@@ -49,27 +49,27 @@ import {
 
 const groups = [
   {
-    label: "Personal Account",
+    label: "Installation",
     teams: [
       {
-        label: "Alicia Koch",
+        label: "Podgórnik 2/51",
         value: "personal",
       },
     ],
   },
-  {
-    label: "Teams",
-    teams: [
-      {
-        label: "Acme Inc.",
-        value: "acme-inc",
-      },
-      {
-        label: "Monsters Inc.",
-        value: "monsters",
-      },
-    ],
-  },
+  // {
+  //   label: "Teams",
+  //   teams: [
+  //     {
+  //       label: "Acme Inc.",
+  //       value: "acme-inc",
+  //     },
+  //     {
+  //       label: "Monsters Inc.",
+  //       value: "monsters",
+  //     },
+  //   ],
+  // },
 ]
 
 type Team = (typeof groups)[number]["teams"][number]
@@ -96,13 +96,13 @@ export default function TeamSwitcher({ className }: TeamSwitcherProps) {
             aria-label="Select a team"
             className={cn("w-[200px] justify-between", className)}
           >
-            <Avatar className="mr-2 h-5 w-5">
+            {/* <Avatar className="mr-2 h-5 w-5">
               <AvatarImage
                 src={`https://avatar.vercel.sh/${selectedTeam.value}.png`}
                 alt={selectedTeam.label}
               />
               <AvatarFallback>SC</AvatarFallback>
-            </Avatar>
+            </Avatar> */}
             {selectedTeam.label}
             <CaretSortIcon className="ml-auto h-4 w-4 shrink-0 opacity-50" />
           </Button>
@@ -110,7 +110,7 @@ export default function TeamSwitcher({ className }: TeamSwitcherProps) {
         <PopoverContent className="w-[200px] p-0">
           <Command>
             <CommandList>
-              <CommandInput placeholder="Search team..." />
+              <CommandInput placeholder="Search installation..." />
               <CommandEmpty>No team found.</CommandEmpty>
               {groups.map((group) => (
                 <CommandGroup key={group.label} heading={group.label}>
@@ -156,7 +156,7 @@ export default function TeamSwitcher({ className }: TeamSwitcherProps) {
                     }}
                   >
                     <PlusCircledIcon className="mr-2 h-5 w-5" />
-                    Create Team
+                    Create Installation
                   </CommandItem>
                 </DialogTrigger>
               </CommandGroup>
@@ -166,7 +166,7 @@ export default function TeamSwitcher({ className }: TeamSwitcherProps) {
       </Popover>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Create team</DialogTitle>
+          <DialogTitle>Create installation</DialogTitle>
           <DialogDescription>
             Add a new team to manage products and customers.
           </DialogDescription>

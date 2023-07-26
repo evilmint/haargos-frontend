@@ -2,44 +2,46 @@ import {
   Avatar,
   AvatarFallback,
   AvatarImage,
-} from "@/registry/new-york/ui/avatar"
+} from "@/registry/new-york/ui/avatar";
+import TimeAgo from "react-timeago";
 import { Button } from "@/registry/new-york/ui/button";
 
-export function Installations({...props}) {
-  const {list} = props;
+export function Installations({ ...props }) {
+  const { installations } = props;
 
-  return (
-    <div className="space-y-8">
-        <div className="flex items-center">
-        
-        <div className="space-y-1">
-          <p className="text-sm font-medium leading-none">Podgórnik 2/51</p>
-          <p className="text-sm text-muted-foreground">
-            1 issue
-          </p>
-        </div>
-        <div className="ml-auto font-medium">
-          <Button>View</Button>
-        </div>
-      </div>
-
-      {[].map((s) => {
-        return <div className="flex items-center">
+  return installations.map((installation) => {
+    return (
+      <div className="flex items-center space-y-4">
         {/* <Avatar className="h-9 w-9">
           <AvatarImage src="/avatars/01.png" alt="Avatar" />
           <AvatarFallback>3195</AvatarFallback>
         </Avatar> */}
-        <div className="ml-4 space-y-1">
-          <p className="text-sm font-medium leading-none">{new Date(s.timestamp).toLocaleDateString() + " " + new Date(s.timestamp).toLocaleTimeString()}</p>
+        <div className="space-y-1">
+          <p className="text-sm font-medium leading-none">
+            {installation.name}
+          </p>
           <p className="text-sm text-muted-foreground">
-            {s.dangers.length} issue{s.dangers.length == 1 ? "" : "s"}
+            Last agent activity:{" "}
+            <TimeAgo date={installation.last_agent_connection} />
           </p>
         </div>
-        <div className="ml-auto font-medium">+$1,999.00</div>
+        <div className="ml-auto space-x-2 font-medium">
+          <Button
+            onClick={() => {
+              
+            }}
+          >
+            Open
+          </Button>
+          <Button
+            onClick={() => {
+              window.open(installation.urls.instance, "_blank");
+            }}
+          >
+            HA
+          </Button>
+        </div>
       </div>
-      })}
-
-
-    </div>
-  )
+    );
+  });
 }

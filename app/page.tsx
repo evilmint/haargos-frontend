@@ -3,6 +3,7 @@
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
 import { getObservations } from "./services/observations";
+import { getInstallations } from "./services/installations";
 
 import { Button } from "@/registry/new-york/ui/button";
 import {
@@ -27,7 +28,8 @@ import TeamSwitcher from "@/components/ui/team-switcher";
 import { UserNav } from "@/components/ui/user-nav";
 
 export default function DashboardPage() {
-  const [list, setList] = useState<any[]>([]);
+  const [observations, setObservations] = useState<any[]>([]);
+  const [installations, setInstallations] = useState<any[]>([]);
 
   useEffect(() => {
     let mounted = true;
@@ -37,7 +39,24 @@ export default function DashboardPage() {
         if (mounted) {
           const json = items.body.items;
           console.log(json);
-          setList(json);
+          setObservations(json);
+        }
+      });
+    return () => (mounted = false);
+  }, []);
+  useEffect(() => {
+    let mounted = true;
+    getInstallations()
+      .then((res) => res.json())
+      .then((items) => {
+        if (mounted) {
+          var json = items.body.items;
+          json.sort(
+            (a, b) =>
+              new Date(b.last_agent_connection) -
+              new Date(a.last_agent_connection)
+          );
+          setInstallations(json);
         }
       });
     return () => (mounted = false);
@@ -117,7 +136,9 @@ export default function DashboardPage() {
                     </svg>
                   </CardHeader>
                   <CardContent>
-                    <div className="text-2xl font-bold">3</div>
+                    <div className="text-2xl font-bold">
+                      {installations.reduce((s, i) => { return s + (i.healthy ? 1 : 0); }, 0)}
+                    </div>
                   </CardContent>
                 </Card>
                 <Card>
@@ -144,7 +165,9 @@ export default function DashboardPage() {
                     </svg>
                   </CardHeader>
                   <CardContent>
-                    <div className="text-2xl font-bold">1</div>
+                    <div className="text-2xl font-bold">
+                      {installations.reduce((s, i) => { return s + (i.healthy ? 0 : 1) }, 0)}
+                    </div>
                   </CardContent>
                 </Card>
                 <Card>
@@ -171,7 +194,9 @@ export default function DashboardPage() {
                     </svg>
                   </CardHeader>
                   <CardContent>
-                    <div className="text-2xl font-bold">2</div>
+                    <div className="text-2xl font-bold">
+                    {installations.reduce((s, i) => { return s + (i.issues.length > 0 ? 1 : 0) }, 0)}
+                    </div>
                   </CardContent>
                 </Card>
                 <Card>
@@ -193,7 +218,7 @@ export default function DashboardPage() {
                     </svg>
                   </CardHeader>
                   <CardContent>
-                    <div className="text-2xl font-bold">Podgórnik 2/51</div>
+                    <div className="text-2xl font-bold">{installations.length > 0 ? installations[0]['name'] : '-'}</div>
                   </CardContent>
                 </Card>
               </div>
@@ -203,7 +228,7 @@ export default function DashboardPage() {
                     <CardTitle>Issues</CardTitle>
                   </CardHeader>
                   <CardContent className="pl-2">
-                    <Overview />
+                    <Overview observations={observations} />
                   </CardContent>
                 </Card>
                 <Card className="col-span-3">
@@ -212,7 +237,7 @@ export default function DashboardPage() {
                     <CardDescription>Client installations</CardDescription>
                   </CardHeader>
                   <CardContent>
-                    <Installations list={list} />
+                    <Installations installations={installations} />
                   </CardContent>
                 </Card>
               </div>

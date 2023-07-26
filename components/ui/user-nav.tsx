@@ -15,23 +15,25 @@ import {
   DropdownMenuTrigger,
 } from "@/registry/new-york/ui/dropdown-menu"
 
-export function UserNav() {
+export function UserNav({ ...props }) {
+  const { user } = props;
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button variant="ghost" className="relative h-8 w-8 rounded-full">
           <Avatar className="h-8 w-8">
             <AvatarImage src="/avatars/01.png" alt="@shadcn" />
-            <AvatarFallback>AL</AvatarFallback>
+            <AvatarFallback>{ user.full_name && user.full_name.split(" ").map((x: string[]) => x[0]).slice(0, 2).join("") }</AvatarFallback>
           </Avatar>
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56" align="end" forceMount>
         <DropdownMenuLabel className="font-normal">
           <div className="flex flex-col space-y-1">
-            <p className="text-sm font-medium leading-none">Aleksander Lorenc</p>
+            <p className="text-sm font-medium leading-none">{ user.full_name }</p>
             <p className="text-xs leading-none text-muted-foreground">
-              lorencaleksander@gmail.com
+              { user.email }
             </p>
           </div>
         </DropdownMenuLabel>
@@ -39,17 +41,13 @@ export function UserNav() {
         <DropdownMenuGroup>
           <DropdownMenuItem>
             Profile
-            {/* <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut> */}
           </DropdownMenuItem>
-          <DropdownMenuItem>
+          {/* <DropdownMenuItem>
             Billing
-            {/* <DropdownMenuShortcut>⌘B</DropdownMenuShortcut> */}
           </DropdownMenuItem>
           <DropdownMenuItem>
             Settings
-            {/* <DropdownMenuShortcut>⌘S</DropdownMenuShortcut> */}
-          </DropdownMenuItem>
-          <DropdownMenuItem>New Team</DropdownMenuItem>
+          </DropdownMenuItem> */}
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
         <DropdownMenuItem>

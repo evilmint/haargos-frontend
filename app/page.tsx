@@ -4,6 +4,7 @@ import Image from "next/image";
 import React, { useEffect, useState } from "react";
 import { getObservations } from "./services/observations";
 import { getInstallations } from "./services/installations";
+import { getUserMe } from "./services/users";
 
 import { Button } from "@/registry/new-york/ui/button";
 import {
@@ -29,37 +30,31 @@ import { UserNav } from "@/components/ui/user-nav";
 
 export default function DashboardPage() {
   const [observations, setObservations] = useState<any[]>([]);
+  const [user, setUser] = useState<any[]>([]);
   const [installations, setInstallations] = useState<any[]>([]);
 
   useEffect(() => {
-    let mounted = true;
-    getObservations()
-      .then((res) => res.json())
-      .then((items) => {
-        if (mounted) {
-          const json = items.body.items;
-          console.log(json);
-          setObservations(json);
-        }
-      });
-    return () => (mounted = false);
+    const fetchUserMe = async () => {
+      const userMe = await (await getUserMe()).json();
+      setUser(userMe.body)
+    }
+    fetchUserMe();
   }, []);
+
   useEffect(() => {
-    let mounted = true;
-    getInstallations()
-      .then((res) => res.json())
-      .then((items) => {
-        if (mounted) {
-          var json = items.body.items;
-          json.sort(
-            (a, b) =>
-              new Date(b.last_agent_connection) -
-              new Date(a.last_agent_connection)
-          );
-          setInstallations(json);
-        }
-      });
-    return () => (mounted = false);
+    const fetchObservations = async () => {
+      const observations = await (await getObservations()).json();
+      setObservations(observations.body.items)
+    }
+    fetchObservations();
+  }, []);
+
+  useEffect(() => {
+    const fetchInstallations = async () => {
+      const installations = await (await getInstallations()).json();
+      setInstallations(installations.body.items)
+    }
+    fetchInstallations();
   }, []);
 
   return (
@@ -87,7 +82,7 @@ export default function DashboardPage() {
             <MainNav className="mx-6" />
             <div className="ml-auto flex items-center space-x-4">
               {/* <Search /> */}
-              <UserNav />
+              <UserNav user={user} />
             </div>
           </div>
         </div>
@@ -186,7 +181,7 @@ export default function DashboardPage() {
                       stroke-width="2"
                       stroke-linecap="round"
                       stroke-linejoin="round"
-                      class="h-4 w-4 text-muted-foreground"
+                      className="h-4 w-4 text-muted-foreground"
                     >
                       <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
                       <line x1="12" y1="9" x2="12" y2="13"></line>

@@ -9,7 +9,7 @@ import { Button } from "@/registry/new-york/ui/button";
 export function Installations({ ...props }) {
   const { installations } = props;
 
-  return installations.map((installation) => {
+  return installations.map((installation: any) => {
     return (
       <div className="flex items-center space-y-4">
         {/* <Avatar className="h-9 w-9">

@@ -5,19 +5,19 @@ import { Bar, BarChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recha
 export function Overview({ ...props }) {
   const { observations } = props;
 
-  const cpuIssueCount = observations.reduce((a, i) => {
+  const cpuIssueCount = observations.reduce((a: any, i: any) => {
     return a + (i.dangers.includes("high_cpu_usage") ? 1 : 0);
   }, 0);
 
-  const volumeIssueCount = observations.reduce((a, i) => {
+  const volumeIssueCount = observations.reduce((a: any, i: any) => {
     return a + (i.dangers.includes("high_volume_usage") ? 1 : 0);
   }, 0);
 
-  const memoryIssueCount = observations.reduce((a, i) => {
+  const memoryIssueCount = observations.reduce((a: any, i: any) => {
     return a + (i.dangers.includes("high_memory_usage") ? 1 : 0);
   }, 0);
 
-  const logIssueCount = observations.reduce((a, i) => {
+  const logIssueCount = observations.reduce((a: any, i: any) => {
     return a + (i.dangers.includes("logs") ? 1 : 0);
   }, 0);
 
@@ -55,6 +55,7 @@ export function Overview({ ...props }) {
           fontSize={12}
           tickLine={false}
           axisLine={false}
+          allowDecimals={false}
           tickFormatter={(value) => `${value}`}
         />
         <Tooltip cursor={false} />

@@ -291,7 +291,7 @@ export default function DashboardPage() {
                     <CardTitle>Issues</CardTitle>
                   </CardHeader>
                   <CardContent className="pl-2">
-                    <Overview observations={observations} />
+                    {/* <Overview observations={observations} /> */}
                   </CardContent>
                 </Card>
                 <Card className="col-span-3">

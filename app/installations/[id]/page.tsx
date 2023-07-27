@@ -6,6 +6,7 @@ import { getObservations } from "../../services/observations";
 import { getInstallations } from "../../services/installations";
 import { getUserMe } from "../../services/users";
 import { useRouter } from 'next/navigation'
+import TimeAgo from "react-timeago";
 
 import { Button } from "@/registry/new-york/ui/button";
 import {
@@ -15,6 +16,15 @@ import {
   CardHeader,
   CardTitle,
 } from "@/registry/new-york/ui/card";
+import {
+  Table,
+  TableBody,
+  TableCaption,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table"
 import {
   Tabs,
   TabsContent,
@@ -31,9 +41,11 @@ import { UserNav } from "@/components/ui/user-nav";
 
 export default function DashboardPage({ params }: { params: { id: string } }) {
   const [observations, setObservations] = useState<any[]>([]);
-  const [user, setUser] = useState<any[]>([]);
-  const [installations, setInstallations] = useState<any[]>([]);
-  const [highestStorage, setHighestStorage] = useState<any[]>([]);
+  const [user, setUser] = useState<any>([]);
+  const [installations, setInstallations] = useState<any>([]);
+  const [installation, setInstallation] = useState<any>([]);
+  const [logs, setLogs] = useState<any[]>([]);
+  const [highestStorage, setHighestStorage] = useState<string>("");
   const router = useRouter()
 
   useEffect(() => {
@@ -46,10 +58,9 @@ export default function DashboardPage({ params }: { params: { id: string } }) {
 
   useEffect(() => {
     const fetchInstallations = async () => {
-      const installations = await (await getInstallations()).json();
-
-      const sorted = installations.body.items.sort((b: any, a: any) => (new Date(a.last_agent_connection).getTime() - new Date(b.last_agent_connection).getTime()))
-
+      const installations: any = await (await getInstallations()).json();
+     
+      const installation = installations.body.items.filter((i: any) => i.id == params.id)[0]
       const observations = await (await getObservations(params.id)).json();
       const itemsArray = observations.body.items;
 
@@ -92,10 +103,26 @@ export default function DashboardPage({ params }: { params: { id: string } }) {
         }
       });
 
-      setHighestStorage(overallHighestUseStorage.use_percentage);
+      setHighestStorage(overallHighestUseStorage.name + " " + overallHighestUseStorage.use_percentage);
 
       setObservations(observations.body.items);
-      setInstallations(sorted);
+      setInstallation(installation);
+      setInstallations(installations.body.items)
+
+      const logs = observations.body.items[0].logs.split("\n")
+      const resultArray: { time: string, type: string, thread: string, log: string }[] = [];
+
+      for (const log of logs) {
+        const parts = log.split(/\s+/);
+        const time = parts[0] + " " + parts[1];
+        const logType = parts[2];
+        const thread = parts[3];
+        const restOfLog = parts.slice(4).join(" ");
+        
+        resultArray.push({ time: time, type: logType, thread: thread, log: restOfLog });
+      }
+
+      setLogs(resultArray)
     };
     fetchInstallations();
   }, []);
@@ -175,13 +202,13 @@ export default function DashboardPage({ params }: { params: { id: string } }) {
                   </CardHeader>
                   <CardContent>
                     <div className="text-2xl font-bold">
-                      {observations[0] &&
+                      {observations.length > 0 ?
                         Math.floor(
                           (observations[0].environment.memory.used /
                             observations[0].environment.memory.total) *
                             100
-                        )}
-                      %
+                        ) + "%" : 'n/a'}
+                      
                     </div>
                   </CardContent>
                 </Card>
@@ -210,14 +237,14 @@ export default function DashboardPage({ params }: { params: { id: string } }) {
                   </CardHeader>
                   <CardContent>
                     <div className="text-2xl font-bold">
-                      {highestStorage}
+                      {highestStorage ?? "n/a"}
                     </div>
                   </CardContent>
                 </Card>
                 <Card>
                   <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                     <CardTitle className="text-sm font-medium">
-                      Installations with issues
+                      Architecture
                     </CardTitle>
 
                     <svg
@@ -239,9 +266,7 @@ export default function DashboardPage({ params }: { params: { id: string } }) {
                   </CardHeader>
                   <CardContent>
                     <div className="text-2xl font-bold">
-                      {installations.reduce((s, i) => {
-                        return s + (i.issues.length > 0 ? 1 : 0);
-                      }, 0)}
+                      {observations.length > 0 && observations[0].environment.cpu.architecture}
                     </div>
                   </CardContent>
                 </Card>
@@ -265,23 +290,41 @@ export default function DashboardPage({ params }: { params: { id: string } }) {
                   </CardHeader>
                   <CardContent>
                     <div className="text-2xl font-bold">
-                      {installations.length > 0
-                        ? installations[0]["name"]
-                        : "-"}
+                      <TimeAgo date={observations.length > 0 && observations[0].timestamp} />
                     </div>
                   </CardContent>
                 </Card>
               </div>
               <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
-                <Card className="col-span-4">
+                <Card className="col-span-8">
                   <CardHeader>
-                    <CardTitle>Issues</CardTitle>
+                    <CardTitle>Logs</CardTitle>
                   </CardHeader>
                   <CardContent className="pl-2">
-                    {/* <Overview observations={observations} /> */}
+                  <Table>
+      <TableCaption>A list of your recent logs.</TableCaption>
+      <TableHeader>
+        <TableRow>
+          <TableHead className="w-[100px]">Time</TableHead>
+          <TableHead>Type</TableHead>
+          <TableHead>Thread</TableHead>
+          <TableHead className="text-right">Log</TableHead>
+        </TableRow>
+      </TableHeader>
+      <TableBody>
+        {logs.map((log) => (
+          <TableRow key={log.time}>
+            <TableCell className="font-medium">{log.time}</TableCell>
+            <TableCell>{log.type}</TableCell>
+            <TableCell>{log.thread}</TableCell>
+            <TableCell className="text-right">{log.log}</TableCell>
+          </TableRow>
+        ))}
+      </TableBody>
+    </Table>
                   </CardContent>
                 </Card>
-                <Card className="col-span-3">
+                <Card className="col-span-7">
                   <CardHeader>
                     <CardTitle>Installations</CardTitle>
                     <CardDescription>Client installations</CardDescription>

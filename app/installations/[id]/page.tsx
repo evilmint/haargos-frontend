@@ -5,8 +5,9 @@ import React, { useEffect, useState } from "react";
 import { getObservations } from "../../services/observations";
 import { getInstallations } from "../../services/installations";
 import { getUserMe } from "../../services/users";
-import { useRouter } from 'next/navigation'
+import { useRouter } from "next/navigation";
 import TimeAgo from "react-timeago";
+import { Logs } from "@/components/ui/logs";
 
 import { Button } from "@/registry/new-york/ui/button";
 import {
@@ -16,15 +17,8 @@ import {
   CardHeader,
   CardTitle,
 } from "@/registry/new-york/ui/card";
-import {
-  Table,
-  TableBody,
-  TableCaption,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table"
+
+import { Log } from "../../types.d";
 import {
   Tabs,
   TabsContent,
@@ -46,7 +40,7 @@ export default function DashboardPage({ params }: { params: { id: string } }) {
   const [installation, setInstallation] = useState<any>([]);
   const [logs, setLogs] = useState<any[]>([]);
   const [highestStorage, setHighestStorage] = useState<string>("");
-  const router = useRouter()
+  const router = useRouter();
 
   useEffect(() => {
     const fetchUserMe = async () => {
@@ -59,8 +53,10 @@ export default function DashboardPage({ params }: { params: { id: string } }) {
   useEffect(() => {
     const fetchInstallations = async () => {
       const installations: any = await (await getInstallations()).json();
-     
-      const installation = installations.body.items.filter((i: any) => i.id == params.id)[0]
+
+      const installation = installations.body.items.filter(
+        (i: any) => i.id == params.id
+      )[0];
       const observations = await (await getObservations(params.id)).json();
       const itemsArray = observations.body.items;
 
@@ -103,26 +99,48 @@ export default function DashboardPage({ params }: { params: { id: string } }) {
         }
       });
 
-      setHighestStorage(overallHighestUseStorage.name + " " + overallHighestUseStorage.use_percentage);
+      setHighestStorage(
+        overallHighestUseStorage.name +
+          " " +
+          overallHighestUseStorage.use_percentage
+      );
 
       setObservations(observations.body.items);
       setInstallation(installation);
-      setInstallations(installations.body.items)
+      setInstallations(installations.body.items);
 
-      const logs = observations.body.items[0].logs.split("\n")
-      const resultArray: { time: string, type: string, thread: string, log: string }[] = [];
+      let logString = "";
+
+      for (const item of observations.body.items) {
+        logString += item.logs;
+        console.log(logString);
+      }
+
+      let logs = logString.split("\n");
+
+      const resultArray: Log[] = [];
 
       for (const log of logs) {
         const parts = log.split(/\s+/);
+
+        if (parts.length < 5) {
+          continue;
+        }
+  
         const time = parts[0] + " " + parts[1];
         const logType = parts[2];
         const thread = parts[3];
         const restOfLog = parts.slice(4).join(" ");
-        
-        resultArray.push({ time: time, type: logType, thread: thread, log: restOfLog });
+
+        resultArray.push({
+          time: time,
+          type: logType,
+          thread: thread,
+          log: restOfLog,
+        });
       }
 
-      setLogs(resultArray)
+      setLogs(resultArray);
     };
     fetchInstallations();
   }, []);
@@ -202,13 +220,13 @@ export default function DashboardPage({ params }: { params: { id: string } }) {
                   </CardHeader>
                   <CardContent>
                     <div className="text-2xl font-bold">
-                      {observations.length > 0 ?
-                        Math.floor(
-                          (observations[0].environment.memory.used /
-                            observations[0].environment.memory.total) *
-                            100
-                        ) + "%" : 'n/a'}
-                      
+                      {observations.length > 0
+                        ? Math.floor(
+                            (observations[0].environment.memory.used /
+                              observations[0].environment.memory.total) *
+                              100
+                          ) + "%"
+                        : "n/a"}
                     </div>
                   </CardContent>
                 </Card>
@@ -266,7 +284,8 @@ export default function DashboardPage({ params }: { params: { id: string } }) {
                   </CardHeader>
                   <CardContent>
                     <div className="text-2xl font-bold">
-                      {observations.length > 0 && observations[0].environment.cpu.architecture}
+                      {observations.length > 0 &&
+                        observations[0].environment.cpu.architecture}
                     </div>
                   </CardContent>
                 </Card>
@@ -290,40 +309,16 @@ export default function DashboardPage({ params }: { params: { id: string } }) {
                   </CardHeader>
                   <CardContent>
                     <div className="text-2xl font-bold">
-                      <TimeAgo date={observations.length > 0 && observations[0].timestamp} />
+                      <TimeAgo
+                        date={
+                          observations.length > 0 && observations[0].timestamp
+                        }
+                      />
                     </div>
                   </CardContent>
                 </Card>
               </div>
               <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
-                <Card className="col-span-8">
-                  <CardHeader>
-                    <CardTitle>Logs</CardTitle>
-                  </CardHeader>
-                  <CardContent className="pl-2">
-                  <Table>
-      <TableCaption>A list of your recent logs.</TableCaption>
-      <TableHeader>
-        <TableRow>
-          <TableHead className="w-[100px]">Time</TableHead>
-          <TableHead>Type</TableHead>
-          <TableHead>Thread</TableHead>
-          <TableHead className="text-right">Log</TableHead>
-        </TableRow>
-      </TableHeader>
-      <TableBody>
-        {logs.map((log) => (
-          <TableRow key={log.time}>
-            <TableCell className="font-medium">{log.time}</TableCell>
-            <TableCell>{log.type}</TableCell>
-            <TableCell>{log.thread}</TableCell>
-            <TableCell className="text-right">{log.log}</TableCell>
-          </TableRow>
-        ))}
-      </TableBody>
-    </Table>
-                  </CardContent>
-                </Card>
                 <Card className="col-span-7">
                   <CardHeader>
                     <CardTitle>Installations</CardTitle>
@@ -331,6 +326,14 @@ export default function DashboardPage({ params }: { params: { id: string } }) {
                   </CardHeader>
                   <CardContent>
                     <Installations installations={installations} />
+                  </CardContent>
+                </Card>
+                <Card className="col-span-8">
+                  <CardHeader>
+                    <CardTitle>Issues ({logs.length})</CardTitle>
+                  </CardHeader>
+                  <CardContent className="pl-2">
+                    <Logs logs={logs} />
                   </CardContent>
                 </Card>
               </div>

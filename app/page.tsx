@@ -53,7 +53,7 @@ export default function DashboardPage() {
     const fetchInstallations = async () => {
       const installations = await (await getInstallations()).json();
 
-      const sorted = installations.body.items.sort((b: any, a: any) => (new Date(a.last_agent_connection) - new Date(b.last_agent_connection)))
+      const sorted = installations.body.items.sort((b: any, a: any) => (new Date(a.last_agent_connection).getTime() - new Date(b.last_agent_connection).getTime()))
 
       setInstallations(sorted)
     }

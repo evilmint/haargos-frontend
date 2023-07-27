@@ -28,7 +28,7 @@ export function Installations({ ...props }) {
         <div className="ml-auto space-x-2 font-medium">
           <Button
             onClick={() => {
-              
+              window.location = '/installations/' + installation.id;
             }}
           >
             Open

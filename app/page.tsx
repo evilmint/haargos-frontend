@@ -52,7 +52,10 @@ export default function DashboardPage() {
   useEffect(() => {
     const fetchInstallations = async () => {
       const installations = await (await getInstallations()).json();
-      setInstallations(installations.body.items)
+
+      const sorted = installations.body.items.sort((b: any, a: any) => (new Date(a.last_agent_connection) - new Date(b.last_agent_connection)))
+
+      setInstallations(sorted)
     }
     fetchInstallations();
   }, []);

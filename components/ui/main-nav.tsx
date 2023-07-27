@@ -17,12 +17,12 @@ export function MainNav({
       >
         Overview
       </Link>
-      <Link
+      {/* <Link
         href="/installations"
         className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
       >
         Installations
-      </Link>
+      </Link> */}
       {/* <Link
         href="/examples/dashboard"
         className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary"

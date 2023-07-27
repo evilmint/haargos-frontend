@@ -42,20 +42,15 @@ export default function DashboardPage() {
   }, []);
 
   useEffect(() => {
-    const fetchObservations = async () => {
-      const observations = await (await getObservations()).json();
-      setObservations(observations.body.items)
-    }
-    fetchObservations();
-  }, []);
-
-  useEffect(() => {
     const fetchInstallations = async () => {
       const installations = await (await getInstallations()).json();
 
       const sorted = installations.body.items.sort((b: any, a: any) => (new Date(a.last_agent_connection).getTime() - new Date(b.last_agent_connection).getTime()))
 
       setInstallations(sorted)
+
+      const observations = await (await getObservations(sorted[0].id)).json();
+      setObservations(observations.body.items)
     }
     fetchInstallations();
   }, []);

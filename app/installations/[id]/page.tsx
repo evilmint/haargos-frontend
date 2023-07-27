@@ -5,6 +5,7 @@ import React, { useEffect, useState } from "react";
 import { getObservations } from "../../services/observations";
 import { getInstallations } from "../../services/installations";
 import { getUserMe } from "../../services/users";
+import { useRouter } from 'next/navigation'
 
 import { Button } from "@/registry/new-york/ui/button";
 import {
@@ -28,11 +29,12 @@ import { Search } from "@/components/ui/search";
 import TeamSwitcher from "@/components/ui/team-switcher";
 import { UserNav } from "@/components/ui/user-nav";
 
-export default function DashboardPage() {
+export default function DashboardPage({ params }: { params: { id: string } }) {
   const [observations, setObservations] = useState<any[]>([]);
   const [user, setUser] = useState<any[]>([]);
   const [installations, setInstallations] = useState<any[]>([]);
   const [highestStorage, setHighestStorage] = useState<any[]>([]);
+  const router = useRouter()
 
   useEffect(() => {
     const fetchUserMe = async () => {
@@ -43,10 +45,12 @@ export default function DashboardPage() {
   }, []);
 
   useEffect(() => {
-    const fetchObservations = async () => {
-      const observations = await (await getObservations()).json();
+    const fetchInstallations = async () => {
+      const installations = await (await getInstallations()).json();
 
-      console.log(observations)
+      const sorted = installations.body.items.sort((b: any, a: any) => (new Date(a.last_agent_connection).getTime() - new Date(b.last_agent_connection).getTime()))
+
+      const observations = await (await getObservations(params.id)).json();
       const itemsArray = observations.body.items;
 
       // Function to find the storage entry with the highest use percentage in an array
@@ -88,26 +92,9 @@ export default function DashboardPage() {
         }
       });
 
-      // Output the result
-      console.log("Storage with the highest use percentage across all items:");
-      console.log(overallHighestUseStorage);
       setHighestStorage(overallHighestUseStorage.use_percentage);
 
       setObservations(observations.body.items);
-
-    };
-    fetchObservations();
-  }, []);
-
-  useEffect(() => {
-    const fetchInstallations = async () => {
-      const installations = await (await getInstallations()).json();
-
-      const sorted = installations.body.items.sort(
-        (b: any, a: any) =>
-          new Date(a.last_agent_connection).getTime() - new Date(b.last_agent_connection).getTime()
-      );
-
       setInstallations(sorted);
     };
     fetchInstallations();

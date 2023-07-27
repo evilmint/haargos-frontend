@@ -96,10 +96,10 @@ export default function DashboardPage() {
             <TabsList>
               <TabsTrigger value="overview">Overview</TabsTrigger>
               <TabsTrigger value="analytics" disabled>
-                Analytics
+                Environment
               </TabsTrigger>
               <TabsTrigger value="reports" disabled>
-                Reports
+                Docker
               </TabsTrigger>
               <TabsTrigger value="notifications" disabled>
                 Notifications

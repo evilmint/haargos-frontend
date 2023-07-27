@@ -185,16 +185,17 @@ export default function DashboardPage({ params }: { params: { id: string } }) {
           <Tabs defaultValue="overview" className="space-y-4">
             <TabsList>
               <TabsTrigger value="overview">Overview</TabsTrigger>
-              <TabsTrigger value="analytics" disabled>
-                Analytics
+              <TabsTrigger value="environment">
+                Environment
               </TabsTrigger>
-              <TabsTrigger value="reports" disabled>
-                Reports
+              <TabsTrigger value="reports">
+                Docker
               </TabsTrigger>
               <TabsTrigger value="notifications" disabled>
                 Notifications
               </TabsTrigger>
             </TabsList>
+  
             <TabsContent value="overview" className="space-y-4">
               <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
                 <Card>
@@ -318,6 +319,29 @@ export default function DashboardPage({ params }: { params: { id: string } }) {
                   </CardContent>
                 </Card>
               </div>
+              <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
+                <Card className="col-span-7">
+                  <CardHeader>
+                    <CardTitle>Installations</CardTitle>
+                    <CardDescription>Client installations</CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <Installations installations={installations} />
+                  </CardContent>
+                </Card>
+                <Card className="col-span-8">
+                  <CardHeader>
+                    <CardTitle>Issues ({logs.length})</CardTitle>
+                  </CardHeader>
+                  <CardContent className="pl-2">
+                    <Logs logs={logs} />
+                  </CardContent>
+                </Card>
+              </div>
+            </TabsContent>
+
+            <TabsContent value="environment" className="space-y-4">
+
               <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
                 <Card className="col-span-7">
                   <CardHeader>

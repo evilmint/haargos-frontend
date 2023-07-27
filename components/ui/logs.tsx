@@ -10,6 +10,8 @@ import {
     TableRow,
 } from "@/components/ui/table"
 
+import { Log } from "../../app/types.d";
+
 export function Logs({ ...props }) {
   const { logs } = props;
 

@@ -5,9 +5,11 @@ import {
 } from "@/registry/new-york/ui/avatar";
 import TimeAgo from "react-timeago";
 import { Button } from "@/registry/new-york/ui/button";
+import { useRouter } from 'next/navigation'
 
 export function Installations({ ...props }) {
   const { installations } = props;
+  const router = useRouter()
 
   return installations.map((installation: any) => {
     return (
@@ -28,13 +30,13 @@ export function Installations({ ...props }) {
         <div className="ml-auto space-x-2 font-medium">
           <Button
             onClick={() => {
-              const win: Window = window;
-              win.location = '/installations/' + installation.id;
+              router.push('/installations/' + installation.id)
             }}
           >
             Open
           </Button>
           <Button
+            
             onClick={() => {
               window.open(installation.urls.instance, "_blank");
             }}

@@ -358,7 +358,7 @@ export default function DashboardPage({ params }: { params: { id: string } }) {
 
                 <Card className="col-span-7">
                   <CardHeader>
-                    <CardTitle>Environment</CardTitle>
+                    <CardTitle>CPU</CardTitle>
                   </CardHeader>
                   <CardContent>
                     <Environment observation={observations[0]} />
@@ -367,10 +367,6 @@ export default function DashboardPage({ params }: { params: { id: string } }) {
 
                 {observations.length > 0 && (
                   <Storage observation={observations[0]} />
-                )}
-
-                {observations.length > 0 && (
-                  <Docker observation={observations[0]} />
                 )}
               </div>
             </TabsContent>

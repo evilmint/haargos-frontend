@@ -6,21 +6,41 @@ import {
 import TimeAgo from "react-timeago";
 import { Button } from "@/registry/new-york/ui/button";
 import { useRouter } from "next/navigation";
+import {
+  Table,
+  TableBody,
+  TableCaption,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 
 export function Environment({ ...props }) {
   const { observation } = props;
 
   return (
-    <div className="items-center space-y-4">
-      <h2 className="text-lg font-medium">CPU</h2>
-      {/* <Avatar className="h-9 w-9">
-          <AvatarImage src="/avatars/01.png" alt="Avatar" />
-          <AvatarFallback>3195</AvatarFallback>
-        </Avatar> */}
-      <div>Architecture: {observation.environment.cpu.architecture}</div>
-      <div>Load: {observation.environment.cpu.load}</div>
-      <div>Model name: {observation.environment.cpu.model_name}</div>
-      <div>MHz: {observation.environment.cpu.cpu_mhz}</div>
-    </div>
+    <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead className="">Model name</TableHead>
+              <TableHead>Architecture</TableHead>
+              <TableHead>Load</TableHead>
+              <TableHead>MHz</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+          
+              <TableRow key={observation.environment.cpu.model_name}>
+                <TableCell className="font-medium text-xs">
+                  {observation.environment.cpu.model_name}
+                </TableCell>
+                <TableCell className="text-xs">{observation.environment.cpu.architecture}</TableCell>
+                <TableCell className="text-xs">{observation.environment.cpu.load}</TableCell>
+                <TableCell className="text-xs">{observation.environment.cpu.cpu_mhz}</TableCell>
+              </TableRow>
+
+          </TableBody>
+        </Table>
   );
 }

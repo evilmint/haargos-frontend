@@ -8,6 +8,9 @@ import { getUserMe } from "../../services/users";
 import { useRouter } from "next/navigation";
 import TimeAgo from "react-timeago";
 import { Logs } from "@/components/ui/logs";
+import { Storage } from "@/components/ui/storage";
+import { Docker } from "@/components/ui/docker";
+import { Environment } from "@/components/ui/environment";
 
 import { Button } from "@/registry/new-york/ui/button";
 import {
@@ -44,7 +47,7 @@ export default function DashboardPage({ params }: { params: { id: string } }) {
   const [installations, setInstallations] = useState<any>([]);
   const [installation, setInstallation] = useState<any>([]);
   const [logs, setLogs] = useState<any[]>([]);
-  const [highestStorage, setHighestStorage] = useState<string>("");
+  const [highestStorage, setHighestStorage] = useState<any>(null);
   const router = useRouter();
 
   useEffect(() => {
@@ -84,7 +87,7 @@ export default function DashboardPage({ params }: { params: { id: string } }) {
       }
 
       // Initialize variables to store the overall highest use storage
-      let overallHighestUseStorage: any = 0;
+      let overallHighestUseStorage: any = null;
       let overallHighestUsePercentage = -1;
 
       // Loop through all items and find the highest use storage
@@ -104,11 +107,13 @@ export default function DashboardPage({ params }: { params: { id: string } }) {
         }
       });
 
-      setHighestStorage(
-        overallHighestUseStorage.name +
-          " " +
-          overallHighestUseStorage.use_percentage
-      );
+      if (overallHighestUseStorage != null) {
+        setHighestStorage(
+          overallHighestUseStorage.name +
+            " " +
+            overallHighestUseStorage.use_percentage
+        );
+      }
 
       setObservations(observations.body.items);
       setInstallation(installation);
@@ -131,13 +136,14 @@ export default function DashboardPage({ params }: { params: { id: string } }) {
         if (parts.length < 5) {
           continue;
         }
-  
-        const time = new Date(parts[0] + "T" + parts[1]+"Z").toLocaleString();
+
+        const time = new Date(parts[0] + "T" + parts[1] + "Z").toLocaleString();
         const logType = parts[2][0];
-        const thread = parts[3].replace('(', '').replace(')', '');
+        const thread = parts[3].replace("(", "").replace(")", "");
         const restOfLog = parts.slice(4).join(" ");
 
         resultArray.push({
+          raw: log,
           time: time,
           type: logType,
           thread: thread,
@@ -190,17 +196,13 @@ export default function DashboardPage({ params }: { params: { id: string } }) {
           <Tabs defaultValue="overview" className="space-y-4">
             <TabsList>
               <TabsTrigger value="overview">Overview</TabsTrigger>
-              <TabsTrigger value="environment">
-                Environment
-              </TabsTrigger>
-              <TabsTrigger value="reports">
-                Docker
-              </TabsTrigger>
+              <TabsTrigger value="environment">Environment</TabsTrigger>
+              <TabsTrigger value="reports">Docker</TabsTrigger>
               <TabsTrigger value="notifications" disabled>
                 Notifications
               </TabsTrigger>
             </TabsList>
-  
+
             <TabsContent value="overview" className="space-y-4">
               <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
                 <Card>
@@ -290,8 +292,7 @@ export default function DashboardPage({ params }: { params: { id: string } }) {
                   </CardHeader>
                   <CardContent>
                     <div className="text-2xl font-bold">
-                      {observations.length > 0 &&
-                        observations[0].environment.cpu.architecture}
+                      {observations[0]?.environment.cpu.architecture ?? "n/a"}
                     </div>
                   </CardContent>
                 </Card>
@@ -315,11 +316,11 @@ export default function DashboardPage({ params }: { params: { id: string } }) {
                   </CardHeader>
                   <CardContent>
                     <div className="text-2xl font-bold">
-                      <TimeAgo
-                        date={
-                          observations.length > 0 && observations[0].timestamp
-                        }
-                      />
+                      {observations.length > 0 ? (
+                        <TimeAgo date={observations[0].timestamp} />
+                      ) : (
+                        "n/a"
+                      )}
                     </div>
                   </CardContent>
                 </Card>
@@ -335,9 +336,6 @@ export default function DashboardPage({ params }: { params: { id: string } }) {
                   </CardContent>
                 </Card>
                 <Card className="col-span-8">
-                  <CardHeader>
-                    <CardTitle>Issues ({logs.length})</CardTitle>
-                  </CardHeader>
                   <CardContent className="pl-2">
                     <Logs logs={logs} />
                   </CardContent>
@@ -346,7 +344,6 @@ export default function DashboardPage({ params }: { params: { id: string } }) {
             </TabsContent>
 
             <TabsContent value="environment" className="space-y-4">
-
               <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
                 <Card className="col-span-7">
                   <CardHeader>
@@ -357,14 +354,24 @@ export default function DashboardPage({ params }: { params: { id: string } }) {
                     <Installations installations={installations} />
                   </CardContent>
                 </Card>
-                <Card className="col-span-8">
+
+
+                <Card className="col-span-7">
                   <CardHeader>
-                    <CardTitle>Issues ({logs.length})</CardTitle>
+                    <CardTitle>Environment</CardTitle>
                   </CardHeader>
-                  <CardContent className="pl-2">
-                    <Logs logs={logs} />
+                  <CardContent>
+                    <Environment observation={observations[0]} />
                   </CardContent>
                 </Card>
+
+                {observations.length > 0 && (
+                  <Storage observation={observations[0]} />
+                )}
+
+                {observations.length > 0 && (
+                  <Docker observation={observations[0]} />
+                )}
               </div>
             </TabsContent>
           </Tabs>

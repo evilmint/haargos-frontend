@@ -33,6 +33,11 @@ import { Search } from "@/components/ui/search";
 import TeamSwitcher from "@/components/ui/team-switcher";
 import { UserNav } from "@/components/ui/user-nav";
 
+function wrapSquareBracketsWithEm(inputString: string) {
+  const regex = /\[([^\]]+)\]/g;
+  return inputString.replace(regex, '<p class="text-xs">[$1]</p>');
+}
+
 export default function DashboardPage({ params }: { params: { id: string } }) {
   const [observations, setObservations] = useState<any[]>([]);
   const [user, setUser] = useState<any>([]);
@@ -127,16 +132,16 @@ export default function DashboardPage({ params }: { params: { id: string } }) {
           continue;
         }
   
-        const time = parts[0] + " " + parts[1];
-        const logType = parts[2];
-        const thread = parts[3];
+        const time = new Date(parts[0] + "T" + parts[1]+"Z").toLocaleString();
+        const logType = parts[2][0];
+        const thread = parts[3].replace('(', '').replace(')', '');
         const restOfLog = parts.slice(4).join(" ");
 
         resultArray.push({
           time: time,
           type: logType,
           thread: thread,
-          log: restOfLog,
+          log: wrapSquareBracketsWithEm(restOfLog),
         });
       }
 

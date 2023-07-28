@@ -29,10 +29,10 @@ export function Logs({ ...props }) {
     <TableBody>
       {(logs ?? []).map((log: Log) => (
         <TableRow key={log.time}>
-          <TableCell className="font-medium">{log.time}</TableCell>
-          <TableCell>{log.type}</TableCell>
-          <TableCell>{log.thread}</TableCell>
-          <TableCell className="text-right">{log.log}</TableCell>
+          <TableCell className="font-medium text-xs">{log.time}</TableCell>
+          <TableCell className="text-xs">{log.type}</TableCell>
+          <TableCell className="text-xs">{log.thread}</TableCell>
+          <TableCell className="text-right" dangerouslySetInnerHTML={{__html: log.log}}></TableCell>
         </TableRow>
       ))}
     </TableBody>

@@ -93,7 +93,7 @@ export default function DashboardPage() {
             </div>
           </div> */}
           <Tabs defaultValue="overview" className="space-y-4">
-            <TabsList>
+            {/* <TabsList>
               <TabsTrigger value="overview">Overview</TabsTrigger>
               <TabsTrigger value="analytics" disabled>
                 Environment
@@ -104,7 +104,7 @@ export default function DashboardPage() {
               <TabsTrigger value="notifications" disabled>
                 Notifications
               </TabsTrigger>
-            </TabsList>
+            </TabsList> */}
             <TabsContent value="overview" className="space-y-4">
               <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
                 <Card>

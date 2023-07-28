@@ -197,7 +197,7 @@ export default function DashboardPage({ params }: { params: { id: string } }) {
             <TabsList>
               <TabsTrigger value="overview">Overview</TabsTrigger>
               <TabsTrigger value="environment">Environment</TabsTrigger>
-              <TabsTrigger value="reports">Docker</TabsTrigger>
+              <TabsTrigger value="docker">Docker</TabsTrigger>
               <TabsTrigger value="notifications" disabled>
                 Notifications
               </TabsTrigger>
@@ -368,6 +368,24 @@ export default function DashboardPage({ params }: { params: { id: string } }) {
                 {observations.length > 0 && (
                   <Storage observation={observations[0]} />
                 )}
+
+                {observations.length > 0 && (
+                  <Docker observation={observations[0]} />
+                )}
+              </div>
+            </TabsContent>
+
+            <TabsContent value="docker" className="space-y-4">
+              <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
+                <Card className="col-span-7">
+                  <CardHeader>
+                    <CardTitle>Installations</CardTitle>
+                    <CardDescription>Client installations</CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <Installations installations={installations} />
+                  </CardContent>
+                </Card>
 
                 {observations.length > 0 && (
                   <Docker observation={observations[0]} />

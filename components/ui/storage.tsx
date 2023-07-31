@@ -24,30 +24,59 @@ import {
   CardTitle,
 } from "@/registry/new-york/ui/card";
 
+import { getObservations } from "../../app/services/observations";
+import { getInstallations } from "../../app/services/installations";
+import { useState, useEffect } from "react";
+
 export function Storage({ ...props }) {
-  const { observation } = props;
+  const [installations, setInstallations] = useState<any>([]);
+  const [installation, setInstallation] = useState<any>([]);
+  const [logs, setLogs] = useState<any[]>([]);
+  const [highestStorage, setHighestStorage] = useState<any>(null);
+  const [observations, setObservations] = useState<any[]>([]);
+  const [volumes, setVolumes] = useState<any[]>([]);
 
-  let volumesUnsorted = observation.environment.storage.sort(
-    (a: any, b: any) =>
-      Number(b.use_percentage.slice(0, -1)) -
-      Number(a.use_percentage.slice(0, -1))
-  );
+  useEffect(() => {
+    const fetchInstallations = async () => {
+      const installations = await (await getInstallations()).json();
 
-  let volumes = [];
-  const map = new Map();
-  for (const item of volumesUnsorted) {
-    if (!map.has(item.mounted_on)) {
-      map.set(item.mounted_on, true); // set any value to Map
-      volumes.push({
-        name: item.name,
-        available: item.available,
-        use_percentage: item.use_percentage,
-        used: item.used,
-        size: item.size,
-        mounted_on: item.mounted_on,
-      });
-    }
-  }
+      const sorted = installations.body.items.sort(
+        (b: any, a: any) =>
+          new Date(a.last_agent_connection).getTime() -
+          new Date(b.last_agent_connection).getTime()
+      );
+
+      setInstallations(sorted);
+
+      const observations = await (await getObservations(sorted[0].id)).json();
+      setObservations(observations.body.items);
+
+      let volumesUnsorted = observations.body.items[0].environment.storage.sort(
+        (a: any, b: any) =>
+          Number(b.use_percentage.slice(0, -1)) -
+          Number(a.use_percentage.slice(0, -1))
+      );
+
+      let volumes = [];
+      const map = new Map();
+      for (const item of volumesUnsorted) {
+        if (!map.has(item.mounted_on)) {
+          map.set(item.mounted_on, true); // set any value to Map
+          volumes.push({
+            name: item.name,
+            available: item.available,
+            use_percentage: item.use_percentage,
+            used: item.used,
+            size: item.size,
+            mounted_on: item.mounted_on,
+          });
+        }
+      }
+
+      setVolumes(volumes);
+    };
+    fetchInstallations();
+  }, []);
 
   return (
     <Card className="col-span-8">

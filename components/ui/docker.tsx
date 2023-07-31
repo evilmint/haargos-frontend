@@ -25,15 +25,40 @@ import {
 } from "@/registry/new-york/ui/card";
 
 import { SVGWithText } from "./SVGWithText";
+import { getObservations } from "../../app/services/observations";
+import { getInstallations } from "../../app/services/installations";
+import { useState, useEffect } from "react";
 
 export function Docker({ ...props }) {
-  const { observation } = props;
+  const [installations, setInstallations] = useState<any>([]);
+  const [installation, setInstallation] = useState<any>([]);
+  const [logs, setLogs] = useState<any[]>([]);
+  const [highestStorage, setHighestStorage] = useState<any>(null);
+  const [observations, setObservations] = useState<any[]>([]);
+
+  useEffect(() => {
+    const fetchInstallations = async () => {
+      const installations = await (await getInstallations()).json();
+
+      const sorted = installations.body.items.sort(
+        (b: any, a: any) =>
+          new Date(a.last_agent_connection).getTime() -
+          new Date(b.last_agent_connection).getTime()
+      );
+
+      setInstallations(sorted);
+
+      const observations = await (await getObservations(sorted[0].id)).json();
+      setObservations(observations.body.items);
+    };
+    fetchInstallations();
+  }, []);
 
   return (
     <Card className="col-span-8">
       <CardHeader>
         <CardTitle>
-          Docker containers ({observation.docker.containers.length})
+          Docker containers ({observations.length > 0 && observations[0].docker.containers.length})
         </CardTitle>
       </CardHeader>
       <CardContent className="pl-2">
@@ -51,7 +76,7 @@ export function Docker({ ...props }) {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {(observation.docker.containers ?? []).map((container: any) => (
+            {observations.length > 0 && (observations[0].docker.containers ?? []).map((container: any) => (
               <TableRow key={container.image}>
                 <TableCell className="font-medium text-xs">
                   {container.name}

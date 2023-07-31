@@ -2,8 +2,28 @@
 
 import { Bar, BarChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 
-export function Overview({ ...props }) {
-  const { observations } = props;
+import { useState, useEffect } from "react";
+import { getObservations } from "../../app/services/observations";
+import { getInstallations } from "../../app/services/installations";
+
+export function Overview() {
+  const [installations, setInstallations] = useState<any[]>([]);
+  const [installation, setInstallation] = useState<any>([]);
+  const [observations, setObservations] = useState<any[]>([]);
+
+    useEffect(() => {
+    const fetchInstallations = async () => {
+      const installations = await (await getInstallations()).json();
+
+      const sorted = installations.body.items.sort((b: any, a: any) => (new Date(a.last_agent_connection).getTime() - new Date(b.last_agent_connection).getTime()))
+
+      setInstallations(sorted)
+
+      const observations = await (await getObservations(sorted[0].id)).json();
+      setObservations(observations.body.items)
+    }
+    fetchInstallations();
+  }, []);
 
   const cpuIssueCount = observations.reduce((a: any, i: any) => {
     return a + (i.dangers.includes("high_cpu_usage") ? 1 : 0);

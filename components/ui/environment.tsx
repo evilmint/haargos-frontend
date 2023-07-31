@@ -1,3 +1,5 @@
+"use client";
+
 import {
   Avatar,
   AvatarFallback,
@@ -16,8 +18,34 @@ import {
   TableRow,
 } from "@/components/ui/table";
 
+import { getObservations } from "../../app/services/observations";
+import { getInstallations } from "../../app/services/installations";
+import { useState, useEffect } from "react";
+
 export function Environment({ ...props }) {
-  const { observation } = props;
+  const [installations, setInstallations] = useState<any>([]);
+  const [installation, setInstallation] = useState<any>([]);
+  const [logs, setLogs] = useState<any[]>([]);
+  const [highestStorage, setHighestStorage] = useState<any>(null);
+  const [observations, setObservations] = useState<any[]>([]);
+
+  useEffect(() => {
+    const fetchInstallations = async () => {
+      const installations = await (await getInstallations()).json();
+
+      const sorted = installations.body.items.sort(
+        (b: any, a: any) =>
+          new Date(a.last_agent_connection).getTime() -
+          new Date(b.last_agent_connection).getTime()
+      );
+
+      setInstallations(sorted);
+
+      const observations = await (await getObservations(sorted[0].id)).json();
+      setObservations(observations.body.items);
+    };
+    fetchInstallations();
+  }, []);
 
   return (
     <Table>
@@ -31,14 +59,16 @@ export function Environment({ ...props }) {
           </TableHeader>
           <TableBody>
           
-              <TableRow key={observation.environment.cpu.model_name}>
+          {observations.length > 0 && 
+              <TableRow key={observations[0].environment.cpu.model_name}>
                 <TableCell className="font-medium text-xs">
-                  {observation.environment.cpu.model_name}
+                  {observations[0].environment.cpu.model_name}
                 </TableCell>
-                <TableCell className="text-xs">{observation.environment.cpu.architecture}</TableCell>
-                <TableCell className="text-xs">{observation.environment.cpu.load}</TableCell>
-                <TableCell className="text-xs">{observation.environment.cpu.cpu_mhz}</TableCell>
+                <TableCell className="text-xs">{observations[0].environment.cpu.architecture}</TableCell>
+                <TableCell className="text-xs">{observations[0].environment.cpu.load}</TableCell>
+                <TableCell className="text-xs">{observations[0].environment.cpu.cpu_mhz}</TableCell>
               </TableRow>
+}
 
           </TableBody>
         </Table>

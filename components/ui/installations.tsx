@@ -1,3 +1,5 @@
+"use client";
+
 import {
   Avatar,
   AvatarFallback,
@@ -7,8 +9,29 @@ import TimeAgo from "react-timeago";
 import { Button } from "@/registry/new-york/ui/button";
 import { useRouter } from 'next/navigation'
 
-export function Installations({ ...props }) {
-  const { installations } = props;
+import { useState, useEffect } from "react";
+import { getObservations } from "../../app/services/observations";
+import { getInstallations } from "../../app/services/installations";
+
+export function Installations() {
+  const [installations, setInstallations] = useState<any[]>([]);
+  const [installation, setInstallation] = useState<any>([]);
+  const [observations, setObservations] = useState<any[]>([]);
+
+    useEffect(() => {
+    const fetchInstallations = async () => {
+      const installations = await (await getInstallations()).json();
+
+      const sorted = installations.body.items.sort((b: any, a: any) => (new Date(a.last_agent_connection).getTime() - new Date(b.last_agent_connection).getTime()))
+
+      setInstallations(sorted)
+
+      const observations = await (await getObservations(sorted[0].id)).json();
+      setObservations(observations.body.items)
+    }
+    fetchInstallations();
+  }, []);
+
   const router = useRouter()
 
   return installations.map((installation: any) => {

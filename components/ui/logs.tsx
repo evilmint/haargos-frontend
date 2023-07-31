@@ -15,7 +15,13 @@ import {
   TabsList,
   TabsTrigger,
 } from "@/registry/new-york/ui/tabs";
-import { Installation, InstallationApiResponse, Log, Observation, ObservationApiResponse } from "../../app/types.d";
+import {
+  Installation,
+  InstallationApiResponse,
+  Log,
+  Observation,
+  ObservationApiResponse,
+} from "../../app/types.d";
 import { getObservations } from "../../app/services/observations";
 import { getInstallations } from "../../app/services/installations";
 
@@ -36,15 +42,18 @@ export function Logs({ ...params }) {
 
   useEffect(() => {
     const fetchInstallations = async () => {
-      const installations: any = await (await getInstallations()).json() as InstallationApiResponse;
+      const installations: any = (await (
+        await getInstallations()
+      ).json()) as InstallationApiResponse;
 
       const installation = installations.body.items.filter(
         (i: any) => i.id == installationId
-      )[0];      
+      )[0];
 
-      const observations = await (await getObservations(installationId)).json() as ObservationApiResponse;
-      setObservations(observations.body.items);
- 
+      const observations = (await (
+        await getObservations(installationId)
+      ).json()) as ObservationApiResponse;
+
       setObservations(observations.body.items);
       setInstallation(installation);
       setInstallations(installations.body.items);

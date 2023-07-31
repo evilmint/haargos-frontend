@@ -38,7 +38,9 @@ export function Storage({ ...props }) {
 
       setInstallations(sorted);
 
-      const observations = await (await getObservations(sorted[0].id)).json() as ObservationApiResponse;
+      const observations = (await (
+        await getObservations(sorted[0].id)
+      ).json()) as ObservationApiResponse;
       setObservations(observations.body.items);
 
       let volumesUnsorted = observations.body.items[0].environment.storage.sort(

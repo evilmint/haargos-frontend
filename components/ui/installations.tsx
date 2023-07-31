@@ -7,7 +7,12 @@ import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import { getObservations } from "../../app/services/observations";
 import { getInstallations } from "../../app/services/installations";
-import { Installation, InstallationApiResponse, Observation, ObservationApiResponse } from "@/app/types";
+import {
+  Installation,
+  InstallationApiResponse,
+  Observation,
+  ObservationApiResponse,
+} from "@/app/types";
 
 export function Installations() {
   const [installations, setInstallations] = useState<Installation[]>([]);
@@ -15,7 +20,9 @@ export function Installations() {
 
   useEffect(() => {
     const fetchInstallations = async () => {
-      const installations = await (await getInstallations()).json() as InstallationApiResponse;
+      const installations = (await (
+        await getInstallations()
+      ).json()) as InstallationApiResponse;
 
       const sorted = installations.body.items.sort(
         (b: any, a: any) =>
@@ -25,7 +32,9 @@ export function Installations() {
 
       setInstallations(sorted);
 
-      const observations = await (await getObservations(sorted[0].id)).json() as ObservationApiResponse;
+      const observations = (await (
+        await getObservations(sorted[0].id)
+      ).json()) as ObservationApiResponse;
       setObservations(observations.body.items);
     };
     fetchInstallations();

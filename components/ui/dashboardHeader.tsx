@@ -9,7 +9,12 @@ import {
 import { useState, useEffect } from "react";
 import { getObservations } from "../../app/services/observations";
 import { getInstallations } from "../../app/services/installations";
-import { Installation, InstallationApiResponse, Observation, ObservationApiResponse } from "@/app/types";
+import {
+  Installation,
+  InstallationApiResponse,
+  Observation,
+  ObservationApiResponse,
+} from "@/app/types";
 
 export function DashboardHeader() {
   const [installations, setInstallations] = useState<Installation[]>([]);
@@ -17,7 +22,9 @@ export function DashboardHeader() {
 
   useEffect(() => {
     const fetchInstallations = async () => {
-      const installations = await (await getInstallations()).json() as InstallationApiResponse;
+      const installations = (await (
+        await getInstallations()
+      ).json()) as InstallationApiResponse;
 
       const sorted = installations.body.items.sort(
         (b: any, a: any) =>

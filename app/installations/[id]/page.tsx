@@ -1,6 +1,6 @@
 import Image from "next/image";
 
-import { Logs } from "@/components/ui/logs";
+// import { Logs } from "@/components/ui/logs";
 // import { Storage } from "@/components/ui/storage";
 // import { Docker } from "@/components/ui/docker";
 // import { Environment } from "@/components/ui/environment";
@@ -23,7 +23,7 @@ import {
 import { MainNav } from "@/components/ui/main-nav";
 import { Installations } from "@/components/ui/installations";
 import { UserNav } from "@/components/ui/user-nav";
-import { DashboardHeaderInstallation } from "@/components/ui/dashboardHeaderInstallation";
+// import { DashboardHeaderInstallation } from "@/components/ui/dashboardHeaderInstallation";
 
 export default function DashboardInstallationPage({ params }: { params: { id: string } }) {
 
@@ -66,7 +66,7 @@ export default function DashboardInstallationPage({ params }: { params: { id: st
             </TabsList>
 
             <TabsContent value="overview" className="space-y-4">
-              <DashboardHeaderInstallation />
+              {/* <DashboardHeaderInstallation /> */}
               <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
                 <Card className="col-span-7">
                   <CardHeader>

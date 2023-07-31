@@ -13,5 +13,5 @@ export function getUserMe() {
   return fetch(
     "https://api.haargos.smartrezydencja.pl/users/me",
     requestOptions
-  )
+  );
 }

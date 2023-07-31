@@ -11,7 +11,8 @@ export function getObservations(installationId) {
   };
 
   return fetch(
-    "https://api.haargos.smartrezydencja.pl/observations?installation_id=" + installationId,
+    "https://api.haargos.smartrezydencja.pl/observations?installation_id=" +
+      installationId,
     requestOptions
-  )
+  );
 }

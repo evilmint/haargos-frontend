@@ -3,23 +3,15 @@
 import {
   Table,
   TableBody,
-  TableCaption,
   TableCell,
   TableHead,
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import {
-  Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger,
-} from "@/registry/new-york/ui/tabs";
-import { Log } from "../../app/types";
+
 import {
   Card,
   CardContent,
-  CardDescription,
   CardHeader,
   CardTitle,
 } from "@/registry/new-york/ui/card";
@@ -29,11 +21,8 @@ import { getObservations } from "../../app/services/observations";
 import { getInstallations } from "../../app/services/installations";
 import { useState, useEffect } from "react";
 
-export function Docker({ ...props }) {
-  const [installations, setInstallations] = useState<any>([]);
-  const [installation, setInstallation] = useState<any>([]);
-  const [logs, setLogs] = useState<any[]>([]);
-  const [highestStorage, setHighestStorage] = useState<any>(null);
+export function Docker() {
+  const [, setInstallations] = useState<any>([]);
   const [observations, setObservations] = useState<any[]>([]);
 
   useEffect(() => {
@@ -58,7 +47,8 @@ export function Docker({ ...props }) {
     <Card className="col-span-8">
       <CardHeader>
         <CardTitle>
-          Docker containers ({observations.length > 0 && observations[0].docker.containers.length})
+          Docker containers (
+          {observations.length > 0 && observations[0].docker.containers.length})
         </CardTitle>
       </CardHeader>
       <CardContent className="pl-2">
@@ -76,34 +66,39 @@ export function Docker({ ...props }) {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {observations.length > 0 && (observations[0].docker.containers ?? []).map((container: any) => (
-              <TableRow key={container.image}>
-                <TableCell className="font-medium text-xs">
-                  {container.name}
-                </TableCell>
-                <TableCell className="text-xs">{container.image}</TableCell>
-                <TableCell className="text-xs">
-                  {container.running ? "Yes" : "No"}
-                </TableCell>
-                <TableCell className="text-xs">
-                 <SVGWithText
-                    showSVG={container.restarting}
-                    textWithSVG="Yes"
-                    fallbackText="No"
-                  />
-                </TableCell>
-                <TableCell className="text-xs">
-                  {new Date(container.started_at).toLocaleString()}
-                </TableCell>
-                <TableCell className="text-xs">
-                  {new Date(container.finished_at).getUTCSeconds() > 0
-                    ? new Date(container.finished_at).toLocaleString()
-                    : "-"}
-                </TableCell>
-                <TableCell className="text-xs">{container.state}</TableCell>
-                <TableCell className="text-xs">{container.status}</TableCell>
-              </TableRow>
-            ))}
+            {observations.length > 0 &&
+              (observations[0].docker.containers ?? []).map(
+                (container: any) => (
+                  <TableRow key={container.image}>
+                    <TableCell className="font-medium text-xs">
+                      {container.name}
+                    </TableCell>
+                    <TableCell className="text-xs">{container.image}</TableCell>
+                    <TableCell className="text-xs">
+                      {container.running ? "Yes" : "No"}
+                    </TableCell>
+                    <TableCell className="text-xs">
+                      <SVGWithText
+                        showSVG={container.restarting}
+                        textWithSVG="Yes"
+                        fallbackText="No"
+                      />
+                    </TableCell>
+                    <TableCell className="text-xs">
+                      {new Date(container.started_at).toLocaleString()}
+                    </TableCell>
+                    <TableCell className="text-xs">
+                      {new Date(container.finished_at).getUTCSeconds() > 0
+                        ? new Date(container.finished_at).toLocaleString()
+                        : "-"}
+                    </TableCell>
+                    <TableCell className="text-xs">{container.state}</TableCell>
+                    <TableCell className="text-xs">
+                      {container.status}
+                    </TableCell>
+                  </TableRow>
+                )
+              )}
           </TableBody>
         </Table>
       </CardContent>

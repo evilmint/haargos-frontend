@@ -1,7 +1,7 @@
 export interface Log {
-    raw: string;
-    time: string;
-    type: string;
-    thread: string;
-    log: string;
+  raw: string;
+  time: string;
+  type: string;
+  thread: string;
+  log: string;
 }

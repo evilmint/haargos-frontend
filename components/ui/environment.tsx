@@ -1,17 +1,8 @@
 "use client";
 
 import {
-  Avatar,
-  AvatarFallback,
-  AvatarImage,
-} from "@/registry/new-york/ui/avatar";
-import TimeAgo from "react-timeago";
-import { Button } from "@/registry/new-york/ui/button";
-import { useRouter } from "next/navigation";
-import {
   Table,
   TableBody,
-  TableCaption,
   TableCell,
   TableHead,
   TableHeader,
@@ -22,11 +13,8 @@ import { getObservations } from "../../app/services/observations";
 import { getInstallations } from "../../app/services/installations";
 import { useState, useEffect } from "react";
 
-export function Environment({ ...props }) {
-  const [installations, setInstallations] = useState<any>([]);
-  const [installation, setInstallation] = useState<any>([]);
-  const [logs, setLogs] = useState<any[]>([]);
-  const [highestStorage, setHighestStorage] = useState<any>(null);
+export function Environment() {
+  const [, setInstallations] = useState<any>([]);
   const [observations, setObservations] = useState<any[]>([]);
 
   useEffect(() => {
@@ -49,28 +37,32 @@ export function Environment({ ...props }) {
 
   return (
     <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead className="">Model name</TableHead>
-              <TableHead>Architecture</TableHead>
-              <TableHead>Load</TableHead>
-              <TableHead>MHz</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-          
-          {observations.length > 0 && 
-              <TableRow key={observations[0].environment.cpu.model_name}>
-                <TableCell className="font-medium text-xs">
-                  {observations[0].environment.cpu.model_name}
-                </TableCell>
-                <TableCell className="text-xs">{observations[0].environment.cpu.architecture}</TableCell>
-                <TableCell className="text-xs">{observations[0].environment.cpu.load}</TableCell>
-                <TableCell className="text-xs">{observations[0].environment.cpu.cpu_mhz}</TableCell>
-              </TableRow>
-}
-
-          </TableBody>
-        </Table>
+      <TableHeader>
+        <TableRow>
+          <TableHead className="">Model name</TableHead>
+          <TableHead>Architecture</TableHead>
+          <TableHead>Load</TableHead>
+          <TableHead>MHz</TableHead>
+        </TableRow>
+      </TableHeader>
+      <TableBody>
+        {observations.length > 0 && (
+          <TableRow key={observations[0].environment.cpu.model_name}>
+            <TableCell className="font-medium text-xs">
+              {observations[0].environment.cpu.model_name}
+            </TableCell>
+            <TableCell className="text-xs">
+              {observations[0].environment.cpu.architecture}
+            </TableCell>
+            <TableCell className="text-xs">
+              {observations[0].environment.cpu.load}
+            </TableCell>
+            <TableCell className="text-xs">
+              {observations[0].environment.cpu.cpu_mhz}
+            </TableCell>
+          </TableRow>
+        )}
+      </TableBody>
+    </Table>
   );
 }

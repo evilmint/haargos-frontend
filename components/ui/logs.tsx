@@ -18,8 +18,6 @@ import {
 import { Log } from "../../app/types.d";
 import { getObservations } from "../../app/services/observations";
 import { getInstallations } from "../../app/services/installations";
-import { getUserMe } from "../../app/services/users";
-import { useRouter } from "next/navigation";
 
 import { useState, useEffect } from "react";
 
@@ -28,14 +26,12 @@ function wrapSquareBracketsWithEm(inputString: string) {
   return inputString.replace(regex, '<p class="text-xs">[$1]</p>');
 }
 
-
 export function Logs({ ...params }) {
-  const [observations, setObservations] = useState<any[]>([]);
-  const [user, setUser] = useState<any>([]);
-  const [installations, setInstallations] = useState<any>([]);
-  const [installation, setInstallation] = useState<any>([]);
+  const [, setObservations] = useState<any[]>([]);
+  const [, setInstallations] = useState<any>([]);
+  const [, setInstallation] = useState<any>([]);
   const [logs, setLogs] = useState<any[]>([]);
-  const [highestStorage, setHighestStorage] = useState<any>(null);
+  const [, setHighestStorage] = useState<any>(null);
 
   const { installationId } = params;
 
@@ -137,7 +133,6 @@ export function Logs({ ...params }) {
     fetchInstallations();
   }, []);
 
-
   return (
     <Tabs defaultValue="logtable" className="space-y-4">
       <h3 className="inline ml-4 font-semibold">Issues ({logs.length})</h3>
@@ -180,9 +175,7 @@ export function Logs({ ...params }) {
             <div className="flex justify-between items-center mb-2"></div>
             <div className="overflow-x-auto">
               <pre id="code" className="text-gray-300">
-                <code>
-                  {logs.map((l: Log) => l.raw).join("\n")}
-                </code>
+                <code>{logs.map((l: Log) => l.raw).join("\n")}</code>
               </pre>
             </div>
           </div>

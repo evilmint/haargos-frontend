@@ -9,19 +9,10 @@ import {
 import { useState, useEffect } from "react";
 import { getObservations } from "../../app/services/observations";
 import { getInstallations } from "../../app/services/installations";
-//import { getUserMe } from "../../services/users";
-
-function wrapSquareBracketsWithEm(inputString: string) {
-  const regex = /\[([^\]]+)\]/g;
-  return inputString.replace(regex, '<p class="text-xs">[$1]</p>');
-}
 
 export function DashboardHeader() {
   const [installations, setInstallations] = useState<any>([]);
-  const [installation, setInstallation] = useState<any>([]);
-  const [logs, setLogs] = useState<any[]>([]);
-  const [highestStorage, setHighestStorage] = useState<any>(null);
-  const [observations, setObservations] = useState<any[]>([]);
+  const [, setObservations] = useState<any[]>([]);
 
   useEffect(() => {
     const fetchInstallations = async () => {

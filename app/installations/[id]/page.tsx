@@ -1,9 +1,9 @@
 import Image from "next/image";
 
 import { Logs } from "@/components/ui/logs";
-import { Storage } from "@/components/ui/storage";
-import { Docker } from "@/components/ui/docker";
-import { Environment } from "@/components/ui/environment";
+// import { Storage } from "@/components/ui/storage";
+// import { Docker } from "@/components/ui/docker";
+// import { Environment } from "@/components/ui/environment";
 
 import {
   Card,
@@ -84,7 +84,7 @@ export default function DashboardInstallationPage({ params }: { params: { id: st
                 </Card>
               </div>
             </TabsContent>
-
+{/* 
             <TabsContent value="environment" className="space-y-4">
               <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
                 <Card className="col-span-7">
@@ -124,7 +124,7 @@ export default function DashboardInstallationPage({ params }: { params: { id: st
 
                 <Docker />
               </div>
-            </TabsContent>
+            </TabsContent> */}
           </Tabs>
         </div>
       </div>

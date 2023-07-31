@@ -15,7 +15,7 @@ import {
   TabsList,
   TabsTrigger,
 } from "@/registry/new-york/ui/tabs";
-import { Log } from "../../app/types.d";
+import { Installation, InstallationApiResponse, Log, Observation, ObservationApiResponse } from "../../app/types.d";
 import { getObservations } from "../../app/services/observations";
 import { getInstallations } from "../../app/services/installations";
 
@@ -27,71 +27,24 @@ function wrapSquareBracketsWithEm(inputString: string) {
 }
 
 export function Logs({ ...params }) {
-  const [, setObservations] = useState<any[]>([]);
-  const [, setInstallations] = useState<any>([]);
-  const [, setInstallation] = useState<any>([]);
+  const [, setObservations] = useState<Observation[]>([]);
+  const [, setInstallations] = useState<Installation[]>([]);
+  const [, setInstallation] = useState<Installation | undefined>(undefined);
   const [logs, setLogs] = useState<any[]>([]);
-  const [, setHighestStorage] = useState<any>(null);
 
   const { installationId } = params;
 
   useEffect(() => {
     const fetchInstallations = async () => {
-      const installations: any = await (await getInstallations()).json();
+      const installations: any = await (await getInstallations()).json() as InstallationApiResponse;
 
       const installation = installations.body.items.filter(
         (i: any) => i.id == installationId
-      )[0];
-      const observations = await (await getObservations(installationId)).json();
-      const itemsArray = observations.body.items;
+      )[0];      
 
-      // Function to find the storage entry with the highest use percentage in an array
-      function findHighestUseStorage(storageArray: any) {
-        let highestUsePercentage = -1;
-        let highestUseStorage = null;
-
-        storageArray.forEach((storage: any) => {
-          const usePercentage = parseInt(
-            storage.use_percentage.replace("%", "")
-          );
-          if (usePercentage > highestUsePercentage) {
-            highestUsePercentage = usePercentage;
-            highestUseStorage = storage;
-          }
-        });
-
-        return highestUseStorage;
-      }
-
-      // Initialize variables to store the overall highest use storage
-      let overallHighestUseStorage: any = null;
-      let overallHighestUsePercentage = -1;
-
-      // Loop through all items and find the highest use storage
-      itemsArray.forEach((item: any) => {
-        const storageArray = item.environment.storage;
-        const highestUseStorage: any = findHighestUseStorage(storageArray);
-
-        if (highestUseStorage) {
-          const highestUsePercentage = parseInt(
-            highestUseStorage.use_percentage.replace("%", "")
-          );
-
-          if (highestUsePercentage > overallHighestUsePercentage) {
-            overallHighestUsePercentage = highestUsePercentage;
-            overallHighestUseStorage = highestUseStorage;
-          }
-        }
-      });
-
-      if (overallHighestUseStorage != null) {
-        setHighestStorage(
-          overallHighestUseStorage.name +
-            " " +
-            overallHighestUseStorage.use_percentage
-        );
-      }
-
+      const observations = await (await getObservations(installationId)).json() as ObservationApiResponse;
+      setObservations(observations.body.items);
+ 
       setObservations(observations.body.items);
       setInstallation(installation);
       setInstallations(installations.body.items);

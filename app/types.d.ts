@@ -1,7 +1,96 @@
-export interface Log {
+interface Log {
   raw: string;
   time: string;
   type: string;
   thread: string;
   log: string;
 }
+
+interface Environment {
+  cpu: {
+    model_name: string;
+    load: number;
+    cpu_mhz: string;
+    architecture: string;
+  };
+  memory: {
+    available: number;
+    shared: number;
+    total: number;
+    buff_cache: number;
+    used: number;
+    free: number;
+  };
+  storage: Array<{
+    name: string;
+    available: string;
+    use_percentage: string;
+    used: string;
+    size: string;
+    mounted_on: string;
+  }>;
+}
+
+interface DockerContainer {
+  running: boolean;
+  image: string;
+  restarting: boolean;
+  finished_at: string;
+  name: string;
+  started_at: string;
+  state: string;
+  status: string;
+}
+
+interface Observation {
+  environment: Environment;
+  logs: string;
+  agent_version: string;
+  docker: {
+    containers: DockerContainer[];
+  };
+  installation_id: string;
+  userId: string;
+  timestamp: string;
+  dangers: string[];
+  id: string;
+}
+
+interface ObservationApiResponse {
+  body: {
+    items: Observation[];
+  };
+}
+
+interface InstallationUrls {
+  instance: string;
+}
+
+interface Installation {
+  urls: InstallationUrls;
+  healthy: boolean;
+  userId: string;
+  issues: string[];
+  notes: string;
+  last_agent_connection: string;
+  id: string;
+  name: string;
+}
+
+interface InstallationBody {
+  items: Installation[];
+}
+
+interface InstallationApiResponse {
+  body: InstallationBody;
+}
+
+export {
+  InstallationApiResponse,
+  Installation,
+  ObservationApiResponse,
+  Log,
+  Environment,
+  DockerContainer,
+  Observation,
+};

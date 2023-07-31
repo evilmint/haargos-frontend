@@ -5,11 +5,11 @@ import { Bar, BarChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recha
 import { useState, useEffect } from "react";
 import { getObservations } from "../../app/services/observations";
 import { getInstallations } from "../../app/services/installations";
+import { Observation, ObservationApiResponse } from "@/app/types";
 
 export function Overview() {
-  const [installations, setInstallations] = useState<any[]>([]);
-  const [installation, setInstallation] = useState<any>([]);
-  const [observations, setObservations] = useState<any[]>([]);
+  const [, setInstallations] = useState<any[]>([]);
+  const [observations, setObservations] = useState<Observation[]>([]);
 
     useEffect(() => {
     const fetchInstallations = async () => {
@@ -19,8 +19,8 @@ export function Overview() {
 
       setInstallations(sorted)
 
-      const observations = await (await getObservations(sorted[0].id)).json();
-      setObservations(observations.body.items)
+      const observations = await (await getObservations(sorted[0].id)).json() as ObservationApiResponse;
+      setObservations(observations.body.items);
     }
     fetchInstallations();
   }, []);

@@ -7,18 +7,19 @@ import {
   CardTitle,
 } from "@/registry/new-york/ui/card";
 import { useState, useEffect } from "react";
+import { ObservationApiResponse, Observation, Installation, InstallationApiResponse } from "../../app/types.d";
 import { getObservations } from "../../app/services/observations";
 import { getInstallations } from "../../app/services/installations";
 import TimeAgo from "react-timeago";
 
 export function DashboardHeaderInstallation() {
-  const [, setInstallations] = useState<any>([]);
+  const [, setInstallations] = useState<Installation[]>([]);
   const [highestStorage, setHighestStorage] = useState<any>(null);
-  const [observations, setObservations] = useState<any[]>([]);
+  const [observations, setObservations] = useState<Observation[]>();
 
   useEffect(() => {
     const fetchInstallations = async () => {
-      const installations = await (await getInstallations()).json();
+      const installations = await (await getInstallations()).json() as InstallationApiResponse;
 
       const sorted = installations.body.items.sort(
         (b: any, a: any) =>
@@ -28,7 +29,7 @@ export function DashboardHeaderInstallation() {
 
       setInstallations(sorted);
 
-      const observations = await (await getObservations(sorted[0].id)).json();
+      const observations = await (await getObservations(sorted[0].id)).json() as ObservationApiResponse;
       setObservations(observations.body.items);
 
       // Function to find the storage entry with the highest use percentage in an array
@@ -104,7 +105,7 @@ export function DashboardHeaderInstallation() {
         </CardHeader>
         <CardContent>
           <div className="text-2xl font-bold">
-            {observations.length > 0 ? observations[0].agent_version : "n/a"}
+            {observations && observations.length > 0 ? observations[0].agent_version : "n/a"}
           </div>
         </CardContent>
       </Card>
@@ -129,7 +130,7 @@ export function DashboardHeaderInstallation() {
         </CardHeader>
         <CardContent>
           <div className="text-2xl font-bold">
-            {observations.length > 0
+            {observations && observations.length > 0
               ? Math.floor(
                   (observations[0].environment.memory.used /
                     observations[0].environment.memory.total) *
@@ -187,7 +188,7 @@ export function DashboardHeaderInstallation() {
         </CardHeader>
         <CardContent>
           <div className="text-2xl font-bold">
-            {observations[0]?.environment.cpu.architecture ?? "n/a"}
+            {(observations && observations[0]?.environment.cpu.architecture) ?? "n/a"}
           </div>
         </CardContent>
       </Card>
@@ -209,8 +210,8 @@ export function DashboardHeaderInstallation() {
         </CardHeader>
         <CardContent>
           <div className="text-2xl font-bold">
-            {observations.length > 0 ? (
-              <TimeAgo date={observations[0].timestamp} />
+            {(observations && observations?.length > 0) ? (
+              <TimeAgo date={observations[0]?.timestamp} />
             ) : (
               "n/a"
             )}

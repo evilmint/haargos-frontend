@@ -20,10 +20,11 @@ import { SVGWithText } from "./SVGWithText";
 import { getObservations } from "../../app/services/observations";
 import { getInstallations } from "../../app/services/installations";
 import { useState, useEffect } from "react";
+import { Installation, Observation, ObservationApiResponse } from "@/app/types";
 
 export function Docker() {
-  const [, setInstallations] = useState<any>([]);
-  const [observations, setObservations] = useState<any[]>([]);
+  const [, setInstallations] = useState<Installation[]>([]);
+  const [observations, setObservations] = useState<Observation[]>([]);
 
   useEffect(() => {
     const fetchInstallations = async () => {
@@ -37,7 +38,7 @@ export function Docker() {
 
       setInstallations(sorted);
 
-      const observations = await (await getObservations(sorted[0].id)).json();
+      const observations = await (await getObservations(sorted[0].id)).json() as ObservationApiResponse;
       setObservations(observations.body.items);
     };
     fetchInstallations();

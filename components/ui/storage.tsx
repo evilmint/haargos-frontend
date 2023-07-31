@@ -3,23 +3,16 @@
 import {
   Table,
   TableBody,
-  TableCaption,
   TableCell,
   TableHead,
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import {
-  Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger,
-} from "@/registry/new-york/ui/tabs";
-import { Log } from "../../app/types";
+
+import { Observation, ObservationApiResponse } from "../../app/types";
 import {
   Card,
   CardContent,
-  CardDescription,
   CardHeader,
   CardTitle,
 } from "@/registry/new-york/ui/card";
@@ -29,11 +22,8 @@ import { getInstallations } from "../../app/services/installations";
 import { useState, useEffect } from "react";
 
 export function Storage({ ...props }) {
-  const [installations, setInstallations] = useState<any>([]);
-  const [installation, setInstallation] = useState<any>([]);
-  const [logs, setLogs] = useState<any[]>([]);
-  const [highestStorage, setHighestStorage] = useState<any>(null);
-  const [observations, setObservations] = useState<any[]>([]);
+  const [, setInstallations] = useState<any>([]);
+  const [, setObservations] = useState<Observation[]>([]);
   const [volumes, setVolumes] = useState<any[]>([]);
 
   useEffect(() => {
@@ -48,7 +38,7 @@ export function Storage({ ...props }) {
 
       setInstallations(sorted);
 
-      const observations = await (await getObservations(sorted[0].id)).json();
+      const observations = await (await getObservations(sorted[0].id)).json() as ObservationApiResponse;
       setObservations(observations.body.items);
 
       let volumesUnsorted = observations.body.items[0].environment.storage.sort(

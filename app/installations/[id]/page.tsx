@@ -1,9 +1,5 @@
 import Image from "next/image";
 
-import { getObservations } from "../../services/observations";
-import { getInstallations } from "../../services/installations";
-import { getUserMe } from "../../services/users";
-import { useRouter } from "next/navigation";
 import { Logs } from "@/components/ui/logs";
 import { Storage } from "@/components/ui/storage";
 import { Docker } from "@/components/ui/docker";
@@ -17,19 +13,19 @@ import {
   CardTitle,
 } from "@/registry/new-york/ui/card";
 
-import { Log } from "../../types.d";
 import {
   Tabs,
   TabsContent,
   TabsList,
   TabsTrigger,
 } from "@/registry/new-york/ui/tabs";
+
 import { MainNav } from "@/components/ui/main-nav";
 import { Installations } from "@/components/ui/installations";
 import { UserNav } from "@/components/ui/user-nav";
 import { DashboardHeaderInstallation } from "@/components/ui/dashboardHeaderInstallation";
 
-export default function DashboardPage({ params }: { params: { id: string } }) {
+export default function DashboardInstallationPage({ params }: { params: { id: string } }) {
 
   return (
     <>

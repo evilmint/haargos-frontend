@@ -46,6 +46,7 @@
     "zod": "^3.21.4"
   },
   "devDependencies": {
+    "@netlify/plugin-nextjs": "^4.37.4",
     "@types/react-timeago": "^4.1.3"
   }
 }

@@ -79,7 +79,7 @@ export default function DashboardInstallationPage({ params }: { params: { id: st
                 </Card>
                 <Card className="col-span-8">
                   <CardContent className="pl-2">
-                    <Logs installationId={params.id} />
+                    {/* <Logs installationId={params.id} /> */}
                   </CardContent>
                 </Card>
               </div>

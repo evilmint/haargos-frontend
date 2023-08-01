@@ -9,7 +9,6 @@ import {
   TableRow,
 } from "@/components/ui/table";
 
-import { Observation, ObservationApiResponse } from "../../app/types";
 import {
   Card,
   CardContent,
@@ -17,63 +16,21 @@ import {
   CardTitle,
 } from "@/registry/new-york/ui/card";
 
-import { getObservations } from "../../app/services/observations";
-import { getInstallations } from "../../app/services/installations";
 import { useState, useEffect } from "react";
+import { useInstallationStore } from "@/app/services/stores";
 
-export function Storage({ ...props }) {
-  const [, setInstallations] = useState<any>([]);
-  const [, setObservations] = useState<Observation[]>([]);
-  const [volumes, setVolumes] = useState<any[]>([]);
+export function Storage() {
+  const observations = useInstallationStore((state) => state.observations);
+  const fetchInstallations = useInstallationStore((state) => state.fetchInstallations);
 
   useEffect(() => {
-    const fetchInstallations = async () => {
-      const installations = await (await getInstallations()).json();
-
-      const sorted = installations.body.items.sort(
-        (b: any, a: any) =>
-          new Date(a.last_agent_connection).getTime() -
-          new Date(b.last_agent_connection).getTime()
-      );
-
-      setInstallations(sorted);
-
-      const observations = (await (
-        await getObservations(sorted[0].id)
-      ).json()) as ObservationApiResponse;
-      setObservations(observations.body.items);
-
-      let volumesUnsorted = observations.body.items[0].environment.storage.sort(
-        (a: any, b: any) =>
-          Number(b.use_percentage.slice(0, -1)) -
-          Number(a.use_percentage.slice(0, -1))
-      );
-
-      let volumes = [];
-      const map = new Map();
-      for (const item of volumesUnsorted) {
-        if (!map.has(item.mounted_on)) {
-          map.set(item.mounted_on, true); // set any value to Map
-          volumes.push({
-            name: item.name,
-            available: item.available,
-            use_percentage: item.use_percentage,
-            used: item.used,
-            size: item.size,
-            mounted_on: item.mounted_on,
-          });
-        }
-      }
-
-      setVolumes(volumes);
-    };
-    fetchInstallations();
-  }, []);
+    fetchInstallations()
+  }, [fetchInstallations]);
 
   return (
     <Card className="col-span-8">
       <CardHeader>
-        <CardTitle>Storage ({volumes.length})</CardTitle>
+        <CardTitle>Storage ({observations[0].environment.storage.length})</CardTitle>
       </CardHeader>
       <CardContent className="pl-2">
         <Table>
@@ -88,18 +45,18 @@ export function Storage({ ...props }) {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {(volumes ?? []).map((volume: any) => (
-              <TableRow key={volume.mounted_on}>
+            {(observations[0].environment.storage ?? []).map(storage => (
+              <TableRow key={storage.mounted_on}>
                 <TableCell className="font-medium text-xs">
-                  {volume.name}
+                  {storage.name}
                 </TableCell>
-                <TableCell className="text-xs">{volume.available}</TableCell>
+                <TableCell className="text-xs">{storage.available}</TableCell>
                 <TableCell className="text-xs">
-                  {volume.use_percentage}
+                  {storage.use_percentage}
                 </TableCell>
-                <TableCell className="text-xs">{volume.used}</TableCell>
-                <TableCell className="text-xs">{volume.size}</TableCell>
-                <TableCell className="text-xs">{volume.mounted_on}</TableCell>
+                <TableCell className="text-xs">{storage.used}</TableCell>
+                <TableCell className="text-xs">{storage.size}</TableCell>
+                <TableCell className="text-xs">{storage.mounted_on}</TableCell>
               </TableRow>
             ))}
           </TableBody>

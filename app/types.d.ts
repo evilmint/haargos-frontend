@@ -21,14 +21,16 @@ interface Environment {
     used: number;
     free: number;
   };
-  storage: Array<{
-    name: string;
-    available: string;
-    use_percentage: string;
-    used: string;
-    size: string;
-    mounted_on: string;
-  }>;
+  storage: Array<Storage>;
+}
+
+interface Storage {
+  name: string;
+  available: string;
+  use_percentage: string;
+  used: string;
+  size: string;
+  mounted_on: string;
 }
 
 interface DockerContainer {
@@ -85,6 +87,16 @@ interface InstallationApiResponse {
   body: InstallationBody;
 }
 
+interface UserApiResponse {
+  body: User;
+}
+
+interface User {
+  userId: string;
+  full_name: string;
+  email: string;
+}
+
 export {
   InstallationApiResponse,
   Installation,
@@ -93,4 +105,7 @@ export {
   Environment,
   DockerContainer,
   Observation,
+  UserApiResponse,
+  User,
+  Storage
 };

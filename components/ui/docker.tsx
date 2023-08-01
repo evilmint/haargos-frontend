@@ -17,41 +17,25 @@ import {
 } from "@/registry/new-york/ui/card";
 
 import { SVGWithText } from "./SVGWithText";
-import { getObservations } from "../../app/services/observations";
-import { getInstallations } from "../../app/services/installations";
-import { useState, useEffect } from "react";
-import { Installation, Observation, ObservationApiResponse } from "@/app/types";
+import { useEffect } from "react";
+import { useInstallationStore } from "@/app/services/stores";
 
 export function Docker() {
-  const [, setInstallations] = useState<Installation[]>([]);
-  const [observations, setObservations] = useState<Observation[]>([]);
+  const observations = useInstallationStore((state) => state.observations);
+  const fetchInstallations = useInstallationStore(
+    (state) => state.fetchInstallations
+  );
 
   useEffect(() => {
-    const fetchInstallations = async () => {
-      const installations = await (await getInstallations()).json();
-
-      const sorted = installations.body.items.sort(
-        (b: any, a: any) =>
-          new Date(a.last_agent_connection).getTime() -
-          new Date(b.last_agent_connection).getTime()
-      );
-
-      setInstallations(sorted);
-
-      const observations = (await (
-        await getObservations(sorted[0].id)
-      ).json()) as ObservationApiResponse;
-      setObservations(observations.body.items);
-    };
     fetchInstallations();
-  }, []);
-
+  }, [fetchInstallations]);
+  const dockerContainerCount = observations[0]?.docker?.containers?.length || 0;
+  
   return (
     <Card className="col-span-8">
       <CardHeader>
         <CardTitle>
-          Docker containers (
-          {observations.length > 0 && observations[0].docker.containers.length})
+          Docker containers ({dockerContainerCount})
         </CardTitle>
       </CardHeader>
       <CardContent className="pl-2">

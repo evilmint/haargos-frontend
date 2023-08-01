@@ -4,8 +4,8 @@ import {
   Avatar,
   AvatarFallback,
   AvatarImage,
-} from "@/registry/new-york/ui/avatar"
-import { Button } from "@/registry/new-york/ui/button"
+} from "@/registry/new-york/ui/avatar";
+import { Button } from "@/registry/new-york/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -13,62 +13,50 @@ import {
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
-  DropdownMenuShortcut,
   DropdownMenuTrigger,
-} from "@/registry/new-york/ui/dropdown-menu"
-import { getUserMe } from "../../app/services/users";
+} from "@/registry/new-york/ui/dropdown-menu";
 
+import { useUserStore } from "@/app/services/stores";
 import React, { useEffect, useState } from "react";
+import { fullNameInitials } from "@/app/tools";
 
-export function UserNav({ ...props }) {
-  const [user, setUser] = useState<any>();
-  const [installations, setInstallations] = useState<any[]>([]);
+export function UserNav() {
+  const fetchUser = useUserStore(state => state.fetchUser);
+  const user = useUserStore(state => state.user);
 
   useEffect(() => {
-    const fetchUserMe = async () => {
-      const userMe = await (await getUserMe()).json();
-      setUser(userMe.body)
-    }
-    fetchUserMe();
-  }, []);
+    fetchUser();
+  }, [fetchUser]);
 
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button variant="ghost" className="relative h-8 w-8 rounded-full">
           <Avatar className="h-8 w-8">
-            <AvatarImage src="/avatars/01.png" alt="@shadcn" />
-            <AvatarFallback>{ user?.full_name && user.full_name.split(" ").map((x: string[]) => x[0]).slice(0, 2).join("") }</AvatarFallback>
+            <AvatarFallback>
+              {fullNameInitials(user)}
+            </AvatarFallback>
           </Avatar>
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56" align="end" forceMount>
         <DropdownMenuLabel className="font-normal">
           <div className="flex flex-col space-y-1">
-            <p className="text-sm font-medium leading-none">{ user?.full_name }</p>
+            <p className="text-sm font-medium leading-none">
+              {user?.full_name}
+            </p>
             <p className="text-xs leading-none text-muted-foreground">
-              { user?.email }
+              {user?.email}
             </p>
           </div>
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
-          <DropdownMenuItem>
-            Profile
-          </DropdownMenuItem>
-          {/* <DropdownMenuItem>
-            Billing
-          </DropdownMenuItem>
-          <DropdownMenuItem>
-            Settings
-          </DropdownMenuItem> */}
+          <DropdownMenuItem>Profile</DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
-        <DropdownMenuItem>
-          Log out
-          {/* <DropdownMenuShortcut>⇧⌘Q</DropdownMenuShortcut> */}
-        </DropdownMenuItem>
+        <DropdownMenuItem>Log out</DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
-  )
+  );
 }

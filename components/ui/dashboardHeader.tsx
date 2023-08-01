@@ -6,41 +6,19 @@ import {
   CardHeader,
   CardTitle,
 } from "@/registry/new-york/ui/card";
-import { useState, useEffect } from "react";
-import { getObservations } from "../../app/services/observations";
-import { getInstallations } from "../../app/services/installations";
-import {
-  Installation,
-  InstallationApiResponse,
-  Observation,
-  ObservationApiResponse,
-} from "@/app/types";
+import { useEffect } from "react";
+import { useInstallationStore } from "@/app/services/stores";
+import { Installation } from "@/app/types";
 
 export function DashboardHeader() {
-  const [installations, setInstallations] = useState<Installation[]>([]);
-  const [, setObservations] = useState<Observation[]>([]);
+  const installations = useInstallationStore((state) => state.installations);
+  const fetchInstallations = useInstallationStore(
+    (state) => state.fetchInstallations
+  );
 
   useEffect(() => {
-    const fetchInstallations = async () => {
-      const installations = (await (
-        await getInstallations()
-      ).json()) as InstallationApiResponse;
-
-      const sorted = installations.body.items.sort(
-        (b: any, a: any) =>
-          new Date(a.last_agent_connection).getTime() -
-          new Date(b.last_agent_connection).getTime()
-      );
-
-      setInstallations(sorted);
-
-      const observations = (await (
-        await getObservations(sorted[0].id)
-      ).json()) as ObservationApiResponse;
-      setObservations(observations.body.items);
-    };
     fetchInstallations();
-  }, []);
+  }, [fetchInstallations]);
 
   return (
     <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
@@ -67,7 +45,7 @@ export function DashboardHeader() {
         </CardHeader>
         <CardContent>
           <div className="text-2xl font-bold">
-            {installations.reduce((s: any, i: any) => {
+            {installations.reduce((s, i) => {
               return s + (i.healthy ? 1 : 0);
             }, 0)}
           </div>
@@ -98,7 +76,7 @@ export function DashboardHeader() {
         </CardHeader>
         <CardContent>
           <div className="text-2xl font-bold">
-            {installations.reduce((s: any, i: any) => {
+            {installations.reduce((s, i) => {
               return s + (i.healthy ? 0 : 1);
             }, 0)}
           </div>
@@ -129,7 +107,7 @@ export function DashboardHeader() {
         </CardHeader>
         <CardContent>
           <div className="text-2xl font-bold">
-            {installations.reduce((s: any, i: any) => {
+            {installations.reduce((s, i) => {
               return s + (i.issues.length > 0 ? 1 : 0);
             }, 0)}
           </div>
@@ -153,7 +131,7 @@ export function DashboardHeader() {
         </CardHeader>
         <CardContent>
           <div className="text-2xl font-bold">
-            {installations.length > 0 ? installations[0]["name"] : "-"}
+            {installations.length > 0 ? installations[0].name : "-"}
           </div>
         </CardContent>
       </Card>

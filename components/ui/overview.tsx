@@ -1,29 +1,26 @@
 "use client";
 
-import { Bar, BarChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
+import {
+  Bar,
+  BarChart,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis,
+} from "recharts";
 
-import { useState, useEffect } from "react";
-import { getObservations } from "../../app/services/observations";
-import { getInstallations } from "../../app/services/installations";
-import { Observation, ObservationApiResponse } from "@/app/types";
+import { useEffect } from "react";
+import { useInstallationStore } from "@/app/services/stores";
 
 export function Overview() {
-  const [, setInstallations] = useState<any[]>([]);
-  const [observations, setObservations] = useState<Observation[]>([]);
+  const observations = useInstallationStore((state) => state.observations);
+  const fetchInstallations = useInstallationStore(
+    (state) => state.fetchInstallations
+  );
 
-    useEffect(() => {
-    const fetchInstallations = async () => {
-      const installations = await (await getInstallations()).json();
-
-      const sorted = installations.body.items.sort((b: any, a: any) => (new Date(a.last_agent_connection).getTime() - new Date(b.last_agent_connection).getTime()))
-
-      setInstallations(sorted)
-
-      const observations = await (await getObservations(sorted[0].id)).json() as ObservationApiResponse;
-      setObservations(observations.body.items);
-    }
+  useEffect(() => {
     fetchInstallations();
-  }, []);
+  }, [fetchInstallations]);
 
   const cpuIssueCount = observations.reduce((a: any, i: any) => {
     return a + (i.dangers.includes("high_cpu_usage") ? 1 : 0);

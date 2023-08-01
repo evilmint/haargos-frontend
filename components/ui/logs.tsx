@@ -15,85 +15,19 @@ import {
   TabsList,
   TabsTrigger,
 } from "@/registry/new-york/ui/tabs";
-import {
-  Installation,
-  InstallationApiResponse,
-  Log,
-  Observation,
-  ObservationApiResponse,
-} from "../../app/types.d";
-import { getObservations } from "../../app/services/observations";
-import { getInstallations } from "../../app/services/installations";
-
-import { useState, useEffect } from "react";
-
-function wrapSquareBracketsWithEm(inputString: string) {
-  const regex = /\[([^\]]+)\]/g;
-  return inputString.replace(regex, '<p class="text-xs">[$1]</p>');
-}
+import { Log } from "../../app/types.d";
+import { useEffect } from "react";
+import { useInstallationStore } from "@/app/services/stores";
 
 export function Logs({ ...params }) {
-  const [, setObservations] = useState<Observation[]>([]);
-  const [, setInstallations] = useState<Installation[]>([]);
-  const [, setInstallation] = useState<Installation | undefined>(undefined);
-  const [logs, setLogs] = useState<any[]>([]);
-
-  const { installationId } = params;
+  const logs = useInstallationStore((state) => state.logs);
+  const fetchInstallations = useInstallationStore(
+    (state) => state.fetchInstallations
+  );
 
   useEffect(() => {
-    const fetchInstallations = async () => {
-      const installations: any = (await (
-        await getInstallations()
-      ).json()) as InstallationApiResponse;
-
-      const installation = installations.body.items.filter(
-        (i: any) => i.id == installationId
-      )[0];
-
-      const observations = (await (
-        await getObservations(installationId)
-      ).json()) as ObservationApiResponse;
-
-      setObservations(observations.body.items);
-      setInstallation(installation);
-      setInstallations(installations.body.items);
-
-      let logString = "";
-
-      for (const item of observations.body.items) {
-        logString += item.logs;
-        console.log(logString);
-      }
-
-      let logs = logString.split("\n");
-
-      const resultArray: Log[] = [];
-
-      for (const log of logs) {
-        const parts = log.split(/\s+/);
-
-        if (parts.length < 5) {
-          continue;
-        }
-
-        const time = new Date(parts[0] + "T" + parts[1] + "Z").toLocaleString();
-        const logType = parts[2][0];
-        const thread = parts[3].replace("(", "").replace(")", "");
-        const restOfLog = parts.slice(4).join(" ");
-
-        resultArray.push({
-          raw: log,
-          time: time,
-          type: logType,
-          thread: thread,
-          log: wrapSquareBracketsWithEm(restOfLog),
-        });
-      }
-
-      setLogs(resultArray);
-    };
     fetchInstallations();
-  }, []);
+  }, [fetchInstallations]);
 
   return (
     <Tabs defaultValue="logtable" className="space-y-4">

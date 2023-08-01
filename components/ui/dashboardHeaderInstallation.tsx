@@ -6,90 +6,18 @@ import {
   CardHeader,
   CardTitle,
 } from "@/registry/new-york/ui/card";
-import { useState, useEffect } from "react";
-import {
-  ObservationApiResponse,
-  Observation,
-  Installation,
-  InstallationApiResponse,
-} from "../../app/types.d";
-import { getObservations } from "../../app/services/observations";
-import { getInstallations } from "../../app/services/installations";
+import { useEffect } from "react";
 import TimeAgo from "react-timeago";
+import { useInstallationStore } from "@/app/services/stores";
 
 export function DashboardHeaderInstallation() {
-  const [, setInstallations] = useState<Installation[]>([]);
-  const [highestStorage, setHighestStorage] = useState<any>(null);
-  const [observations, setObservations] = useState<Observation[]>();
+  const observations = useInstallationStore(state => state.observations);
+  const highestStorage = useInstallationStore(state => state.highestStorage);
+  const fetchInstallations = useInstallationStore(state => state.fetchInstallations);
 
   useEffect(() => {
-    const fetchInstallations = async () => {
-      const installations = (await (
-        await getInstallations()
-      ).json()) as InstallationApiResponse;
-
-      const sorted = installations.body.items.sort(
-        (b: any, a: any) =>
-          new Date(a.last_agent_connection).getTime() -
-          new Date(b.last_agent_connection).getTime()
-      );
-
-      setInstallations(sorted);
-
-      const observations = (await (
-        await getObservations(sorted[0].id)
-      ).json()) as ObservationApiResponse;
-      setObservations(observations.body.items);
-
-      // Function to find the storage entry with the highest use percentage in an array
-      function findHighestUseStorage(storageArray: any) {
-        let highestUsePercentage = -1;
-        let highestUseStorage = null;
-
-        storageArray.forEach((storage: any) => {
-          const usePercentage = parseInt(
-            storage.use_percentage.replace("%", "")
-          );
-          if (usePercentage > highestUsePercentage) {
-            highestUsePercentage = usePercentage;
-            highestUseStorage = storage;
-          }
-        });
-
-        return highestUseStorage;
-      }
-
-      // Initialize variables to store the overall highest use storage
-      let overallHighestUseStorage: any = null;
-      let overallHighestUsePercentage = -1;
-
-      // Loop through all items and find the highest use storage
-      observations.body.items.forEach((item: any) => {
-        const storageArray = item.environment.storage;
-        const highestUseStorage: any = findHighestUseStorage(storageArray);
-
-        if (highestUseStorage) {
-          const highestUsePercentage = parseInt(
-            highestUseStorage.use_percentage.replace("%", "")
-          );
-
-          if (highestUsePercentage > overallHighestUsePercentage) {
-            overallHighestUsePercentage = highestUsePercentage;
-            overallHighestUseStorage = highestUseStorage;
-          }
-        }
-      });
-
-      if (overallHighestUseStorage != null) {
-        setHighestStorage(
-          overallHighestUseStorage.name +
-            " " +
-            overallHighestUseStorage.use_percentage
-        );
-      }
-    };
     fetchInstallations();
-  }, []);
+  }, [fetchInstallations]);
 
   return (
     <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-5">
@@ -173,7 +101,9 @@ export function DashboardHeaderInstallation() {
           </svg>
         </CardHeader>
         <CardContent>
-          <div className="text-2xl font-bold">{highestStorage ?? "n/a"}</div>
+          <div className="text-2xl font-bold">{(highestStorage ? (highestStorage.name +
+            " " +
+            highestStorage.use_percentage) : "n/a")}</div>
         </CardContent>
       </Card>
       <Card>

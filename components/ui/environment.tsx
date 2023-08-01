@@ -9,41 +9,16 @@ import {
   TableRow,
 } from "@/components/ui/table";
 
-import { getObservations } from "../../app/services/observations";
-import { getInstallations } from "../../app/services/installations";
-import { useState, useEffect } from "react";
-import {
-  Installation,
-  InstallationApiResponse,
-  Observation,
-  ObservationApiResponse,
-} from "@/app/types";
+import { useInstallationStore } from "@/app/services/stores";
+import { useEffect } from "react";
 
 export function Environment() {
-  const [, setInstallations] = useState<Installation[]>([]);
-  const [observations, setObservations] = useState<Observation[]>([]);
+  const observations = useInstallationStore((state) => state.observations);
+  const fetchInstallations = useInstallationStore((state) => state.fetchInstallations);
 
   useEffect(() => {
-    const fetchInstallations = async () => {
-      const installations = (await (
-        await getInstallations()
-      ).json()) as InstallationApiResponse;
-
-      const sorted = installations.body.items.sort(
-        (b: any, a: any) =>
-          new Date(a.last_agent_connection).getTime() -
-          new Date(b.last_agent_connection).getTime()
-      );
-
-      setInstallations(sorted);
-
-      const observations = (await (
-        await getObservations(sorted[0].id)
-      ).json()) as ObservationApiResponse;
-      setObservations(observations.body.items);
-    };
     fetchInstallations();
-  }, []);
+  }, [fetchInstallations]);
 
   return (
     <Table>

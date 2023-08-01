@@ -17,24 +17,6 @@ export function MainNav({
       >
         Dashboard
       </Link>
-      {/* <Link
-        href="/installations"
-        className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
-      >
-        Installations
-      </Link> */}
-      {/* <Link
-        href="/examples/dashboard"
-        className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
-      >
-        Products
-      </Link>
-      <Link
-        href="/examples/dashboard"
-        className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
-      >
-        Settings
-      </Link> */}
     </nav>
   )
 }

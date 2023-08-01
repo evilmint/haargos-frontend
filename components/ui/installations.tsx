@@ -39,7 +39,7 @@ export function Installations() {
           </Button>
           <Button
             onClick={() => {
-              window.open(installation.urls.instance, "_blank");
+              //window.open(installation.urls.instance, "_blank");
             }}
           >
             HA

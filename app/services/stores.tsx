@@ -1,7 +1,6 @@
 import { getUserMe } from "./users";
 import { create } from "zustand";
-import { Log, User, Storage } from "@/app/types.d";
-import { Installation, Observation } from "@/app/types";
+import { Installation, Observation, Log, User, Storage } from "@/app/types";
 import { getInstallations } from "./installations";
 import { getObservations } from "./observations";
 
@@ -33,6 +32,52 @@ interface InstallationStoreState {
   fetchInstallations: () => Promise<void>;
 }
 
+const findHighestUseStorage = (storageArray: Storage[]): Storage | null => {
+  return storageArray.reduce((highest: Storage | null, storage: Storage) => {
+    if (highest === null) {
+      return storage;
+    }
+
+    const usePercentage = parseInt(storage.use_percentage.replace("%", ""));
+    return usePercentage > parseInt(highest.use_percentage.replace("%", ""))
+      ? storage
+      : highest;
+  }, null);
+};
+
+const parseLog = (logString: string): Log[] => {
+  const logs = logString.split("\n");
+  return logs.reduce((acc: Log[], log: string) => {
+    const parts = log.split(/\s+/);
+    if (parts.length >= 5) {
+      const time = new Date(parts[0] + "T" + parts[1] + "Z").toLocaleString();
+      const logType = parts[2][0];
+      const thread = parts[3].replace("(", "").replace(")", "");
+      const restOfLog = parts.slice(4).join(" ");
+
+      acc.push({
+        raw: log,
+        time: time,
+        type: logType,
+        thread: thread,
+        log: wrapSquareBracketsWithEm(restOfLog), // Ensure wrapSquareBracketsWithEm is correctly typed
+      });
+    }
+    return acc;
+  }, []);
+};
+
+const extractUniqueVolumes = (volumesUnsorted: Storage[]): Storage[] => {
+  const map = new Map();
+  return volumesUnsorted.reduce((uniqueVolumes: Storage[], volume: Storage) => {
+    if (!map.has(volume.mounted_on)) {
+      map.set(volume.mounted_on, true);
+      uniqueVolumes.push(volume);
+    }
+    return uniqueVolumes;
+  }, []);
+};
+
 const useInstallationStore = create<InstallationStoreState>((set, get) => ({
   installations: [],
   observations: [],
@@ -44,10 +89,7 @@ const useInstallationStore = create<InstallationStoreState>((set, get) => ({
     set({ isFetching: true });
 
     const { installations } = get();
-
-    if (installations.length > 0) {
-      return;
-    }
+    if (installations.length > 0) return;
 
     try {
       const installations = await getInstallations();
@@ -55,8 +97,6 @@ const useInstallationStore = create<InstallationStoreState>((set, get) => ({
 
       if (installations.length > 0) {
         const observations = await getObservations(installations[0].id);
-
-        // Update observations with unique and sorted volumes
         const updatedObservations = observations.map((observation) => {
           let volumesUnsorted = observation.environment.storage.sort(
             (a, b) =>
@@ -64,84 +104,28 @@ const useInstallationStore = create<InstallationStoreState>((set, get) => ({
               Number(a.use_percentage.slice(0, -1))
           );
 
-          let uniqueVolumes = [];
-          const map = new Map();
-          for (const item of volumesUnsorted) {
-            if (!map.has(item.mounted_on)) {
-              map.set(item.mounted_on, true); // set any value to Map
-              uniqueVolumes.push(item);
-            }
-          }
-
-          // replace the storage array with the unique and sorted volumes
-          observation.environment.storage = uniqueVolumes;
-
+          observation.environment.storage =
+            extractUniqueVolumes(volumesUnsorted);
           return observation;
         });
 
         set({ observations: updatedObservations });
 
-        let logString = "";
+        let logString = updatedObservations.reduce(
+          (acc: string, item: Observation) => acc + item.logs,
+          ""
+        );
 
-        for (const item of updatedObservations) {
-          logString += item.logs;
-        }
-
-        let logs = logString.split("\n");
-
-        const resultArray: Log[] = [];
-
-        for (const log of logs) {
-          const parts = log.split(/\s+/);
-
-          if (parts.length < 5) {
-            continue;
-          }
-
-          const time = new Date(
-            parts[0] + "T" + parts[1] + "Z"
-          ).toLocaleString();
-          const logType = parts[2][0];
-          const thread = parts[3].replace("(", "").replace(")", "");
-          const restOfLog = parts.slice(4).join(" ");
-
-          resultArray.push({
-            raw: log,
-            time: time,
-            type: logType,
-            thread: thread,
-            log: wrapSquareBracketsWithEm(restOfLog), // Ensure wrapSquareBracketsWithEm is correctly typed
-          });
-        }
-
-        set({ logs: resultArray });
+        set({ logs: parseLog(logString) });
 
         // Logic to find highest storage
         let overallHighestUseStorage: Storage | null = null;
         let overallHighestUsePercentage = -1;
 
-        const findHighestUseStorage = (
-          storageArray: Storage[]
-        ): Storage | null => {
-          let highestUsePercentage = -1;
-          let highestUseStorage = null;
-
-          storageArray.forEach((storage) => {
-            const usePercentage = parseInt(
-              storage.use_percentage.replace("%", "")
-            );
-            if (usePercentage > highestUsePercentage) {
-              highestUsePercentage = usePercentage;
-              highestUseStorage = storage;
-            }
-          });
-
-          return highestUseStorage;
-        };
-
         updatedObservations.forEach((item) => {
-          const storageArray = item.environment.storage;
-          const highestUseStorage = findHighestUseStorage(storageArray);
+          const highestUseStorage = findHighestUseStorage(
+            item.environment.storage
+          );
 
           if (highestUseStorage) {
             const highestUsePercentage = parseInt(

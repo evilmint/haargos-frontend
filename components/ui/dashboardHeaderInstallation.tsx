@@ -9,15 +9,31 @@ import {
 import { useEffect } from "react";
 import TimeAgo from "react-timeago";
 import { useInstallationStore } from "@/app/services/stores";
+import { Button } from "@/registry/new-york/ui/button";
 
-export function DashboardHeaderInstallation() {
-  const observations = useInstallationStore(state => state.observations);
-  const highestStorage = useInstallationStore(state => state.highestStorage);
-  const fetchInstallations = useInstallationStore(state => state.fetchInstallations);
+export function DashboardHeaderInstallation({ ...params }) {
+  const { installationId } = params;
+  const observations = useInstallationStore(
+    (state) => state.observations[installationId]
+  );
+  const highestStorage = useInstallationStore(
+    (state) => state.highestStorageByInstallationId[installationId]
+  );
+  const fetchInstallations = useInstallationStore(
+    (state) => state.fetchInstallations
+  );
+  const fetchObservationsForInstallation = useInstallationStore(
+    (state) => state.fetchObservationsForInstallation
+  );
+  const haVersion = useInstallationStore(
+    (state) => state.haVersion[installationId]
+  );
 
   useEffect(() => {
-    fetchInstallations();
-  }, [fetchInstallations]);
+    fetchInstallations()
+      .then(() => fetchObservationsForInstallation(installationId))
+      .catch((error) => console.error(error));
+  }, [fetchInstallations, fetchObservationsForInstallation, installationId]);
 
   return (
     <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-5">
@@ -50,6 +66,43 @@ export function DashboardHeaderInstallation() {
       </Card>
       <Card>
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+          <CardTitle className="text-sm font-medium">HA version</CardTitle>
+
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            className="h-4 w-4 text-muted-foreground"
+          >
+            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+          </svg>
+        </CardHeader>
+        <CardContent className="flex">
+          <div className="text-2xl flex-1 font-bold inline">
+            {haVersion ?? "n/a"}
+          </div>
+          <Button
+            onClick={() => {
+              window.open(
+                "https://github.com/home-assistant/core/releases",
+                "_blank"
+              );
+            }}
+            className="inline flex-1 flex-auto"
+            variant="outline"
+          >
+            Releases
+          </Button>
+        </CardContent>
+      </Card>
+      <Card>
+        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
           <CardTitle className="text-sm font-medium">Memory</CardTitle>
 
           <svg
@@ -70,12 +123,30 @@ export function DashboardHeaderInstallation() {
         <CardContent>
           <div className="text-2xl font-bold">
             {observations && observations.length > 0
-              ? Math.floor(
-                  (observations[0].environment.memory.used /
-                    observations[0].environment.memory.total) *
-                    100
-                ) + "%"
+              ? (
+                  observations[0].environment.memory.used /
+                  1024 /
+                  1024
+                ).toPrecision(2) +
+                "G / " +
+                (
+                  observations[0].environment.memory.total /
+                  1024 /
+                  1024
+                ).toPrecision(2) +
+                "G" +
+                " "
               : "n/a"}
+
+            <p className="text-sm font-normal inline">
+              {observations?.length > 0
+                ? Math.floor(
+                    (observations[0].environment.memory.used /
+                      observations[0].environment.memory.total) *
+                      100
+                  ) + "%"
+                : ""}
+            </p>
           </div>
         </CardContent>
       </Card>
@@ -101,9 +172,15 @@ export function DashboardHeaderInstallation() {
           </svg>
         </CardHeader>
         <CardContent>
-          <div className="text-2xl font-bold">{(highestStorage ? (highestStorage.name +
-            " " +
-            highestStorage.use_percentage) : "n/a")}</div>
+          <div className="text-2xl font-bold">
+            {highestStorage
+              ? highestStorage?.used + " / " + highestStorage?.size
+              : "n/a"}
+
+            <p className="text-sm font-normal ml-2 inline">
+              {highestStorage?.name ?? ""}
+            </p>
+          </div>
         </CardContent>
       </Card>
       <Card>

@@ -12,13 +12,17 @@ import {
 import { useInstallationStore } from "@/app/services/stores";
 import { useEffect } from "react";
 
-export function Environment() {
-  const observations = useInstallationStore((state) => state.observations);
-  const fetchInstallations = useInstallationStore((state) => state.fetchInstallations);
+export function Environment({ ...params }) {
+  const { installationId } = params;
+  const observations = useInstallationStore(state => state.observations[installationId]);
+  const fetchInstallations = useInstallationStore(state => state.fetchInstallations);
+  const fetchObservationsForInstallation = useInstallationStore(state => state.fetchObservationsForInstallation);
 
   useEffect(() => {
-    fetchInstallations();
-  }, [fetchInstallations]);
+    fetchInstallations()
+      .then(() => fetchObservationsForInstallation(installationId))
+      .catch((error) => console.error(error));
+  }, [fetchInstallations, fetchObservationsForInstallation, installationId]);
 
   return (
     <Table>

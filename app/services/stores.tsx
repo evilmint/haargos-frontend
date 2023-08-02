@@ -25,13 +25,143 @@ const useUserStore = create<UserState>((set) => ({
 
 interface InstallationStoreState {
   installations: Installation[];
-  observations: Observation[];
-  logs: Log[];
-  highestStorage: Storage | null;
-  isFetching: boolean;
+  observations: Record<string, Observation[]>;
+  logsByInstallationId: Record<string, Log[]>;
+  haVersion: Record<string, string>;
+  highestStorageByInstallationId: Record<string, Storage | null>;
+  isFetchingInstallations: boolean;
+  isFetchingObservations: Record<string, boolean>;
   fetchInstallations: () => Promise<void>;
+  fetchObservationsForInstallation: (installationId: string) => Promise<void>;
+  getObservationsForInstallation: (installationId: string) => Observation[];
 }
 
+const useInstallationStore = create<InstallationStoreState>((set, get) => ({
+  installations: [],
+  observations: {},
+  logsByInstallationId: {},
+  haVersion: {},
+  highestStorageByInstallationId: {},
+  isFetchingInstallations: false,
+  isFetchingObservations: {},
+  fetchInstallations: async () => {
+    if (get().isFetchingInstallations) return;
+    set({ isFetchingInstallations: true });
+
+    const { installations } = get();
+    if (installations.length > 0) return;
+
+    try {
+      const installations = await getInstallations();
+      set({ installations });
+    } catch (error) {
+      console.log(error);
+    } finally {
+      set({ isFetchingInstallations: false });
+    }
+  },
+  fetchObservationsForInstallation: async (installationId: string) => {
+    if (get().isFetchingObservations[installationId]) return;
+    set((state) => ({
+      isFetchingObservations: {
+        ...state.isFetchingObservations,
+        [installationId]: true,
+      },
+    }));
+
+    try {
+      const observations = await getObservations(installationId);
+      const updatedObservations = observations.map((observation) => {
+        let volumesUnsorted = observation.environment.storage.sort(
+          (a, b) =>
+            Number(b.use_percentage.slice(0, -1)) -
+            Number(a.use_percentage.slice(0, -1))
+        );
+
+        observation.environment.storage = extractUniqueVolumes(volumesUnsorted);
+        return observation;
+      });
+
+      set((state) => ({
+        observations: {
+          ...state.observations,
+          [installationId]: updatedObservations,
+        },
+      }));
+
+      let logString = updatedObservations.reduce(
+        (acc: string, item: Observation) => acc + item.logs,
+        ""
+      );
+
+      set((state) => ({
+        logsByInstallationId: {
+          ...state.logsByInstallationId,
+          [installationId]: parseLog(logString),
+        },
+      }));
+
+      const homeAssistantContainer = updatedObservations
+        .flatMap((observation) => observation.docker.containers)
+        .find((container) =>
+          container.image.startsWith("ghcr.io/home-assistant/home-assistant:")
+        );
+
+      if (homeAssistantContainer) {
+        const haVersion = homeAssistantContainer.image.split(':')[1];
+        set((state) => ({
+          haVersion: { ...state.haVersion, [installationId]: haVersion },
+        }));
+      }
+
+      let overallHighestUseStorage: Storage | null = null;
+      let overallHighestUsePercentage = -1;
+
+      updatedObservations.forEach((item) => {
+        const highestUseStorage = findHighestUseStorage(
+          item.environment.storage
+        );
+
+        if (highestUseStorage) {
+          const highestUsePercentage = parseInt(
+            highestUseStorage.use_percentage.replace("%", "")
+          );
+
+          if (highestUsePercentage > overallHighestUsePercentage) {
+            overallHighestUsePercentage = highestUsePercentage;
+            overallHighestUseStorage = highestUseStorage;
+          }
+        }
+      });
+
+      if (overallHighestUseStorage != null) {
+        set((state) => ({
+          highestStorageByInstallationId: {
+            ...state.highestStorageByInstallationId,
+            [installationId]: overallHighestUseStorage,
+          },
+        }));
+      }
+    } catch (error) {
+      console.log(error);
+    } finally {
+      set((state) => ({
+        isFetchingObservations: {
+          ...state.isFetchingObservations,
+          [installationId]: false,
+        },
+      }));
+    }
+  },
+  getObservationsForInstallation: (installationId: string) => {
+    return get().observations[installationId] || [];
+  },
+}));
+
+function wrapSquareBracketsWithEm(inputString: string) {
+  const regex = /\[([^\]]+)\]/g;
+  return inputString.replace(regex, '<p class="text-xs">[$1]</p>');
+}
 const findHighestUseStorage = (storageArray: Storage[]): Storage | null => {
   return storageArray.reduce((highest: Storage | null, storage: Storage) => {
     if (highest === null) {
@@ -77,83 +207,5 @@ const extractUniqueVolumes = (volumesUnsorted: Storage[]): Storage[] => {
     return uniqueVolumes;
   }, []);
 };
-
-const useInstallationStore = create<InstallationStoreState>((set, get) => ({
-  installations: [],
-  observations: [],
-  logs: [],
-  highestStorage: null,
-  isFetching: false,
-  fetchInstallations: async () => {
-    if (get().isFetching) return;
-    set({ isFetching: true });
-
-    const { installations } = get();
-    if (installations.length > 0) return;
-
-    try {
-      const installations = await getInstallations();
-      set({ installations });
-
-      if (installations.length > 0) {
-        const observations = await getObservations(installations[0].id);
-        const updatedObservations = observations.map((observation) => {
-          let volumesUnsorted = observation.environment.storage.sort(
-            (a, b) =>
-              Number(b.use_percentage.slice(0, -1)) -
-              Number(a.use_percentage.slice(0, -1))
-          );
-
-          observation.environment.storage =
-            extractUniqueVolumes(volumesUnsorted);
-          return observation;
-        });
-
-        set({ observations: updatedObservations });
-
-        let logString = updatedObservations.reduce(
-          (acc: string, item: Observation) => acc + item.logs,
-          ""
-        );
-
-        set({ logs: parseLog(logString) });
-
-        // Logic to find highest storage
-        let overallHighestUseStorage: Storage | null = null;
-        let overallHighestUsePercentage = -1;
-
-        updatedObservations.forEach((item) => {
-          const highestUseStorage = findHighestUseStorage(
-            item.environment.storage
-          );
-
-          if (highestUseStorage) {
-            const highestUsePercentage = parseInt(
-              highestUseStorage.use_percentage.replace("%", "")
-            );
-
-            if (highestUsePercentage > overallHighestUsePercentage) {
-              overallHighestUsePercentage = highestUsePercentage;
-              overallHighestUseStorage = highestUseStorage;
-            }
-          }
-        });
-
-        if (overallHighestUseStorage != null) {
-          set({ highestStorage: overallHighestUseStorage });
-        }
-      }
-    } catch (error) {
-      console.log(error);
-    } finally {
-      set({ isFetching: false });
-    }
-  },
-}));
-
-function wrapSquareBracketsWithEm(inputString: string) {
-  const regex = /\[([^\]]+)\]/g;
-  return inputString.replace(regex, '<p class="text-xs">[$1]</p>');
-}
 
 export { useUserStore, useInstallationStore };

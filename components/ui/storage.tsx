@@ -16,21 +16,27 @@ import {
   CardTitle,
 } from "@/registry/new-york/ui/card";
 
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import { useInstallationStore } from "@/app/services/stores";
 
-export function Storage() {
-  const observations = useInstallationStore((state) => state.observations);
-  const fetchInstallations = useInstallationStore((state) => state.fetchInstallations);
+export function Storage({ ...params }) {
+  const { installationId } = params;
+
+  const observations = useInstallationStore(state => state.observations[installationId]);
+  const installations = useInstallationStore(state => state.installations);
+  const fetchInstallations = useInstallationStore(state => state.fetchInstallations);
+  const fetchObservationsForInstallation = useInstallationStore(state => state.fetchObservationsForInstallation);
 
   useEffect(() => {
     fetchInstallations()
-  }, [fetchInstallations]);
+      .then(() => fetchObservationsForInstallation(installationId))
+      .catch((error) => console.error(error));
+  }, [fetchInstallations, fetchObservationsForInstallation, installationId]);
 
   return (
     <Card className="col-span-8">
       <CardHeader>
-        <CardTitle>Storage ({observations[0].environment.storage.length})</CardTitle>
+        <CardTitle>Storage ({observations?.length > 0 ? observations[0].environment.storage.length : 0})</CardTitle>
       </CardHeader>
       <CardContent className="pl-2">
         <Table>
@@ -45,7 +51,7 @@ export function Storage() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {(observations[0].environment.storage ?? []).map(storage => (
+            {observations?.length > 0 && (observations[0].environment.storage ?? []).map(storage => (
               <TableRow key={storage.mounted_on}>
                 <TableCell className="font-medium text-xs">
                   {storage.name}

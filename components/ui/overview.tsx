@@ -1,42 +1,40 @@
 "use client";
 
-import {
-  Bar,
-  BarChart,
-  ResponsiveContainer,
-  Tooltip,
-  XAxis,
-  YAxis,
-} from "recharts";
+import { Bar, BarChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 
 import { useEffect } from "react";
 import { useInstallationStore } from "@/app/services/stores";
 
 export function Overview() {
+  const installations = useInstallationStore((state) => state.installations);
   const observations = useInstallationStore((state) => state.observations);
-  const fetchInstallations = useInstallationStore(
-    (state) => state.fetchInstallations
-  );
+  const fetchInstallations = useInstallationStore((state) => state.fetchInstallations);
+  const fetchObservationsForInstallation = useInstallationStore((state) => state.fetchObservationsForInstallation);
 
   useEffect(() => {
-    fetchInstallations();
-  }, [fetchInstallations]);
+    fetchInstallations()
+      .then(() => Promise.all(installations.map(({ id }) => fetchObservationsForInstallation(id))))
+      .catch((error) => console.error(error));
+  }, [fetchInstallations, fetchObservationsForInstallation, installations]);
+ 
+  const allObservations = Object.values(observations).flat();
 
-  const cpuIssueCount = observations.reduce((a: any, i: any) => {
+  const cpuIssueCount = allObservations.reduce((a: any, i: any) => {
     return a + (i.dangers.includes("high_cpu_usage") ? 1 : 0);
   }, 0);
 
-  const volumeIssueCount = observations.reduce((a: any, i: any) => {
+  const volumeIssueCount = allObservations.reduce((a: any, i: any) => {
     return a + (i.dangers.includes("high_volume_usage") ? 1 : 0);
   }, 0);
 
-  const memoryIssueCount = observations.reduce((a: any, i: any) => {
+  const memoryIssueCount = allObservations.reduce((a: any, i: any) => {
     return a + (i.dangers.includes("high_memory_usage") ? 1 : 0);
   }, 0);
 
-  const logIssueCount = observations.reduce((a: any, i: any) => {
+  const logIssueCount = allObservations.reduce((a: any, i: any) => {
     return a + (i.dangers.includes("logs") ? 1 : 0);
   }, 0);
+
 
   const data = [
     {

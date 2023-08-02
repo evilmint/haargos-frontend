@@ -20,7 +20,8 @@ import { useEffect } from "react";
 import { useInstallationStore } from "@/app/services/stores";
 
 export function Logs({ ...params }) {
-  const logs = useInstallationStore((state) => state.logs);
+  const { installationId } = params;
+  const logs = useInstallationStore((state) => state.logsByInstallationId[installationId]);
   const fetchInstallations = useInstallationStore(
     (state) => state.fetchInstallations
   );
@@ -31,7 +32,7 @@ export function Logs({ ...params }) {
 
   return (
     <Tabs defaultValue="logtable" className="space-y-4">
-      <h3 className="inline ml-4 font-semibold">Issues ({logs.length})</h3>
+      <h3 className="inline ml-4 font-semibold">Issues ({(logs ?? []).length})</h3>
       <TabsList className="ml-4">
         <TabsTrigger value="logtable">Visual</TabsTrigger>
         <TabsTrigger value="lograw">Raw</TabsTrigger>
@@ -71,7 +72,7 @@ export function Logs({ ...params }) {
             <div className="flex justify-between items-center mb-2"></div>
             <div className="overflow-x-auto">
               <pre id="code" className="text-gray-300">
-                <code>{logs.map((l: Log) => l.raw).join("\n")}</code>
+                <code>{(logs ?? []).map((l: Log) => l.raw).join("\n")}</code>
               </pre>
             </div>
           </div>

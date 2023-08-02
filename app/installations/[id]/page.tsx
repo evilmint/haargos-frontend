@@ -1,3 +1,5 @@
+import Image from "next/image";
+
 import { Logs } from "@/components/ui/logs";
 import { Storage } from "@/components/ui/storage";
 import { Docker } from "@/components/ui/docker";
@@ -30,7 +32,23 @@ export default function DashboardInstallationPage({
 }) {
   return (
     <>
-      <div className="hidden flex-col sm:flex">
+      <div className="md:hidden">
+        <Image
+          src="/examples/dashboard-light.png"
+          width={1280}
+          height={866}
+          alt="Dashboard"
+          className="block dark:hidden"
+        />
+        <Image
+          src="/examples/dashboard-dark.png"
+          width={1280}
+          height={866}
+          alt="Dashboard"
+          className="hidden dark:block"
+        />
+      </div>
+      <div className="hidden flex-col md:flex">
         <div className="border-b">
           <div className="flex h-16 items-center px-4">
             <MainNav className="mx-6" />
@@ -51,7 +69,7 @@ export default function DashboardInstallationPage({
             </TabsList>
 
             <TabsContent value="overview" className="space-y-4">
-              <DashboardHeaderInstallation />
+              <DashboardHeaderInstallation installationId={params.id} />
               <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
                 <Card className="col-span-7">
                   <CardHeader>
@@ -87,11 +105,11 @@ export default function DashboardInstallationPage({
                     <CardTitle>CPU</CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <Environment />
+                    <Environment installationId={params.id} />
                   </CardContent>
                 </Card>
 
-                <Storage />
+                <Storage installationId={params.id} />
               </div>
             </TabsContent>
 
@@ -107,7 +125,7 @@ export default function DashboardInstallationPage({
                   </CardContent>
                 </Card>
 
-                <Docker />
+                <Docker installationId={params.id} />
               </div>
             </TabsContent>
           </Tabs>

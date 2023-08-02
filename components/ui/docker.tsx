@@ -20,15 +20,18 @@ import { SVGWithText } from "./SVGWithText";
 import { useEffect } from "react";
 import { useInstallationStore } from "@/app/services/stores";
 
-export function Docker() {
-  const observations = useInstallationStore((state) => state.observations);
-  const fetchInstallations = useInstallationStore(
-    (state) => state.fetchInstallations
-  );
+export function Docker({ ...params }) {
+  const { installationId } = params;
+  const observations = useInstallationStore(state => state.observations[installationId]);
+  const fetchInstallations = useInstallationStore(state => state.fetchInstallations);
+  const fetchObservationsForInstallation = useInstallationStore(state => state.fetchObservationsForInstallation);
 
   useEffect(() => {
-    fetchInstallations();
-  }, [fetchInstallations]);
+    fetchInstallations()
+      .then(() => fetchObservationsForInstallation(installationId))
+      .catch((error) => console.error(error));
+  }, [fetchInstallations, fetchObservationsForInstallation, installationId]);
+
   const dockerContainerCount = observations[0]?.docker?.containers?.length || 0;
   
   return (

@@ -5,31 +5,16 @@ import { Storage } from "@/components/ui/storage";
 import { Docker } from "@/components/ui/docker";
 import { Environment } from "@/components/ui/environment";
 
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/registry/new-york/ui/card";
-
-import {
-  Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger,
-} from "@/registry/new-york/ui/tabs";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/registry/new-york/ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/registry/new-york/ui/tabs";
 
 import { MainNav } from "@/components/ui/main-nav";
 import { Installations } from "@/components/ui/installations";
 import { UserNav } from "@/components/ui/user-nav";
 import { DashboardHeaderInstallation } from "@/components/ui/dashboardHeaderInstallation";
+import { Zigbee } from "@/components/ui/zigbee";
 
-export default function DashboardInstallationPage({
-  params,
-}: {
-  params: { id: string };
-}) {
+export default function DashboardInstallationPage({ params }: { params: { id: string } }) {
   return (
     <>
       <div className="md:hidden">
@@ -63,9 +48,7 @@ export default function DashboardInstallationPage({
               <TabsTrigger value="overview">Overview</TabsTrigger>
               <TabsTrigger value="environment">Environment</TabsTrigger>
               <TabsTrigger value="docker">Docker</TabsTrigger>
-              <TabsTrigger value="notifications" disabled>
-                Notifications
-              </TabsTrigger>
+              <TabsTrigger value="zigbee">Zigbee</TabsTrigger>
             </TabsList>
 
             <TabsContent value="overview" className="space-y-4">
@@ -126,6 +109,22 @@ export default function DashboardInstallationPage({
                 </Card>
 
                 <Docker installationId={params.id} />
+              </div>
+            </TabsContent>
+
+            <TabsContent value="zigbee" className="space-y-4">
+              <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
+                <Card className="col-span-7">
+                  <CardHeader>
+                    <CardTitle>Installations</CardTitle>
+                    <CardDescription>Client installations</CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <Installations />
+                  </CardContent>
+                </Card>
+
+                <Zigbee installationId={params.id} />
               </div>
             </TabsContent>
           </Tabs>

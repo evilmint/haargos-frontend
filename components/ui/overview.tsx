@@ -16,7 +16,7 @@ export function Overview() {
       .then(() => Promise.all(installations.map(({ id }) => fetchObservationsForInstallation(id))))
       .catch((error) => console.error(error));
   }, [fetchInstallations, fetchObservationsForInstallation, installations]);
- 
+
   const allObservations = Object.values(observations).flat();
 
   const cpuIssueCount = allObservations.reduce((a: any, i: any) => {
@@ -34,7 +34,6 @@ export function Overview() {
   const logIssueCount = allObservations.reduce((a: any, i: any) => {
     return a + (i.dangers.includes("logs") ? 1 : 0);
   }, 0);
-
 
   const data = [
     {
@@ -58,13 +57,7 @@ export function Overview() {
   return (
     <ResponsiveContainer width="100%" height={350}>
       <BarChart data={data}>
-        <XAxis
-          dataKey="name"
-          stroke="#888888"
-          fontSize={12}
-          tickLine={false}
-          axisLine={false}
-        />
+        <XAxis dataKey="name" stroke="#888888" fontSize={12} tickLine={false} axisLine={false} />
         <YAxis
           stroke="#888888"
           fontSize={12}

@@ -1,10 +1,4 @@
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/registry/new-york/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/registry/new-york/ui/card";
 import { Tabs, TabsContent } from "@/registry/new-york/ui/tabs";
 import { MainNav } from "@/components/ui/main-nav";
 import { Overview } from "@/components/ui/overview";

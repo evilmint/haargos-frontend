@@ -8,7 +8,7 @@ import { SVGWithText } from "./SVGWithText";
 import { useEffect } from "react";
 import { useInstallationStore } from "@/app/services/stores";
 
-export function Docker({ ...params }) {
+export function Zigbee({ ...params }) {
   const { installationId } = params;
   const observations = useInstallationStore((state) => state.observations[installationId]);
   const fetchInstallations = useInstallationStore((state) => state.fetchInstallations);
@@ -25,7 +25,7 @@ export function Docker({ ...params }) {
   return (
     <Card className="col-span-8">
       <CardHeader>
-        <CardTitle>Docker containers ({dockerContainerCount})</CardTitle>
+        <CardTitle>Zigbee something ({dockerContainerCount})</CardTitle>
       </CardHeader>
       <CardContent className="pl-2">
         <Table>

@@ -1,32 +1,34 @@
 "use client";
 
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@/registry/new-york/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/registry/new-york/ui/card";
 import { useEffect } from "react";
 import { useInstallationStore } from "@/app/services/stores";
-import { Installation } from "@/app/types";
 
 export function DashboardHeader() {
   const installations = useInstallationStore((state) => state.installations);
-  const fetchInstallations = useInstallationStore(
-    (state) => state.fetchInstallations
-  );
+  const fetchInstallations = useInstallationStore((state) => state.fetchInstallations);
 
   useEffect(() => {
     fetchInstallations();
   }, [fetchInstallations]);
 
+  const healthyInstallations = installations.reduce((s, i) => {
+    return s + (i.healthy ? 1 : 0);
+  }, 0);
+
+  const unhealthyInstallations = installations.reduce((s, i) => {
+    return s + (i.healthy ? 0 : 1);
+  }, 0);
+  const installationsWithIssues = installations.reduce((s, i) => {
+    return s + (i.issues.length > 0 ? 1 : 0);
+  }, 0);
+  const latestActivityInstallationName = installations.length > 0 ? installations[0].name : "-";
+
   return (
     <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
       <Card>
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-sm font-medium">
-            Healthy installations
-          </CardTitle>
+          <CardTitle className="text-sm font-medium">Healthy installations</CardTitle>
 
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -44,18 +46,12 @@ export function DashboardHeader() {
           </svg>
         </CardHeader>
         <CardContent>
-          <div className="text-2xl font-bold">
-            {installations.reduce((s, i) => {
-              return s + (i.healthy ? 1 : 0);
-            }, 0)}
-          </div>
+          <div className="text-2xl font-bold">{healthyInstallations}</div>
         </CardContent>
       </Card>
       <Card>
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-sm font-medium">
-            Unhealthy installations
-          </CardTitle>
+          <CardTitle className="text-sm font-medium">Unhealthy installations</CardTitle>
 
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -75,18 +71,12 @@ export function DashboardHeader() {
           </svg>
         </CardHeader>
         <CardContent>
-          <div className="text-2xl font-bold">
-            {installations.reduce((s, i) => {
-              return s + (i.healthy ? 0 : 1);
-            }, 0)}
-          </div>
+          <div className="text-2xl font-bold">{unhealthyInstallations}</div>
         </CardContent>
       </Card>
       <Card>
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-sm font-medium">
-            Installations with issues
-          </CardTitle>
+          <CardTitle className="text-sm font-medium">Installations with issues</CardTitle>
 
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -106,11 +96,7 @@ export function DashboardHeader() {
           </svg>
         </CardHeader>
         <CardContent>
-          <div className="text-2xl font-bold">
-            {installations.reduce((s, i) => {
-              return s + (i.issues.length > 0 ? 1 : 0);
-            }, 0)}
-          </div>
+          <div className="text-2xl font-bold">{installationsWithIssues}</div>
         </CardContent>
       </Card>
       <Card>
@@ -130,9 +116,7 @@ export function DashboardHeader() {
           </svg>
         </CardHeader>
         <CardContent>
-          <div className="text-2xl font-bold">
-            {installations.length > 0 ? installations[0].name : "-"}
-          </div>
+          <div className="text-2xl font-bold">{latestActivityInstallationName}</div>
         </CardContent>
       </Card>
     </div>

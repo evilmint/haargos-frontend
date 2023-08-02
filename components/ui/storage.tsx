@@ -1,20 +1,8 @@
 "use client";
 
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@/registry/new-york/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/registry/new-york/ui/card";
 
 import { useEffect } from "react";
 import { useInstallationStore } from "@/app/services/stores";
@@ -22,10 +10,10 @@ import { useInstallationStore } from "@/app/services/stores";
 export function Storage({ ...params }) {
   const { installationId } = params;
 
-  const observations = useInstallationStore(state => state.observations[installationId]);
-  const installations = useInstallationStore(state => state.installations);
-  const fetchInstallations = useInstallationStore(state => state.fetchInstallations);
-  const fetchObservationsForInstallation = useInstallationStore(state => state.fetchObservationsForInstallation);
+  const observations = useInstallationStore((state) => state.observations[installationId]);
+  const installations = useInstallationStore((state) => state.installations);
+  const fetchInstallations = useInstallationStore((state) => state.fetchInstallations);
+  const fetchObservationsForInstallation = useInstallationStore((state) => state.fetchObservationsForInstallation);
 
   useEffect(() => {
     fetchInstallations()
@@ -51,20 +39,17 @@ export function Storage({ ...params }) {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {observations?.length > 0 && (observations[0].environment.storage ?? []).map(storage => (
-              <TableRow key={storage.mounted_on}>
-                <TableCell className="font-medium text-xs">
-                  {storage.name}
-                </TableCell>
-                <TableCell className="text-xs">{storage.available}</TableCell>
-                <TableCell className="text-xs">
-                  {storage.use_percentage}
-                </TableCell>
-                <TableCell className="text-xs">{storage.used}</TableCell>
-                <TableCell className="text-xs">{storage.size}</TableCell>
-                <TableCell className="text-xs">{storage.mounted_on}</TableCell>
-              </TableRow>
-            ))}
+            {observations?.length > 0 &&
+              (observations[0].environment.storage ?? []).map((storage) => (
+                <TableRow key={storage.mounted_on}>
+                  <TableCell className="font-medium text-xs">{storage.name}</TableCell>
+                  <TableCell className="text-xs">{storage.available}</TableCell>
+                  <TableCell className="text-xs">{storage.use_percentage}</TableCell>
+                  <TableCell className="text-xs">{storage.used}</TableCell>
+                  <TableCell className="text-xs">{storage.size}</TableCell>
+                  <TableCell className="text-xs">{storage.mounted_on}</TableCell>
+                </TableRow>
+              ))}
           </TableBody>
         </Table>
       </CardContent>

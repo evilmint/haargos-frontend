@@ -1,11 +1,7 @@
 "use client";
+import numeral from "numeral";
 
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@/registry/new-york/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/registry/new-york/ui/card";
 import { useEffect } from "react";
 import TimeAgo from "react-timeago";
 import { useInstallationStore } from "@/app/services/stores";
@@ -13,21 +9,23 @@ import { Button } from "@/registry/new-york/ui/button";
 
 export function DashboardHeaderInstallation({ ...params }) {
   const { installationId } = params;
-  const observations = useInstallationStore(
-    (state) => state.observations[installationId]
-  );
-  const highestStorage = useInstallationStore(
-    (state) => state.highestStorageByInstallationId[installationId]
-  );
-  const fetchInstallations = useInstallationStore(
-    (state) => state.fetchInstallations
-  );
-  const fetchObservationsForInstallation = useInstallationStore(
-    (state) => state.fetchObservationsForInstallation
-  );
-  const haVersion = useInstallationStore(
-    (state) => state.haVersion[installationId]
-  );
+  const observations = useInstallationStore((state) => state.observations[installationId]);
+  const highestStorage = useInstallationStore((state) => state.highestStorageByInstallationId[installationId]);
+  const fetchInstallations = useInstallationStore((state) => state.fetchInstallations);
+  const fetchObservationsForInstallation = useInstallationStore((state) => state.fetchObservationsForInstallation);
+  const haVersion = useInstallationStore((state) => state.haVersion[installationId]);
+
+  const memoryValues =
+    observations && observations.length > 0
+      ? `${numeral(observations[0].environment.memory.used / 1024 / 1024).format("0.0")}G / ${numeral(
+          observations[0].environment.memory.total / 1024 / 1024
+        ).format("0.0")}G `
+      : "n/a";
+
+  const hasObservations = observations?.length > 0;
+  const memoryUsed = hasObservations ? observations[0].environment.memory.used : 0;
+  const memoryTotal = hasObservations ? observations[0].environment.memory.total : 1;
+  const memoryPercentage = Math.floor((memoryUsed / memoryTotal) * 100) + "%";
 
   useEffect(() => {
     fetchInstallations()
@@ -35,6 +33,7 @@ export function DashboardHeaderInstallation({ ...params }) {
       .catch((error) => console.error(error));
   }, [fetchInstallations, fetchObservationsForInstallation, installationId]);
 
+  const cpuArchitecture = (observations && observations[0]?.environment.cpu.architecture) ?? "n/a";
   return (
     <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-5">
       <Card>
@@ -48,26 +47,26 @@ export function DashboardHeaderInstallation({ ...params }) {
             viewBox="0 0 24 24"
             fill="none"
             stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
             className="h-4 w-4 text-muted-foreground"
           >
-            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+            <line x1="6" y1="3" x2="6" y2="15"></line>
+            <circle cx="18" cy="6" r="3"></circle>
+            <circle cx="6" cy="18" r="3"></circle>
+            <path d="M18 9a9 9 0 0 1-9 9"></path>
           </svg>
         </CardHeader>
         <CardContent>
           <div className="text-2xl font-bold">
-            {observations && observations.length > 0
-              ? observations[0].agent_version
-              : "n/a"}
+            {observations && observations.length > 0 ? observations[0].agent_version : "n/a"}
           </div>
         </CardContent>
       </Card>
       <Card>
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
           <CardTitle className="text-sm font-medium">HA version</CardTitle>
-
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="24"
@@ -75,24 +74,22 @@ export function DashboardHeaderInstallation({ ...params }) {
             viewBox="0 0 24 24"
             fill="none"
             stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
             className="h-4 w-4 text-muted-foreground"
           >
-            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+            <line x1="6" y1="3" x2="6" y2="15"></line>
+            <circle cx="18" cy="6" r="3"></circle>
+            <circle cx="6" cy="18" r="3"></circle>
+            <path d="M18 9a9 9 0 0 1-9 9"></path>
           </svg>
         </CardHeader>
         <CardContent className="flex">
-          <div className="text-2xl flex-1 font-bold inline">
-            {haVersion ?? "n/a"}
-          </div>
+          <div className="text-2xl flex-1 font-bold inline">{haVersion ?? "n/a"}</div>
           <Button
             onClick={() => {
-              window.open(
-                "https://github.com/home-assistant/core/releases",
-                "_blank"
-              );
+              window.open("https://github.com/home-assistant/core/releases", "_blank");
             }}
             className="inline flex-1 flex-auto"
             variant="outline"
@@ -112,41 +109,21 @@ export function DashboardHeaderInstallation({ ...params }) {
             viewBox="0 0 24 24"
             fill="none"
             stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
             className="h-4 w-4 text-muted-foreground"
           >
-            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+            <ellipse cx="12" cy="5" rx="9" ry="3"></ellipse>
+            <path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"></path>
+            <path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"></path>
           </svg>
         </CardHeader>
         <CardContent>
           <div className="text-2xl font-bold">
-            {observations && observations.length > 0
-              ? (
-                  observations[0].environment.memory.used /
-                  1024 /
-                  1024
-                ).toPrecision(2) +
-                "G / " +
-                (
-                  observations[0].environment.memory.total /
-                  1024 /
-                  1024
-                ).toPrecision(2) +
-                "G" +
-                " "
-              : "n/a"}
+            {memoryValues}
 
-            <p className="text-sm font-normal inline">
-              {observations?.length > 0
-                ? Math.floor(
-                    (observations[0].environment.memory.used /
-                      observations[0].environment.memory.total) *
-                      100
-                  ) + "%"
-                : ""}
-            </p>
+            <p className="text-sm font-normal inline">{memoryPercentage}</p>
           </div>
         </CardContent>
       </Card>
@@ -161,25 +138,22 @@ export function DashboardHeaderInstallation({ ...params }) {
             viewBox="0 0 24 24"
             fill="none"
             stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
             className="h-4 w-4 text-muted-foreground"
           >
-            <polygon points="7.86 2 16.14 2 22 7.86 22 16.14 16.14 22 7.86 22 2 16.14 2 7.86 7.86 2"></polygon>
-            <line x1="12" y1="8" x2="12" y2="12"></line>
-            <line x1="12" y1="16" x2="12.01" y2="16"></line>
+            <line x1="22" y1="12" x2="2" y2="12"></line>
+            <path d="M5.45 5.11L2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"></path>
+            <line x1="6" y1="16" x2="6.01" y2="16"></line>
+            <line x1="10" y1="16" x2="10.01" y2="16"></line>
           </svg>
         </CardHeader>
         <CardContent>
           <div className="text-2xl font-bold">
-            {highestStorage
-              ? highestStorage?.used + " / " + highestStorage?.size
-              : "n/a"}
+            {highestStorage ? `${highestStorage?.used}  / ${highestStorage?.size}` : "n/a"}
 
-            <p className="text-sm font-normal ml-2 inline">
-              {highestStorage?.name ?? ""}
-            </p>
+            <p className="text-sm font-normal ml-2 inline">{highestStorage?.name ?? ""}</p>
           </div>
         </CardContent>
       </Card>
@@ -194,21 +168,25 @@ export function DashboardHeaderInstallation({ ...params }) {
             viewBox="0 0 24 24"
             fill="none"
             stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
             className="h-4 w-4 text-muted-foreground"
           >
-            <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
-            <line x1="12" y1="9" x2="12" y2="13"></line>
-            <line x1="12" y1="17" x2="12.01" y2="17"></line>
+            <rect x="4" y="4" width="16" height="16" rx="2" ry="2"></rect>
+            <rect x="9" y="9" width="6" height="6"></rect>
+            <line x1="9" y1="1" x2="9" y2="4"></line>
+            <line x1="15" y1="1" x2="15" y2="4"></line>
+            <line x1="9" y1="20" x2="9" y2="23"></line>
+            <line x1="15" y1="20" x2="15" y2="23"></line>
+            <line x1="20" y1="9" x2="23" y2="9"></line>
+            <line x1="20" y1="14" x2="23" y2="14"></line>
+            <line x1="1" y1="9" x2="4" y2="9"></line>
+            <line x1="1" y1="14" x2="4" y2="14"></line>
           </svg>
         </CardHeader>
         <CardContent>
-          <div className="text-2xl font-bold">
-            {(observations && observations[0]?.environment.cpu.architecture) ??
-              "n/a"}
-          </div>
+          <div className="text-2xl font-bold">{cpuArchitecture}</div>
         </CardContent>
       </Card>
       <Card>
@@ -229,11 +207,7 @@ export function DashboardHeaderInstallation({ ...params }) {
         </CardHeader>
         <CardContent>
           <div className="text-2xl font-bold">
-            {observations && observations?.length > 0 ? (
-              <TimeAgo date={observations[0]?.timestamp} />
-            ) : (
-              "n/a"
-            )}
+            {observations && observations?.length > 0 ? <TimeAgo date={observations[0]?.timestamp} /> : "n/a"}
           </div>
         </CardContent>
       </Card>

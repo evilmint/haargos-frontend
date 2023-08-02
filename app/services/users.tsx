@@ -8,10 +8,7 @@ export async function getUserMe(): Promise<User> {
     redirect: "follow",
   };
 
-  const response = await fetch(
-    `${apiSettings.baseUrl}/users/me`,
-    requestOptions
-  );
+  const response = await fetch(`${apiSettings.baseUrl}/users/me`, requestOptions);
 
   const data: UserApiResponse = await response.json();
   return data.body;

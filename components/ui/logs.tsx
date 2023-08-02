@@ -1,20 +1,7 @@
 "use client";
 
-import {
-  Table,
-  TableBody,
-  TableCaption,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import {
-  Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger,
-} from "@/registry/new-york/ui/tabs";
+import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/registry/new-york/ui/tabs";
 import { Log } from "../../app/types.d";
 import { useEffect } from "react";
 import { useInstallationStore } from "@/app/services/stores";
@@ -22,9 +9,7 @@ import { useInstallationStore } from "@/app/services/stores";
 export function Logs({ ...params }) {
   const { installationId } = params;
   const logs = useInstallationStore((state) => state.logsByInstallationId[installationId]);
-  const fetchInstallations = useInstallationStore(
-    (state) => state.fetchInstallations
-  );
+  const fetchInstallations = useInstallationStore((state) => state.fetchInstallations);
 
   useEffect(() => {
     fetchInstallations();
@@ -51,15 +36,10 @@ export function Logs({ ...params }) {
           <TableBody>
             {(logs ?? []).map((log: Log) => (
               <TableRow key={log.time}>
-                <TableCell className="font-medium text-xs">
-                  {log.time}
-                </TableCell>
+                <TableCell className="font-medium text-xs">{log.time}</TableCell>
                 <TableCell className="text-xs">{log.type}</TableCell>
                 <TableCell className="text-xs">{log.thread}</TableCell>
-                <TableCell
-                  className="text-left"
-                  dangerouslySetInnerHTML={{ __html: log.log }}
-                ></TableCell>
+                <TableCell className="text-left" dangerouslySetInnerHTML={{ __html: log.log }}></TableCell>
               </TableRow>
             ))}
           </TableBody>

@@ -5,7 +5,7 @@ import { Button } from "@/registry/new-york/ui/button";
 import { useRouter } from "next/navigation";
 
 import { useEffect } from "react";
-import { useInstallationStore } from '@/app/services/stores';
+import { useInstallationStore } from "@/app/services/stores";
 
 export function Installations() {
   const installations = useInstallationStore((state) => state.installations);
@@ -21,12 +21,9 @@ export function Installations() {
     return (
       <div className="flex items-center space-y-4">
         <div className="space-y-1">
-          <p className="text-sm font-medium leading-none">
-            {installation.name}
-          </p>
+          <p className="text-sm font-medium leading-none">{installation.name}</p>
           <p className="text-sm text-muted-foreground">
-            Last agent activity:{" "}
-            <TimeAgo date={installation.last_agent_connection} />
+            Last agent activity: <TimeAgo date={installation.last_agent_connection} />
           </p>
         </div>
         <div className="ml-auto space-x-2 font-medium">

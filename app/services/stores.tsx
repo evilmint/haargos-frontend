@@ -73,9 +73,7 @@ const useInstallationStore = create<InstallationStoreState>((set, get) => ({
       const observations = await getObservations(installationId);
       const updatedObservations = observations.map((observation) => {
         let volumesUnsorted = observation.environment.storage.sort(
-          (a, b) =>
-            Number(b.use_percentage.slice(0, -1)) -
-            Number(a.use_percentage.slice(0, -1))
+          (a, b) => Number(b.use_percentage.slice(0, -1)) - Number(a.use_percentage.slice(0, -1))
         );
 
         observation.environment.storage = extractUniqueVolumes(volumesUnsorted);
@@ -89,10 +87,7 @@ const useInstallationStore = create<InstallationStoreState>((set, get) => ({
         },
       }));
 
-      let logString = updatedObservations.reduce(
-        (acc: string, item: Observation) => acc + item.logs,
-        ""
-      );
+      let logString = updatedObservations.reduce((acc: string, item: Observation) => acc + item.logs, "");
 
       set((state) => ({
         logsByInstallationId: {
@@ -103,12 +98,10 @@ const useInstallationStore = create<InstallationStoreState>((set, get) => ({
 
       const homeAssistantContainer = updatedObservations
         .flatMap((observation) => observation.docker.containers)
-        .find((container) =>
-          container.image.startsWith("ghcr.io/home-assistant/home-assistant:")
-        );
+        .find((container) => container.image.startsWith("ghcr.io/home-assistant/home-assistant:"));
 
       if (homeAssistantContainer) {
-        const haVersion = homeAssistantContainer.image.split(':')[1];
+        const haVersion = homeAssistantContainer.image.split(":")[1];
         set((state) => ({
           haVersion: { ...state.haVersion, [installationId]: haVersion },
         }));
@@ -118,14 +111,10 @@ const useInstallationStore = create<InstallationStoreState>((set, get) => ({
       let overallHighestUsePercentage = -1;
 
       updatedObservations.forEach((item) => {
-        const highestUseStorage = findHighestUseStorage(
-          item.environment.storage
-        );
+        const highestUseStorage = findHighestUseStorage(item.environment.storage);
 
         if (highestUseStorage) {
-          const highestUsePercentage = parseInt(
-            highestUseStorage.use_percentage.replace("%", "")
-          );
+          const highestUsePercentage = parseInt(highestUseStorage.use_percentage.replace("%", ""));
 
           if (highestUsePercentage > overallHighestUsePercentage) {
             overallHighestUsePercentage = highestUsePercentage;
@@ -169,9 +158,7 @@ const findHighestUseStorage = (storageArray: Storage[]): Storage | null => {
     }
 
     const usePercentage = parseInt(storage.use_percentage.replace("%", ""));
-    return usePercentage > parseInt(highest.use_percentage.replace("%", ""))
-      ? storage
-      : highest;
+    return usePercentage > parseInt(highest.use_percentage.replace("%", "")) ? storage : highest;
   }, null);
 };
 

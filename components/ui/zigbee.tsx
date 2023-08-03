@@ -4,7 +4,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/registry/new-york/ui/card';
 
-import { SVGWithText } from './SVGWithText';
+import { SVGWithText } from './svg-with-text';
 import { useEffect } from 'react';
 import { useInstallationStore } from '@/app/services/stores';
 import { ZigbeeDevice } from '@/app/types';

@@ -1,5 +1,5 @@
 import { ObservationApiResponse, Observation } from '../types';
-import { apiSettings, baseHeaders } from './apiSettings';
+import { apiSettings, baseHeaders } from './api-settings';
 
 export async function getObservations(installationId: string): Promise<Observation[]> {
   const requestOptions: RequestInit = {

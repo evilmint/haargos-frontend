@@ -1,24 +1,24 @@
-import Link from "next/link"
+'use client';
 
-import { cn } from "@/lib/utils"
-import InstallationSwitcher from "./installation-switcher"
+import Link from 'next/link';
 
-export function MainNav({
-  className,
-  ...props
-}: React.HTMLAttributes<HTMLElement>) {
+import { cn } from '@/lib/utils';
+import InstallationSwitcher from './installation-switcher';
+import { useTeamStore } from '@/app/services/stores';
+
+export function MainNav({ className, ...props }: React.HTMLAttributes<HTMLElement>) {
+  const dashboardClicked = useTeamStore(state => state.clearTeam);
+
   return (
-    <nav
-      className={cn("flex items-center space-x-4 lg:space-x-6", className)}
-      {...props}
-    >
+    <nav className={cn('flex items-center space-x-4 lg:space-x-6', className)} {...props}>
       <Link
         href="/"
+        onClick={() => dashboardClicked()}
         className="text-sm font-medium transition-colors hover:text-primary"
       >
         Dashboard
       </Link>
-    <InstallationSwitcher />
+      <InstallationSwitcher />
     </nav>
-  )
+  );
 }

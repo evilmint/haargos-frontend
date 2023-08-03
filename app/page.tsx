@@ -3,7 +3,7 @@ import { Tabs, TabsContent } from '@/registry/new-york/ui/tabs';
 import { MainNav } from '@/components/ui/main-nav';
 import { Overview } from '@/components/ui/overview';
 import { Installations } from '@/components/ui/installations';
-import { DashboardHeader } from '@/components/ui/dashboardHeader';
+import { DashboardHeader } from '@/components/ui/dashboard-header';
 import { UserNav } from '@/components/ui/user-nav';
 
 export default function DashboardPage() {

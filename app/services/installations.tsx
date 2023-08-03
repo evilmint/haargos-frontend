@@ -1,5 +1,5 @@
 import { Installation, InstallationApiResponse } from '../types';
-import { apiSettings, baseHeaders } from './apiSettings';
+import { apiSettings, baseHeaders } from './api-settings';
 
 export async function getInstallations(): Promise<Installation[]> {
   const requestOptions: RequestInit = {

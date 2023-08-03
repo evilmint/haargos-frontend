@@ -25,11 +25,13 @@ const useUserStore = create<UserState>(set => ({
 
 interface TeamState {
   selectedTeam: any | null;
+  clearTeam: () => void;
   setSelectedTeam: (team: any | null) => void;
 }
 
 const useTeamStore = create<TeamState>(set => ({
   selectedTeam: null,
+  clearTeam: () => set(() => ({ selectedTeam: null })),
   setSelectedTeam: selectedTeam => set(() => ({ selectedTeam }))
 }));
 

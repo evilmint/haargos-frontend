@@ -1,5 +1,5 @@
 import { User, UserApiResponse } from '../types';
-import { apiSettings, baseHeaders } from './apiSettings';
+import { apiSettings, baseHeaders } from './api-settings';
 
 export async function getUserMe(): Promise<User> {
   const requestOptions: RequestInit = {

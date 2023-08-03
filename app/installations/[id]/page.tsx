@@ -11,9 +11,9 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/registry/new-york/ui
 import { MainNav } from '@/components/ui/main-nav';
 import { Installations } from '@/components/ui/installations';
 import { UserNav } from '@/components/ui/user-nav';
-import { DashboardHeaderInstallation } from '@/components/ui/dashboardHeaderInstallation';
+import { DashboardHeaderInstallation } from '@/components/ui/dashboard-header-installation';
 import { Zigbee } from '@/components/ui/zigbee';
-import { InstallationName } from '@/components/ui/installationName';
+import { InstallationName } from '@/components/ui/installation-name';
 
 export default function DashboardInstallationPage({ params }: { params: { id: string } }) {
   return (

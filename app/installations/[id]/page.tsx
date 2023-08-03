@@ -44,8 +44,6 @@ export default function DashboardInstallationPage({ params }: { params: { id: st
           </div>
         </div>
         <div className="flex-1 space-y-4 p-8 pt-6">
-          <InstallationName installationId={params.id} />
-      
           <Tabs defaultValue="overview" className="space-y-4">
             <TabsList>
               <TabsTrigger value="overview">Overview</TabsTrigger>
@@ -57,15 +55,6 @@ export default function DashboardInstallationPage({ params }: { params: { id: st
             <TabsContent value="overview" className="space-y-4">
               <DashboardHeaderInstallation installationId={params.id} />
               <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
-                <Card className="col-span-7">
-                  <CardHeader>
-                    <CardTitle>Installations</CardTitle>
-                    <CardDescription>Client installations</CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <Installations />
-                  </CardContent>
-                </Card>
                 <Card className="col-span-8">
                   <CardContent className="pl-2">
                     <Logs installationId={params.id} />
@@ -76,16 +65,6 @@ export default function DashboardInstallationPage({ params }: { params: { id: st
 
             <TabsContent value="environment" className="space-y-4">
               <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
-                <Card className="col-span-7">
-                  <CardHeader>
-                    <CardTitle>Installations</CardTitle>
-                    <CardDescription>Client installations</CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <Installations />
-                  </CardContent>
-                </Card>
-
                 <Card className="col-span-7">
                   <CardHeader>
                     <CardTitle>CPU</CardTitle>
@@ -101,32 +80,12 @@ export default function DashboardInstallationPage({ params }: { params: { id: st
 
             <TabsContent value="docker" className="space-y-4">
               <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
-                <Card className="col-span-7">
-                  <CardHeader>
-                    <CardTitle>Installations</CardTitle>
-                    <CardDescription>Client installations</CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <Installations />
-                  </CardContent>
-                </Card>
-
                 <Docker installationId={params.id} />
               </div>
             </TabsContent>
 
             <TabsContent value="zigbee" className="space-y-4">
               <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
-                <Card className="col-span-7">
-                  <CardHeader>
-                    <CardTitle>Installations</CardTitle>
-                    <CardDescription>Client installations</CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <Installations />
-                  </CardContent>
-                </Card>
-
                 <Zigbee installationId={params.id} />
               </div>
             </TabsContent>

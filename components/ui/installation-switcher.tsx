@@ -4,7 +4,6 @@ import * as React from 'react';
 import { CaretSortIcon, CheckIcon, PlusCircledIcon } from '@radix-ui/react-icons';
 
 import { cn } from '@/lib/utils';
-import { Avatar, AvatarFallback, AvatarImage } from '@/registry/new-york/ui/avatar';
 import { Button } from '@/registry/new-york/ui/button';
 import {
   Command,
@@ -28,42 +27,37 @@ import { Input } from '@/registry/new-york/ui/input';
 import { Label } from '@/registry/new-york/ui/label';
 import { Popover, PopoverContent, PopoverTrigger } from '@/registry/new-york/ui/popover';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/registry/new-york/ui/select';
-
-const groups = [
-  {
-    label: 'Installation',
-    teams: [
-      {
-        label: 'Podgórnik 2/51',
-        value: 'personal',
-      },
-    ],
-  },
-  // {
-  //   label: "Teams",
-  //   teams: [
-  //     {
-  //       label: "Acme Inc.",
-  //       value: "acme-inc",
-  //     },
-  //     {
-  //       label: "Monsters Inc.",
-  //       value: "monsters",
-  //     },
-  //   ],
-  // },
-];
-
-type Team = (typeof groups)[number]['teams'][number];
+import { useRouter } from 'next/navigation';
+import { useInstallationStore, useTeamStore } from '@/app/services/stores';
 
 type PopoverTriggerProps = React.ComponentPropsWithoutRef<typeof PopoverTrigger>;
 
 interface TeamSwitcherProps extends PopoverTriggerProps {}
 
-export default function TeamSwitcher({ className }: TeamSwitcherProps) {
+export default function InstallationSwitcher({ className }: TeamSwitcherProps) {
+  const installations = useInstallationStore(state => state.installations);
+  const fetchInstallations = useInstallationStore(state => state.fetchInstallations);
   const [open, setOpen] = React.useState(false);
+  const [groups, setGroups] = React.useState<any[]>([]);
   const [showNewTeamDialog, setShowNewTeamDialog] = React.useState(false);
-  const [selectedTeam, setSelectedTeam] = React.useState<Team>(groups[0].teams[0]);
+
+  const selectedTeam = useTeamStore(state => state.selectedTeam);
+  const setSelectedTeam = useTeamStore(state => state.setSelectedTeam);
+  
+  const router = useRouter();
+
+  React.useEffect(() => {
+    fetchInstallations().then(() => {
+      setGroups([
+        {
+          label: 'Installation',
+          teams: installations.map(i => {
+            return { label: i.name, value: i.id };
+          }),
+        },
+      ]);
+    });
+  }, [fetchInstallations, installations]);
 
   return (
     <Dialog open={showNewTeamDialog} onOpenChange={setShowNewTeamDialog}>
@@ -76,14 +70,7 @@ export default function TeamSwitcher({ className }: TeamSwitcherProps) {
             aria-label="Select a team"
             className={cn('w-[200px] justify-between', className)}
           >
-            {/* <Avatar className="mr-2 h-5 w-5">
-              <AvatarImage
-                src={`https://avatar.vercel.sh/${selectedTeam.value}.png`}
-                alt={selectedTeam.label}
-              />
-              <AvatarFallback>SC</AvatarFallback>
-            </Avatar> */}
-            {selectedTeam.label}
+            {selectedTeam?.label ?? 'Choose installation'}
             <CaretSortIcon className="ml-auto h-4 w-4 shrink-0 opacity-50" />
           </Button>
         </PopoverTrigger>
@@ -91,31 +78,25 @@ export default function TeamSwitcher({ className }: TeamSwitcherProps) {
           <Command>
             <CommandList>
               <CommandInput placeholder="Search installation..." />
-              <CommandEmpty>No team found.</CommandEmpty>
+              <CommandEmpty>No installation found.</CommandEmpty>
               {groups.map(group => (
                 <CommandGroup key={group.label} heading={group.label}>
-                  {group.teams.map(team => (
+                  {group.teams.map((installation: any) => (
                     <CommandItem
-                      key={team.value}
+                      key={installation.value}
                       onSelect={() => {
-                        setSelectedTeam(team);
+                        setSelectedTeam(installation);
                         setOpen(false);
+
+                        router.push('/installations/' + installation.value);
                       }}
                       className="text-sm"
                     >
-                      <Avatar className="mr-2 h-5 w-5">
-                        <AvatarImage
-                          src={`https://avatar.vercel.sh/${team.value}.png`}
-                          alt={team.label}
-                          className="grayscale"
-                        />
-                        <AvatarFallback>SC</AvatarFallback>
-                      </Avatar>
-                      {team.label}
+                      {installation.label}
                       <CheckIcon
                         className={cn(
                           'ml-auto h-4 w-4',
-                          selectedTeam.value === team.value ? 'opacity-100' : 'opacity-0',
+                          selectedTeam?.value === installation.value ? 'opacity-100' : 'opacity-0',
                         )}
                       />
                     </CommandItem>
@@ -123,7 +104,7 @@ export default function TeamSwitcher({ className }: TeamSwitcherProps) {
                 </CommandGroup>
               ))}
             </CommandList>
-            <CommandSeparator />
+            {/* <CommandSeparator />
             <CommandList>
               <CommandGroup>
                 <DialogTrigger asChild>
@@ -138,7 +119,7 @@ export default function TeamSwitcher({ className }: TeamSwitcherProps) {
                   </CommandItem>
                 </DialogTrigger>
               </CommandGroup>
-            </CommandList>
+            </CommandList> */}
           </Command>
         </PopoverContent>
       </Popover>

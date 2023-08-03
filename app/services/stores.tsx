@@ -23,6 +23,16 @@ const useUserStore = create<UserState>(set => ({
   },
 }));
 
+interface TeamState {
+  selectedTeam: any | null;
+  setSelectedTeam: (team: any | null) => void;
+}
+
+const useTeamStore = create<TeamState>(set => ({
+  selectedTeam: null,
+  setSelectedTeam: selectedTeam => set(() => ({ selectedTeam }))
+}));
+
 interface InstallationStoreState {
   installations: Installation[];
   observations: Record<string, Observation[]>;
@@ -196,4 +206,4 @@ const extractUniqueVolumes = (volumesUnsorted: Storage[]): Storage[] => {
   }, []);
 };
 
-export { useUserStore, useInstallationStore };
+export { useUserStore, useInstallationStore, useTeamStore };

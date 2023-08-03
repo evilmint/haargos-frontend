@@ -24,7 +24,7 @@ export function Zigbee({ ...params }) {
   return (
     <Card className="col-span-8">
       <CardHeader>
-        <CardTitle>Zigbee devices ({observations.length > 0 && (observations[0].zigbee?.devices.length ?? 0)})</CardTitle>
+        <CardTitle>Zigbee devices ({observations.length > 0 ? (observations[0].zigbee?.devices.length ?? 0) : 0})</CardTitle>
       </CardHeader>
       <CardContent className="pl-2">
         <Table>
@@ -37,7 +37,7 @@ export function Zigbee({ ...params }) {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {observations[0].zigbee && observations[0].zigbee.devices.length > 0 &&
+            {observations.length > 0 && observations[0].zigbee && observations[0].zigbee.devices.length > 0 &&
               (observations[0].zigbee.devices ?? []).map((device: ZigbeeDevice) => (
                 <TableRow key={device.ieee}>
                   <TableCell className="font-medium text-xs">{device.ieee}</TableCell>

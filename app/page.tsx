@@ -23,21 +23,12 @@ export default function DashboardPage() {
             <TabsContent value="overview" className="space-y-4">
               <DashboardHeader />
               <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
-                <Card className="col-span-4">
+                <Card className="col-span-7">
                   <CardHeader>
                     <CardTitle>Issues</CardTitle>
                   </CardHeader>
                   <CardContent className="pl-2">
                     <Overview />
-                  </CardContent>
-                </Card>
-                <Card className="col-span-3">
-                  <CardHeader>
-                    <CardTitle>Installations</CardTitle>
-                    <CardDescription>Client installations</CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <Installations />
                   </CardContent>
                 </Card>
               </div>

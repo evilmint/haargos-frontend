@@ -56,6 +56,18 @@ interface Observation {
   timestamp: string;
   dangers: string[];
   id: string;
+  zigbee: Zigbee | null;
+}
+
+interface Zigbee {
+  devices: ZigbeeDevice[];
+}
+
+interface ZigbeeDevice {
+  ieee: string;
+  last_updated: string;
+  entity_name: string;
+  brand: string;
 }
 
 interface ObservationApiResponse {
@@ -106,6 +118,8 @@ export {
   DockerContainer,
   Observation,
   UserApiResponse,
+  Zigbee,
+  ZigbeeDevice,
   User,
-  Storage
+  Storage,
 };

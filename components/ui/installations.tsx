@@ -1,15 +1,15 @@
-"use client";
+'use client';
 
-import TimeAgo from "react-timeago";
-import { Button } from "@/registry/new-york/ui/button";
-import { useRouter } from "next/navigation";
+import TimeAgo from 'react-timeago';
+import { Button } from '@/registry/new-york/ui/button';
+import { useRouter } from 'next/navigation';
 
-import { useEffect } from "react";
-import { useInstallationStore } from "@/app/services/stores";
+import { useEffect } from 'react';
+import { useInstallationStore } from '@/app/services/stores';
 
 export function Installations() {
-  const installations = useInstallationStore((state) => state.installations);
-  const fetchInstallations = useInstallationStore((state) => state.fetchInstallations);
+  const installations = useInstallationStore(state => state.installations);
+  const fetchInstallations = useInstallationStore(state => state.fetchInstallations);
 
   useEffect(() => {
     fetchInstallations();
@@ -29,7 +29,7 @@ export function Installations() {
         <div className="ml-auto space-x-2 font-medium">
           <Button
             onClick={() => {
-              router.push("/installations/" + installation.id);
+              router.push('/installations/' + installation.id);
             }}
           >
             Open

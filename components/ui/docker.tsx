@@ -1,23 +1,23 @@
-"use client";
+'use client';
 
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/registry/new-york/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from '@/registry/new-york/ui/card';
 
-import { SVGWithText } from "./SVGWithText";
-import { useEffect } from "react";
-import { useInstallationStore } from "@/app/services/stores";
+import { SVGWithText } from './SVGWithText';
+import { useEffect } from 'react';
+import { useInstallationStore } from '@/app/services/stores';
 
 export function Docker({ ...params }) {
   const { installationId } = params;
-  const observations = useInstallationStore((state) => state.observations[installationId]);
-  const fetchInstallations = useInstallationStore((state) => state.fetchInstallations);
-  const fetchObservationsForInstallation = useInstallationStore((state) => state.fetchObservationsForInstallation);
+  const observations = useInstallationStore(state => state.observations[installationId]);
+  const fetchInstallations = useInstallationStore(state => state.fetchInstallations);
+  const fetchObservationsForInstallation = useInstallationStore(state => state.fetchObservationsForInstallation);
 
   useEffect(() => {
     fetchInstallations()
       .then(() => fetchObservationsForInstallation(installationId))
-      .catch((error) => console.error(error));
+      .catch(error => console.error(error));
   }, [fetchInstallations, fetchObservationsForInstallation, installationId]);
 
   const dockerContainerCount = observations[0]?.docker?.containers?.length || 0;
@@ -47,7 +47,7 @@ export function Docker({ ...params }) {
                 <TableRow key={container.image}>
                   <TableCell className="font-medium text-xs">{container.name}</TableCell>
                   <TableCell className="text-xs">{container.image}</TableCell>
-                  <TableCell className="text-xs">{container.running ? "Yes" : "No"}</TableCell>
+                  <TableCell className="text-xs">{container.running ? 'Yes' : 'No'}</TableCell>
                   <TableCell className="text-xs">
                     <SVGWithText showSVG={container.restarting} textWithSVG="Yes" fallbackText="No" />
                   </TableCell>
@@ -55,7 +55,7 @@ export function Docker({ ...params }) {
                   <TableCell className="text-xs">
                     {new Date(container.finished_at).getUTCSeconds() > 0
                       ? new Date(container.finished_at).toLocaleString()
-                      : "-"}
+                      : '-'}
                   </TableCell>
                   <TableCell className="text-xs">{container.state}</TableCell>
                   <TableCell className="text-xs">{container.status}</TableCell>

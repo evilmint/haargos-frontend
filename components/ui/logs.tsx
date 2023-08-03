@@ -1,15 +1,15 @@
-"use client";
+'use client';
 
-import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/registry/new-york/ui/tabs";
-import { Log } from "../../app/types.d";
-import { useEffect } from "react";
-import { useInstallationStore } from "@/app/services/stores";
+import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/registry/new-york/ui/tabs';
+import { Log } from '../../app/types.d';
+import { useEffect } from 'react';
+import { useInstallationStore } from '@/app/services/stores';
 
 export function Logs({ ...params }) {
   const { installationId } = params;
-  const logs = useInstallationStore((state) => state.logsByInstallationId[installationId]);
-  const fetchInstallations = useInstallationStore((state) => state.fetchInstallations);
+  const logs = useInstallationStore(state => state.logsByInstallationId[installationId]);
+  const fetchInstallations = useInstallationStore(state => state.fetchInstallations);
 
   useEffect(() => {
     fetchInstallations();
@@ -52,7 +52,7 @@ export function Logs({ ...params }) {
             <div className="flex justify-between items-center mb-2"></div>
             <div className="overflow-x-auto">
               <pre id="code" className="text-gray-300">
-                <code>{(logs ?? []).map((l: Log) => l.raw).join("\n")}</code>
+                <code>{(logs ?? []).map((l: Log) => l.raw).join('\n')}</code>
               </pre>
             </div>
           </div>

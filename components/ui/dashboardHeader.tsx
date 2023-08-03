@@ -1,12 +1,12 @@
-"use client";
+'use client';
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/registry/new-york/ui/card";
-import { useEffect } from "react";
-import { useInstallationStore } from "@/app/services/stores";
+import { Card, CardContent, CardHeader, CardTitle } from '@/registry/new-york/ui/card';
+import { useEffect } from 'react';
+import { useInstallationStore } from '@/app/services/stores';
 
 export function DashboardHeader() {
-  const installations = useInstallationStore((state) => state.installations);
-  const fetchInstallations = useInstallationStore((state) => state.fetchInstallations);
+  const installations = useInstallationStore(state => state.installations);
+  const fetchInstallations = useInstallationStore(state => state.fetchInstallations);
 
   useEffect(() => {
     fetchInstallations();
@@ -22,7 +22,7 @@ export function DashboardHeader() {
   const installationsWithIssues = installations.reduce((s, i) => {
     return s + (i.issues.length > 0 ? 1 : 0);
   }, 0);
-  const latestActivityInstallationName = installations.length > 0 ? installations[0].name : "-";
+  const latestActivityInstallationName = installations.length > 0 ? installations[0].name : '-';
 
   return (
     <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">

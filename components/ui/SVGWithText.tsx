@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 
 export function SVGWithText({ ...props }) {
   const { showSVG, textWithSVG, fallbackText } = props;

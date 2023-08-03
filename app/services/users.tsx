@@ -1,11 +1,11 @@
-import { User, UserApiResponse } from "../types";
-import { apiSettings, baseHeaders } from "./apiSettings";
+import { User, UserApiResponse } from '../types';
+import { apiSettings, baseHeaders } from './apiSettings';
 
 export async function getUserMe(): Promise<User> {
   const requestOptions: RequestInit = {
-    method: "GET",
+    method: 'GET',
     headers: baseHeaders,
-    redirect: "follow",
+    redirect: 'follow',
   };
 
   const response = await fetch(`${apiSettings.baseUrl}/users/me`, requestOptions);

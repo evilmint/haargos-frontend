@@ -1,24 +1,24 @@
-"use client";
+'use client';
 
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/registry/new-york/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from '@/registry/new-york/ui/card';
 
-import { useEffect } from "react";
-import { useInstallationStore } from "@/app/services/stores";
+import { useEffect } from 'react';
+import { useInstallationStore } from '@/app/services/stores';
 
 export function Storage({ ...params }) {
   const { installationId } = params;
 
-  const observations = useInstallationStore((state) => state.observations[installationId]);
-  const installations = useInstallationStore((state) => state.installations);
-  const fetchInstallations = useInstallationStore((state) => state.fetchInstallations);
-  const fetchObservationsForInstallation = useInstallationStore((state) => state.fetchObservationsForInstallation);
+  const observations = useInstallationStore(state => state.observations[installationId]);
+  const installations = useInstallationStore(state => state.installations);
+  const fetchInstallations = useInstallationStore(state => state.fetchInstallations);
+  const fetchObservationsForInstallation = useInstallationStore(state => state.fetchObservationsForInstallation);
 
   useEffect(() => {
     fetchInstallations()
       .then(() => fetchObservationsForInstallation(installationId))
-      .catch((error) => console.error(error));
+      .catch(error => console.error(error));
   }, [fetchInstallations, fetchObservationsForInstallation, installationId]);
 
   return (
@@ -40,7 +40,7 @@ export function Storage({ ...params }) {
           </TableHeader>
           <TableBody>
             {observations?.length > 0 &&
-              (observations[0].environment.storage ?? []).map((storage) => (
+              (observations[0].environment.storage ?? []).map(storage => (
                 <TableRow key={storage.mounted_on}>
                   <TableCell className="font-medium text-xs">{storage.name}</TableCell>
                   <TableCell className="text-xs">{storage.available}</TableCell>

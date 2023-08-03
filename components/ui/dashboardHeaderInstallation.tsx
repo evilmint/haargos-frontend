@@ -1,39 +1,39 @@
-"use client";
-import numeral from "numeral";
+'use client';
+import numeral from 'numeral';
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/registry/new-york/ui/card";
-import { useEffect } from "react";
-import TimeAgo from "react-timeago";
-import { useInstallationStore } from "@/app/services/stores";
-import { Button } from "@/registry/new-york/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from '@/registry/new-york/ui/card';
+import { useEffect } from 'react';
+import TimeAgo from 'react-timeago';
+import { useInstallationStore } from '@/app/services/stores';
+import { Button } from '@/registry/new-york/ui/button';
 
 export function DashboardHeaderInstallation({ ...params }) {
   const { installationId } = params;
-  const observations = useInstallationStore((state) => state.observations[installationId]);
-  const highestStorage = useInstallationStore((state) => state.highestStorageByInstallationId[installationId]);
-  const fetchInstallations = useInstallationStore((state) => state.fetchInstallations);
-  const fetchObservationsForInstallation = useInstallationStore((state) => state.fetchObservationsForInstallation);
-  const haVersion = useInstallationStore((state) => state.haVersion[installationId]);
+  const observations = useInstallationStore(state => state.observations[installationId]);
+  const highestStorage = useInstallationStore(state => state.highestStorageByInstallationId[installationId]);
+  const fetchInstallations = useInstallationStore(state => state.fetchInstallations);
+  const fetchObservationsForInstallation = useInstallationStore(state => state.fetchObservationsForInstallation);
+  const haVersion = useInstallationStore(state => state.haVersion[installationId]);
 
   const memoryValues =
     observations && observations.length > 0
-      ? `${numeral(observations[0].environment.memory.used / 1024 / 1024).format("0.0")}G / ${numeral(
-          observations[0].environment.memory.total / 1024 / 1024
-        ).format("0.0")}G `
-      : "n/a";
+      ? `${numeral(observations[0].environment.memory.used / 1024 / 1024).format('0.0')}G / ${numeral(
+          observations[0].environment.memory.total / 1024 / 1024,
+        ).format('0.0')}G `
+      : 'n/a';
 
   const hasObservations = observations?.length > 0;
   const memoryUsed = hasObservations ? observations[0].environment.memory.used : 0;
   const memoryTotal = hasObservations ? observations[0].environment.memory.total : 1;
-  const memoryPercentage = Math.floor((memoryUsed / memoryTotal) * 100) + "%";
+  const memoryPercentage = Math.floor((memoryUsed / memoryTotal) * 100) + '%';
 
   useEffect(() => {
     fetchInstallations()
       .then(() => fetchObservationsForInstallation(installationId))
-      .catch((error) => console.error(error));
+      .catch(error => console.error(error));
   }, [fetchInstallations, fetchObservationsForInstallation, installationId]);
 
-  const cpuArchitecture = (observations && observations[0]?.environment.cpu.architecture) ?? "n/a";
+  const cpuArchitecture = (observations && observations[0]?.environment.cpu.architecture) ?? 'n/a';
   return (
     <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-5">
       <Card>
@@ -60,7 +60,7 @@ export function DashboardHeaderInstallation({ ...params }) {
         </CardHeader>
         <CardContent>
           <div className="text-2xl font-bold">
-            {observations && observations.length > 0 ? observations[0].agent_version : "n/a"}
+            {observations && observations.length > 0 ? observations[0].agent_version : 'n/a'}
           </div>
         </CardContent>
       </Card>
@@ -86,12 +86,12 @@ export function DashboardHeaderInstallation({ ...params }) {
           </svg>
         </CardHeader>
         <CardContent className="flex">
-          <div className="text-2xl flex-1 font-bold inline">{haVersion ?? "n/a"}</div>
+          <div className="text-2xl flex-1 font-bold inline">{haVersion ?? 'n/a'}</div>
           <Button
             onClick={() => {
-              window.open("https://github.com/home-assistant/core/releases", "_blank");
+              window.open('https://github.com/home-assistant/core/releases', '_blank');
             }}
-            className="inline flex-1 flex-auto"
+            className="inline flex-1 flex-auto md:hidden"
             variant="outline"
           >
             Releases
@@ -151,9 +151,9 @@ export function DashboardHeaderInstallation({ ...params }) {
         </CardHeader>
         <CardContent>
           <div className="text-2xl font-bold">
-            {highestStorage ? `${highestStorage?.used}  / ${highestStorage?.size}` : "n/a"}
+            {highestStorage ? `${highestStorage?.used}  / ${highestStorage?.size}` : 'n/a'}
 
-            <p className="text-sm font-normal ml-2 inline">{highestStorage?.name ?? ""}</p>
+            <p className="text-sm font-normal ml-2 inline">{highestStorage?.name ?? ''}</p>
           </div>
         </CardContent>
       </Card>
@@ -207,7 +207,7 @@ export function DashboardHeaderInstallation({ ...params }) {
         </CardHeader>
         <CardContent>
           <div className="text-2xl font-bold">
-            {observations && observations?.length > 0 ? <TimeAgo date={observations[0]?.timestamp} /> : "n/a"}
+            {observations && observations?.length > 0 ? <TimeAgo date={observations[0]?.timestamp} /> : 'n/a'}
           </div>
         </CardContent>
       </Card>

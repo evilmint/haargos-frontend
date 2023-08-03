@@ -1,18 +1,19 @@
-import Image from "next/image";
+import Image from 'next/image';
 
-import { Logs } from "@/components/ui/logs";
-import { Storage } from "@/components/ui/storage";
-import { Docker } from "@/components/ui/docker";
-import { Environment } from "@/components/ui/environment";
+import { Logs } from '@/components/ui/logs';
+import { Storage } from '@/components/ui/storage';
+import { Docker } from '@/components/ui/docker';
+import { Environment } from '@/components/ui/environment';
 
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/registry/new-york/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/registry/new-york/ui/tabs";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/registry/new-york/ui/card';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/registry/new-york/ui/tabs';
 
-import { MainNav } from "@/components/ui/main-nav";
-import { Installations } from "@/components/ui/installations";
-import { UserNav } from "@/components/ui/user-nav";
-import { DashboardHeaderInstallation } from "@/components/ui/dashboardHeaderInstallation";
-import { Zigbee } from "@/components/ui/zigbee";
+import { MainNav } from '@/components/ui/main-nav';
+import { Installations } from '@/components/ui/installations';
+import { UserNav } from '@/components/ui/user-nav';
+import { DashboardHeaderInstallation } from '@/components/ui/dashboardHeaderInstallation';
+import { Zigbee } from '@/components/ui/zigbee';
+import { InstallationName } from '@/components/ui/installationName';
 
 export default function DashboardInstallationPage({ params }: { params: { id: string } }) {
   return (
@@ -43,6 +44,8 @@ export default function DashboardInstallationPage({ params }: { params: { id: st
           </div>
         </div>
         <div className="flex-1 space-y-4 p-8 pt-6">
+          <InstallationName installationId={params.id} />
+      
           <Tabs defaultValue="overview" className="space-y-4">
             <TabsList>
               <TabsTrigger value="overview">Overview</TabsTrigger>

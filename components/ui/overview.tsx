@@ -1,56 +1,73 @@
-"use client";
+'use client';
 
-import { Bar, BarChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
+import { Bar, BarChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
 
-import { useEffect } from "react";
-import { useInstallationStore } from "@/app/services/stores";
+import { useEffect } from 'react';
+import { useInstallationStore } from '@/app/services/stores';
+import { Observation, ZigbeeDevice } from '@/app/types';
 
 export function Overview() {
-  const installations = useInstallationStore((state) => state.installations);
-  const observations = useInstallationStore((state) => state.observations);
-  const fetchInstallations = useInstallationStore((state) => state.fetchInstallations);
-  const fetchObservationsForInstallation = useInstallationStore((state) => state.fetchObservationsForInstallation);
+  const installations = useInstallationStore(state => state.installations);
+  const observations = useInstallationStore(state => state.observations);
+  const fetchInstallations = useInstallationStore(state => state.fetchInstallations);
+  const fetchObservationsForInstallation = useInstallationStore(state => state.fetchObservationsForInstallation);
 
   useEffect(() => {
     fetchInstallations()
       .then(() => Promise.all(installations.map(({ id }) => fetchObservationsForInstallation(id))))
-      .catch((error) => console.error(error));
+      .catch(error => console.error(error));
   }, [fetchInstallations, fetchObservationsForInstallation, installations]);
 
   const allObservations = Object.values(observations).flat();
 
   const cpuIssueCount = allObservations.reduce((a: any, i: any) => {
-    return a + (i.dangers.includes("high_cpu_usage") ? 1 : 0);
+    return a + (i.dangers.includes('high_cpu_usage') ? 1 : 0);
   }, 0);
 
-  const volumeIssueCount = allObservations.reduce((a: any, i: any) => {
-    return a + (i.dangers.includes("high_volume_usage") ? 1 : 0);
+  const volumeIssueCount = allObservations.reduce((a: number, i: Observation) => {
+    return a + (i.dangers.includes('high_volume_usage') ? 1 : 0);
   }, 0);
 
-  const memoryIssueCount = allObservations.reduce((a: any, i: any) => {
-    return a + (i.dangers.includes("high_memory_usage") ? 1 : 0);
+  const memoryIssueCount = allObservations.reduce((a: number, i: Observation) => {
+    return a + (i.dangers.includes('high_memory_usage') ? 1 : 0);
   }, 0);
 
-  const logIssueCount = allObservations.reduce((a: any, i: any) => {
-    return a + (i.dangers.includes("logs") ? 1 : 0);
+  const logErrorIssueCount = allObservations.reduce((a: number, i: Observation) => {
+    return a + (i.dangers.includes('log_errors') ? 1 : 0);
+  }, 0);
+
+  const logWarningIssueCount = allObservations.reduce((a: number, i: Observation) => {
+    return a + (i.dangers.includes('log_warnings') ? 1 : 0);
+  }, 0);
+
+  const zigbeeIssueCount = allObservations.reduce((a: number, i: Observation) => {
+    return a + (i.zigbee?.devices.reduce((c: number, d: ZigbeeDevice) => { return c + (new Date(d.last_updated).getTime() == 0 ? 1 : 0) }, 0) ?? 0);
   }, 0);
 
   const data = [
     {
-      name: "Volume",
+      name: 'Volume',
       total: volumeIssueCount,
     },
     {
-      name: "CPU",
+      name: 'CPU',
       total: cpuIssueCount,
     },
     {
-      name: "Memory",
+      name: 'Memory',
       total: memoryIssueCount,
     },
     {
-      name: "Logs",
-      total: logIssueCount,
+      name: 'Log errors',
+      total: logErrorIssueCount,
+    },
+    {
+      name: 'Log warnings',
+      total: logWarningIssueCount,
+    },
+    {
+      name: 'Zigbee',
+      total: zigbeeIssueCount,
     },
   ];
 
@@ -64,10 +81,10 @@ export function Overview() {
           tickLine={false}
           axisLine={false}
           allowDecimals={false}
-          tickFormatter={(value) => `${value}`}
+          tickFormatter={value => `${value}`}
         />
         <Tooltip cursor={false} />
-        <Bar dataKey="total" fill="#aa55ff" radius={[4, 4, 0, 0]} />
+        <Bar dataKey="total" fill="#2485af" radius={[4, 4, 0, 0]} />
       </BarChart>
     </ResponsiveContainer>
   );

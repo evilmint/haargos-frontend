@@ -43,24 +43,27 @@ export function Docker({ ...params }) {
           </TableHeader>
           <TableBody>
             {observations.length > 0 &&
-              (observations[0].docker.containers ?? []).map((container: any) => (
-                <TableRow key={container.image}>
-                  <TableCell className="font-medium text-xs">{container.name}</TableCell>
-                  <TableCell className="text-xs">{container.image}</TableCell>
-                  <TableCell className="text-xs">{container.running ? 'Yes' : 'No'}</TableCell>
-                  <TableCell className="text-xs">
-                    <SVGWithText showSVG={container.restarting} textWithSVG="Yes" fallbackText="No" />
-                  </TableCell>
-                  <TableCell className="text-xs">{new Date(container.started_at).toLocaleString()}</TableCell>
-                  <TableCell className="text-xs">
-                    {new Date(container.finished_at).getUTCSeconds() > 0
-                      ? new Date(container.finished_at).toLocaleString()
-                      : '-'}
-                  </TableCell>
-                  <TableCell className="text-xs">{container.state}</TableCell>
-                  <TableCell className="text-xs">{container.status}</TableCell>
-                </TableRow>
-              ))}
+              (observations[0].docker.containers ?? []).map(container => {
+                const isAbnormalRunning = container.restarting;
+                const abnormalClassName = isAbnormalRunning ? 'font-medium' : '';
+
+                return (
+                  <TableRow key={container.image} className={abnormalClassName}>
+                    <TableCell className="font-medium text-xs">{container.name}</TableCell>
+                    <TableCell className="text-xs">{container.image}</TableCell>
+                    <TableCell className="text-xs">{container.running ? <p>Yes</p> : <p className='text-red-600'>'No'</p>}</TableCell>
+                    <TableCell className="text-xs">{container.restarting ? <p className='text-red-600'>Yes</p> : 'No'}</TableCell>
+                    <TableCell className="text-xs">{new Date(container.started_at).toLocaleString()}</TableCell>
+                    <TableCell className="text-xs">
+                      {new Date(container.finished_at).getUTCSeconds() > 0
+                        ? new Date(container.finished_at).toLocaleString()
+                        : '-'}
+                    </TableCell>
+                    <TableCell className="text-xs">{<p className={container.state == 'restarting' ? 'text-red-600' : ''}>{container.state}</p>}</TableCell>
+                    <TableCell className="text-xs">{container.status}</TableCell>
+                  </TableRow>
+                );
+              })}
           </TableBody>
         </Table>
       </CardContent>

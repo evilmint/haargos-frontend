@@ -24,7 +24,9 @@ export function Zigbee({ ...params }) {
   return (
     <Card className="col-span-8">
       <CardHeader>
-        <CardTitle>Zigbee devices ({observations.length > 0 ? (observations[0].zigbee?.devices.length ?? 0) : 0})</CardTitle>
+        <CardTitle>
+          Zigbee devices ({observations.length > 0 ? observations[0].zigbee?.devices.length ?? 0 : 0})
+        </CardTitle>
       </CardHeader>
       <CardContent className="pl-2">
         <Table>
@@ -38,16 +40,25 @@ export function Zigbee({ ...params }) {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {observations.length > 0 && observations[0].zigbee && observations[0].zigbee.devices.length > 0 &&
-              (observations[0].zigbee.devices ?? []).map((device: ZigbeeDevice) => (
-                <TableRow key={device.ieee}>
-                  <TableCell className="font-medium text-xs">{device.ieee}</TableCell>
-                  <TableCell className="text-xs">{device.brand}</TableCell>
-                  <TableCell className="text-xs">{device.entity_name}</TableCell>
-                  <TableCell className="text-xs">{device.lqi}</TableCell>
-                  <TableCell className="text-xs">{new Date(device.last_updated).toLocaleString()}</TableCell>
-                </TableRow>
-              ))}
+            {observations.length > 0 &&
+              observations[0].zigbee &&
+              observations[0].zigbee.devices.length > 0 &&
+              (observations[0].zigbee.devices ?? []).map((device: ZigbeeDevice) => {
+                const isAbnormalLQI = device.lqi <= 32;
+                const abnormalClassName = isAbnormalLQI ? 'font-medium' : '';
+
+                return (
+                  <TableRow className={abnormalClassName} key={device.ieee}>
+                    <TableCell className="font-medium text-xs">{device.ieee}</TableCell>
+                    <TableCell className="text-xs">{device.brand}</TableCell>
+                    <TableCell className="text-xs">{device.entity_name}</TableCell>
+                    <TableCell className="text-xs">
+                      {device.lqi <= 32 ? <b className="text-red-600">{device.lqi}</b> : <p>{device.lqi}</p>}
+                    </TableCell>
+                    <TableCell className="text-xs">{new Date(device.last_updated).toLocaleString()}</TableCell>
+                  </TableRow>
+                );
+              })}
           </TableBody>
         </Table>
       </CardContent>

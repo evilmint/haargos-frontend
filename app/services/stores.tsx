@@ -32,7 +32,7 @@ interface TeamState {
 const useTeamStore = create<TeamState>(set => ({
   selectedTeam: null,
   clearTeam: () => set(() => ({ selectedTeam: null })),
-  setSelectedTeam: selectedTeam => set(() => ({ selectedTeam }))
+  setSelectedTeam: selectedTeam => set(() => ({ selectedTeam })),
 }));
 
 interface InstallationStoreState {
@@ -89,7 +89,9 @@ const useInstallationStore = create<InstallationStoreState>((set, get) => ({
         );
 
         observation.environment.storage = extractUniqueVolumes(volumesUnsorted);
-        observation.zigbee?.devices.sort((a,b) => new Date(b.last_updated).getTime() - new Date(a.last_updated).getTime());
+        observation.zigbee?.devices.sort(
+          (a, b) => new Date(b.last_updated).getTime() - new Date(a.last_updated).getTime(),
+        );
         return observation;
       });
 

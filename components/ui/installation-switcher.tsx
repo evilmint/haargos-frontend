@@ -43,7 +43,7 @@ export default function InstallationSwitcher({ className }: TeamSwitcherProps) {
 
   const selectedTeam = useTeamStore(state => state.selectedTeam);
   const setSelectedTeam = useTeamStore(state => state.setSelectedTeam);
-  
+
   const router = useRouter();
 
   React.useEffect(() => {

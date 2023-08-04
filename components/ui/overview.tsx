@@ -41,7 +41,12 @@ export function Overview() {
   }, 0);
 
   const zigbeeIssueCount = allObservations.reduce((a: number, i: Observation) => {
-    return a + (i.zigbee?.devices.reduce((c: number, d: ZigbeeDevice) => { return c + (new Date(d.last_updated).getTime() == 0 ? 1 : 0) }, 0) ?? 0);
+    return (
+      a +
+      (i.zigbee?.devices.reduce((c: number, d: ZigbeeDevice) => {
+        return c + (new Date(d.last_updated).getTime() == 0 ? 1 : 0);
+      }, 0) ?? 0)
+    );
   }, 0);
 
   const data = [

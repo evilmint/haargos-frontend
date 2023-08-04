@@ -25,7 +25,7 @@ export function Zigbee({ ...params }) {
     <Card className="col-span-8">
       <CardHeader>
         <CardTitle>
-          Zigbee devices ({observations.length > 0 ? observations[0].zigbee?.devices.length ?? 0 : 0})
+          Zigbee devices ({observations && observations.length > 0 ? observations[0].zigbee?.devices.length ?? 0 : 0})
         </CardTitle>
       </CardHeader>
       <CardContent className="pl-2">
@@ -36,16 +36,19 @@ export function Zigbee({ ...params }) {
               <TableHead>Brand</TableHead>
               <TableHead>Entity name</TableHead>
               <TableHead>LQI</TableHead>
+              <TableHead>Integration</TableHead>
               <TableHead>Last updated</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
-            {observations.length > 0 &&
+            {observations &&
+              observations.length > 0 &&
               observations[0].zigbee &&
               observations[0].zigbee.devices.length > 0 &&
               (observations[0].zigbee.devices ?? []).map((device: ZigbeeDevice) => {
-                const isAbnormalLQI = device.lqi <= 32;
+                const isAbnormalLQI = device.lqi <= 32 && device.integration_type == 'zha';
                 const abnormalClassName = isAbnormalLQI ? 'font-medium' : '';
+                const lqiName = device.integration_type == 'zha' ? device.lqi : '-';
 
                 return (
                   <TableRow className={abnormalClassName} key={device.ieee}>
@@ -53,8 +56,9 @@ export function Zigbee({ ...params }) {
                     <TableCell className="text-xs">{device.brand}</TableCell>
                     <TableCell className="text-xs">{device.entity_name}</TableCell>
                     <TableCell className="text-xs">
-                      {device.lqi <= 32 ? <b className="text-red-600">{device.lqi}</b> : <p>{device.lqi}</p>}
+                      {isAbnormalLQI ? <b className="text-red-600">{lqiName}</b> : <p>{lqiName}</p>}
                     </TableCell>
+                    <TableCell className="text-xs">{device.integration_type.toUpperCase()}</TableCell>
                     <TableCell className="text-xs">{new Date(device.last_updated).toLocaleString()}</TableCell>
                   </TableRow>
                 );

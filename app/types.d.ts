@@ -69,6 +69,7 @@ interface ZigbeeDevice {
   entity_name: string;
   brand: string;
   lqi: number;
+  integration_type: string;
 }
 
 interface ObservationApiResponse {

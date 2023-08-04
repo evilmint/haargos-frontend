@@ -41,7 +41,7 @@ export function Storage({ ...params }) {
           <TableBody>
             {observations?.length > 0 &&
               (observations[0].environment.storage ?? []).map(storage => {
-                const usePercentage =  Number(storage.use_percentage.slice(0, -1));
+                const usePercentage = Number(storage.use_percentage.slice(0, -1));
                 const isAbnormalUsePercentage = usePercentage >= 90;
                 const abnormalClassName = isAbnormalUsePercentage ? 'font-medium' : '';
 
@@ -49,7 +49,9 @@ export function Storage({ ...params }) {
                   <TableRow key={storage.mounted_on} className={abnormalClassName}>
                     <TableCell className="font-medium text-xs">{storage.name}</TableCell>
                     <TableCell className="text-xs">{storage.available}</TableCell>
-                    <TableCell className="text-xs">{usePercentage >= 90 ? <p className="text-red-600">{usePercentage}%</p> : <p>{usePercentage}%</p>}</TableCell>
+                    <TableCell className="text-xs">
+                      {usePercentage >= 90 ? <p className="text-red-600">{usePercentage}%</p> : <p>{usePercentage}%</p>}
+                    </TableCell>
                     <TableCell className="text-xs">{storage.used}</TableCell>
                     <TableCell className="text-xs">{storage.size}</TableCell>
                     <TableCell className="text-xs">{storage.mounted_on}</TableCell>

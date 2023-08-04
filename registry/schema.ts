@@ -1,4 +1,4 @@
-import * as z from "zod"
+import * as z from 'zod';
 
 export const registrySchema = z.array(
   z.object({
@@ -6,12 +6,8 @@ export const registrySchema = z.array(
     dependencies: z.array(z.string()).optional(),
     registryDependencies: z.array(z.string()).optional(),
     files: z.array(z.string()),
-    type: z.enum([
-      "components:ui",
-      "components:component",
-      "components:example",
-    ]),
-  })
-)
+    type: z.enum(['components:ui', 'components:component', 'components:example']),
+  }),
+);
 
-export type Registry = z.infer<typeof registrySchema>
+export type Registry = z.infer<typeof registrySchema>;

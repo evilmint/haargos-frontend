@@ -33,6 +33,7 @@ export function Zigbee({ ...params }) {
               <TableHead className="w-[100px]">IEEE</TableHead>
               <TableHead>Brand</TableHead>
               <TableHead>Entity name</TableHead>
+              <TableHead>LQI</TableHead>
               <TableHead>Last updated</TableHead>
             </TableRow>
           </TableHeader>
@@ -43,6 +44,7 @@ export function Zigbee({ ...params }) {
                   <TableCell className="font-medium text-xs">{device.ieee}</TableCell>
                   <TableCell className="text-xs">{device.brand}</TableCell>
                   <TableCell className="text-xs">{device.entity_name}</TableCell>
+                  <TableCell className="text-xs">{device.lqi}</TableCell>
                   <TableCell className="text-xs">{new Date(device.last_updated).toLocaleString()}</TableCell>
                 </TableRow>
               ))}

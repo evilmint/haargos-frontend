@@ -32,16 +32,21 @@ import { useInstallationStore, useTeamStore } from '@/app/services/stores';
 
 type PopoverTriggerProps = React.ComponentPropsWithoutRef<typeof PopoverTrigger>;
 
-interface TeamSwitcherProps extends PopoverTriggerProps {}
+interface TeamSwitcherProps extends PopoverTriggerProps {
+  installationId: string;
+}
 
-export default function InstallationSwitcher({ className }: TeamSwitcherProps) {
+export default function InstallationSwitcher({ className, installationId }: TeamSwitcherProps) {
   const installations = useInstallationStore(state => state.installations);
   const fetchInstallations = useInstallationStore(state => state.fetchInstallations);
   const [open, setOpen] = React.useState(false);
   const [groups, setGroups] = React.useState<any[]>([]);
   const [showNewTeamDialog, setShowNewTeamDialog] = React.useState(false);
 
-  const selectedTeam = useTeamStore(state => state.selectedTeam);
+  const selectedTeam = useTeamStore(state => {
+    return state.selectedTeam
+  });
+
   const setSelectedTeam = useTeamStore(state => state.setSelectedTeam);
 
   const router = useRouter();
@@ -56,10 +61,21 @@ export default function InstallationSwitcher({ className }: TeamSwitcherProps) {
           }),
         },
       ]);
+
+      var paramInstallation = installations.filter(i => i.id == installationId)
+
+      // selectedTeam == null breaks infinite loop
+      if (paramInstallation.length > 0 && paramInstallation[0] != null && selectedTeam == null) {
+        const i = paramInstallation[0]
+        setSelectedTeam({
+          label: i.name, value: i.id
+        });
+      }
     });
-  }, [fetchInstallations, installations]);
+  }, [fetchInstallations, installations, selectedTeam, setSelectedTeam, installationId]);
 
   return (
+
     <Dialog open={showNewTeamDialog} onOpenChange={setShowNewTeamDialog}>
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>

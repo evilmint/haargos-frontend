@@ -47,9 +47,9 @@ export function DashboardHeaderInstallation({ ...params }) {
             viewBox="0 0 24 24"
             fill="none"
             stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
             className="h-4 w-4 text-muted-foreground"
           >
             <line x1="6" y1="3" x2="6" y2="15"></line>
@@ -74,9 +74,9 @@ export function DashboardHeaderInstallation({ ...params }) {
             viewBox="0 0 24 24"
             fill="none"
             stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
             className="h-4 w-4 text-muted-foreground"
           >
             <line x1="6" y1="3" x2="6" y2="15"></line>
@@ -109,9 +109,9 @@ export function DashboardHeaderInstallation({ ...params }) {
             viewBox="0 0 24 24"
             fill="none"
             stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
             className="h-4 w-4 text-muted-foreground"
           >
             <ellipse cx="12" cy="5" rx="9" ry="3"></ellipse>
@@ -138,9 +138,9 @@ export function DashboardHeaderInstallation({ ...params }) {
             viewBox="0 0 24 24"
             fill="none"
             stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
             className="h-4 w-4 text-muted-foreground"
           >
             <line x1="22" y1="12" x2="2" y2="12"></line>
@@ -168,9 +168,9 @@ export function DashboardHeaderInstallation({ ...params }) {
             viewBox="0 0 24 24"
             fill="none"
             stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
             className="h-4 w-4 text-muted-foreground"
           >
             <rect x="4" y="4" width="16" height="16" rx="2" ry="2"></rect>

@@ -12,6 +12,7 @@ export function Installations() {
   const fetchInstallations = useInstallationStore(state => state.fetchInstallations);
 
   useEffect(() => {
+    console.log("kek");
     fetchInstallations();
   }, [fetchInstallations]);
 

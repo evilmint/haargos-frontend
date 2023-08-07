@@ -6,6 +6,7 @@ import { useEffect } from 'react';
 import TimeAgo from 'react-timeago';
 import { useInstallationStore } from '@/app/services/stores';
 import { Button } from '@/registry/new-york/ui/button';
+import { useAuth0 } from '@auth0/auth0-react';
 
 export function DashboardHeaderInstallation({ ...params }) {
   const { installationId } = params;
@@ -14,6 +15,7 @@ export function DashboardHeaderInstallation({ ...params }) {
   const fetchInstallations = useInstallationStore(state => state.fetchInstallations);
   const fetchObservationsForInstallation = useInstallationStore(state => state.fetchObservationsForInstallation);
   const haVersion = useInstallationStore(state => state.haVersion[installationId]);
+  const { getAccessTokenSilently, getIdTokenClaims, user, logout, isAuthenticated } = useAuth0();
 
   const memoryValues =
     observations && observations.length > 0
@@ -28,10 +30,12 @@ export function DashboardHeaderInstallation({ ...params }) {
   const memoryPercentage = Math.floor((memoryUsed / memoryTotal) * 100) + '%';
 
   useEffect(() => {
-    fetchInstallations()
-      .then(() => fetchObservationsForInstallation(installationId))
-      .catch(error => console.error(error));
-  }, [fetchInstallations, fetchObservationsForInstallation, installationId]);
+    getAccessTokenSilently().then(token => {
+      fetchInstallations(token)
+        .then(() => fetchObservationsForInstallation(installationId, token))
+        .catch(error => console.error(error));
+    });
+  }, [fetchInstallations, getAccessTokenSilently, user, fetchObservationsForInstallation, installationId]);
 
   const cpuArchitecture = (observations && observations[0]?.environment.cpu.architecture) ?? 'n/a';
   return (

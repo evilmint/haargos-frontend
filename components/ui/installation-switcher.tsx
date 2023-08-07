@@ -29,6 +29,7 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/registry/new-york/ui/
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/registry/new-york/ui/select';
 import { useRouter } from 'next/navigation';
 import { useInstallationStore, useTeamStore } from '@/app/services/stores';
+import { useAuth0 } from '@auth0/auth0-react';
 
 type PopoverTriggerProps = React.ComponentPropsWithoutRef<typeof PopoverTrigger>;
 
@@ -44,38 +45,41 @@ export default function InstallationSwitcher({ className, installationId }: Team
   const [showNewTeamDialog, setShowNewTeamDialog] = React.useState(false);
 
   const selectedTeam = useTeamStore(state => {
-    return state.selectedTeam
+    return state.selectedTeam;
   });
 
   const setSelectedTeam = useTeamStore(state => state.setSelectedTeam);
+  const { getAccessTokenSilently, getIdTokenClaims, user, logout, isAuthenticated } = useAuth0();
 
   const router = useRouter();
 
   React.useEffect(() => {
-    fetchInstallations().then(() => {
-      setGroups([
-        {
-          label: 'Installation',
-          teams: installations.map(i => {
-            return { label: i.name, value: i.id };
-          }),
-        },
-      ]);
-
-      var paramInstallation = installations.filter(i => i.id == installationId)
-
-      // selectedTeam == null breaks infinite loop
-      if (paramInstallation.length > 0 && paramInstallation[0] != null && selectedTeam == null) {
-        const i = paramInstallation[0]
-        setSelectedTeam({
-          label: i.name, value: i.id
-        });
-      }
-    });
-  }, [fetchInstallations, installations, selectedTeam, setSelectedTeam, installationId]);
+    getAccessTokenSilently().then(token => {
+      fetchInstallations(token).then(() => {
+        setGroups([
+          {
+            label: 'Installation',
+            teams: installations.map(i => {
+              return { label: i.name, value: i.id };
+            }),
+          },
+        ]);
+  
+        var paramInstallation = installations.filter(i => i.id == installationId);
+  
+        // selectedTeam == null breaks infinite loop
+        if (paramInstallation.length > 0 && paramInstallation[0] != null && selectedTeam == null) {
+          const i = paramInstallation[0];
+          setSelectedTeam({
+            label: i.name,
+            value: i.id,
+          });
+        }
+      });
+    })
+  }, [fetchInstallations, user, getAccessTokenSilently, installations, selectedTeam, setSelectedTeam, installationId]);
 
   return (
-
     <Dialog open={showNewTeamDialog} onOpenChange={setShowNewTeamDialog}>
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>

@@ -7,17 +7,21 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/registry/new-york/ui
 import { SVGWithText } from './svg-with-text';
 import { useEffect } from 'react';
 import { useInstallationStore } from '@/app/services/stores';
+import { useAuth0 } from '@auth0/auth0-react';
 
 export function Docker({ ...params }) {
   const { installationId } = params;
   const observations = useInstallationStore(state => state.observations[installationId]);
   const fetchInstallations = useInstallationStore(state => state.fetchInstallations);
   const fetchObservationsForInstallation = useInstallationStore(state => state.fetchObservationsForInstallation);
+  const { getAccessTokenSilently, getIdTokenClaims, user, logout, isAuthenticated } = useAuth0();
 
   useEffect(() => {
-    fetchInstallations()
-      .then(() => fetchObservationsForInstallation(installationId))
-      .catch(error => console.error(error));
+    getAccessTokenSilently().then(token => {
+      fetchInstallations(token)
+        .then(() => fetchObservationsForInstallation(installationId, token))
+        .catch(error => console.error(error));
+    })
   }, [fetchInstallations, fetchObservationsForInstallation, installationId]);
 
   const dockerContainerCount = observations[0]?.docker?.containers?.length || 0;

@@ -1,3 +1,5 @@
+'use client';
+
 import Image from 'next/image';
 
 import { Logs } from '@/components/ui/logs';
@@ -14,10 +16,18 @@ import { UserNav } from '@/components/ui/user-nav';
 import { DashboardHeaderInstallation } from '@/components/ui/dashboard-header-installation';
 import { Zigbee } from '@/components/ui/zigbee';
 import { InstallationName } from '@/components/ui/installation-name';
+import { Auth0Provider } from '@auth0/auth0-react';
 
 export default function DashboardInstallationPage({ params }: { params: { id: string } }) {
   return (
-    <>
+    <Auth0Provider
+      domain="dev-ofc2nc2a0lc4ncig.eu.auth0.com"
+      clientId="3EGUK8VIxgWNygQ1My32IIMeFz2KFeXm"
+      authorizationParams={{
+        redirect_uri: window.location.origin,
+        audience: 'https://api.haargos.smartrezydencja.pl',
+      }}
+    >
       <div className="md:hidden">
         <Image
           src="/examples/dashboard-light.png"
@@ -92,6 +102,6 @@ export default function DashboardInstallationPage({ params }: { params: { id: st
           </Tabs>
         </div>
       </div>
-    </>
+    </Auth0Provider>
   );
 }

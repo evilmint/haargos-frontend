@@ -6,6 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/registry/new-york/ui
 
 import { useEffect } from 'react';
 import { useInstallationStore } from '@/app/services/stores';
+import { useAuth0 } from '@auth0/auth0-react';
 
 export function Storage({ ...params }) {
   const { installationId } = params;
@@ -15,11 +16,15 @@ export function Storage({ ...params }) {
   const fetchInstallations = useInstallationStore(state => state.fetchInstallations);
   const fetchObservationsForInstallation = useInstallationStore(state => state.fetchObservationsForInstallation);
 
+  const { getAccessTokenSilently, getIdTokenClaims, user, logout, isAuthenticated } = useAuth0();
+
   useEffect(() => {
-    fetchInstallations()
-      .then(() => fetchObservationsForInstallation(installationId))
-      .catch(error => console.error(error));
-  }, [fetchInstallations, fetchObservationsForInstallation, installationId]);
+    getAccessTokenSilently().then(token => {
+      fetchInstallations(token)
+        .then(() => fetchObservationsForInstallation(installationId, token))
+        .catch(error => console.error(error));
+    });
+  }, [fetchInstallations, user, getAccessTokenSilently, fetchObservationsForInstallation, installationId]);
 
   return (
     <Card className="col-span-8">

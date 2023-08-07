@@ -15,7 +15,7 @@ const useUserStore = create<UserState>(set => ({
   setUser: user => set(() => ({ user })),
   fetchUser: async () => {
     try {
-      const user = await getUserMe(); // Ensure getUserMe is correctly typed
+      const user = await getUserMe(token); // Ensure getUserMe is correctly typed
       set({ user });
     } catch (error) {
       console.log(error);
@@ -43,8 +43,8 @@ interface InstallationStoreState {
   highestStorageByInstallationId: Record<string, Storage | null>;
   isFetchingInstallations: boolean;
   isFetchingObservations: Record<string, boolean>;
-  fetchInstallations: () => Promise<void>;
-  fetchObservationsForInstallation: (installationId: string) => Promise<void>;
+  fetchInstallations: (token: string) => Promise<void>;
+  fetchObservationsForInstallation: (installationId: string, token: string) => Promise<void>;
   getObservationsForInstallation: (installationId: string) => Observation[];
 }
 
@@ -56,7 +56,7 @@ const useInstallationStore = create<InstallationStoreState>((set, get) => ({
   highestStorageByInstallationId: {},
   isFetchingInstallations: false,
   isFetchingObservations: {},
-  fetchInstallations: async () => {
+  fetchInstallations: async token => {
     if (get().isFetchingInstallations) return;
     set({ isFetchingInstallations: true });
 
@@ -64,7 +64,7 @@ const useInstallationStore = create<InstallationStoreState>((set, get) => ({
     if (installations.length > 0) return;
 
     try {
-      const installations = await getInstallations();
+      const installations = await getInstallations(token);
       set({ installations });
     } catch (error) {
       console.log(error);
@@ -72,7 +72,7 @@ const useInstallationStore = create<InstallationStoreState>((set, get) => ({
       set({ isFetchingInstallations: false });
     }
   },
-  fetchObservationsForInstallation: async (installationId: string) => {
+  fetchObservationsForInstallation: async (installationId: string, token: string) => {
     if (get().isFetchingObservations[installationId]) return;
     set(state => ({
       isFetchingObservations: {
@@ -82,7 +82,7 @@ const useInstallationStore = create<InstallationStoreState>((set, get) => ({
     }));
 
     try {
-      const observations = await getObservations(installationId);
+      const observations = await getObservations(installationId, token);
       const updatedObservations = observations.map(observation => {
         let volumesUnsorted = observation.environment.storage.sort(
           (a, b) => Number(b.use_percentage.slice(0, -1)) - Number(a.use_percentage.slice(0, -1)),

@@ -1,10 +1,18 @@
 import { User, UserApiResponse } from '../types';
 import { apiSettings, baseHeaders } from './api-settings';
 
-export async function getUserMe(): Promise<User> {
+export async function getUserMe(token: string): Promise<User> {
+  const additionalHeaders = new Headers({
+    'Authorization': `Bearer ${token}`,
+  });
+  
+  const mergedHeaders = new Headers({
+    ...Object.fromEntries(baseHeaders),
+    ...Object.fromEntries(additionalHeaders),
+  });
   const requestOptions: RequestInit = {
     method: 'GET',
-    headers: baseHeaders,
+    headers: mergedHeaders,
     redirect: 'follow',
   };
 

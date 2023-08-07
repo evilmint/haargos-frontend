@@ -1,3 +1,5 @@
+'use client';
+
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/registry/new-york/ui/card';
 import { Tabs, TabsContent } from '@/registry/new-york/ui/tabs';
 import { MainNav } from '@/components/ui/main-nav';
@@ -5,10 +7,20 @@ import { Overview } from '@/components/ui/overview';
 import { Installations } from '@/components/ui/installations';
 import { DashboardHeader } from '@/components/ui/dashboard-header';
 import { UserNav } from '@/components/ui/user-nav';
+import { Auth0Provider, useAuth0 } from '@auth0/auth0-react';
 
 export default function DashboardPage() {
+  const { getAccessTokenSilently, getIdTokenClaims, user, logout, isAuthenticated } = useAuth0();
+
   return (
-    <>
+    <Auth0Provider
+      domain="dev-ofc2nc2a0lc4ncig.eu.auth0.com"
+      clientId="3EGUK8VIxgWNygQ1My32IIMeFz2KFeXm"
+      authorizationParams={{
+        redirect_uri: window && window.location.origin,
+        audience: "https://api.haargos.smartrezydencja.pl"
+      }}
+    >
       <div className="hidden flex-col sm:flex">
         <div className="border-b">
           <div className="flex h-16 items-center px-4">
@@ -19,7 +31,7 @@ export default function DashboardPage() {
           </div>
         </div>
         <div className="flex-1 space-y-4 p-8 pt-6">
-          <Tabs defaultValue="overview" className="space-y-4">
+          {true && <Tabs defaultValue="overview" className="space-y-4">
             <TabsContent value="overview" className="space-y-4">
               <DashboardHeader />
               <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
@@ -33,9 +45,9 @@ export default function DashboardPage() {
                 </Card>
               </div>
             </TabsContent>
-          </Tabs>
+          </Tabs>}
         </div>
       </div>
-    </>
+    </Auth0Provider>
   );
 }

@@ -5,15 +5,20 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/registry/new-york/ui
 import { Log } from '../../app/types.d';
 import { useEffect } from 'react';
 import { useInstallationStore } from '@/app/services/stores';
+import { useAuth0 } from '@auth0/auth0-react';
 
 export function Logs({ ...params }) {
   const { installationId } = params;
   const logs = useInstallationStore(state => state.logsByInstallationId[installationId]);
   const fetchInstallations = useInstallationStore(state => state.fetchInstallations);
+  const { getAccessTokenSilently, getIdTokenClaims, user, logout, isAuthenticated } = useAuth0();
 
   useEffect(() => {
-    fetchInstallations();
-  }, [fetchInstallations]);
+    getAccessTokenSilently().then(token => {
+      fetchInstallations(token);
+    })
+    
+  }, [fetchInstallations, isAuthenticated, user, getAccessTokenSilently]);
 
   return (
     <Tabs defaultValue="logtable" className="space-y-4">

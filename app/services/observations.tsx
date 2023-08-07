@@ -1,10 +1,19 @@
 import { ObservationApiResponse, Observation } from '../types';
 import { apiSettings, baseHeaders } from './api-settings';
 
-export async function getObservations(installationId: string): Promise<Observation[]> {
+export async function getObservations(installationId: string, token: string): Promise<Observation[]> {
+  const additionalHeaders = new Headers({
+    'Authorization': `Bearer ${token}`,
+  });
+  
+  const mergedHeaders = new Headers({
+    ...Object.fromEntries(baseHeaders),
+    ...Object.fromEntries(additionalHeaders),
+  });
+  
   const requestOptions: RequestInit = {
     method: 'GET',
-    headers: baseHeaders,
+    headers: mergedHeaders,
     redirect: 'follow',
   };
 

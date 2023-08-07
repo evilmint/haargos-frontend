@@ -8,18 +8,22 @@ import { SVGWithText } from './svg-with-text';
 import { useEffect } from 'react';
 import { useInstallationStore } from '@/app/services/stores';
 import { ZigbeeDevice } from '@/app/types';
+import { useAuth0 } from '@auth0/auth0-react';
 
 export function Zigbee({ ...params }) {
   const { installationId } = params;
   const observations = useInstallationStore(state => state.observations[installationId]);
   const fetchInstallations = useInstallationStore(state => state.fetchInstallations);
   const fetchObservationsForInstallation = useInstallationStore(state => state.fetchObservationsForInstallation);
+  const { getAccessTokenSilently, getIdTokenClaims, user, logout, isAuthenticated } = useAuth0();
 
   useEffect(() => {
-    fetchInstallations()
-      .then(() => fetchObservationsForInstallation(installationId))
-      .catch(error => console.error(error));
-  }, [fetchInstallations, fetchObservationsForInstallation, installationId]);
+    getAccessTokenSilently().then(token => {
+      fetchInstallations(token)
+        .then(() => fetchObservationsForInstallation(installationId, token))
+        .catch(error => console.error(error));
+    })
+  }, [fetchInstallations, fetchObservationsForInstallation, user, getAccessTokenSilently, installationId]);
 
   return (
     <Card className="col-span-8">

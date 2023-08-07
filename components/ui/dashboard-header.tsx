@@ -3,14 +3,18 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/registry/new-york/ui/card';
 import { useEffect } from 'react';
 import { useInstallationStore } from '@/app/services/stores';
+import { useAuth0 } from '@auth0/auth0-react';
 
 export function DashboardHeader() {
   const installations = useInstallationStore(state => state.installations);
   const fetchInstallations = useInstallationStore(state => state.fetchInstallations);
+  const { getAccessTokenSilently, getIdTokenClaims, user, logout, isAuthenticated } = useAuth0();
 
   useEffect(() => {
-    fetchInstallations();
-  }, [fetchInstallations]);
+    getAccessTokenSilently().then(token => {
+      fetchInstallations(token);
+    });
+  }, [fetchInstallations, getAccessTokenSilently, user]);
 
   const healthyInstallations = installations.reduce((s, i) => {
     return s + (i.healthy ? 1 : 0);

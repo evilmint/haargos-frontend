@@ -2,21 +2,42 @@
 
 import { Bar, BarChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useInstallationStore } from '@/app/services/stores';
 import { Observation, ZigbeeDevice } from '@/app/types';
+import { useAuth0 } from '@auth0/auth0-react';
 
 export function Overview() {
   const installations = useInstallationStore(state => state.installations);
   const observations = useInstallationStore(state => state.observations);
   const fetchInstallations = useInstallationStore(state => state.fetchInstallations);
   const fetchObservationsForInstallation = useInstallationStore(state => state.fetchObservationsForInstallation);
+  const { getAccessTokenSilently, getIdTokenClaims, user, logout, isAuthenticated } = useAuth0();
+  const [token, setToken] = useState<string | null>(null);
 
   useEffect(() => {
-    fetchInstallations()
-      .then(() => Promise.all(installations.map(({ id }) => fetchObservationsForInstallation(id))))
-      .catch(error => console.error(error));
-  }, [fetchInstallations, fetchObservationsForInstallation, installations]);
+    getAccessTokenSilently().then((token) => {
+      console.log('Fetched token ' + token);
+      setToken(token);
+    });
+  }, [getAccessTokenSilently]);
+
+  // Fetch the installations whenever the token changes.
+  useEffect(() => {
+    if (token) {
+      console.log('Fetching with token ' + token);
+      fetchInstallations(token)
+        .then(() => Promise.all(installations.map(({ id }) => fetchObservationsForInstallation(id, token))))
+        .catch((error) => console.error(error));
+    }
+  }, [
+    fetchInstallations,
+    fetchObservationsForInstallation,
+    isAuthenticated,
+    user,
+    token,  // replace getAccessTokenSilently with token
+    installations,
+  ]);
 
   const allObservations = Object.values(observations).flat();
 

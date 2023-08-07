@@ -1,10 +1,19 @@
 import { Installation, InstallationApiResponse } from '../types';
 import { apiSettings, baseHeaders } from './api-settings';
 
-export async function getInstallations(): Promise<Installation[]> {
+export async function getInstallations(token: string): Promise<Installation[]> {
+  const additionalHeaders = new Headers({
+    Authorization: `Bearer ${token}`,
+  });
+
+  const mergedHeaders = new Headers({
+    ...Object.fromEntries(baseHeaders),
+    ...Object.fromEntries(additionalHeaders),
+  });
+
   const requestOptions: RequestInit = {
     method: 'GET',
-    headers: baseHeaders,
+    headers: mergedHeaders,
     redirect: 'follow',
   };
 

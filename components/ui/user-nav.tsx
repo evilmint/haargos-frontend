@@ -24,11 +24,9 @@ export function UserNav() {
   const { getAccessTokenSilently, getIdTokenClaims, user, logout, isAuthenticated } = useAuth0();
 
   useEffect(() => {
-
     getAccessTokenSilently().then(token => {
-      
       fetchUser(token);
-    })
+    });
   }, [fetchUser, user, getAccessTokenSilently]);
 
   return isAuthenticated ? (
@@ -36,7 +34,7 @@ export function UserNav() {
       <DropdownMenuTrigger asChild>
         <Button variant="ghost" className="relative h-8 w-8 rounded-full">
           <Avatar className="h-8 w-8">
-          <AvatarImage src={user?.picture} alt="@shadcn" />
+            <AvatarImage src={user?.picture} alt="@shadcn" />
             <AvatarFallback>{fullNameInitials(user)}</AvatarFallback>
           </Avatar>
         </Button>
@@ -53,9 +51,13 @@ export function UserNav() {
           <DropdownMenuItem>Profile</DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
-      
-        <DropdownMenuItem onClick={() => logout({ logoutParams: { returnTo: window.location.origin } })}>Log out</DropdownMenuItem>
+
+        <DropdownMenuItem onClick={() => logout({ logoutParams: { returnTo: window.location.origin } })}>
+          Log out
+        </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
-  ) : (<LoginButton />);
+  ) : (
+    <LoginButton />
+  );
 }

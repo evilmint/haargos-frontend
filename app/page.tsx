@@ -1,24 +1,21 @@
 'use client';
 
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/registry/new-york/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/registry/new-york/ui/card';
 import { Tabs, TabsContent } from '@/registry/new-york/ui/tabs';
 import { MainNav } from '@/components/ui/main-nav';
 import { Overview } from '@/components/ui/overview';
-import { Installations } from '@/components/ui/installations';
 import { DashboardHeader } from '@/components/ui/dashboard-header';
 import { UserNav } from '@/components/ui/user-nav';
 import { Auth0Provider, useAuth0 } from '@auth0/auth0-react';
 
 export default function DashboardPage() {
-  const { getAccessTokenSilently, getIdTokenClaims, user, logout, isAuthenticated } = useAuth0();
-
   return (
     <Auth0Provider
       domain="dev-ofc2nc2a0lc4ncig.eu.auth0.com"
       clientId="3EGUK8VIxgWNygQ1My32IIMeFz2KFeXm"
       authorizationParams={{
-        redirect_uri: window && window.location.origin,
-        audience: "https://api.haargos.smartrezydencja.pl"
+        redirect_uri: window.location.origin,
+        audience: 'https://api.haargos.smartrezydencja.pl',
       }}
     >
       <div className="hidden flex-col sm:flex">
@@ -31,21 +28,23 @@ export default function DashboardPage() {
           </div>
         </div>
         <div className="flex-1 space-y-4 p-8 pt-6">
-          {true && <Tabs defaultValue="overview" className="space-y-4">
-            <TabsContent value="overview" className="space-y-4">
-              <DashboardHeader />
-              <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
-                <Card className="col-span-7">
-                  <CardHeader>
-                    <CardTitle>Issues</CardTitle>
-                  </CardHeader>
-                  <CardContent className="pl-2">
-                    <Overview />
-                  </CardContent>
-                </Card>
-              </div>
-            </TabsContent>
-          </Tabs>}
+          {true && (
+            <Tabs defaultValue="overview" className="space-y-4">
+              <TabsContent value="overview" className="space-y-4">
+                <DashboardHeader />
+                <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
+                  <Card className="col-span-7">
+                    <CardHeader>
+                      <CardTitle>Issues</CardTitle>
+                    </CardHeader>
+                    <CardContent className="pl-2">
+                      <Overview />
+                    </CardContent>
+                  </Card>
+                </div>
+              </TabsContent>
+            </Tabs>
+          )}
         </div>
       </div>
     </Auth0Provider>

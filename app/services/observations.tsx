@@ -3,14 +3,14 @@ import { apiSettings, baseHeaders } from './api-settings';
 
 export async function getObservations(installationId: string, token: string): Promise<Observation[]> {
   const additionalHeaders = new Headers({
-    'Authorization': `Bearer ${token}`,
+    Authorization: `Bearer ${token}`,
   });
-  
+
   const mergedHeaders = new Headers({
     ...Object.fromEntries(baseHeaders),
     ...Object.fromEntries(additionalHeaders),
   });
-  
+
   const requestOptions: RequestInit = {
     method: 'GET',
     headers: mergedHeaders,

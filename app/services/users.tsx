@@ -3,9 +3,9 @@ import { apiSettings, baseHeaders } from './api-settings';
 
 export async function getUserMe(token: string): Promise<User> {
   const additionalHeaders = new Headers({
-    'Authorization': `Bearer ${token}`,
+    Authorization: `Bearer ${token}`,
   });
-  
+
   const mergedHeaders = new Headers({
     ...Object.fromEntries(baseHeaders),
     ...Object.fromEntries(additionalHeaders),

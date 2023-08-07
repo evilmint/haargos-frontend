@@ -64,9 +64,9 @@ export default function InstallationSwitcher({ className, installationId }: Team
             }),
           },
         ]);
-  
+
         var paramInstallation = installations.filter(i => i.id == installationId);
-  
+
         // selectedTeam == null breaks infinite loop
         if (paramInstallation.length > 0 && paramInstallation[0] != null && selectedTeam == null) {
           const i = paramInstallation[0];
@@ -76,7 +76,7 @@ export default function InstallationSwitcher({ className, installationId }: Team
           });
         }
       });
-    })
+    });
   }, [fetchInstallations, user, getAccessTokenSilently, installations, selectedTeam, setSelectedTeam, installationId]);
 
   return (

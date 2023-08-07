@@ -21,7 +21,7 @@ export function Docker({ ...params }) {
       fetchInstallations(token)
         .then(() => fetchObservationsForInstallation(installationId, token))
         .catch(error => console.error(error));
-    })
+    });
   }, [fetchInstallations, fetchObservationsForInstallation, installationId]);
 
   const dockerContainerCount = observations[0]?.docker?.containers?.length || 0;

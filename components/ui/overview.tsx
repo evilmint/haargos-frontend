@@ -16,7 +16,7 @@ export function Overview() {
   const [token, setToken] = useState<string | null>(null);
 
   useEffect(() => {
-    getAccessTokenSilently().then((token) => {
+    getAccessTokenSilently().then(token => {
       console.log('Fetched token ' + token);
       setToken(token);
     });
@@ -28,14 +28,14 @@ export function Overview() {
       console.log('Fetching with token ' + token);
       fetchInstallations(token)
         .then(() => Promise.all(installations.map(({ id }) => fetchObservationsForInstallation(id, token))))
-        .catch((error) => console.error(error));
+        .catch(error => console.error(error));
     }
   }, [
     fetchInstallations,
     fetchObservationsForInstallation,
     isAuthenticated,
     user,
-    token,  // replace getAccessTokenSilently with token
+    token, // replace getAccessTokenSilently with token
     installations,
   ]);
 

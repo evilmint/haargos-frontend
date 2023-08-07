@@ -7,15 +7,13 @@ import { Storage } from '@/components/ui/storage';
 import { Docker } from '@/components/ui/docker';
 import { Environment } from '@/components/ui/environment';
 
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/registry/new-york/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/registry/new-york/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/registry/new-york/ui/tabs';
 
 import { MainNav } from '@/components/ui/main-nav';
-import { Installations } from '@/components/ui/installations';
 import { UserNav } from '@/components/ui/user-nav';
 import { DashboardHeaderInstallation } from '@/components/ui/dashboard-header-installation';
 import { Zigbee } from '@/components/ui/zigbee';
-import { InstallationName } from '@/components/ui/installation-name';
 import { Auth0Provider } from '@auth0/auth0-react';
 
 export default function DashboardInstallationPage({ params }: { params: { id: string } }) {

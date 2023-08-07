@@ -22,7 +22,7 @@ export function Zigbee({ ...params }) {
       fetchInstallations(token)
         .then(() => fetchObservationsForInstallation(installationId, token))
         .catch(error => console.error(error));
-    })
+    });
   }, [fetchInstallations, fetchObservationsForInstallation, user, getAccessTokenSilently, installationId]);
 
   return (

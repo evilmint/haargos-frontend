@@ -16,8 +16,7 @@ export function Logs({ ...params }) {
   useEffect(() => {
     getAccessTokenSilently().then(token => {
       fetchInstallations(token);
-    })
-    
+    });
   }, [fetchInstallations, isAuthenticated, user, getAccessTokenSilently]);
 
   return (

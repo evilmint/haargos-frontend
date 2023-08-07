@@ -6,7 +6,7 @@ import { cn } from '@/lib/utils';
 import InstallationSwitcher from './installation-switcher';
 import { useTeamStore } from '@/app/services/stores';
 
-export function MainNav({...props }, { className }: React.HTMLAttributes<HTMLElement>) {
+export function MainNav({ ...props }, { className }: React.HTMLAttributes<HTMLElement>) {
   const { installationId } = props;
   const dashboardClicked = useTeamStore(state => state.clearTeam);
 

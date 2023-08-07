@@ -18,7 +18,7 @@ export function Environment({ ...params }) {
       fetchInstallations(token)
         .then(() => fetchObservationsForInstallation(installationId, token))
         .catch(error => console.error(error));
-    })
+    });
   }, [fetchInstallations, fetchObservationsForInstallation, installationId]);
 
   return (

@@ -14,7 +14,7 @@ export default function DashboardPage() {
       domain="dev-ofc2nc2a0lc4ncig.eu.auth0.com"
       clientId="3EGUK8VIxgWNygQ1My32IIMeFz2KFeXm"
       authorizationParams={{
-        redirect_uri: window.location.origin,
+        redirect_uri: '/',
         audience: 'https://api.haargos.smartrezydencja.pl',
       }}
     >

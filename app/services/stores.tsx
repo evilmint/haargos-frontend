@@ -7,15 +7,15 @@ import { getObservations } from './observations';
 interface UserState {
   user: User | null;
   setUser: (user: User | null) => void;
-  fetchUser: () => Promise<void>;
+  fetchUser: (token: string) => Promise<void>;
 }
 
 const useUserStore = create<UserState>(set => ({
   user: null,
   setUser: user => set(() => ({ user })),
-  fetchUser: async () => {
+  fetchUser: async token => {
     try {
-      const user = await getUserMe(token); // Ensure getUserMe is correctly typed
+      const user = await getUserMe(token);
       set({ user });
     } catch (error) {
       console.log(error);

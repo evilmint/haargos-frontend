@@ -6,14 +6,17 @@ import { useRouter } from 'next/navigation';
 
 import { useEffect } from 'react';
 import { useInstallationStore } from '@/app/services/stores';
+import { useAuth0 } from '@auth0/auth0-react';
 
 export function Installations() {
   const installations = useInstallationStore(state => state.installations);
   const fetchInstallations = useInstallationStore(state => state.fetchInstallations);
+  const { getAccessTokenSilently } = useAuth0();
 
   useEffect(() => {
-    console.log('kek');
-    fetchInstallations();
+    getAccessTokenSilently().then(token => {
+      fetchInstallations(token).catch(error => console.error(error));
+    });
   }, [fetchInstallations]);
 
   const router = useRouter();

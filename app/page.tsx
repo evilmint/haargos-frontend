@@ -7,14 +7,21 @@ import { Overview } from '@/components/ui/overview';
 import { DashboardHeader } from '@/components/ui/dashboard-header';
 import { UserNav } from '@/components/ui/user-nav';
 import { Auth0Provider, useAuth0 } from '@auth0/auth0-react';
+import { useEffect, useState } from 'react';
 
 export default function DashboardPage() {
-  return (
+  const [origin, setOrigin] = useState<string | null>(null);
+
+  useEffect(() => {
+    setOrigin(window.location.origin);
+  }, []);
+
+  return origin != null && (
     <Auth0Provider
       domain="dev-ofc2nc2a0lc4ncig.eu.auth0.com"
       clientId="3EGUK8VIxgWNygQ1My32IIMeFz2KFeXm"
       authorizationParams={{
-        redirect_uri: '/',
+        redirect_uri: origin ?? "https://haargos.smartrezydencja.pl",
         audience: 'https://api.haargos.smartrezydencja.pl',
       }}
     >

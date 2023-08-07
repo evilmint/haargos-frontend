@@ -69,6 +69,7 @@ interface ZigbeeDevice {
   entity_name: string;
   brand: string;
   lqi: number;
+  power_source: string | null;
   integration_type: string;
 }
 

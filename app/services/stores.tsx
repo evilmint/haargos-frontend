@@ -81,6 +81,12 @@ const useInstallationStore = create<InstallationStoreState>((set, get) => ({
       },
     }));
 
+    const observations = get().observations[installationId];
+
+    if (observations != null && observations.length > 0) {
+      return;
+    }
+
     try {
       const observations = await getObservations(installationId, token);
       const updatedObservations = observations.map(observation => {
@@ -89,9 +95,16 @@ const useInstallationStore = create<InstallationStoreState>((set, get) => ({
         );
 
         observation.environment.storage = extractUniqueVolumes(volumesUnsorted);
-        observation.zigbee?.devices.sort(
-          (a, b) => new Date(b.last_updated).getTime() - new Date(a.last_updated).getTime(),
-        );
+        observation.zigbee?.devices.sort((a, b) => {
+          if (a.lqi == 0) {
+            return 1
+          }
+          if (b.lqi == 0) {
+            return -1
+          }
+          
+          return a.lqi - b.lqi;
+        });
         return observation;
       });
 

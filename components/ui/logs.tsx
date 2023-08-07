@@ -11,7 +11,7 @@ export function Logs({ ...params }) {
   const { installationId } = params;
   const logs = useInstallationStore(state => state.logsByInstallationId[installationId]);
   const fetchInstallations = useInstallationStore(state => state.fetchInstallations);
-  const { getAccessTokenSilently, getIdTokenClaims, user, logout, isAuthenticated } = useAuth0();
+  const { getAccessTokenSilently, user, isAuthenticated } = useAuth0();
 
   useEffect(() => {
     getAccessTokenSilently().then(token => {
@@ -31,19 +31,19 @@ export function Logs({ ...params }) {
           <TableCaption>A list of your recent logs.</TableCaption>
           <TableHeader>
             <TableRow>
-              <TableHead className="w-[100px]">Timestamp</TableHead>
-              <TableHead>Level</TableHead>
-              <TableHead>Thread</TableHead>
-              <TableHead className="text-right">Log</TableHead>
+              <TableHead className="w-[200px]">Timestamp</TableHead>
+              <TableHead>Log</TableHead>
+              <TableHead className="text-center">Level</TableHead>
+              <TableHead className="text-right w-[100px]">Thread</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {(logs ?? []).map((log: Log) => (
               <TableRow key={log.time}>
                 <TableCell className="font-medium text-xs">{log.time}</TableCell>
-                <TableCell className="text-xs">{log.type}</TableCell>
-                <TableCell className="text-xs">{log.thread}</TableCell>
                 <TableCell className="text-left" dangerouslySetInnerHTML={{ __html: log.log }}></TableCell>
+                <TableCell className="text-xs text-center">{log.type}</TableCell>
+                <TableCell className="text-xs text-right">{log.thread}</TableCell>
               </TableRow>
             ))}
           </TableBody>

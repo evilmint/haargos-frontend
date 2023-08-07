@@ -13,15 +13,14 @@ import {
 } from '@/registry/new-york/ui/dropdown-menu';
 
 import { useUserStore } from '@/app/services/stores';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { fullNameInitials } from '@/app/tools';
 import { useAuth0 } from '@auth0/auth0-react';
 import { LoginButton } from './login-button';
-import { AvatarIcon } from '@radix-ui/react-icons';
 
 export function UserNav() {
   const fetchUser = useUserStore(state => state.fetchUser);
-  const { getAccessTokenSilently, getIdTokenClaims, user, logout, isAuthenticated } = useAuth0();
+  const { getAccessTokenSilently, user, logout, isAuthenticated } = useAuth0();
 
   useEffect(() => {
     getAccessTokenSilently().then(token => {

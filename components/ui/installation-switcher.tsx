@@ -1,7 +1,7 @@
 'use client';
 
 import * as React from 'react';
-import { CaretSortIcon, CheckIcon, PlusCircledIcon } from '@radix-ui/react-icons';
+import { CaretSortIcon, CheckIcon } from '@radix-ui/react-icons';
 
 import { cn } from '@/lib/utils';
 import { Button } from '@/registry/new-york/ui/button';
@@ -12,7 +12,6 @@ import {
   CommandInput,
   CommandItem,
   CommandList,
-  CommandSeparator,
 } from '@/registry/new-york/ui/command';
 import {
   Dialog,
@@ -21,7 +20,6 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from '@/registry/new-york/ui/dialog';
 import { Input } from '@/registry/new-york/ui/input';
 import { Label } from '@/registry/new-york/ui/label';
@@ -49,7 +47,7 @@ export default function InstallationSwitcher({ className, installationId }: Team
   });
 
   const setSelectedTeam = useTeamStore(state => state.setSelectedTeam);
-  const { getAccessTokenSilently, getIdTokenClaims, user, logout, isAuthenticated } = useAuth0();
+  const { getAccessTokenSilently, user } = useAuth0();
 
   const router = useRouter();
 

@@ -15,7 +15,7 @@ export function DashboardHeaderInstallation({ ...params }) {
   const fetchInstallations = useInstallationStore(state => state.fetchInstallations);
   const fetchObservationsForInstallation = useInstallationStore(state => state.fetchObservationsForInstallation);
   const haVersion = useInstallationStore(state => state.haVersion[installationId]);
-  const { getAccessTokenSilently, getIdTokenClaims, user, logout, isAuthenticated } = useAuth0();
+  const { getAccessTokenSilently, user, isAuthenticated } = useAuth0();
 
   const memoryValues =
     observations && observations.length > 0

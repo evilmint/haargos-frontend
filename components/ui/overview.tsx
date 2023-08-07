@@ -12,7 +12,7 @@ export function Overview() {
   const observations = useInstallationStore(state => state.observations);
   const fetchInstallations = useInstallationStore(state => state.fetchInstallations);
   const fetchObservationsForInstallation = useInstallationStore(state => state.fetchObservationsForInstallation);
-  const { getAccessTokenSilently, getIdTokenClaims, user, logout, isAuthenticated } = useAuth0();
+  const { getAccessTokenSilently, user, isAuthenticated } = useAuth0();
   const [token, setToken] = useState<string | null>(null);
 
   useEffect(() => {

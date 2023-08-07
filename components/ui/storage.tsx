@@ -12,11 +12,10 @@ export function Storage({ ...params }) {
   const { installationId } = params;
 
   const observations = useInstallationStore(state => state.observations[installationId]);
-  const installations = useInstallationStore(state => state.installations);
   const fetchInstallations = useInstallationStore(state => state.fetchInstallations);
   const fetchObservationsForInstallation = useInstallationStore(state => state.fetchObservationsForInstallation);
 
-  const { getAccessTokenSilently, getIdTokenClaims, user, logout, isAuthenticated } = useAuth0();
+  const { getAccessTokenSilently, user } = useAuth0();
 
   useEffect(() => {
     getAccessTokenSilently().then(token => {
@@ -35,12 +34,12 @@ export function Storage({ ...params }) {
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead className="w-[100px]">Name</TableHead>
-              <TableHead>Available</TableHead>
+              <TableHead className="w-[200px]">Name</TableHead>
               <TableHead>%</TableHead>
               <TableHead>Used</TableHead>
+              <TableHead>Available</TableHead>
               <TableHead>Size</TableHead>
-              <TableHead>Mounted on</TableHead>
+              <TableHead className="text-right">Mounted on</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -53,13 +52,13 @@ export function Storage({ ...params }) {
                 return (
                   <TableRow key={storage.mounted_on} className={abnormalClassName}>
                     <TableCell className="font-medium text-xs">{storage.name}</TableCell>
-                    <TableCell className="text-xs">{storage.available}</TableCell>
                     <TableCell className="text-xs">
                       {usePercentage >= 90 ? <p className="text-red-600">{usePercentage}%</p> : <p>{usePercentage}%</p>}
                     </TableCell>
                     <TableCell className="text-xs">{storage.used}</TableCell>
+                    <TableCell className="text-xs">{storage.available}</TableCell>
                     <TableCell className="text-xs">{storage.size}</TableCell>
-                    <TableCell className="text-xs">{storage.mounted_on}</TableCell>
+                    <TableCell className="text-xs text-right">{storage.mounted_on}</TableCell>
                   </TableRow>
                 );
               })}

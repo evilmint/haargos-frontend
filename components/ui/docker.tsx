@@ -4,7 +4,6 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/registry/new-york/ui/card';
 
-import { SVGWithText } from './svg-with-text';
 import { useEffect } from 'react';
 import { useInstallationStore } from '@/app/services/stores';
 import { useAuth0 } from '@auth0/auth0-react';
@@ -14,7 +13,7 @@ export function Docker({ ...params }) {
   const observations = useInstallationStore(state => state.observations[installationId]);
   const fetchInstallations = useInstallationStore(state => state.fetchInstallations);
   const fetchObservationsForInstallation = useInstallationStore(state => state.fetchObservationsForInstallation);
-  const { getAccessTokenSilently, getIdTokenClaims, user, logout, isAuthenticated } = useAuth0();
+  const { getAccessTokenSilently } = useAuth0();
 
   useEffect(() => {
     getAccessTokenSilently().then(token => {
@@ -24,7 +23,7 @@ export function Docker({ ...params }) {
     });
   }, [fetchInstallations, fetchObservationsForInstallation, installationId]);
 
-  const dockerContainerCount = observations[0]?.docker?.containers?.length || 0;
+  const dockerContainerCount = observations?.length > 0 && (observations[0]?.docker?.containers?.length || 0);
 
   return (
     <Card className="col-span-8">
@@ -46,7 +45,7 @@ export function Docker({ ...params }) {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {observations.length > 0 &&
+            {observations?.length > 0 &&
               (observations[0].docker.containers ?? []).map(container => {
                 const isAbnormalRunning = container.restarting;
                 const abnormalClassName = isAbnormalRunning ? 'font-medium' : '';

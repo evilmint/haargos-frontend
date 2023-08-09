@@ -1,6 +1,5 @@
 'use client';
 
-import Image from 'next/image';
 
 import { Logs } from '@/components/ui/logs';
 import { Storage } from '@/components/ui/storage';
@@ -17,14 +16,14 @@ import { Zigbee } from '@/components/ui/zigbee';
 import { Auth0Provider } from '@auth0/auth0-react';
 import { useEffect, useState } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
-import { DataTableDemo } from '@/components/ui/data-table';
+import { TableProxy } from '@/components/ui/table-proxy';
 
 export default function DashboardInstallationPage({ params }: { params: { id: string } }) {
   const [origin, setOrigin] = useState<string | null>(null);
   const [defaultTab, setDefaultTab] = useState<string>('overview');
   const pathName = usePathname();
   const router = useRouter();
-
+  
   useEffect(() => {
     setOrigin(window.location.origin);
 
@@ -79,9 +78,9 @@ export default function DashboardInstallationPage({ params }: { params: { id: st
               <TabsList>
                 <TabsTrigger value="overview">Overview</TabsTrigger>
                 <TabsTrigger value="zigbee">Zigbee</TabsTrigger>
+                {/* <TabsTrigger value="test">Zigbee2</TabsTrigger> */}
                 <TabsTrigger value="host">Host</TabsTrigger>
                 <TabsTrigger value="docker">Docker</TabsTrigger>
-                <TabsTrigger value="test">Test</TabsTrigger>
               </TabsList>
 
               <TabsContent value="overview" className="space-y-4">
@@ -116,14 +115,14 @@ export default function DashboardInstallationPage({ params }: { params: { id: st
                 </div>
               </TabsContent>
 
-              <TabsContent value="zigbee" className="space-y-4">
+              <TabsContent value="zigbee2" className="space-y-4">
                 <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
                   <Zigbee installationId={params.id} />
                 </div>
               </TabsContent>
 
-              <TabsContent value="test" className="space-y-4">
-                <DataTableDemo />
+              <TabsContent value="zigbee" className="space-y-4">
+                <TableProxy installationId={params.id} />
               </TabsContent>
             </Tabs>
           </div>

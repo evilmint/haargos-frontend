@@ -13,7 +13,7 @@ import {
 } from '@/registry/new-york/ui/dropdown-menu';
 
 import { useUserStore } from '@/app/services/stores';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { fullNameInitials } from '@/app/tools';
 import { useAuth0 } from '@auth0/auth0-react';
 import { LoginButton } from './login-button';
@@ -21,14 +21,19 @@ import { LoginButton } from './login-button';
 export function UserNav() {
   const fetchUser = useUserStore(state => state.fetchUser);
   const { getAccessTokenSilently, user, logout, isAuthenticated } = useAuth0();
+  const [isLoading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
-    getAccessTokenSilently().then(token => {
-      fetchUser(token);
-    });
+    getAccessTokenSilently()
+      .then(token => {
+        fetchUser(token);
+      })
+      .finally(() => setLoading(false));
   }, [fetchUser, user, getAccessTokenSilently]);
 
-  return isAuthenticated ? (
+  return isLoading ? (
+    <></>
+  ) : isAuthenticated ? (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button variant="ghost" className="relative h-8 w-8 rounded-full">

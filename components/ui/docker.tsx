@@ -23,7 +23,7 @@ export function Docker({ ...params }) {
     });
   }, [fetchInstallations, fetchObservationsForInstallation, installationId]);
 
-  const dockerContainerCount = observations?.length > 0 && (observations[0]?.docker?.containers?.length || 0);
+  const dockerContainerCount = observations?.length > 0 ? observations[0]?.docker?.containers?.length || 0 : 0;
 
   return (
     <Card className="col-span-8">

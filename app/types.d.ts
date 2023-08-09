@@ -67,6 +67,7 @@ interface ZigbeeDevice {
   ieee: string;
   last_updated: string;
   entity_name: string;
+  name_by_user: string | null;
   brand: string;
   lqi: number;
   power_source: string | null;

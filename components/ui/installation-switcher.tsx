@@ -28,6 +28,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { useRouter } from 'next/navigation';
 import { useInstallationStore, useTeamStore } from '@/app/services/stores';
 import { useAuth0 } from '@auth0/auth0-react';
+import { useState } from 'react';
+import { Skeleton } from '@/registry/new-york/ui/skeleton';
 
 type PopoverTriggerProps = React.ComponentPropsWithoutRef<typeof PopoverTrigger>;
 
@@ -41,6 +43,7 @@ export default function InstallationSwitcher({ className, installationId }: Team
   const [open, setOpen] = React.useState(false);
   const [groups, setGroups] = React.useState<any[]>([]);
   const [showNewTeamDialog, setShowNewTeamDialog] = React.useState(false);
+  const [isVisible, setVisible] = React.useState<boolean>(true);
 
   const selectedTeam = useTeamStore(state => {
     return state.selectedTeam;
@@ -50,34 +53,47 @@ export default function InstallationSwitcher({ className, installationId }: Team
   const { getAccessTokenSilently, user } = useAuth0();
 
   const router = useRouter();
+  const [isLoading, setLoading] = useState<boolean>(true);
 
   React.useEffect(() => {
-    getAccessTokenSilently().then(token => {
-      fetchInstallations(token).then(() => {
-        setGroups([
-          {
-            label: 'Installation',
-            teams: installations.map(i => {
-              return { label: i.name, value: i.id };
-            }),
-          },
-        ]);
+    getAccessTokenSilently()
+      .then(token => {
+        fetchInstallations(token)
+          .then(() => {
+            setGroups([
+              {
+                label: 'Installation',
+                teams: installations.map(i => {
+                  return { label: i.name, value: i.id };
+                }),
+              },
+            ]);
 
-        var paramInstallation = installations.filter(i => i.id == installationId);
+            var paramInstallation = installations.filter(i => i.id == installationId);
 
-        // selectedTeam == null breaks infinite loop
-        if (paramInstallation.length > 0 && paramInstallation[0] != null && selectedTeam == null) {
-          const i = paramInstallation[0];
-          setSelectedTeam({
-            label: i.name,
-            value: i.id,
-          });
-        }
+            // selectedTeam == null breaks infinite loop
+            if (paramInstallation.length > 0 && paramInstallation[0] != null && selectedTeam == null) {
+              const i = paramInstallation[0];
+              setSelectedTeam({
+                label: i.name,
+                value: i.id,
+              });
+            }
+          })
+          .catch(() => {
+            setVisible(false);
+          })
+          .finally(() => setLoading(false));
+      })
+      .catch(() => {
+        setVisible(false);
+        setLoading(false);
       });
-    });
   }, [fetchInstallations, user, getAccessTokenSilently, installations, selectedTeam, setSelectedTeam, installationId]);
 
-  return (
+  return isLoading ? (
+    <Skeleton className="h-8 w-[150px]" />
+  ) : isVisible ? (
     <Dialog open={showNewTeamDialog} onOpenChange={setShowNewTeamDialog}>
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
@@ -180,5 +196,7 @@ export default function InstallationSwitcher({ className, installationId }: Team
         </DialogFooter>
       </DialogContent>
     </Dialog>
+  ) : (
+    <></>
   );
 }

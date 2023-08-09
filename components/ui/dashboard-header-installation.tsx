@@ -2,11 +2,12 @@
 import numeral from 'numeral';
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/registry/new-york/ui/card';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import TimeAgo from 'react-timeago';
 import { useInstallationStore } from '@/app/services/stores';
 import { Button } from '@/registry/new-york/ui/button';
 import { useAuth0 } from '@auth0/auth0-react';
+import { Skeleton } from '@/registry/new-york/ui/skeleton';
 
 export function DashboardHeaderInstallation({ ...params }) {
   const { installationId } = params;
@@ -16,6 +17,7 @@ export function DashboardHeaderInstallation({ ...params }) {
   const fetchObservationsForInstallation = useInstallationStore(state => state.fetchObservationsForInstallation);
   const haVersion = useInstallationStore(state => state.haVersion[installationId]);
   const { getAccessTokenSilently, user, isAuthenticated } = useAuth0();
+  const [isLoading, setLoading] = useState<boolean>(true);
 
   const memoryValues =
     observations && observations.length > 0
@@ -29,10 +31,13 @@ export function DashboardHeaderInstallation({ ...params }) {
   const memoryTotal = hasObservations ? observations[0].environment.memory.total : 1;
   const memoryPercentage = Math.floor((memoryUsed / memoryTotal) * 100) + '%';
 
+  const observationsLoaded = observations == null || observations == undefined || observations?.length == 0;
+
   useEffect(() => {
     getAccessTokenSilently().then(token => {
       fetchInstallations(token)
         .then(() => fetchObservationsForInstallation(installationId, token))
+        .then(() => setLoading(false))
         .catch(error => console.error(error));
     });
   }, [fetchInstallations, getAccessTokenSilently, user, fetchObservationsForInstallation, installationId]);
@@ -64,7 +69,13 @@ export function DashboardHeaderInstallation({ ...params }) {
         </CardHeader>
         <CardContent>
           <div className="text-2xl font-bold">
-            {observations && observations.length > 0 ? observations[0].agent_version : 'n/a'}
+            {observationsLoaded || isLoading ? (
+              <Skeleton className="h-8" />
+            ) : observations && observations.length > 0 ? (
+              observations[0].agent_version
+            ) : (
+              'n/a'
+            )}
           </div>
         </CardContent>
       </Card>
@@ -90,13 +101,15 @@ export function DashboardHeaderInstallation({ ...params }) {
           </svg>
         </CardHeader>
         <CardContent className="flex">
-          <div className="text-2xl flex-1 font-bold inline">{haVersion ?? 'n/a'}</div>
+          <div className="text-2xl flex-1 font-bold inline">
+            {observationsLoaded || isLoading ? <Skeleton className="h-8" /> : haVersion ?? 'n/a'}
+          </div>
           <Button
             onClick={() => {
               window.open('https://github.com/home-assistant/core/releases', '_blank');
             }}
-            className="inline flex-1 flex-auto md:hidden"
-            variant="outline"
+            className="inline flex-1 ml-4 flex-auto"
+            variant="ghost"
           >
             Releases
           </Button>
@@ -125,9 +138,15 @@ export function DashboardHeaderInstallation({ ...params }) {
         </CardHeader>
         <CardContent>
           <div className="text-2xl font-bold">
-            {memoryValues}
+            {observationsLoaded || isLoading ? (
+              <Skeleton className="h-8" />
+            ) : (
+              <div>
+                {memoryValues}
 
-            <p className="text-sm font-normal inline">{memoryPercentage}</p>
+                <p className="text-sm font-normal inline">{memoryPercentage}</p>
+              </div>
+            )}
           </div>
         </CardContent>
       </Card>
@@ -155,9 +174,15 @@ export function DashboardHeaderInstallation({ ...params }) {
         </CardHeader>
         <CardContent>
           <div className="text-2xl font-bold">
-            {highestStorage ? `${highestStorage?.used}  / ${highestStorage?.size}` : 'n/a'}
+            {observationsLoaded || isLoading ? (
+              <Skeleton className="h-8" />
+            ) : (
+              <div>
+                {highestStorage ? `${highestStorage?.used}  / ${highestStorage?.size}` : 'n/a'}
 
-            <p className="text-sm font-normal ml-2 inline">{highestStorage?.name ?? ''}</p>
+                <p className="text-sm font-normal ml-2 inline">{highestStorage?.name ?? ''}</p>
+              </div>
+            )}
           </div>
         </CardContent>
       </Card>
@@ -190,7 +215,9 @@ export function DashboardHeaderInstallation({ ...params }) {
           </svg>
         </CardHeader>
         <CardContent>
-          <div className="text-2xl font-bold">{cpuArchitecture}</div>
+          <div className="text-2xl font-bold">
+            {observationsLoaded || isLoading ? <Skeleton className="h-8" /> : cpuArchitecture}
+          </div>
         </CardContent>
       </Card>
       <Card>
@@ -211,7 +238,11 @@ export function DashboardHeaderInstallation({ ...params }) {
         </CardHeader>
         <CardContent>
           <div className="text-2xl font-bold">
-            {observations && observations?.length > 0 ? <TimeAgo date={observations[0]?.timestamp} /> : 'n/a'}
+            {observationsLoaded || isLoading ? (
+              <Skeleton className="h-8" />
+            ) : (
+              <TimeAgo date={observations[0]?.timestamp} />
+            )}
           </div>
         </CardContent>
       </Card>

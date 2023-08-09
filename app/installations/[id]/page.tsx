@@ -16,15 +16,40 @@ import { DashboardHeaderInstallation } from '@/components/ui/dashboard-header-in
 import { Zigbee } from '@/components/ui/zigbee';
 import { Auth0Provider } from '@auth0/auth0-react';
 import { useEffect, useState } from 'react';
+import { usePathname, useRouter } from 'next/navigation';
+import { DataTableDemo } from '@/components/ui/data-table';
 
 export default function DashboardInstallationPage({ params }: { params: { id: string } }) {
   const [origin, setOrigin] = useState<string | null>(null);
+  const [defaultTab, setDefaultTab] = useState<string>('overview');
+  const pathName = usePathname();
+  const router = useRouter();
 
   useEffect(() => {
     setOrigin(window.location.origin);
+
+    if (window.location.hash != null && window.location.hash.length > 0) {
+      setDefaultTab(window.location.hash.slice(1));
+    } else {
+      setDefaultTab('overview');
+    }
+  }, [setDefaultTab, setOrigin]);
+
+  useEffect(() => {
+    const onHashChanged = () => {
+      const newHash = window.location.hash.slice(1);
+      setDefaultTab(newHash?.length > 0 ? newHash : 'overview');
+    };
+
+    window.addEventListener('hashchange', onHashChanged);
+
+    return () => {
+      window.removeEventListener('hashchange', onHashChanged);
+    };
   }, []);
 
   return (
+    defaultTab != null &&
     origin != null && (
       <Auth0Provider
         domain="dev-ofc2nc2a0lc4ncig.eu.auth0.com"
@@ -34,23 +59,7 @@ export default function DashboardInstallationPage({ params }: { params: { id: st
           audience: 'https://api.haargos.smartrezydencja.pl',
         }}
       >
-        <div className="md:hidden">
-          <Image
-            src="/examples/dashboard-light.png"
-            width={1280}
-            height={866}
-            alt="Dashboard"
-            className="block dark:hidden"
-          />
-          <Image
-            src="/examples/dashboard-dark.png"
-            width={1280}
-            height={866}
-            alt="Dashboard"
-            className="hidden dark:block"
-          />
-        </div>
-        <div className="hidden flex-col md:flex">
+        <div className="flex-col">
           <div className="border-b">
             <div className="flex h-16 items-center px-4">
               <MainNav installationId={params.id} className="mx-6" />
@@ -60,12 +69,19 @@ export default function DashboardInstallationPage({ params }: { params: { id: st
             </div>
           </div>
           <div className="flex-1 space-y-4 p-8 pt-6">
-            <Tabs defaultValue="overview" className="space-y-4">
+            <Tabs
+              value={defaultTab}
+              onValueChange={value => {
+                window.location.hash = `#${value}`;
+              }}
+              className="space-y-4"
+            >
               <TabsList>
                 <TabsTrigger value="overview">Overview</TabsTrigger>
-                <TabsTrigger value="environment">Environment</TabsTrigger>
-                <TabsTrigger value="docker">Docker</TabsTrigger>
                 <TabsTrigger value="zigbee">Zigbee</TabsTrigger>
+                <TabsTrigger value="host">Host</TabsTrigger>
+                <TabsTrigger value="docker">Docker</TabsTrigger>
+                <TabsTrigger value="test">Test</TabsTrigger>
               </TabsList>
 
               <TabsContent value="overview" className="space-y-4">
@@ -79,7 +95,7 @@ export default function DashboardInstallationPage({ params }: { params: { id: st
                 </div>
               </TabsContent>
 
-              <TabsContent value="environment" className="space-y-4">
+              <TabsContent value="host" className="space-y-4">
                 <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
                   <Card className="col-span-7">
                     <CardHeader>
@@ -104,6 +120,10 @@ export default function DashboardInstallationPage({ params }: { params: { id: st
                 <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
                   <Zigbee installationId={params.id} />
                 </div>
+              </TabsContent>
+
+              <TabsContent value="test" className="space-y-4">
+                <DataTableDemo />
               </TabsContent>
             </Tabs>
           </div>

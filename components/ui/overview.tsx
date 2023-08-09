@@ -17,27 +17,17 @@ export function Overview() {
 
   useEffect(() => {
     getAccessTokenSilently().then(token => {
-      console.log('Fetched token ' + token);
       setToken(token);
     });
   }, [getAccessTokenSilently]);
 
-  // Fetch the installations whenever the token changes.
   useEffect(() => {
     if (token) {
-      console.log('Fetching with token ' + token);
       fetchInstallations(token)
         .then(() => Promise.all(installations.map(({ id }) => fetchObservationsForInstallation(id, token))))
         .catch(error => console.error(error));
     }
-  }, [
-    fetchInstallations,
-    fetchObservationsForInstallation,
-    isAuthenticated,
-    user,
-    token, // replace getAccessTokenSilently with token
-    installations,
-  ]);
+  }, [fetchInstallations, fetchObservationsForInstallation, isAuthenticated, user, token, installations]);
 
   const allObservations = Object.values(observations).flat();
 

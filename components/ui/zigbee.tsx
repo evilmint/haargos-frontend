@@ -35,12 +35,13 @@ export function Zigbee({ ...params }) {
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead className="w-[100px]">IEEE</TableHead>
-              <TableHead>Device</TableHead>
+              <TableHead className="w-[200px]">IEEE</TableHead>
+              <TableHead>Name by user</TableHead>
               {/* <TableHead>Entity name</TableHead> */}
               <TableHead>LQI</TableHead>
               <TableHead className="text-right">Last updated</TableHead>
               <TableHead className="text-right">Δ Observation</TableHead>
+              <TableHead className="text-right">Device</TableHead>
               <TableHead className="text-center">Power</TableHead>
               <TableHead className="text-right">Source</TableHead>
             </TableRow>
@@ -58,15 +59,18 @@ export function Zigbee({ ...params }) {
                 return (
                   <TableRow className={abnormalClassName} key={device.ieee}>
                     <TableCell className="font-medium text-xs">{device.ieee}</TableCell>
-                    <TableCell className="text-xs">{device.brand} {device.entity_name}</TableCell>
+                    <TableCell className="text-xs">{device.name_by_user ?? '-'}</TableCell>
                     {/* <TableCell className="text-xs"></TableCell> */}
                     <TableCell className="text-x">
                       {isAbnormalLQI ? <b className="text-red-600">{lqiName}</b> : <p>{lqiName}</p>}
                     </TableCell>
-                    <TableCell className="text-xs text-right">{new Date(device.last_updated).toLocaleString()}</TableCell>
+                    <TableCell className="text-xs text-right">
+                      {new Date(device.last_updated).toLocaleString()}
+                    </TableCell>
                     <TableCell className="text-xs text-right">
                       <TimeAgo date={device.last_updated} now={() => new Date(observations[0].timestamp).getTime()} />
                     </TableCell>
+                    <TableCell className="text-xs text-right">{`${device.brand} ${device.entity_name}`}</TableCell>
                     <TableCell className="text-xs flex justify-center items-center ">
                       {device.power_source == 'Battery' ? (
                         <svg

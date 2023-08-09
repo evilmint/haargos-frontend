@@ -96,13 +96,14 @@ const useInstallationStore = create<InstallationStoreState>((set, get) => ({
 
         observation.environment.storage = extractUniqueVolumes(volumesUnsorted);
         observation.zigbee?.devices.sort((a, b) => {
-          if (a.lqi == 0) {
-            return 1
+          if (a.lqi === 0 && b.lqi === 0) {
+            return new Date(b.last_updated).getTime() - new Date(a.last_updated).getTime();
+          } else if (a.lqi === 0) {
+            return 1;
+          } else if (b.lqi === 0) {
+            return -1;
           }
-          if (b.lqi == 0) {
-            return -1
-          }
-          
+
           return a.lqi - b.lqi;
         });
         return observation;

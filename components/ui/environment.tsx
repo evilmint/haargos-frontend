@@ -11,7 +11,7 @@ export function Environment({ ...params }) {
   const observations = useInstallationStore(state => state.observations[installationId]);
   const fetchInstallations = useInstallationStore(state => state.fetchInstallations);
   const fetchObservationsForInstallation = useInstallationStore(state => state.fetchObservationsForInstallation);
-  const { getAccessTokenSilently, getIdTokenClaims, user, logout, isAuthenticated } = useAuth0();
+  const { getAccessTokenSilently } = useAuth0();
 
   useEffect(() => {
     getAccessTokenSilently().then(token => {
@@ -32,7 +32,7 @@ export function Environment({ ...params }) {
         </TableRow>
       </TableHeader>
       <TableBody>
-        {observations.length > 0 && (
+        {observations && observations.length > 0 && (
           <TableRow key={observations[0].environment.cpu.model_name}>
             <TableCell className="font-medium text-xs">{observations[0].environment.cpu.model_name}</TableCell>
             <TableCell className="text-xs">{observations[0].environment.cpu.architecture}</TableCell>

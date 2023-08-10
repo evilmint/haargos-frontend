@@ -50,7 +50,7 @@ export function DashboardHeader() {
           </svg>
         </CardHeader>
         <CardContent>
-          <div className="text-2xl font-bold">{healthyInstallations}</div>
+          <div className="text-xl font-bold">{healthyInstallations}</div>
         </CardContent>
       </Card>
       <Card>
@@ -75,7 +75,7 @@ export function DashboardHeader() {
           </svg>
         </CardHeader>
         <CardContent>
-          <div className="text-2xl font-bold">{unhealthyInstallations}</div>
+          <div className="text-xl font-bold">{unhealthyInstallations}</div>
         </CardContent>
       </Card>
       <Card>
@@ -100,7 +100,7 @@ export function DashboardHeader() {
           </svg>
         </CardHeader>
         <CardContent>
-          <div className="text-2xl font-bold">{installationsWithIssues}</div>
+          <div className="text-xl font-bold">{installationsWithIssues}</div>
         </CardContent>
       </Card>
       <Card>
@@ -120,7 +120,7 @@ export function DashboardHeader() {
           </svg>
         </CardHeader>
         <CardContent>
-          <div className="text-2xl font-bold">{latestActivityInstallationName}</div>
+          <div className="text-xl font-bold">{latestActivityInstallationName}</div>
         </CardContent>
       </Card>
     </div>

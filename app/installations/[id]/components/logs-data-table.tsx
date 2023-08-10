@@ -22,32 +22,23 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Input } from '@/components/ui/input';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { columns } from './data-table-columns';
+import { columns } from './logs-data-table-columns';
 
-export interface ZigbeeDeviceTableView {
-  ieee: string;
-  last_updated: Date;
-  entity_name: string;
-  timeago: {last_updated: Date, timestamp: Date};
-  name_by_user: string | null;
-  device: string;
-  lqi: number;
-  power_source: string | null;
-  integration_type: string;
+export interface LogTableView {
   id: string;
+  log: string;
+  type: string;
+  time: Date;
+  thread: string;
 }
 
-export function DataTableDemo({ ...params }) {
-  const { data, installationId } = params;
+export function LogsDataTable({ ...params }) {
+  const { data } = params;
 
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
   const [pageSize, ] = React.useState<number>(20);
-  const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({
-    ieee: false,
-    integration_type: false,
-    device: false,
-  });
+  const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = React.useState({});
 
   const table = useReactTable({
@@ -76,9 +67,9 @@ export function DataTableDemo({ ...params }) {
     <div className="w-full">
       <div className="flex items-center py-4">
         <Input
-          placeholder="Filter names..."
-          value={(table.getColumn('name_by_user')?.getFilterValue() as string) ?? ''}
-          onChange={event => table.getColumn('name_by_user')?.setFilterValue(event.target.value)}
+          placeholder="Filter logs..."
+          value={(table.getColumn('log')?.getFilterValue() as string) ?? ''}
+          onChange={event => table.getColumn('log')?.setFilterValue(event.target.value)}
           className="max-w-sm"
         />
         <DropdownMenu>

@@ -68,7 +68,7 @@ export function DashboardHeaderInstallation({ ...params }) {
           </svg>
         </CardHeader>
         <CardContent>
-          <div className="text-2xl font-bold">
+          <div className="text-xl font-bold">
             {observationsLoaded || isLoading ? (
               <Skeleton className="h-8" />
             ) : observations && observations.length > 0 ? (
@@ -101,7 +101,7 @@ export function DashboardHeaderInstallation({ ...params }) {
           </svg>
         </CardHeader>
         <CardContent className="flex">
-          <div className="text-2xl flex-1 font-bold inline">
+          <div className="text-xl flex-1 font-bold inline">
             {observationsLoaded || isLoading ? <Skeleton className="h-8" /> : haVersion ?? 'n/a'}
           </div>
           <Button
@@ -137,7 +137,7 @@ export function DashboardHeaderInstallation({ ...params }) {
           </svg>
         </CardHeader>
         <CardContent>
-          <div className="text-2xl font-bold">
+          <div className="text-xl font-bold">
             {observationsLoaded || isLoading ? (
               <Skeleton className="h-8" />
             ) : (
@@ -173,7 +173,7 @@ export function DashboardHeaderInstallation({ ...params }) {
           </svg>
         </CardHeader>
         <CardContent>
-          <div className="text-2xl font-bold">
+          <div className="text-xl font-bold">
             {observationsLoaded || isLoading ? (
               <Skeleton className="h-8" />
             ) : (
@@ -215,7 +215,7 @@ export function DashboardHeaderInstallation({ ...params }) {
           </svg>
         </CardHeader>
         <CardContent>
-          <div className="text-2xl font-bold">
+          <div className="text-xl font-bold">
             {observationsLoaded || isLoading ? <Skeleton className="h-8" /> : cpuArchitecture}
           </div>
         </CardContent>
@@ -237,7 +237,7 @@ export function DashboardHeaderInstallation({ ...params }) {
           </svg>
         </CardHeader>
         <CardContent>
-          <div className="text-2xl font-bold">
+          <div className="text-xl font-bold">
             {observationsLoaded || isLoading ? (
               <Skeleton className="h-8" />
             ) : (

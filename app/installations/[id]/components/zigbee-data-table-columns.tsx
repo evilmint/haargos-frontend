@@ -1,20 +1,22 @@
 'use client';
+
 import * as React from 'react';
 import { ColumnDef } from '@tanstack/react-table';
 import { ArrowUpDown } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { ZigbeeDeviceTableView } from './data-table';
-import { Icons } from '../icons';
+import { ZigbeeDeviceTableView } from './zigbee-data-table';
+import { Icons } from '@/components/icons';
 
 import TimeAgo from 'react-timeago';
 export const columns: ColumnDef<ZigbeeDeviceTableView>[] = [
   {
     accessorKey: 'ieee',
     header: 'IEEE',
-    cell: ({ row }) => <div className="lowercase text-xs">{row.getValue('ieee')}</div>,
+    id: 'IEEE',
+    cell: ({ row }) => <div className="lowercase text-xs">{row.getValue('IEEE')}</div>,
   },
   {
-    accessorKey: 'name_by_user',
+    accessorKey: 'name',
     header: ({ column }) => {
       return (
         <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
@@ -23,10 +25,11 @@ export const columns: ColumnDef<ZigbeeDeviceTableView>[] = [
         </Button>
       );
     },
-    cell: ({ row }) => <div className="text-xs">{row.getValue('name_by_user')}</div>,
+    cell: ({ row }) => <div className="text-xs">{row.getValue('name')}</div>,
   },
   {
     accessorKey: 'lqi',
+    id: 'LQI',
     header: ({ column }) => {
       return (
         <div className="text-center">
@@ -39,7 +42,7 @@ export const columns: ColumnDef<ZigbeeDeviceTableView>[] = [
     },
     sortingFn: 'alphanumeric',
     cell: ({ row }) => {
-      const lqi = parseFloat(row.getValue('lqi'));
+      const lqi = parseFloat(row.getValue('LQI'));
       const isAbnormalLQI = lqi <= 32;
       const className = isAbnormalLQI ? 'text-red-600 font-semibold' : ' font-regular';
       const classNames = ` ${className} text-center text-xs`;

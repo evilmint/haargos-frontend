@@ -7,18 +7,28 @@ import { getObservations } from './observations';
 interface UserState {
   user: User | null;
   setUser: (user: User | null) => void;
+  isFetchingUser: boolean;
   fetchUser: (token: string) => Promise<void>;
 }
 
-const useUserStore = create<UserState>(set => ({
+const useUserStore = create<UserState>((set, get) => ({
   user: null,
+  isFetchingUser: false,
   setUser: user => set(() => ({ user })),
   fetchUser: async token => {
+    const { user } = get();
+    if (user) return;
+
+    if (get().isFetchingUser) return;
+    set({ isFetchingUser: true });
+
     try {
       const user = await getUserMe(token);
       set({ user });
     } catch (error) {
       console.log(error);
+    } finally {
+      set({ isFetchingUser: false });
     }
   },
 }));
@@ -61,7 +71,7 @@ const useInstallationStore = create<InstallationStoreState>((set, get) => ({
     set({ isFetchingInstallations: true });
 
     const { installations } = get();
-    if (installations.length > 0) return;
+    if (installations && installations.length > 0) return;
 
     try {
       const installations = await getInstallations(token);

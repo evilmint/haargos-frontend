@@ -2,7 +2,7 @@
 
 import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/registry/new-york/ui/tabs';
-import { Log } from '../../app/types.d';
+import { Log } from '../../../types';
 import { useEffect } from 'react';
 import { useInstallationStore } from '@/app/services/stores';
 import { useAuth0 } from '@auth0/auth0-react';
@@ -55,7 +55,7 @@ export function Logs({ ...params }) {
           <div className="bg-slate-950 text-white p-4 rounded-md">
             <div className="flex justify-between items-center mb-2"></div>
             <div className="overflow-x-auto">
-              <pre id="code" className="text-gray-300">
+              <pre id="code" className="text-gray-300 text-xs">
                 <code>{(logs ?? []).map((l: Log) => l.raw).join('\n')}</code>
               </pre>
             </div>

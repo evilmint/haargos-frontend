@@ -1,29 +1,26 @@
 'use client';
-
-
-import { Logs } from '@/components/ui/logs';
-import { Storage } from '@/components/ui/storage';
-import { Docker } from '@/components/ui/docker';
-import { Environment } from '@/components/ui/environment';
-
 import { Card, CardContent, CardHeader, CardTitle } from '@/registry/new-york/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/registry/new-york/ui/tabs';
-
+import { Logs } from '@/app/installations/[id]/components/logs-deprecated';
+import { Storage } from './components/storage';
+import { Docker } from './components/docker';
+import { Environment } from './components/environment';
+import { ZigbeeDataTableProxy } from './components/zigbee-data-table-proxy';
 import { MainNav } from '@/components/ui/main-nav';
 import { UserNav } from '@/components/ui/user-nav';
-import { DashboardHeaderInstallation } from '@/components/ui/dashboard-header-installation';
-import { Zigbee } from '@/components/ui/zigbee';
+import { DashboardHeaderInstallation } from '@/app/installations/[id]/components/dashboard-header-installation';
+import { Zigbee } from '@/app/installations/[id]/components/zigbee-deprecated';
 import { Auth0Provider } from '@auth0/auth0-react';
 import { useEffect, useState } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
-import { TableProxy } from '@/components/ui/table-proxy';
+import { LogsDataTableProxy } from './components/logs-data-table-proxy';
 
 export default function DashboardInstallationPage({ params }: { params: { id: string } }) {
   const [origin, setOrigin] = useState<string | null>(null);
   const [defaultTab, setDefaultTab] = useState<string>('overview');
   const pathName = usePathname();
   const router = useRouter();
-  
+
   useEffect(() => {
     setOrigin(window.location.origin);
 
@@ -85,13 +82,10 @@ export default function DashboardInstallationPage({ params }: { params: { id: st
 
               <TabsContent value="overview" className="space-y-4">
                 <DashboardHeaderInstallation installationId={params.id} />
-                <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
-                  <Card className="col-span-8">
-                    <CardContent className="pl-2">
-                      <Logs installationId={params.id} />
-                    </CardContent>
-                  </Card>
-                </div>
+
+                {/* <Logs installationId={params.id} /> */}
+
+                <LogsDataTableProxy installationId={params.id} />
               </TabsContent>
 
               <TabsContent value="host" className="space-y-4">
@@ -115,14 +109,8 @@ export default function DashboardInstallationPage({ params }: { params: { id: st
                 </div>
               </TabsContent>
 
-              <TabsContent value="zigbee2" className="space-y-4">
-                <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
-                  <Zigbee installationId={params.id} />
-                </div>
-              </TabsContent>
-
               <TabsContent value="zigbee" className="space-y-4">
-                <TableProxy installationId={params.id} />
+                <ZigbeeDataTableProxy installationId={params.id} />
               </TabsContent>
             </Tabs>
           </div>

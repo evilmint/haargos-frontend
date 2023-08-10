@@ -39,9 +39,12 @@ export const columns: ColumnDef<ZigbeeDeviceTableView>[] = [
     },
     sortingFn: 'alphanumeric',
     cell: ({ row }) => {
-      const amount = parseFloat(row.getValue('lqi'));
+      const lqi = parseFloat(row.getValue('lqi'));
+      const isAbnormalLQI = lqi <= 32;
+      const className = isAbnormalLQI ? 'text-red-600 font-semibold' : ' font-regular';
+      const classNames = ` ${className} text-center text-xs`;
 
-      return <div className="text-center font-regular text-xs">{amount}</div>;
+      return <div className={classNames}>{lqi}</div>;
     },
   },
   {

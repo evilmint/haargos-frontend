@@ -64,7 +64,7 @@ export default function InstallationSwitcher({ className, installationId }: Team
               {
                 label: 'Installation',
                 teams: installations.map(i => {
-                  return { label: i.name, value: i.id };
+                  return { label: i.name, healthy: i.healthy?.is_healthy ?? false, value: i.id };
                 }),
               },
             ]);
@@ -76,6 +76,7 @@ export default function InstallationSwitcher({ className, installationId }: Team
               const i = paramInstallation[0];
               setSelectedTeam({
                 label: i.name,
+                healthy: i.healthy?.is_healthy ?? false,
                 value: i.id,
               });
             }
@@ -102,9 +103,20 @@ export default function InstallationSwitcher({ className, installationId }: Team
             role="combobox"
             aria-expanded={open}
             aria-label="Select a team"
-            className={cn('w-[200px] justify-between', className)}
+            className={cn('w-[220px] justify-between', className)}
           >
-            {selectedTeam?.label ?? 'Choose installation'}
+            {selectedTeam?.label != null ? (
+              <>
+                {selectedTeam?.healthy ? (
+                  <div className="w-2 h-2 bg-green-600 rounded-full inline-block mr-2"></div>
+                ) : (
+                  <div className="w-2 h-2 bg-red-600 rounded-full inline-block mr-2"></div>
+                )}
+                {selectedTeam.label}
+              </>
+            ) : (
+              'Choose installation'
+            )}
             <CaretSortIcon className="ml-auto h-4 w-4 shrink-0 opacity-50" />
           </Button>
         </PopoverTrigger>
@@ -126,6 +138,11 @@ export default function InstallationSwitcher({ className, installationId }: Team
                       }}
                       className="text-sm"
                     >
+                      {installation?.healthy ? (
+                        <div className="w-2 h-2 bg-green-600 rounded-full inline-block mr-2"></div>
+                      ) : (
+                        <div className="w-2 h-2 bg-red-600 rounded-full inline-block mr-2"></div>
+                      )}
                       {installation.label}
                       <CheckIcon
                         className={cn(

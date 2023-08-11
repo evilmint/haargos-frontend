@@ -13,6 +13,8 @@ import { Icons } from '@/components/icons';
 export function DashboardHeaderInstallation({ ...params }) {
   const { installationId } = params;
   const observations = useInstallationStore(state => state.observations[installationId]);
+  const installations = useInstallationStore(state => state.installations);
+  const installation = installations.find(i => i.id == installationId);
   const highestStorage = useInstallationStore(state => state.highestStorageByInstallationId[installationId]);
   const fetchInstallations = useInstallationStore(state => state.fetchInstallations);
   const fetchObservationsForInstallation = useInstallationStore(state => state.fetchObservationsForInstallation);
@@ -108,7 +110,9 @@ export function DashboardHeaderInstallation({ ...params }) {
           <div className="text-xl font-bold inline">
             {observationsLoading || isLoading ? <Skeleton className="h-8" /> : haVersion ?? 'n/a'}
           </div>
-          {observationsLoading == false && isLoading == false && isHAUpdateAvailable == false && <Icons.check className="inline font-regular text-green-700 text-xs mb-1 ml-1" />}
+          {observationsLoading == false && isLoading == false && isHAUpdateAvailable == false && (
+            <Icons.check className="inline font-regular text-green-700 text-xs mb-1 ml-1" />
+          )}
           {observationsLoading == false && isLoading == false && isHAUpdateAvailable && (
             <Button
               onClick={() => {
@@ -233,6 +237,44 @@ export function DashboardHeaderInstallation({ ...params }) {
               <Skeleton className="h-8" />
             ) : (
               <TimeAgo date={observations[0]?.timestamp} />
+            )}
+          </div>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+          <CardTitle className="text-sm font-medium">Instance status</CardTitle>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="2"
+            className="h-4 w-4 text-muted-foreground"
+          >
+            <path d="M22 12h-4l-3 9L9 3l-3 9H2" />
+          </svg>
+        </CardHeader>
+        <CardContent>
+          <div className="text-xl font-bold">
+            {observationsLoading || isLoading ? (
+              <Skeleton className="h-8" />
+            ) : (
+              <div>
+                {installation?.healthy.is_healthy ? (
+                  <div className="w-3 h-3 bg-green-600 rounded-full inline-block"></div>
+                ) : (
+                  <div className="w-3 h-3 bg-red-600 rounded-full inline-block"></div>
+                )}
+                {installation?.healthy.last_updated && (
+                  <p className="text-sm font-normal ml-2 inline">
+                    <TimeAgo date={installation?.healthy.last_updated} />
+                  </p>
+                )}
+              </div>
             )}
           </div>
         </CardContent>

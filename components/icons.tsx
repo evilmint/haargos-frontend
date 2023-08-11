@@ -200,7 +200,7 @@ export const Icons = {
       strokeLinecap="round"
       strokeLinejoin="round"
       className="h-4 w-4 text-muted-foreground"
-      {... props}
+      {...props}
     >
       <ellipse cx="12" cy="5" rx="9" ry="3"></ellipse>
       <path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"></path>

@@ -87,18 +87,23 @@ interface ObservationApiResponse {
 }
 
 interface InstallationUrls {
-  instance: string;
+  instance: string | null;
 }
 
 interface Installation {
   urls: InstallationUrls;
-  healthy: boolean;
+  healthy: InstallationHealthy;
   userId: string;
   issues: string[];
   notes: string;
   last_agent_connection: string;
   id: string;
   name: string;
+}
+
+interface InstallationHealthy {
+  is_healthy: boolean;
+  last_updated: string;
 }
 
 interface InstallationBody {

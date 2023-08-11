@@ -75,9 +75,9 @@ const useInstallationStore = create<InstallationStoreState>((set, get) => ({
 
     try {
       const installations = await getInstallations(token);
-      set({ 
+      set({
         installations: installations.items,
-        latestHaRelease: installations.latest_ha_release
+        latestHaRelease: installations.latest_ha_release,
       });
     } catch (error) {
       console.log(error);

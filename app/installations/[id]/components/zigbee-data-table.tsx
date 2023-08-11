@@ -77,8 +77,8 @@ export function ZigbeeDataTable({ ...params }) {
       <div className="flex items-center py-4">
         <Input
           placeholder="Filter names..."
-          value={(table.getColumn('name_by_user')?.getFilterValue() as string) ?? ''}
-          onChange={event => table.getColumn('name_by_user')?.setFilterValue(event.target.value)}
+          value={(table.getColumn('name')?.getFilterValue() as string) ?? ''}
+          onChange={event => table.getColumn('name')?.setFilterValue(event.target.value)}
           className="max-w-sm"
         />
         <DropdownMenu>

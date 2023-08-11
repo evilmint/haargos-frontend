@@ -32,7 +32,10 @@ export function LogsDataTableProxy({ ...params }) {
   );
 
   const installation = installations.find(i => i.id == installationId);
-  const logFilename = `logs-${(installation?.name ?? 'default').replace(/[^a-zA-Z0-9\u00C0-\u017F]/g, '_')}-${new Date().getTime()}.txt`;
+  const logFilename = `logs-${(installation?.name ?? 'default').replace(
+    /[^a-zA-Z0-9\u00C0-\u017F]/g,
+    '_',
+  )}-${new Date().getTime()}.txt`;
 
   return (
     <Tabs defaultValue="logtable" className="space-y-4">

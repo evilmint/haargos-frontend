@@ -33,7 +33,7 @@ export function DashboardHeaderInstallation({ ...params }) {
   const memoryTotal = hasObservations ? observations[0].environment.memory.total : 1;
   const memoryPercentage = Math.floor((memoryUsed / memoryTotal) * 100) + '%';
 
-  const observationsLoaded = observations == null || observations == undefined || observations?.length == 0;
+  const observationsLoading = observations == null || observations == undefined || observations?.length == 0;
   const isHAUpdateAvailable = latestHaRelease != null && haVersion != null && haVersion != latestHaRelease;
 
   useEffect(() => {
@@ -72,7 +72,7 @@ export function DashboardHeaderInstallation({ ...params }) {
         </CardHeader>
         <CardContent>
           <div className="text-xl font-bold">
-            {observationsLoaded || isLoading ? (
+            {observationsLoading || isLoading ? (
               <Skeleton className="h-8" />
             ) : observations && observations.length > 0 ? (
               observations[0].agent_version
@@ -105,9 +105,9 @@ export function DashboardHeaderInstallation({ ...params }) {
         </CardHeader>
         <CardContent>
           <div className="text-xl font-bold inline">
-            {observationsLoaded || isLoading ? <Skeleton className="h-8" /> : haVersion ?? 'n/a'}
+            {observationsLoading || isLoading ? <Skeleton className="h-8" /> : haVersion ?? 'n/a'}
           </div>
-          {isHAUpdateAvailable == false && <Icons.check className="inline font-regular text-green-700 text-xs mb-1 ml-1" />}
+          {observationsLoading == false && isLoading == false && isHAUpdateAvailable == false && <Icons.check className="inline font-regular text-green-700 text-xs mb-1 ml-1" />}
           {isHAUpdateAvailable && (
             <Button
               onClick={() => {
@@ -143,7 +143,7 @@ export function DashboardHeaderInstallation({ ...params }) {
         </CardHeader>
         <CardContent>
           <div className="text-xl font-bold">
-            {observationsLoaded || isLoading ? (
+            {observationsLoading || isLoading ? (
               <Skeleton className="h-8" />
             ) : (
               <div>
@@ -179,7 +179,7 @@ export function DashboardHeaderInstallation({ ...params }) {
         </CardHeader>
         <CardContent>
           <div className="text-xl font-bold">
-            {observationsLoaded || isLoading ? (
+            {observationsLoading || isLoading ? (
               <Skeleton className="h-8" />
             ) : (
               <div>
@@ -221,13 +221,13 @@ export function DashboardHeaderInstallation({ ...params }) {
         </CardHeader>
         <CardContent>
           <div className="text-xl font-bold">
-            {observationsLoaded || isLoading ? <Skeleton className="h-8" /> : cpuArchitecture}
+            {observationsLoading || isLoading ? <Skeleton className="h-8" /> : cpuArchitecture}
           </div>
         </CardContent>
       </Card>
       <Card>
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-sm font-medium">Latest activity</CardTitle>
+          <CardTitle className="text-sm font-medium">Latest agent activity</CardTitle>
           <svg
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 24 24"
@@ -243,7 +243,7 @@ export function DashboardHeaderInstallation({ ...params }) {
         </CardHeader>
         <CardContent>
           <div className="text-xl font-bold">
-            {observationsLoaded || isLoading ? (
+            {observationsLoading || isLoading ? (
               <Skeleton className="h-8" />
             ) : (
               <TimeAgo date={observations[0]?.timestamp} />

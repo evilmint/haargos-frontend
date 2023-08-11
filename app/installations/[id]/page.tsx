@@ -7,7 +7,7 @@ import { Environment } from './components/environment';
 import { ZigbeeDataTableProxy } from './components/zigbee-data-table-proxy';
 import { MainNav } from '@/components/ui/main-nav';
 import { UserNav } from '@/components/ui/user-nav';
-import { DashboardHeaderInstallation } from '@/app/installations/[id]/components/dashboard-header-installation';
+import { DashboardHeaderInstallation } from '@/app/installations/[id]/components/dashboard-header';
 import { Auth0Provider } from '@auth0/auth0-react';
 import { useEffect, useState } from 'react';
 import { usePathname, useRouter } from 'next/navigation';

@@ -136,7 +136,14 @@ export const columns: ColumnDef<ZigbeeDeviceTableView>[] = [
 
       return (
         <div className="flex justify-center items-center text-center text-xs font-regular">
-          {power_source.startsWith('Battery') ? <div className="center"><Icons.battery />{power_source.slice(8)}</div> : <Icons.zap />}
+          {power_source.startsWith('Battery') ? (
+            <div className="center">
+              <Icons.battery />
+              {power_source.slice(8)}
+            </div>
+          ) : (
+            <Icons.zap />
+          )}
         </div>
       );
     },

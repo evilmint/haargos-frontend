@@ -8,11 +8,12 @@ import { Log } from '@/app/types';
 import { LogsDataTable, LogTableView } from './logs-data-table';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/registry/new-york/ui/tabs';
 import CopyButton from './copy-button';
+import DownloadButton from './download-button';
 
 export function LogsDataTableProxy({ ...params }) {
   const { installationId } = params;
 
-  const observations = useInstallationStore(state => state.observations[installationId]);
+  const installations = useInstallationStore(state => state.installations);
   const logs = useInstallationStore(state => state.logsByInstallationId[installationId]);
   const fetchInstallations = useInstallationStore(state => state.fetchInstallations);
   const fetchObservationsForInstallation = useInstallationStore(state => state.fetchObservationsForInstallation);
@@ -30,6 +31,9 @@ export function LogsDataTableProxy({ ...params }) {
     mapToTableView(log),
   );
 
+  const installation = installations.find(i => i.id == installationId);
+  const logFilename = `logs-${(installation?.name ?? 'default').replace(/[^a-zA-Z0-9\u00C0-\u017F]/g, '_')}-${new Date().getTime()}.txt`;
+
   return (
     <Tabs defaultValue="logtable" className="space-y-4">
       <h3 className="inline ml-4 font-semibold">Logs</h3>
@@ -44,11 +48,11 @@ export function LogsDataTableProxy({ ...params }) {
       <TabsContent value="lograw">
         <div className="relative mx-auto mt-4">
           <CopyButton textToCopy={(logs ?? []).map((l: Log) => l.raw).join('\n')} />
+          <DownloadButton fileName={logFilename} textToCopy={(logs ?? []).map((l: Log) => l.raw).join('\n')} />
           <div className="bg-slate-950 text-white p-4 rounded-md">
             <div className="flex justify-between items-center mb-2"></div>
             <div className="overflow-x-auto">
               <pre id="code" className="text-gray-300 text-xs leading-4">
-                
                 <code>{(logs ?? []).map((l: Log) => l.raw).join('\n')}</code>
               </pre>
             </div>

@@ -22,7 +22,7 @@ export default function CopyButton({ textToCopy = 'Copy default' }) {
   const btnStyle = copied ? "bg-gray-500 text-white" : "";
 
   return (
-    <div className="text-center my-5 text-gray-200 mt-1 absolute z-20 right-2">
+    <div className="text-center my-5 text-gray-200 mt-1 absolute z-20 right-10">
       <button
         onClick={copyToClipboard}
         className={

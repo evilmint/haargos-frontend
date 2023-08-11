@@ -50,6 +50,7 @@ interface InstallationStoreState {
   observations: Record<string, Observation[]>;
   logsByInstallationId: Record<string, Log[]>;
   haVersion: Record<string, string>;
+  latestHaRelease: string | null;
   highestStorageByInstallationId: Record<string, Storage | null>;
   isFetchingInstallations: boolean;
   isFetchingObservations: Record<string, boolean>;
@@ -63,6 +64,7 @@ const useInstallationStore = create<InstallationStoreState>((set, get) => ({
   observations: {},
   logsByInstallationId: {},
   haVersion: {},
+  latestHaRelease: null,
   highestStorageByInstallationId: {},
   isFetchingInstallations: false,
   isFetchingObservations: {},
@@ -75,7 +77,10 @@ const useInstallationStore = create<InstallationStoreState>((set, get) => ({
 
     try {
       const installations = await getInstallations(token);
-      set({ installations });
+      set({ 
+        installations: installations.items,
+        latestHaRelease: installations.latest_ha_release
+      });
     } catch (error) {
       console.log(error);
     } finally {

@@ -8,6 +8,7 @@ import { useInstallationStore } from '@/app/services/stores';
 import { Button } from '@/registry/new-york/ui/button';
 import { useAuth0 } from '@auth0/auth0-react';
 import { Skeleton } from '@/registry/new-york/ui/skeleton';
+import { Icons } from '@/components/icons';
 
 export function DashboardHeaderInstallation({ ...params }) {
   const { installationId } = params;
@@ -16,12 +17,13 @@ export function DashboardHeaderInstallation({ ...params }) {
   const fetchInstallations = useInstallationStore(state => state.fetchInstallations);
   const fetchObservationsForInstallation = useInstallationStore(state => state.fetchObservationsForInstallation);
   const haVersion = useInstallationStore(state => state.haVersion[installationId]);
+  const latestHaRelease = useInstallationStore(state => state.latestHaRelease);
   const { getAccessTokenSilently, user, isAuthenticated } = useAuth0();
   const [isLoading, setLoading] = useState<boolean>(true);
 
   const memoryValues =
     observations && observations.length > 0
-      ? `${numeral(observations[0].environment.memory.used / 1024 / 1024).format('0.0')}G / ${numeral(
+      ? `${numeral(observations[0].environment.memory.used / 1024 / 1024).format('0.0')}G/${numeral(
           observations[0].environment.memory.total / 1024 / 1024,
         ).format('0.0')}G `
       : 'n/a';
@@ -32,6 +34,7 @@ export function DashboardHeaderInstallation({ ...params }) {
   const memoryPercentage = Math.floor((memoryUsed / memoryTotal) * 100) + '%';
 
   const observationsLoaded = observations == null || observations == undefined || observations?.length == 0;
+  const isHAUpdateAvailable = latestHaRelease != null && haVersion != null && haVersion != latestHaRelease;
 
   useEffect(() => {
     getAccessTokenSilently().then(token => {
@@ -100,19 +103,21 @@ export function DashboardHeaderInstallation({ ...params }) {
             <path d="M18 9a9 9 0 0 1-9 9"></path>
           </svg>
         </CardHeader>
-        <CardContent className="flex">
-          <div className="text-xl flex-1 font-bold inline">
+        <CardContent>
+          <div className="text-xl font-bold inline">
             {observationsLoaded || isLoading ? <Skeleton className="h-8" /> : haVersion ?? 'n/a'}
           </div>
-          <Button
-            onClick={() => {
-              window.open('https://github.com/home-assistant/core/releases', '_blank');
-            }}
-            className="inline flex-1 ml-4 flex-auto"
-            variant="ghost"
-          >
-            Releases
-          </Button>
+          {isHAUpdateAvailable == false && <Icons.check className="inline font-regular text-green-700 text-xs mb-1 ml-1" />}
+          {isHAUpdateAvailable && (
+            <Button
+              onClick={() => {
+                window.open('https://github.com/home-assistant/core/releases', '_blank');
+              }}
+              className="block"
+            >
+              {latestHaRelease} available
+            </Button>
+          )}
         </CardContent>
       </Card>
       <Card>
@@ -178,7 +183,7 @@ export function DashboardHeaderInstallation({ ...params }) {
               <Skeleton className="h-8" />
             ) : (
               <div>
-                {highestStorage ? `${highestStorage?.used}  / ${highestStorage?.size}` : 'n/a'}
+                {highestStorage ? `${highestStorage?.used}/${highestStorage?.size}` : 'n/a'}
 
                 <p className="text-sm font-normal ml-2 inline">{highestStorage?.name ?? ''}</p>
               </div>

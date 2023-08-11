@@ -1,7 +1,7 @@
-import { Installation, InstallationApiResponse } from '../types';
+import { Installation, InstallationApiResponse, InstallationBody } from '../types';
 import { apiSettings, baseHeaders } from './api-settings';
 
-export async function getInstallations(token: string): Promise<Installation[]> {
+export async function getInstallations(token: string): Promise<InstallationBody> {
   const additionalHeaders = new Headers({
     Authorization: `Bearer ${token}`,
   });
@@ -18,9 +18,11 @@ export async function getInstallations(token: string): Promise<Installation[]> {
   };
 
   const response = await fetch(`${apiSettings.baseUrl}/installations`, requestOptions);
-  const data: InstallationApiResponse = await response.json();
+  let data: InstallationApiResponse = await response.json();
 
-  return data.body.items.sort(
+  data.body.items = data.body.items.sort(
     (a, b) => new Date(b.last_agent_connection).getTime() - new Date(a.last_agent_connection).getTime(),
   );
+
+  return data.body;
 }

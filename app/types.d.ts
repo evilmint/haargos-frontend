@@ -97,6 +97,7 @@ interface Installation {
 }
 
 interface InstallationBody {
+  latest_ha_release: string | null;
   items: Installation[];
 }
 
@@ -122,6 +123,7 @@ export {
   Environment,
   DockerContainer,
   Observation,
+  InstallationBody,
   UserApiResponse,
   Zigbee,
   ZigbeeDevice,

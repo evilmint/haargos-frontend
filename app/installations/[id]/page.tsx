@@ -1,7 +1,6 @@
 'use client';
 import { Card, CardContent, CardHeader, CardTitle } from '@/registry/new-york/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/registry/new-york/ui/tabs';
-import { Logs } from '@/app/installations/[id]/components/logs-deprecated';
 import { Storage } from './components/storage';
 import { Docker } from './components/docker';
 import { Environment } from './components/environment';
@@ -9,7 +8,6 @@ import { ZigbeeDataTableProxy } from './components/zigbee-data-table-proxy';
 import { MainNav } from '@/components/ui/main-nav';
 import { UserNav } from '@/components/ui/user-nav';
 import { DashboardHeaderInstallation } from '@/app/installations/[id]/components/dashboard-header-installation';
-import { Zigbee } from '@/app/installations/[id]/components/zigbee-deprecated';
 import { Auth0Provider } from '@auth0/auth0-react';
 import { useEffect, useState } from 'react';
 import { usePathname, useRouter } from 'next/navigation';

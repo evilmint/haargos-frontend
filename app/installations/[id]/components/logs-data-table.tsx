@@ -37,7 +37,7 @@ export function LogsDataTable({ ...params }) {
 
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
-  const [pageSize, ] = React.useState<number>(20);
+  const [pageSize] = React.useState<number>(20);
   const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = React.useState({});
 
@@ -45,7 +45,7 @@ export function LogsDataTable({ ...params }) {
     data,
     columns,
     initialState: {
-        pagination: { pageSize: 20 }
+      pagination: { pageSize: 20 },
     },
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,

@@ -28,7 +28,7 @@ export interface ZigbeeDeviceTableView {
   ieee: string;
   last_updated: Date;
   entity_name: string;
-  timeago: {last_updated: Date, timestamp: Date};
+  timeago: { last_updated: Date; timestamp: Date };
   name: string | null;
   device: string;
   lqi: number;
@@ -42,7 +42,7 @@ export function ZigbeeDataTable({ ...params }) {
 
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
-  const [pageSize, ] = React.useState<number>(20);
+  const [pageSize] = React.useState<number>(20);
   const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({
     ieee: false,
     integration_type: false,
@@ -54,7 +54,7 @@ export function ZigbeeDataTable({ ...params }) {
     data,
     columns,
     initialState: {
-        pagination: { pageSize: 20 }
+      pagination: { pageSize: 20 },
     },
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,

@@ -41,7 +41,7 @@ function mapToTableView(device: ZigbeeDevice, observation: Observation): ZigbeeD
     timeago: { last_updated: new Date(device.last_updated), timestamp: new Date(observation.timestamp) }, //<TimeAgo date={device.last_updated} now={() => new Date(observation.timestamp).getTime()} />,
     device: `${device.brand} ${device.entity_name}`,
     lqi: device.lqi,
-    power_source: device.power_source,
+    power_source: device.power_source + ` ${device.battery_level ?? "n/a"}`,
     integration_type: device.integration_type.toLocaleUpperCase(),
   };
 }

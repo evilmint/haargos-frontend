@@ -70,6 +70,7 @@ interface ZigbeeDevice {
   name_by_user: string | null;
   brand: string;
   lqi: number;
+  battery_level: number | null;
   power_source: string | null;
   integration_type: string;
 }

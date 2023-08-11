@@ -57,6 +57,11 @@ interface Observation {
   dangers: string[];
   id: string;
   zigbee: Zigbee | null;
+  ha_config: HAConfig | null;
+}
+
+interface HAConfig {
+  version: string | null;
 }
 
 interface Zigbee {

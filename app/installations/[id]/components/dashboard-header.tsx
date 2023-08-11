@@ -16,7 +16,6 @@ export function DashboardHeaderInstallation({ ...params }) {
   const highestStorage = useInstallationStore(state => state.highestStorageByInstallationId[installationId]);
   const fetchInstallations = useInstallationStore(state => state.fetchInstallations);
   const fetchObservationsForInstallation = useInstallationStore(state => state.fetchObservationsForInstallation);
-  const haVersion = useInstallationStore(state => state.haVersion[installationId]);
   const latestHaRelease = useInstallationStore(state => state.latestHaRelease);
   const { getAccessTokenSilently, user, isAuthenticated } = useAuth0();
   const [isLoading, setLoading] = useState<boolean>(true);
@@ -34,6 +33,8 @@ export function DashboardHeaderInstallation({ ...params }) {
   const memoryPercentage = Math.floor((memoryUsed / memoryTotal) * 100) + '%';
 
   const observationsLoading = observations == null || observations == undefined || observations?.length == 0;
+
+  const haVersion = observations?.length > 0 && observations[0].ha_config?.version;
   const isHAUpdateAvailable = latestHaRelease != null && haVersion != null && haVersion != latestHaRelease;
 
   useEffect(() => {
@@ -108,7 +109,7 @@ export function DashboardHeaderInstallation({ ...params }) {
             {observationsLoading || isLoading ? <Skeleton className="h-8" /> : haVersion ?? 'n/a'}
           </div>
           {observationsLoading == false && isLoading == false && isHAUpdateAvailable == false && <Icons.check className="inline font-regular text-green-700 text-xs mb-1 ml-1" />}
-          {isHAUpdateAvailable && (
+          {observationsLoading == false && isLoading == false && isHAUpdateAvailable && (
             <Button
               onClick={() => {
                 window.open('https://github.com/home-assistant/core/releases', '_blank');
@@ -124,22 +125,7 @@ export function DashboardHeaderInstallation({ ...params }) {
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
           <CardTitle className="text-sm font-medium">Memory</CardTitle>
 
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            className="h-4 w-4 text-muted-foreground"
-          >
-            <ellipse cx="12" cy="5" rx="9" ry="3"></ellipse>
-            <path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"></path>
-            <path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"></path>
-          </svg>
+          <Icons.memory />
         </CardHeader>
         <CardContent>
           <div className="text-xl font-bold">

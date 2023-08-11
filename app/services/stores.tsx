@@ -49,7 +49,6 @@ interface InstallationStoreState {
   installations: Installation[];
   observations: Record<string, Observation[]>;
   logsByInstallationId: Record<string, Log[]>;
-  haVersion: Record<string, string>;
   latestHaRelease: string | null;
   highestStorageByInstallationId: Record<string, Storage | null>;
   isFetchingInstallations: boolean;
@@ -63,7 +62,6 @@ const useInstallationStore = create<InstallationStoreState>((set, get) => ({
   installations: [],
   observations: {},
   logsByInstallationId: {},
-  haVersion: {},
   latestHaRelease: null,
   highestStorageByInstallationId: {},
   isFetchingInstallations: false,
@@ -139,17 +137,6 @@ const useInstallationStore = create<InstallationStoreState>((set, get) => ({
           [installationId]: parseLog(logString),
         },
       }));
-
-      const homeAssistantContainer = updatedObservations
-        .flatMap(observation => observation.docker.containers)
-        .find(container => container.image.startsWith('ghcr.io/home-assistant/home-assistant:'));
-
-      if (homeAssistantContainer) {
-        const haVersion = homeAssistantContainer.image.split(':')[1];
-        set(state => ({
-          haVersion: { ...state.haVersion, [installationId]: haVersion },
-        }));
-      }
 
       let overallHighestUseStorage: Storage | null = null;
       let overallHighestUsePercentage = -1;

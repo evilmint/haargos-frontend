@@ -7,11 +7,11 @@ export default function CopyButton({ textToCopy = 'Copy default' }) {
   const copyToClipboard = () => {
     navigator.clipboard.writeText(textToCopy).then(
       () => {
-        // setCopied(true);
-        // // changing back to default state after 2 seconds.
-        // setTimeout(() => {
-        //   setCopied(false);
-        // }, 2000);
+        setCopied(true);
+
+        setTimeout(() => {
+          setCopied(false);
+        }, 2000);
       },
       err => {
         console.log('failed to copy', err.mesage);
@@ -19,12 +19,10 @@ export default function CopyButton({ textToCopy = 'Copy default' }) {
     );
   };
 
-  const btnStyle = copied ? 'bg-gray-500 text-white' : '';
-
   return (
     <div className="text-center my-5 text-gray-200 mt-1 absolute z-20 right-10">
-      <button onClick={copyToClipboard} className={btnStyle + 'rounded p-2 transition'}>
-        {copied ? 'Copied' : <Icons.copy />}
+      <button onClick={copyToClipboard} className={'rounded p-2 transition'}>
+        {copied ? <Icons.check className="text-white" /> : <Icons.copy />}
       </button>
     </div>
   );

@@ -58,6 +58,31 @@ interface Observation {
   id: string;
   zigbee: Zigbee | null;
   ha_config: HAConfig | null;
+  automations: Automation[];
+  scenes: Scene[];
+  scripts: Script[];
+}
+
+interface Automation {
+  last_triggered: string | null;
+  id: string;
+  state: string | null;
+  alias: string;
+  friendly_name: string | null;
+}
+
+interface Scene {
+  name: string;
+  id: string;
+  state: string | null;
+  friendly_name: string | null;
+}
+
+interface Script {
+  state: string | null;
+  alias: string;
+  friendly_name: string | null;
+  lastTriggered: string | null;
 }
 
 interface HAConfig {
@@ -126,6 +151,9 @@ interface User {
 }
 
 export {
+  Automation,
+  Script,
+  Scene,
   InstallationApiResponse,
   Installation,
   ObservationApiResponse,

@@ -1,7 +1,7 @@
 'use client';
 
 import * as React from 'react';
-import { CaretSortIcon, CheckIcon } from '@radix-ui/react-icons';
+import { CaretSortIcon, CheckIcon, PlusCircledIcon } from '@radix-ui/react-icons';
 
 import { cn } from '@/lib/utils';
 import { Button } from '@/registry/new-york/ui/button';
@@ -12,6 +12,7 @@ import {
   CommandInput,
   CommandItem,
   CommandList,
+  CommandSeparator,
 } from '@/registry/new-york/ui/command';
 import {
   Dialog,
@@ -20,6 +21,7 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
+  DialogTrigger,
 } from '@/registry/new-york/ui/dialog';
 import { Input } from '@/registry/new-york/ui/input';
 import { Label } from '@/registry/new-york/ui/label';
@@ -30,6 +32,7 @@ import { useInstallationStore, useTeamStore } from '@/app/services/stores';
 import { useAuth0 } from '@auth0/auth0-react';
 import { useState } from 'react';
 import { Skeleton } from '@/registry/new-york/ui/skeleton';
+import { Dot } from './dots';
 
 type PopoverTriggerProps = React.ComponentPropsWithoutRef<typeof PopoverTrigger>;
 
@@ -138,11 +141,7 @@ export default function InstallationSwitcher({ className, installationId }: Team
                       }}
                       className="text-sm"
                     >
-                      {installation?.healthy ? (
-                        <div className="w-2 h-2 bg-green-600 rounded-full inline-block mr-2"></div>
-                      ) : (
-                        <div className="w-2 h-2 bg-red-600 rounded-full inline-block mr-2"></div>
-                      )}
+                      {installation?.healthy ? <Dot.green /> : <Dot.red />}
                       {installation.label}
                       <CheckIcon
                         className={cn(
@@ -155,7 +154,7 @@ export default function InstallationSwitcher({ className, installationId }: Team
                 </CommandGroup>
               ))}
             </CommandList>
-            {/* <CommandSeparator />
+            <CommandSeparator />
             <CommandList>
               <CommandGroup>
                 <DialogTrigger asChild>
@@ -170,7 +169,7 @@ export default function InstallationSwitcher({ className, installationId }: Team
                   </CommandItem>
                 </DialogTrigger>
               </CommandGroup>
-            </CommandList> */}
+            </CommandList>
           </Command>
         </PopoverContent>
       </Popover>

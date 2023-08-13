@@ -4,14 +4,17 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/registry/new-york/ui
 import { Storage } from './components/storage';
 import { Docker } from './components/docker';
 import { Environment } from './components/environment';
-import { ZigbeeDataTableProxy } from './components/zigbee-data-table-proxy';
+import { ZigbeeDataTableProxy } from './components/zigbee/zigbee-data-table-proxy';
 import { MainNav } from '@/components/ui/main-nav';
 import { UserNav } from '@/components/ui/user-nav';
 import { DashboardHeaderInstallation } from '@/app/installations/[id]/components/dashboard-header';
 import { Auth0Provider } from '@auth0/auth0-react';
 import { useEffect, useState } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
-import { LogsDataTableProxy } from './components/logs-data-table-proxy';
+import { LogsDataTableProxy } from './components/logs/logs-data-table-proxy';
+import { AutomationsDataTableProxy } from './components/automations/automations-data-table-proxy';
+import { ScriptsDataTableProxy } from './components/scripts/scripts-data-table-proxy';
+import { SceneDataTableProxy } from './components/scenes/scenes-data-table-proxy';
 
 export default function DashboardInstallationPage({ params }: { params: { id: string } }) {
   const [origin, setOrigin] = useState<string | null>(null);
@@ -73,7 +76,9 @@ export default function DashboardInstallationPage({ params }: { params: { id: st
               <TabsList>
                 <TabsTrigger value="overview">Overview</TabsTrigger>
                 <TabsTrigger value="zigbee">Zigbee</TabsTrigger>
-                {/* <TabsTrigger value="test">Zigbee2</TabsTrigger> */}
+                <TabsTrigger value="automations">Automations</TabsTrigger>
+                <TabsTrigger value="scripts">Scripts</TabsTrigger>
+                <TabsTrigger value="scenes">Scenes</TabsTrigger>
                 <TabsTrigger value="host">Host</TabsTrigger>
                 <TabsTrigger value="docker">Docker</TabsTrigger>
               </TabsList>
@@ -84,6 +89,22 @@ export default function DashboardInstallationPage({ params }: { params: { id: st
                 {/* <Logs installationId={params.id} /> */}
 
                 <LogsDataTableProxy installationId={params.id} />
+              </TabsContent>
+
+              <TabsContent value="zigbee" className="space-y-4">
+                <ZigbeeDataTableProxy installationId={params.id} />
+              </TabsContent>
+
+              <TabsContent value="automations" className="space-y-4">
+                <AutomationsDataTableProxy installationId={params.id} />
+              </TabsContent>
+
+              <TabsContent value="scripts" className="space-y-4">
+                <ScriptsDataTableProxy installationId={params.id} />
+              </TabsContent>
+
+              <TabsContent value="scenes" className="space-y-4">
+                <SceneDataTableProxy installationId={params.id} />
               </TabsContent>
 
               <TabsContent value="host" className="space-y-4">
@@ -105,10 +126,6 @@ export default function DashboardInstallationPage({ params }: { params: { id: st
                 <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
                   <Docker installationId={params.id} />
                 </div>
-              </TabsContent>
-
-              <TabsContent value="zigbee" className="space-y-4">
-                <ZigbeeDataTableProxy installationId={params.id} />
               </TabsContent>
             </Tabs>
           </div>

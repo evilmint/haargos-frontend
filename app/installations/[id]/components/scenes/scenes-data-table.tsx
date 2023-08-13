@@ -22,23 +22,26 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Input } from '@/components/ui/input';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { columns } from './logs-data-table-columns';
+import { columns } from './scenes-data-table-columns';
 
-export interface LogTableView {
+export interface SceneTableView {
   id: string;
-  log: string;
-  type: string;
-  time: Date;
-  thread: string;
+  name: string;
+  state: string | null;
+  friendly_name: string | null;
 }
 
-export function LogsDataTable({ ...params }) {
-  const { data } = params;
+export function SceneDataTable({ ...params }) {
+  const { data, installationId } = params;
 
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
   const [pageSize] = React.useState<number>(20);
-  const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({});
+  const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({
+    ieee: false,
+    integration_type: false,
+    device: false,
+  });
   const [rowSelection, setRowSelection] = React.useState({});
 
   const table = useReactTable({
@@ -67,9 +70,9 @@ export function LogsDataTable({ ...params }) {
     <div className="w-full">
       <div className="flex items-center py-4">
         <Input
-          placeholder="Filter logs..."
-          value={(table.getColumn('log')?.getFilterValue() as string) ?? ''}
-          onChange={event => table.getColumn('log')?.setFilterValue(event.target.value)}
+          placeholder="Filter scenes..."
+          value={(table.getColumn('friendly_name')?.getFilterValue() as string) ?? ''}
+          onChange={event => table.getColumn('friendly_name')?.setFilterValue(event.target.value)}
           className="max-w-sm"
         />
         <DropdownMenu>
@@ -90,7 +93,7 @@ export function LogsDataTable({ ...params }) {
                     checked={column.getIsVisible()}
                     onCheckedChange={value => column.toggleVisibility(!!value)}
                   >
-                    {column.id}
+                    {column.id.replace('_', ' ')}
                   </DropdownMenuCheckboxItem>
                 );
               })}

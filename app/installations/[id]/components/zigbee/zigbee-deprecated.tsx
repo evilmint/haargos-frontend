@@ -8,7 +8,7 @@ import { useEffect } from 'react';
 import { useInstallationStore } from '@/app/services/stores';
 import { ZigbeeDevice } from '@/app/types';
 import { useAuth0 } from '@auth0/auth0-react';
-import { Icons } from '../../../../components/icons';
+import { Icons } from '@/components/icons';
 
 export function Zigbee({ ...params }) {
   const { installationId } = params;

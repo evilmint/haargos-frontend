@@ -8,7 +8,7 @@ import { AutomationTableView } from './automations-data-table';
 import { Icons } from '@/components/icons';
 
 import TimeAgo from 'react-timeago';
-import { Dot, GreenDot, RedDot } from '../../../../../components/ui/dots';
+import { Dot } from '@/components/ui/dots';
 export const columns: ColumnDef<AutomationTableView>[] = [
   {
     accessorKey: 'name',

@@ -9,6 +9,8 @@ import { Button } from '@/registry/new-york/ui/button';
 import { useAuth0 } from '@auth0/auth0-react';
 import { Skeleton } from '@/registry/new-york/ui/skeleton';
 import { Icons } from '@/components/icons';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { Dot } from '@/components/ui/dots';
 
 export function DashboardHeaderInstallation({ ...params }) {
   const { installationId } = params;
@@ -24,7 +26,7 @@ export function DashboardHeaderInstallation({ ...params }) {
 
   const memoryValues =
     observations && observations.length > 0
-      ? `${numeral(observations[0].environment.memory.used / 1024 / 1024).format('0.0')}G/${numeral(
+      ? `${numeral(observations[0].environment.memory.used / 1024 / 1024).format('0.0')} / ${numeral(
           observations[0].environment.memory.total / 1024 / 1024,
         ).format('0.0')}G `
       : 'n/a';
@@ -54,24 +56,7 @@ export function DashboardHeaderInstallation({ ...params }) {
       <Card>
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
           <CardTitle className="text-sm font-medium">Agent version</CardTitle>
-
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            className="h-4 w-4 text-muted-foreground"
-          >
-            <line x1="6" y1="3" x2="6" y2="15"></line>
-            <circle cx="18" cy="6" r="3"></circle>
-            <circle cx="6" cy="18" r="3"></circle>
-            <path d="M18 9a9 9 0 0 1-9 9"></path>
-          </svg>
+          <Icons.git />
         </CardHeader>
         <CardContent>
           <div className="text-xl font-bold">
@@ -88,31 +73,28 @@ export function DashboardHeaderInstallation({ ...params }) {
       <Card>
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
           <CardTitle className="text-sm font-medium">HA version</CardTitle>
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            className="h-4 w-4 text-muted-foreground"
-          >
-            <line x1="6" y1="3" x2="6" y2="15"></line>
-            <circle cx="18" cy="6" r="3"></circle>
-            <circle cx="6" cy="18" r="3"></circle>
-            <path d="M18 9a9 9 0 0 1-9 9"></path>
-          </svg>
+          <Icons.git />
         </CardHeader>
         <CardContent>
           <div className="text-xl font-bold inline">
             {observationsLoading || isLoading ? <Skeleton className="h-8" /> : haVersion ?? 'n/a'}
           </div>
-          {observationsLoading == false && isLoading == false && isHAUpdateAvailable == false && (
-            <Icons.check className="inline font-regular text-green-700 text-xs mb-1 ml-1" />
-          )}
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger>
+                {observationsLoading == false &&
+                  isLoading == false &&
+                  (isHAUpdateAvailable == false ? (
+                    <Icons.check className="inline font-regular text-green-700 text-xs mb-1 ml-1" />
+                  ) : (
+                    <div className="w-2 h-2 bg-yellow-600 rounded-full inline-block mr-2 ml-2 mb-0.5"></div>
+                  ))}
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>{isHAUpdateAvailable ? `${latestHaRelease} available` : 'Up to date'}</p>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>{' '}
           {observationsLoading == false && isLoading == false && isHAUpdateAvailable && (
             <Button
               onClick={() => {
@@ -137,9 +119,14 @@ export function DashboardHeaderInstallation({ ...params }) {
               <Skeleton className="h-8" />
             ) : (
               <div>
-                {memoryValues}
-
-                <p className="text-sm font-normal inline">{memoryPercentage}</p>
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger>{memoryValues}</TooltipTrigger>
+                    <TooltipContent>
+                      <p>{memoryPercentage}</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
               </div>
             )}
           </div>
@@ -147,25 +134,8 @@ export function DashboardHeaderInstallation({ ...params }) {
       </Card>
       <Card>
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-sm font-medium">Storage max</CardTitle>
-
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            className="h-4 w-4 text-muted-foreground"
-          >
-            <line x1="22" y1="12" x2="2" y2="12"></line>
-            <path d="M5.45 5.11L2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"></path>
-            <line x1="6" y1="16" x2="6.01" y2="16"></line>
-            <line x1="10" y1="16" x2="10.01" y2="16"></line>
-          </svg>
+          <CardTitle className="text-sm font-medium">Volume max</CardTitle>
+          <Icons.storage />
         </CardHeader>
         <CardContent>
           <div className="text-xl font-bold">
@@ -173,9 +143,16 @@ export function DashboardHeaderInstallation({ ...params }) {
               <Skeleton className="h-8" />
             ) : (
               <div>
-                {highestStorage ? `${highestStorage?.used}/${highestStorage?.size}` : 'n/a'}
-
-                <p className="text-sm font-normal ml-2 inline">{highestStorage?.name ?? ''}</p>
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger>
+                      {highestStorage ? `${highestStorage?.used.slice(0, -1)} / ${highestStorage?.size}` : 'n/a'}
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>{highestStorage?.name ?? ''}</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
               </div>
             )}
           </div>
@@ -184,30 +161,7 @@ export function DashboardHeaderInstallation({ ...params }) {
       <Card>
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
           <CardTitle className="text-sm font-medium">Architecture</CardTitle>
-
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            className="h-4 w-4 text-muted-foreground"
-          >
-            <rect x="4" y="4" width="16" height="16" rx="2" ry="2"></rect>
-            <rect x="9" y="9" width="6" height="6"></rect>
-            <line x1="9" y1="1" x2="9" y2="4"></line>
-            <line x1="15" y1="1" x2="15" y2="4"></line>
-            <line x1="9" y1="20" x2="9" y2="23"></line>
-            <line x1="15" y1="20" x2="15" y2="23"></line>
-            <line x1="20" y1="9" x2="23" y2="9"></line>
-            <line x1="20" y1="14" x2="23" y2="14"></line>
-            <line x1="1" y1="9" x2="4" y2="9"></line>
-            <line x1="1" y1="14" x2="4" y2="14"></line>
-          </svg>
+          <Icons.cpu />
         </CardHeader>
         <CardContent>
           <div className="text-xl font-bold">
@@ -218,18 +172,8 @@ export function DashboardHeaderInstallation({ ...params }) {
       <Card>
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
           <CardTitle className="text-sm font-medium">Latest agent activity</CardTitle>
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth="2"
-            className="h-4 w-4 text-muted-foreground"
-          >
-            <path d="M22 12h-4l-3 9L9 3l-3 9H2" />
-          </svg>
+
+          <Icons.healthline />
         </CardHeader>
         <CardContent>
           <div className="text-xl font-bold">
@@ -245,18 +189,7 @@ export function DashboardHeaderInstallation({ ...params }) {
       <Card>
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
           <CardTitle className="text-sm font-medium">Instance status</CardTitle>
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth="2"
-            className="h-4 w-4 text-muted-foreground"
-          >
-            <path d="M22 12h-4l-3 9L9 3l-3 9H2" />
-          </svg>
+          <Icons.healthline />
         </CardHeader>
         <CardContent>
           <div className="text-xl font-bold">
@@ -270,9 +203,18 @@ export function DashboardHeaderInstallation({ ...params }) {
                   <div className="w-3 h-3 bg-red-600 rounded-full inline-block"></div>
                 )}
                 {installation?.healthy.last_updated && (
-                  <p className="text-sm font-normal ml-2 inline">
-                    <TimeAgo date={installation?.healthy.last_updated} />
-                  </p>
+                  <div className="text-sm font-normal ml-2 inline">
+                    <TooltipProvider>
+                      <Tooltip>
+                        <TooltipTrigger>
+                          <TimeAgo date={installation?.healthy.last_updated} />
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          <p>This shows the status and last time of a query of the HomeAssistant instance url.</p>
+                        </TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
+                  </div>
                 )}
               </div>
             )}

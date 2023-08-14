@@ -9,6 +9,7 @@ import { Icons } from '@/components/icons';
 
 import TimeAgo from 'react-timeago';
 import { Dot } from '@/components/ui/dots';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 export const columns: ColumnDef<ScriptTableView>[] = [
   {
     accessorKey: 'alias',
@@ -52,10 +53,23 @@ export const columns: ColumnDef<ScriptTableView>[] = [
     header: ({ column }) => {
       return (
         <div className="text-center">
-          <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
-            State
-            <ArrowUpDown className="ml-2 h-4 w-4" />
-          </Button>
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
+                  State
+                  <ArrowUpDown className="ml-2 h-4 w-4" />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>
+                  The green dot indicates that the automation is currently active and running.
+                  <br />
+                  The red dot means it's turned off.
+                </p>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
         </div>
       );
     },

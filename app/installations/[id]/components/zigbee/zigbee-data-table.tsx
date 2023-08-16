@@ -133,7 +133,7 @@ export function ZigbeeDataTable({ ...params }) {
             ) : (
               <TableRow>
                 <TableCell colSpan={columns.length} className="h-24 text-center">
-                  No results.
+                  No zigbee devices.
                 </TableCell>
               </TableRow>
             )}

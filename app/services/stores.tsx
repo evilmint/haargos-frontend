@@ -195,7 +195,7 @@ const findHighestUseStorage = (storageArray: Storage[]): Storage | null => {
 
 const parseLog = (logString: string): Log[] => {
   const logs = logString.split('\n');
-  return logs.reduce((acc: Log[], log: string) => {
+  let reduced = logs.reduce((acc: Log[], log: string) => {
     const parts = log.split(/\s+/);
     if (parts.length >= 5) {
       const time = new Date(parts[0] + 'T' + parts[1] + 'Z').toLocaleString();
@@ -213,6 +213,9 @@ const parseLog = (logString: string): Log[] => {
     }
     return acc;
   }, []);
+
+
+  return reduced;
 };
 
 const extractUniqueVolumes = (volumesUnsorted: Storage[]): Storage[] => {

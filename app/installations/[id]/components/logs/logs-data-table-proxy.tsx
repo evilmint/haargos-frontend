@@ -27,9 +27,8 @@ export function LogsDataTableProxy({ ...params }) {
     });
   }, [fetchInstallations, fetchObservationsForInstallation, user, getAccessTokenSilently, installationId]);
 
-  const logViews = (useInstallationStore(state => state.logsByInstallationId[installationId]) ?? []).map(log =>
-    mapToTableView(log),
-  );
+  const sortedLogs = (logs ?? []).sort((a, b) => { return new Date(a.time).getTime() - new Date(b.time).getTime(); });
+  const logViews = sortedLogs.map(log => mapToTableView(log));
 
   const installation = installations.find(i => i.id == installationId);
   const logFilename = `logs-${(installation?.name ?? 'default').replace(

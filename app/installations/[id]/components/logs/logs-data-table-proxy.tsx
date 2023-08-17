@@ -27,7 +27,11 @@ export function LogsDataTableProxy({ ...params }) {
     });
   }, [fetchInstallations, fetchObservationsForInstallation, user, getAccessTokenSilently, installationId]);
 
-  const sortedLogs = (logs ?? []).sort((a, b) => { return new Date(a.time).getTime() - new Date(b.time).getTime(); });
+  const sortedLogs = (logs ?? []).sort((a, b) => {
+    console.log('hi');
+    console.log(`${a.time} - ${new Date(a.time)}`);
+    return new Date(a.time).getTime() - new Date(b.time).getTime();
+  });
   const logViews = sortedLogs.map(log => mapToTableView(log));
 
   const installation = installations.find(i => i.id == installationId);
@@ -41,7 +45,7 @@ export function LogsDataTableProxy({ ...params }) {
       <h3 className="inline ml-4 font-semibold">Logs</h3>
       <TabsList className="ml-4">
         <TabsTrigger value="logtable">Table</TabsTrigger>
-        <TabsTrigger value="lograw">Raw</TabsTrigger>
+        <TabsTrigger value="lograw" disabled={logs == null || logs.length == 0}>Raw</TabsTrigger>
       </TabsList>
       <TabsContent value="logtable" className="space-y-4">
         <LogsDataTable data={logViews} />
@@ -49,8 +53,12 @@ export function LogsDataTableProxy({ ...params }) {
 
       <TabsContent value="lograw">
         <div className="relative mx-auto mt-4">
-          <CopyButton textToCopy={(logs ?? []).map((l: Log) => l.raw).join('\n')} />
-          <DownloadButton fileName={logFilename} textToCopy={(logs ?? []).map((l: Log) => l.raw).join('\n')} />
+          {logs?.length > 0 && (
+            <>
+              <CopyButton textToCopy={(logs ?? []).map((l: Log) => l.raw).join('\n')} />
+              <DownloadButton fileName={logFilename} textToCopy={(logs ?? []).map((l: Log) => l.raw).join('\n')} />
+            </>
+          )}
           <div className="bg-slate-950 text-white p-4 rounded-md">
             <div className="flex justify-between items-center mb-2"></div>
             <div className="overflow-x-auto">

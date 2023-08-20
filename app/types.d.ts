@@ -12,7 +12,7 @@ interface Environment {
     load: number;
     cpu_mhz: string;
     architecture: string;
-  };
+  } | null;
   memory: {
     available: number;
     shared: number;
@@ -20,7 +20,7 @@ interface Environment {
     buff_cache: number;
     used: number;
     free: number;
-  };
+  } | null;
   storage: Array<Storage>;
 }
 

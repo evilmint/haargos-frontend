@@ -25,15 +25,15 @@ export function DashboardHeaderInstallation({ ...params }) {
   const [isLoading, setLoading] = useState<boolean>(true);
 
   const memoryValues =
-    observations && observations.length > 0
+    observations && observations.length > 0 && observations[0].environment.memory
       ? `${numeral(observations[0].environment.memory.used / 1024 / 1024).format('0.0')} / ${numeral(
           observations[0].environment.memory.total / 1024 / 1024,
         ).format('0.0')}G `
       : 'n/a';
 
   const hasObservations = observations?.length > 0;
-  const memoryUsed = hasObservations ? observations[0].environment.memory.used : 0;
-  const memoryTotal = hasObservations ? observations[0].environment.memory.total : 1;
+  const memoryUsed = hasObservations ? observations[0].environment.memory?.used ?? 0 : 0;
+  const memoryTotal = hasObservations ? observations[0].environment.memory?.total ?? 0 : 1;
   const memoryPercentage = Math.floor((memoryUsed / memoryTotal) * 100) + '%';
 
   const observationsLoading = observations == null || observations == undefined || observations?.length == 0;
@@ -50,7 +50,7 @@ export function DashboardHeaderInstallation({ ...params }) {
     });
   }, [fetchInstallations, getAccessTokenSilently, user, fetchObservationsForInstallation, installationId]);
 
-  const cpuArchitecture = (observations && observations[0]?.environment.cpu.architecture) ?? 'n/a';
+  const cpuArchitecture = (observations && observations[0]?.environment.cpu?.architecture) ?? 'n/a';
   return (
     <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-5">
       <Card>

@@ -21,7 +21,7 @@ export function Environment({ ...params }) {
     });
   }, [fetchInstallations, fetchObservationsForInstallation, installationId]);
 
-  return (
+  return observations[0].environment.cpu && (
     <Table>
       <TableHeader>
         <TableRow>

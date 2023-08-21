@@ -28,7 +28,7 @@ export interface LogTableView {
   id: string;
   log: string;
   type: string;
-  time: string;
+  time: Date;
   thread: string;
 }
 

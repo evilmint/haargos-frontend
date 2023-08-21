@@ -6,6 +6,7 @@ import { cn } from '@/lib/utils';
 import InstallationSwitcher from './installation-switcher';
 import { useInstallationStore, useTeamStore } from '@/app/services/stores';
 import { Button } from '@/registry/new-york/ui/button';
+import { ModeToggle } from './mode-toggle';
 
 export function MainNav({ ...props }, { className }: React.HTMLAttributes<HTMLElement>) {
   const { installationId } = props;
@@ -29,6 +30,7 @@ export function MainNav({ ...props }, { className }: React.HTMLAttributes<HTMLEl
 
       {installationInstanceLink && (
         <Button
+          variant="outline"
           onClick={() => {
             window.open(installationInstanceLink, '_blank');
           }}
@@ -36,6 +38,8 @@ export function MainNav({ ...props }, { className }: React.HTMLAttributes<HTMLEl
           Home Assistant
         </Button>
       )}
+
+      <ModeToggle />
     </nav>
   );
 }

@@ -29,8 +29,8 @@ export const columns: ColumnDef<LogTableView>[] = [
     ),
     sortingFn: 'datetime',
     cell: ({ row }) => {
-      const time: string = row.getValue('time');
-      return <div className="text-xs">{`${time}`}</div>;
+      const date: Date = row.getValue('time');
+      return <div className="text-xs">{`${date.toLocaleDateString() + ", " + date.toLocaleTimeString()}`}</div>;
     },
   },
   {

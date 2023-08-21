@@ -1,6 +1,6 @@
 interface Log {
   raw: string;
-  time: string;
+  time: Date;
   type: string;
   thread: string;
   log: string;

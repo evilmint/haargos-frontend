@@ -40,7 +40,9 @@ export function LogsDataTableProxy({ ...params }) {
       <h3 className="inline ml-4 font-semibold">Logs</h3>
       <TabsList className="ml-4">
         <TabsTrigger value="logtable">Table</TabsTrigger>
-        <TabsTrigger value="lograw" disabled={logs == null || logs.length == 0}>Raw</TabsTrigger>
+        <TabsTrigger value="lograw" disabled={logs == null || logs.length == 0}>
+          Raw
+        </TabsTrigger>
       </TabsList>
       <TabsContent value="logtable" className="space-y-4">
         <LogsDataTable data={logViews} />

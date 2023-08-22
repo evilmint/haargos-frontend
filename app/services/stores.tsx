@@ -193,12 +193,17 @@ const findHighestUseStorage = (storageArray: Storage[]): Storage | null => {
   }, null);
 };
 
+function parseISOLocal(s: any) {
+  var b = s.split(/\D/);
+  return new Date(b[0], b[1] - 1, b[2], b[3], b[4], b[5]);
+}
+
 const parseLog = (logString: string): Log[] => {
   let logs = logString.split('\n');
   let reduced = logs.reduce((acc: Log[], log: string) => {
     const parts = log.split(/\s+/);
     if (parts.length >= 5) {
-      const time = new Date(parts[0] + 'T' + parts[1] + 'Z');
+      const time = parseISOLocal(parts[0] + 'T' + parts[1]);
       const logType = parts[2][0];
       const thread = parts[3].replace('(', '').replace(')', '');
       const restOfLog = parts.slice(4).join(' ');

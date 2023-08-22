@@ -56,7 +56,11 @@ export const columns: ColumnDef<ZigbeeDeviceTableView>[] = [
                 </Button>
               </TooltipTrigger>
               <TooltipContent>
-                <p>LQI (Link Quality Indicator) is a metric used in Zigbee to determine the quality of a link between two devices.<br />A higher value indicates a better link quality.</p>
+                <p>
+                  LQI (Link Quality Indicator) is a metric used in Zigbee to determine the quality of a link between two
+                  devices.
+                  <br />A higher value indicates a better link quality.
+                </p>
               </TooltipContent>
             </Tooltip>
           </TooltipProvider>
@@ -112,7 +116,9 @@ export const columns: ColumnDef<ZigbeeDeviceTableView>[] = [
               </Button>
             </TooltipTrigger>
             <TooltipContent>
-              <p>The relative time between the snapshot of data taken and the time the Zigbee device reported its status.</p>
+              <p>
+                The relative time between the snapshot of data taken and the time the Zigbee device reported its status.
+              </p>
             </TooltipContent>
           </Tooltip>
         </TooltipProvider>

@@ -30,7 +30,7 @@ export const columns: ColumnDef<LogTableView>[] = [
     sortingFn: 'datetime',
     cell: ({ row }) => {
       const date: Date = row.getValue('time');
-      return <div className="text-xs">{`${date.toLocaleDateString() + ", " + date.toLocaleTimeString()}`}</div>;
+      return <div className="text-xs">{`${date.toLocaleDateString() + ', ' + date.toLocaleTimeString()}`}</div>;
     },
   },
   {

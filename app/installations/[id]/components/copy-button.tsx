@@ -23,7 +23,7 @@ export default function CopyButton({ textToCopy = 'Copy default' }, { className 
   return (
     <div className="text-center my-5 text-gray-200 mt-1 absolute z-20 right-10">
       <button onClick={copyToClipboard} className={'rounded p-2 transition'}>
-        {copied ? <Icons.check className={cn("text-green-500", className)} /> : <Icons.copy />}
+        {copied ? <Icons.check className={cn('text-green-500', className)} /> : <Icons.copy />}
       </button>
     </div>
   );

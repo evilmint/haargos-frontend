@@ -21,26 +21,28 @@ export function Environment({ ...params }) {
     });
   }, [fetchInstallations, fetchObservationsForInstallation, installationId]);
 
-  return observations[0].environment.cpu && (
-    <Table>
-      <TableHeader>
-        <TableRow>
-          <TableHead className="">Model name</TableHead>
-          <TableHead>Architecture</TableHead>
-          <TableHead>Load</TableHead>
-          <TableHead>MHz</TableHead>
-        </TableRow>
-      </TableHeader>
-      <TableBody>
-        {observations && observations.length > 0 && (
-          <TableRow key={observations[0].environment.cpu.model_name}>
-            <TableCell className="font-medium text-xs">{observations[0].environment.cpu.model_name}</TableCell>
-            <TableCell className="text-xs">{observations[0].environment.cpu.architecture}</TableCell>
-            <TableCell className="text-xs">{observations[0].environment.cpu.load}</TableCell>
-            <TableCell className="text-xs">{observations[0].environment.cpu.cpu_mhz}</TableCell>
+  return (
+    observations[0].environment.cpu && (
+      <Table>
+        <TableHeader>
+          <TableRow>
+            <TableHead className="">Model name</TableHead>
+            <TableHead>Architecture</TableHead>
+            <TableHead>Load</TableHead>
+            <TableHead>MHz</TableHead>
           </TableRow>
-        )}
-      </TableBody>
-    </Table>
+        </TableHeader>
+        <TableBody>
+          {observations && observations.length > 0 && (
+            <TableRow key={observations[0].environment.cpu.model_name}>
+              <TableCell className="font-medium text-xs">{observations[0].environment.cpu.model_name}</TableCell>
+              <TableCell className="text-xs">{observations[0].environment.cpu.architecture}</TableCell>
+              <TableCell className="text-xs">{observations[0].environment.cpu.load}</TableCell>
+              <TableCell className="text-xs">{observations[0].environment.cpu.cpu_mhz}</TableCell>
+            </TableRow>
+          )}
+        </TableBody>
+      </Table>
+    )
   );
 }

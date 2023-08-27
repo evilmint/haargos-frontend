@@ -34,6 +34,7 @@ export function LogsDataTableProxy({ ...params }) {
     /[^a-zA-Z0-9\u00C0-\u017F]/g,
     '_',
   )}-${new Date().getTime()}.txt`;
+  const concatenatedLogs = (logs ?? []).map((l: Log) => l.raw).join('\n');
 
   return (
     <Tabs defaultValue="logtable" className="space-y-4">
@@ -52,15 +53,15 @@ export function LogsDataTableProxy({ ...params }) {
         <div className="relative mx-auto mt-4">
           {logs?.length > 0 && (
             <>
-              <CopyButton textToCopy={(logs ?? []).map((l: Log) => l.raw).join('\n')} />
-              <DownloadButton fileName={logFilename} textToCopy={(logs ?? []).map((l: Log) => l.raw).join('\n')} />
+              <CopyButton textToCopy={concatenatedLogs} />
+              <DownloadButton fileName={logFilename} textToCopy={concatenatedLogs} />
             </>
           )}
-          <div className="bg-slate-950 text-white p-4 rounded-md">
+          <div className="bg-slate-700 text-white p-4 rounded-md">
             <div className="flex justify-between items-center mb-2"></div>
-            <div className="overflow-x-auto">
-              <pre id="code" className="text-gray-300 text-xs leading-4">
-                <code>{(logs ?? []).map((l: Log) => l.raw).join('\n')}</code>
+            <div className="overflow-x-auto ">
+              <pre id="code" className="text-gray-300 h-[400px] text-xs leading-4  overflow-y-scroll">
+                <code>{concatenatedLogs}</code>
               </pre>
             </div>
           </div>

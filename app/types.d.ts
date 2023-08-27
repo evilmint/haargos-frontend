@@ -124,6 +124,7 @@ interface Installation {
   last_agent_connection: string;
   id: string;
   name: string;
+  agent_token: string;
 }
 
 interface InstallationHealthy {

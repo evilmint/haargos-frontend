@@ -15,6 +15,10 @@ import { LogsDataTableProxy } from './components/logs/logs-data-table-proxy';
 import { AutomationsDataTableProxy } from './components/automations/automations-data-table-proxy';
 import { ScriptsDataTableProxy } from './components/scripts/scripts-data-table-proxy';
 import { SceneDataTableProxy } from './components/scenes/scenes-data-table-proxy';
+import CopyButton from './components/copy-button';
+import Copy from './components/code';
+import Code from './components/code';
+import { AgentInstallation } from './components/agent-installation';
 
 export default function DashboardInstallationPage({ params }: { params: { id: string } }) {
   const [origin, setOrigin] = useState<string | null>(null);
@@ -74,6 +78,7 @@ export default function DashboardInstallationPage({ params }: { params: { id: st
               className="space-y-4"
             >
               <TabsList>
+                <TabsTrigger value="install">Install</TabsTrigger>
                 <TabsTrigger value="overview">Overview</TabsTrigger>
                 <TabsTrigger value="zigbee">Zigbee</TabsTrigger>
                 <TabsTrigger value="automations">Automations</TabsTrigger>
@@ -82,6 +87,12 @@ export default function DashboardInstallationPage({ params }: { params: { id: st
                 <TabsTrigger value="host">Host</TabsTrigger>
                 <TabsTrigger value="docker">Docker</TabsTrigger>
               </TabsList>
+
+              <TabsContent value="install" className="space-y-4">
+                <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
+                  <AgentInstallation installationId={params.id} />
+                </div>
+              </TabsContent>
 
               <TabsContent value="overview" className="space-y-4">
                 <DashboardHeaderInstallation installationId={params.id} />

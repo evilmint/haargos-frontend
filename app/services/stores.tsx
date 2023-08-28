@@ -1,7 +1,7 @@
 import { getUserMe } from './users';
 import { create } from 'zustand';
 import { Installation, Observation, Log, User, Storage } from '@/app/types';
-import { getInstallations } from './installations';
+import { createInstallation, getInstallations } from './installations';
 import { getObservations } from './observations';
 
 interface UserState {
@@ -33,16 +33,16 @@ const useUserStore = create<UserState>((set, get) => ({
   },
 }));
 
-interface TeamState {
-  selectedTeam: any | null;
-  clearTeam: () => void;
-  setSelectedTeam: (team: any | null) => void;
+interface InstallationState {
+  selectedInstallation: any | null;
+  clearInstallation: () => void;
+  setSelectedInstallation: (team: any | null) => void;
 }
 
-const useTeamStore = create<TeamState>(set => ({
-  selectedTeam: null,
-  clearTeam: () => set(() => ({ selectedTeam: null })),
-  setSelectedTeam: selectedTeam => set(() => ({ selectedTeam })),
+const useInstallationSwitcherStore = create<InstallationState>(set => ({
+  selectedInstallation: null,
+  clearInstallation: () => set(() => ({ selectedInstallation: null })),
+  setSelectedInstallation: selectedInstallation => set(() => ({ selectedInstallation: selectedInstallation })),
 }));
 
 interface InstallationStoreState {
@@ -53,6 +53,7 @@ interface InstallationStoreState {
   highestStorageByInstallationId: Record<string, Storage | null>;
   isFetchingInstallations: boolean;
   isFetchingObservations: Record<string, boolean>;
+  createInstallation: (token: string, instance: string, name: string) => Promise<Installation | null>;
   fetchInstallations: (token: string) => Promise<void>;
   fetchObservationsForInstallation: (installationId: string, token: string) => Promise<void>;
   getObservationsForInstallation: (installationId: string) => Observation[];
@@ -66,6 +67,22 @@ const useInstallationStore = create<InstallationStoreState>((set, get) => ({
   highestStorageByInstallationId: {},
   isFetchingInstallations: false,
   isFetchingObservations: {},
+  createInstallation: async (token: string, instance: string, name: string) => {
+    try {
+      const newInstallation = await createInstallation(token, instance, name);
+
+      // Update the installations list to include the newly created one
+      set(state => ({
+        installations: [...state.installations, newInstallation],
+      }));
+
+      return newInstallation;
+    } catch (error) {
+      console.log('Error creating installation:', error);
+    }
+
+    return null;
+  },
   fetchInstallations: async token => {
     if (get().isFetchingInstallations) return;
     set({ isFetchingInstallations: true });
@@ -233,4 +250,4 @@ const extractUniqueVolumes = (volumesUnsorted: Storage[]): Storage[] => {
   }, []);
 };
 
-export { useUserStore, useInstallationStore, useTeamStore };
+export { useUserStore, useInstallationStore, useInstallationSwitcherStore };

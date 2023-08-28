@@ -33,7 +33,7 @@ export function AgentInstallation({ ...params }) {
     installation && (
       <Card className="col-span-7">
         <CardHeader>
-          <CardTitle>Install Haargos</CardTitle>
+          <CardTitle>Install Haargos on {installation.name}</CardTitle>
         </CardHeader>
         <CardContent>
           <h5>Agent token</h5>

@@ -28,11 +28,12 @@ import { Label } from '@/registry/new-york/ui/label';
 import { Popover, PopoverContent, PopoverTrigger } from '@/registry/new-york/ui/popover';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/registry/new-york/ui/select';
 import { useRouter } from 'next/navigation';
-import { useInstallationStore, useTeamStore } from '@/app/services/stores';
+import { useInstallationStore, useInstallationSwitcherStore } from '@/app/services/stores';
 import { useAuth0 } from '@auth0/auth0-react';
 import { useState } from 'react';
 import { Skeleton } from '@/registry/new-york/ui/skeleton';
 import { Dot } from './dots';
+import { Installation } from '@/app/types';
 
 type PopoverTriggerProps = React.ComponentPropsWithoutRef<typeof PopoverTrigger>;
 
@@ -45,18 +46,54 @@ export default function InstallationSwitcher({ className, installationId }: Team
   const fetchInstallations = useInstallationStore(state => state.fetchInstallations);
   const [open, setOpen] = React.useState(false);
   const [groups, setGroups] = React.useState<any[]>([]);
-  const [showNewTeamDialog, setShowNewTeamDialog] = React.useState(false);
+  const [showNewTeamDialog, setShowNewInstallationDialog] = React.useState(false);
   const [isVisible, setVisible] = React.useState<boolean>(true);
 
-  const selectedTeam = useTeamStore(state => {
-    return state.selectedTeam;
+  const createInstallation = useInstallationStore(state => state.createInstallation);
+
+  const selectedInstallation = useInstallationSwitcherStore(state => {
+    return state.selectedInstallation;
   });
 
-  const setSelectedTeam = useTeamStore(state => state.setSelectedTeam);
+  const setSelectedTeam = useInstallationSwitcherStore(state => state.setSelectedInstallation);
   const { getAccessTokenSilently, user } = useAuth0();
 
   const router = useRouter();
   const [isLoading, setLoading] = useState<boolean>(true);
+  const [isUpdating, setUpdating] = useState<boolean>(false);
+
+  const [nameValue, setNameValue] = useState('');
+  const [instanceValue, setInstanceValue] = useState('');
+  const handleChange = (event: any) => {
+    if (event.target.id == 'url') {
+      setInstanceValue(event.target.value);
+    } else if (event.target.id == 'name') {
+      setNameValue(event.target.value);
+    }
+  };
+
+  const handleSubmit = () => {
+    if (nameValue.trim().length > 0) {
+      setUpdating(true);
+      getAccessTokenSilently().then(token => {
+        createInstallation(token, instanceValue, nameValue)
+          .then(i => {
+            if (i != null) {
+              const newI = { label: i.name, healthy: i.healthy?.is_healthy ?? false, value: i.id };
+              setSelectedTeam(newI);
+              setOpen(false);
+
+              router.push('/installations/' + newI.value + '#install');
+            }
+          })
+          .catch(error => console.error(error))
+          .finally(() => {
+            setShowNewInstallationDialog(false);
+            setUpdating(false);
+          });
+      });
+    }
+  };
 
   React.useEffect(() => {
     getAccessTokenSilently()
@@ -75,7 +112,7 @@ export default function InstallationSwitcher({ className, installationId }: Team
             var paramInstallation = installations.filter(i => i.id == installationId);
 
             // selectedTeam == null breaks infinite loop
-            if (paramInstallation.length > 0 && paramInstallation[0] != null && selectedTeam == null) {
+            if (paramInstallation.length > 0 && paramInstallation[0] != null && selectedInstallation == null) {
               const i = paramInstallation[0];
               setSelectedTeam({
                 label: i.name,
@@ -93,29 +130,37 @@ export default function InstallationSwitcher({ className, installationId }: Team
         setVisible(false);
         setLoading(false);
       });
-  }, [fetchInstallations, user, getAccessTokenSilently, installations, selectedTeam, setSelectedTeam, installationId]);
+  }, [
+    fetchInstallations,
+    user,
+    getAccessTokenSilently,
+    installations,
+    selectedInstallation,
+    setSelectedTeam,
+    installationId,
+  ]);
 
   return isLoading ? (
     <Skeleton className="h-8 w-[150px]" />
   ) : isVisible ? (
-    <Dialog open={showNewTeamDialog} onOpenChange={setShowNewTeamDialog}>
+    <Dialog open={showNewTeamDialog} onOpenChange={setShowNewInstallationDialog}>
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
           <Button
             variant="outline"
             role="combobox"
             aria-expanded={open}
-            aria-label="Select a team"
+            aria-label="Select an installation"
             className={cn('w-[220px] justify-between', className)}
           >
-            {selectedTeam?.label != null ? (
+            {selectedInstallation?.label != null ? (
               <>
-                {selectedTeam?.healthy ? (
+                {selectedInstallation?.healthy ? (
                   <div className="w-2 h-2 bg-green-600 rounded-full inline-block mr-2"></div>
                 ) : (
                   <div className="w-2 h-2 bg-red-600 rounded-full inline-block mr-2"></div>
                 )}
-                {selectedTeam.label}
+                {selectedInstallation.label}
               </>
             ) : (
               'Choose installation'
@@ -146,7 +191,7 @@ export default function InstallationSwitcher({ className, installationId }: Team
                       <CheckIcon
                         className={cn(
                           'ml-auto h-4 w-4',
-                          selectedTeam?.value === installation.value ? 'opacity-100' : 'opacity-0',
+                          selectedInstallation?.value === installation.value ? 'opacity-100' : 'opacity-0',
                         )}
                       />
                     </CommandItem>
@@ -161,7 +206,7 @@ export default function InstallationSwitcher({ className, installationId }: Team
                   <CommandItem
                     onSelect={() => {
                       setOpen(false);
-                      setShowNewTeamDialog(true);
+                      setShowNewInstallationDialog(true);
                     }}
                   >
                     <PlusCircledIcon className="mr-2 h-5 w-5" />
@@ -176,39 +221,27 @@ export default function InstallationSwitcher({ className, installationId }: Team
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Create installation</DialogTitle>
-          <DialogDescription>Add a new team to manage products and customers.</DialogDescription>
+          <DialogDescription>Add a new HomeAssistant installation</DialogDescription>
         </DialogHeader>
         <div>
           <div className="space-y-4 py-2 pb-4">
             <div className="space-y-2">
-              <Label htmlFor="name">Team name</Label>
-              <Input id="name" placeholder="Acme Inc." />
+              <Label htmlFor="name">Name</Label>
+              <Input id="name" onChange={handleChange} placeholder="My Parents' Home" />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="plan">Subscription plan</Label>
-              <Select>
-                <SelectTrigger>
-                  <SelectValue placeholder="Select a plan" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="free">
-                    <span className="font-medium">Free</span> -{' '}
-                    <span className="text-muted-foreground">Trial for two weeks</span>
-                  </SelectItem>
-                  <SelectItem value="pro">
-                    <span className="font-medium">Pro</span> -{' '}
-                    <span className="text-muted-foreground">$9/month per user</span>
-                  </SelectItem>
-                </SelectContent>
-              </Select>
+              <Label htmlFor="url">Public HomeAssistant URL (optional)</Label>
+              <Input id="url" onChange={handleChange} placeholder="https://my.homeassistant.url" />
             </div>
           </div>
         </div>
         <DialogFooter>
-          <Button variant="outline" onClick={() => setShowNewTeamDialog(false)}>
+          <Button disabled={isUpdating} variant="outline" onClick={() => setShowNewInstallationDialog(false)}>
             Cancel
           </Button>
-          <Button type="submit">Continue</Button>
+          <Button disabled={isUpdating} type="submit" onClick={handleSubmit}>
+            Create
+          </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

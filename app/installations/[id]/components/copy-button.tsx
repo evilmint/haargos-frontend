@@ -7,10 +7,7 @@ type CopyButtonProps = {
   className?: string;
 };
 
-export default function CopyButton({
-  textToCopy = 'Copy default',
-  className,
-}: CopyButtonProps) {
+export default function CopyButton({ textToCopy = 'Copy default', className }: CopyButtonProps) {
   const [copied, setCopied] = useState(false);
 
   const copyToClipboard = () => {

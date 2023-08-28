@@ -10,21 +10,15 @@ import { UserNav } from '@/components/ui/user-nav';
 import { DashboardHeaderInstallation } from '@/app/installations/[id]/components/dashboard-header';
 import { Auth0Provider } from '@auth0/auth0-react';
 import { useEffect, useState } from 'react';
-import { usePathname, useRouter } from 'next/navigation';
 import { LogsDataTableProxy } from './components/logs/logs-data-table-proxy';
 import { AutomationsDataTableProxy } from './components/automations/automations-data-table-proxy';
 import { ScriptsDataTableProxy } from './components/scripts/scripts-data-table-proxy';
 import { SceneDataTableProxy } from './components/scenes/scenes-data-table-proxy';
-import CopyButton from './components/copy-button';
-import Copy from './components/code';
-import Code from './components/code';
 import { AgentInstallation } from './components/agent-installation';
 
 export default function DashboardInstallationPage({ params }: { params: { id: string } }) {
   const [origin, setOrigin] = useState<string | null>(null);
   const [defaultTab, setDefaultTab] = useState<string>('overview');
-  const pathName = usePathname();
-  const router = useRouter();
 
   useEffect(() => {
     setOrigin(window.location.origin);

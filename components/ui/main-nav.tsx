@@ -4,13 +4,13 @@ import Link from 'next/link';
 
 import { cn } from '@/lib/utils';
 import InstallationSwitcher from './installation-switcher';
-import { useInstallationStore, useTeamStore } from '@/app/services/stores';
+import { useInstallationStore, useInstallationSwitcherStore } from '@/app/services/stores';
 import { Button } from '@/registry/new-york/ui/button';
 import { ModeToggle } from './mode-toggle';
 
 export function MainNav({ ...props }, { className }: React.HTMLAttributes<HTMLElement>) {
   const { installationId } = props;
-  const dashboardClicked = useTeamStore(state => state.clearTeam);
+  const dashboardClicked = useInstallationSwitcherStore(state => state.clearInstallation);
 
   const installations = useInstallationStore(state => state.installations);
 

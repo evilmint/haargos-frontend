@@ -26,14 +26,12 @@ import {
 import { Input } from '@/registry/new-york/ui/input';
 import { Label } from '@/registry/new-york/ui/label';
 import { Popover, PopoverContent, PopoverTrigger } from '@/registry/new-york/ui/popover';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/registry/new-york/ui/select';
 import { useRouter } from 'next/navigation';
 import { useInstallationStore, useInstallationSwitcherStore } from '@/app/services/stores';
 import { useAuth0 } from '@auth0/auth0-react';
 import { useState } from 'react';
 import { Skeleton } from '@/registry/new-york/ui/skeleton';
 import { Dot } from './dots';
-import { Installation } from '@/app/types';
 
 type PopoverTriggerProps = React.ComponentPropsWithoutRef<typeof PopoverTrigger>;
 

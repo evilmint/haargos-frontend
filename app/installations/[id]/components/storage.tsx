@@ -7,6 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/registry/new-york/ui
 import { useEffect } from 'react';
 import { useInstallationStore } from '@/app/services/stores';
 import { useAuth0 } from '@auth0/auth0-react';
+import { ProgressBar } from '@tremor/react';
 
 export function Storage({ ...params }) {
   const { installationId } = params;
@@ -35,7 +36,7 @@ export function Storage({ ...params }) {
           <TableHeader>
             <TableRow>
               <TableHead className="w-[200px]">Name</TableHead>
-              <TableHead>%</TableHead>
+              <TableHead className="w-[200px]">%</TableHead>
               <TableHead>Used</TableHead>
               <TableHead>Available</TableHead>
               <TableHead>Size</TableHead>
@@ -54,6 +55,7 @@ export function Storage({ ...params }) {
                     <TableCell className="font-medium text-xs">{storage.name}</TableCell>
                     <TableCell className="text-xs">
                       {usePercentage >= 90 ? <p className="text-red-600">{usePercentage}%</p> : <p>{usePercentage}%</p>}
+                <ProgressBar value={usePercentage} color="blue" className="mt-3" />
                     </TableCell>
                     <TableCell className="text-xs">{storage.used}</TableCell>
                     <TableCell className="text-xs">{storage.available}</TableCell>

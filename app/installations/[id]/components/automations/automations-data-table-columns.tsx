@@ -75,7 +75,7 @@ export const columns: ColumnDef<AutomationTableView>[] = [
     },
     cell: ({ row }) => {
       const state: string = row.getValue('state');
-      return <div className="text-center">{state == 'off' ? <Dot.red /> : <Dot.green />}</div>;
+      return <div className="text-center relative-flex flex justify-center text-xs">{state == 'off' ? <Icons.checkCircle className="w-6 h-6 text-red-600" /> : <Icons.checkCircle className="w-6 h-6 text-green-600" />}</div>;
     },
   },
 ];

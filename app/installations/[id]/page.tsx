@@ -15,6 +15,7 @@ import { AutomationsDataTableProxy } from './components/automations/automations-
 import { ScriptsDataTableProxy } from './components/scripts/scripts-data-table-proxy';
 import { SceneDataTableProxy } from './components/scenes/scenes-data-table-proxy';
 import { AgentInstallation } from './components/agent-installation';
+import { InstallationOverviewChart } from './components/installation-overview-chart';
 
 export default function DashboardInstallationPage({ params }: { params: { id: string } }) {
   const [origin, setOrigin] = useState<string | null>(null);
@@ -91,7 +92,7 @@ export default function DashboardInstallationPage({ params }: { params: { id: st
               <TabsContent value="overview" className="space-y-4">
                 <DashboardHeaderInstallation installationId={params.id} />
 
-                {/* <Logs installationId={params.id} /> */}
+                <InstallationOverviewChart installationId={params.id} />
 
                 <LogsDataTableProxy installationId={params.id} />
               </TabsContent>

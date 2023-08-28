@@ -11,6 +11,8 @@ import { Skeleton } from '@/registry/new-york/ui/skeleton';
 import { Icons } from '@/components/icons';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { Dot } from '@/components/ui/dots';
+import { Badge, BadgeDelta, Flex, ProgressBar, Text } from '@tremor/react';
+import Link from 'next/link';
 
 export function DashboardHeaderInstallation({ ...params }) {
   const { installationId } = params;
@@ -34,7 +36,7 @@ export function DashboardHeaderInstallation({ ...params }) {
   const hasObservations = observations?.length > 0;
   const memoryUsed = hasObservations ? observations[0].environment.memory?.used ?? 0 : 0;
   const memoryTotal = hasObservations ? observations[0].environment.memory?.total ?? 0 : 1;
-  const memoryPercentage = Math.floor((memoryUsed / memoryTotal) * 100) + '%';
+  const memoryPercentage = Math.floor((memoryUsed / memoryTotal) * 100);
 
   const observationsLoading = observations == null || observations == undefined || observations?.length == 0;
 
@@ -85,26 +87,26 @@ export function DashboardHeaderInstallation({ ...params }) {
                 {observationsLoading == false &&
                   isLoading == false &&
                   (isHAUpdateAvailable == false ? (
-                    <Icons.check className="inline font-regular text-green-700 text-xs mb-1 ml-1" />
+                    <Badge className="ml-2 cursor-pointer" color="orange" icon={Icons.shieldCheck}>
+                        {latestHaRelease} available
+                      </Badge>
                   ) : (
-                    <div className="w-2 h-2 bg-yellow-600 rounded-full inline-block mr-2 ml-2 mb-0.5"></div>
+                    <a
+                      className="cursor-pointer"
+                      href="https://github.com/home-assistant/core/releases"
+                      target="_blank"
+                    >
+                      <Badge className="ml-2 cursor-pointer" color="orange" icon={Icons.shieldExclamation}>
+                        {latestHaRelease} available
+                      </Badge>
+                    </a>
                   ))}
               </TooltipTrigger>
               <TooltipContent>
                 <p>{isHAUpdateAvailable ? `${latestHaRelease} available` : 'Up to date'}</p>
               </TooltipContent>
             </Tooltip>
-          </TooltipProvider>{' '}
-          {observationsLoading == false && isLoading == false && isHAUpdateAvailable && (
-            <Button
-              onClick={() => {
-                window.open('https://github.com/home-assistant/core/releases', '_blank');
-              }}
-              className="block"
-            >
-              {latestHaRelease} available
-            </Button>
-          )}
+          </TooltipProvider>
         </CardContent>
       </Card>
       <Card>
@@ -114,19 +116,21 @@ export function DashboardHeaderInstallation({ ...params }) {
           <Icons.memory />
         </CardHeader>
         <CardContent>
-          <div className="text-xl font-bold">
+          <div className="text-xl">
             {observationsLoading || isLoading ? (
               <Skeleton className="h-8" />
             ) : (
               <div>
-                <TooltipProvider>
-                  <Tooltip>
-                    <TooltipTrigger>{memoryValues}</TooltipTrigger>
-                    <TooltipContent>
-                      <p>{memoryPercentage}</p>
-                    </TooltipContent>
-                  </Tooltip>
-                </TooltipProvider>
+                <Flex>
+                  <Text>
+                    {numeral((observations[0]?.environment?.memory?.used ?? 0) / 1024 / 1024).format('0.0')}G &bull;{' '}
+                    {memoryPercentage}%
+                  </Text>
+                  <Text>
+                    {numeral((observations[0]?.environment?.memory?.total ?? 0) / 1024 / 1024).format('0.0')}G
+                  </Text>
+                </Flex>
+                <ProgressBar value={memoryPercentage} color="blue" className="mt-3" />
               </div>
             )}
           </div>
@@ -138,22 +142,24 @@ export function DashboardHeaderInstallation({ ...params }) {
           <Icons.storage />
         </CardHeader>
         <CardContent>
-          <div className="text-xl font-bold">
+          <div className="text-xl">
             {observationsLoading || isLoading ? (
               <Skeleton className="h-8" />
             ) : (
               <div>
-                <TooltipProvider>
-                  <Tooltip>
-                    <TooltipTrigger>
-                      {highestStorage ? `${highestStorage?.used.slice(0, -1)} / ${highestStorage?.size}` : 'n/a'}
-                    </TooltipTrigger>
-                    <TooltipContent>
-                      <p>{highestStorage?.name ?? ''}</p>
-                    </TooltipContent>
-                  </Tooltip>
-                </TooltipProvider>
-              </div>
+              <Flex>
+                <Text>
+                  {highestStorage?.used} &bull;{' '}
+                  {(Number(highestStorage?.used.slice(0, -1)) / Number(highestStorage?.size.slice(0, -1)) * 100).toFixed(0)}%
+                  &bull;{' '}
+                  {highestStorage?.name}
+                </Text>
+                <Text>
+                  {highestStorage?.size}
+                </Text>
+              </Flex>
+              <ProgressBar value={Number(highestStorage?.used.slice(0, -1)) / Number(highestStorage?.size.slice(0, -1)) * 100} color="blue" className="mt-3" />
+            </div>
             )}
           </div>
         </CardContent>
@@ -192,23 +198,25 @@ export function DashboardHeaderInstallation({ ...params }) {
           <Icons.healthline />
         </CardHeader>
         <CardContent>
-          <div className="text-xl font-bold">
+          <div className="">
             {observationsLoading || isLoading ? (
               <Skeleton className="h-8" />
             ) : (
               <div>
                 {installation?.healthy.is_healthy ? (
-                  <div className="w-3 h-3 bg-green-600 rounded-full inline-block"></div>
+                  <Badge color="green" icon={Icons.signal}>
+                    <TimeAgo date={installation?.healthy.last_updated ?? ''} />
+                  </Badge>
                 ) : (
-                  <div className="w-3 h-3 bg-red-600 rounded-full inline-block"></div>
+                  <Badge color="red" icon={Icons.signal}>
+                    <TimeAgo date={installation?.healthy.last_updated ?? ''} />
+                  </Badge>
                 )}
                 {installation?.healthy.last_updated && (
                   <div className="text-sm font-normal ml-2 inline">
                     <TooltipProvider>
                       <Tooltip>
-                        <TooltipTrigger>
-                          <TimeAgo date={installation?.healthy.last_updated} />
-                        </TooltipTrigger>
+                        <TooltipTrigger></TooltipTrigger>
                         <TooltipContent>
                           <p>This shows the status and last time of a query of the HomeAssistant instance url.</p>
                         </TooltipContent>
@@ -221,6 +229,7 @@ export function DashboardHeaderInstallation({ ...params }) {
           </div>
         </CardContent>
       </Card>
+      
     </div>
   );
 }

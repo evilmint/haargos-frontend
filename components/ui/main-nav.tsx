@@ -26,7 +26,7 @@ export function MainNav({ ...props }, { className }: React.HTMLAttributes<HTMLEl
       >
         Dashboard
       </Link>
-      <InstallationSwitcher installationId={installationId} />
+      <InstallationSwitcher installationId={installationId} className={''} />
 
       {installationInstanceLink && (
         <Button

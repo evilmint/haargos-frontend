@@ -27,8 +27,6 @@ import {
   SheetTrigger,
 } from '@/registry/default/ui/sheet';
 import { Button } from '@/components/ui/button';
-import { Label } from '@/registry/default/ui/label';
-import { Input } from '@/registry/default/ui/input';
 import { Icons } from '@/components/icons';
 import {
   AlertDialog,
@@ -73,11 +71,11 @@ export default function DashboardInstallationPage({ params }: { params: { id: st
     defaultTab != null &&
     origin != null && (
       <Auth0Provider
-        domain="dev-ofc2nc2a0lc4ncig.eu.auth0.com"
-        clientId="3EGUK8VIxgWNygQ1My32IIMeFz2KFeXm"
+        domain={process.env.NEXT_PUBLIC_WARNING_AUTH0_DOMAIN ?? ''}
+        clientId={process.env.NEXT_PUBLIC_WARNING_AUTH0_DOMAIN ?? ''}
         authorizationParams={{
-          redirect_uri: window.location.origin,
-          audience: 'https://api.haargos.smartrezydencja.pl',
+          redirect_uri: origin ?? process.env.NEXT_PUBLIC_WARNING_AUTH0_DOMAIN ?? '',
+          audience: process.env.NEXT_PUBLIC_WARNING_AUTH0_DOMAIN ?? '',
         }}
       >
         <div className="flex-col">

@@ -39,7 +39,7 @@ interface InstallationSwitcherProps {
   className: string;
 }
 
-export default function InstallationSwitcher({ className, installationId }: InstallationSwitcherProps) {
+export default function InstallationSwitcher({ className = '', installationId }: InstallationSwitcherProps) {
   const installations = useInstallationStore(state => state.installations);
   const fetchInstallations = useInstallationStore(state => state.fetchInstallations);
   const [open, setOpen] = React.useState(false);

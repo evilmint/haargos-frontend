@@ -70,12 +70,12 @@ export default function DashboardInstallationPage({ params }: { params: { id: st
   return (
     defaultTab != null &&
     origin != null && (
-      <Auth0Provider
+            <Auth0Provider
         domain={process.env.NEXT_PUBLIC_WARNING_AUTH0_DOMAIN ?? ''}
-        clientId={process.env.NEXT_PUBLIC_WARNING_AUTH0_DOMAIN ?? ''}
+        clientId={process.env.NEXT_PUBLIC_WARNING_AUTH0_CLIENT_ID ?? ''}
         authorizationParams={{
-          redirect_uri: origin ?? process.env.NEXT_PUBLIC_WARNING_AUTH0_DOMAIN ?? '',
-          audience: process.env.NEXT_PUBLIC_WARNING_AUTH0_DOMAIN ?? '',
+          redirect_uri: origin ?? process.env.NEXT_PUBLIC_WARNING_AUTH0_REDIRECT_URI_DEFAULT ?? '',
+          audience: process.env.NEXT_PUBLIC_WARNING_AUTH0_AUDIENCE ?? '',
         }}
       >
         <div className="flex-col">

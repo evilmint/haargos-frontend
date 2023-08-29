@@ -130,8 +130,6 @@ export default function InstallationSwitcher({ className = '', installationId }:
   ]);
 
   React.useEffect(() => {
-    console.log(pathname);
-
     if (pathname == '/') {
       setSelectedTeam(null);
     }

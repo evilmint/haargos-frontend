@@ -26,7 +26,14 @@ import { columns } from './installations-data-table-columns';
 
 export interface InstallationTableView {
   id: string;
-  name: string;
+  general: {
+    goToHomeAssistant: (url: string) => void;
+    goToInstallation: () => void;
+    name: string;
+    is_up: boolean;
+    instance_url: string | null;
+    installation_url: string;
+  };
   agent_version: string;
   ha_version: string;
   is_healthy: boolean;
@@ -83,8 +90,8 @@ export function InstallationDataTable({ ...params }) {
       <div className="flex items-center py-4">
         <Input
           placeholder="Filter installations..."
-          value={(table.getColumn('name')?.getFilterValue() as string) ?? ''}
-          onChange={event => table.getColumn('name')?.setFilterValue(event.target.value)}
+          value={(table.getColumn('general')?.getFilterValue() as string) ?? ''}
+          onChange={event => table.getColumn('general')?.setFilterValue(event.target.value)}
           className="max-w-sm"
         />
         <DropdownMenu>

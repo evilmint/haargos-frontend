@@ -17,13 +17,18 @@ export function Zigbee({ ...params }) {
   const fetchObservationsForInstallation = useInstallationStore(state => state.fetchObservationsForInstallation);
   const { getAccessTokenSilently, user } = useAuth0();
 
+  const asyncFetch = async () => {
+    try {
+      const token = await getAccessTokenSilently();
+      await fetchObservationsForInstallation(installationId, token);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   useEffect(() => {
-    getAccessTokenSilently().then(token => {
-      fetchInstallations(token)
-        .then(() => fetchObservationsForInstallation(installationId, token))
-        .catch(error => console.error(error));
-    });
-  }, [fetchInstallations, fetchObservationsForInstallation, user, getAccessTokenSilently, installationId]);
+    asyncFetch();
+  }, [fetchInstallations, getAccessTokenSilently, fetchObservationsForInstallation, installationId, user]);
 
   return (
     <Card className="col-span-8">
@@ -53,8 +58,7 @@ export function Zigbee({ ...params }) {
               observations[0].zigbee &&
               observations[0].zigbee.devices.length > 0 &&
               (observations[0].zigbee.devices ?? []).map((device: ZigbeeDevice) => {
-                const isAbnormalLQI = device.lqi <= 32 && device.integration_type == 'zha';
-                const abnormalClassName = isAbnormalLQI ? 'font-medium' : '';
+                const abnormalClassName = device.has_low_lqi ? 'font-medium' : '';
                 const lqiName = device.integration_type == 'zha' ? device.lqi : '-';
 
                 return (
@@ -63,7 +67,7 @@ export function Zigbee({ ...params }) {
                     <TableCell className="text-xs">{device.name_by_user ?? '-'}</TableCell>
                     {/* <TableCell className="text-xs"></TableCell> */}
                     <TableCell className="text-x">
-                      {isAbnormalLQI ? <b className="text-red-600">{lqiName}</b> : <p>{lqiName}</p>}
+                      {device.has_low_lqi ? <b className="text-red-600">{lqiName}</b> : <p>{lqiName}</p>}
                     </TableCell>
                     <TableCell className="text-xs text-right">
                       {new Date(device.last_updated).toLocaleString()}

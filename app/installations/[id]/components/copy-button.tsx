@@ -10,19 +10,13 @@ type CopyButtonProps = {
 export default function CopyButton({ textToCopy = 'Copy default', className }: CopyButtonProps) {
   const [copied, setCopied] = useState(false);
 
-  const copyToClipboard = () => {
-    navigator.clipboard.writeText(textToCopy).then(
-      () => {
-        setCopied(true);
+  const copyToClipboard = async () => {
+    await navigator.clipboard.writeText(textToCopy);
+    setCopied(true);
 
-        setTimeout(() => {
-          setCopied(false);
-        }, 2000);
-      },
-      err => {
-        console.log('failed to copy', err.mesage);
-      },
-    );
+    setTimeout(() => {
+      setCopied(false);
+    }, 2000);
   };
 
   return (

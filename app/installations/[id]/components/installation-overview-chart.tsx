@@ -16,13 +16,18 @@ export function InstallationOverviewChart({ ...params }) {
 
   const { getAccessTokenSilently, user } = useAuth0();
 
+  const asyncFetch = async () => {
+    try {
+      const token = await getAccessTokenSilently();
+      await fetchObservationsForInstallation(installationId, token);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   useEffect(() => {
-    getAccessTokenSilently().then(token => {
-      fetchInstallations(token)
-        .then(() => fetchObservationsForInstallation(installationId, token))
-        .catch(error => console.error(error));
-    });
-  }, [fetchInstallations, user, getAccessTokenSilently, fetchObservationsForInstallation, installationId]);
+    asyncFetch();
+  }, [fetchInstallations, getAccessTokenSilently, fetchObservationsForInstallation, installationId, user]);
 
   const dataFormatter = (number: number) => {
     return Intl.NumberFormat('us').format(number).toString();
@@ -34,29 +39,29 @@ export function InstallationOverviewChart({ ...params }) {
       : [
           {
             name: 'Zigbee devices',
-            'Amount': observations[0].zigbee?.devices.length ?? 0,
+            Amount: observations[0].zigbee?.devices.length ?? 0,
           },
           {
             name: 'Automations',
-            'Amount': observations[0].automations?.length ?? 0,
+            Amount: observations[0].automations?.length ?? 0,
           },
           {
             name: 'Scripts',
-            'Amount': observations[0].scripts?.length ?? 0,
+            Amount: observations[0].scripts?.length ?? 0,
           },
           {
             name: 'Scenes',
-            'Amount': observations[0].scenes?.length ?? 0,
+            Amount: observations[0].scenes?.length ?? 0,
           },
           {
             name: 'Error & warning logs',
-            'Amount': logs.filter(l => {
+            Amount: logs.filter(l => {
               return ['w', 'e'].indexOf(l.type.toLowerCase()) == 0;
             }).length,
           },
           {
             name: 'Docker containers',
-            'Amount': observations[0].docker.containers.length ?? 0,
+            Amount: observations[0].docker.containers.length ?? 0,
           },
         ];
   return (

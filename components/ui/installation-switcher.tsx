@@ -26,20 +26,20 @@ import {
 import { Input } from '@/registry/new-york/ui/input';
 import { Label } from '@/registry/new-york/ui/label';
 import { Popover, PopoverContent, PopoverTrigger } from '@/registry/new-york/ui/popover';
-import { useRouter } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { useInstallationStore, useInstallationSwitcherStore } from '@/app/services/stores';
 import { useAuth0 } from '@auth0/auth0-react';
 import { useState } from 'react';
 import { Skeleton } from '@/registry/new-york/ui/skeleton';
 import { Dot } from './dots';
+import { Installation } from '@/app/types';
 
-type PopoverTriggerProps = React.ComponentPropsWithoutRef<typeof PopoverTrigger>;
-
-interface TeamSwitcherProps extends PopoverTriggerProps {
+interface InstallationSwitcherProps {
   installationId: string;
+  className: string;
 }
 
-export default function InstallationSwitcher({ className, installationId }: TeamSwitcherProps) {
+export default function InstallationSwitcher({ className, installationId }: InstallationSwitcherProps) {
   const installations = useInstallationStore(state => state.installations);
   const fetchInstallations = useInstallationStore(state => state.fetchInstallations);
   const [open, setOpen] = React.useState(false);
@@ -59,6 +59,7 @@ export default function InstallationSwitcher({ className, installationId }: Team
   const router = useRouter();
   const [isLoading, setLoading] = useState<boolean>(true);
   const [isUpdating, setUpdating] = useState<boolean>(false);
+  const pathname = usePathname();
 
   const [nameValue, setNameValue] = useState('');
   const [instanceValue, setInstanceValue] = useState('');
@@ -70,64 +71,54 @@ export default function InstallationSwitcher({ className, installationId }: Team
     }
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (nameValue.trim().length > 0) {
       setUpdating(true);
-      getAccessTokenSilently().then(token => {
-        createInstallation(token, instanceValue, nameValue)
-          .then(i => {
-            if (i != null) {
-              const newI = { label: i.name, healthy: i.healthy?.is_healthy ?? false, value: i.id };
-              setSelectedTeam(newI);
-              setOpen(false);
 
-              router.push('/installations/' + newI.value + '#install');
-            }
-          })
-          .catch(error => console.error(error))
-          .finally(() => {
-            setShowNewInstallationDialog(false);
-            setUpdating(false);
-          });
-      });
+      try {
+        const accessToken = await getAccessTokenSilently();
+        const installation = await createInstallation(accessToken, instanceValue, nameValue);
+
+        if (installation != null) {
+          setSelectedTeam(installation);
+          setOpen(false);
+
+          router.push('/installations/' + installation.id + '#install');
+        }
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setShowNewInstallationDialog(false);
+        setUpdating(false);
+      }
+    }
+  };
+
+  const fetchAndSetInstallations = async () => {
+    try {
+      const token = await getAccessTokenSilently();
+      await fetchInstallations(token);
+
+      setGroups([
+        {
+          label: 'Installation',
+          installations: installations,
+        },
+      ]);
+
+      const paramInstallation = installations.filter(i => i.id === installationId);
+      if (paramInstallation.length > 0 && paramInstallation[0] != null && selectedInstallation == null) {
+        setSelectedTeam(paramInstallation[0]);
+      }
+    } catch {
+      setVisible(false);
+    } finally {
+      setLoading(false);
     }
   };
 
   React.useEffect(() => {
-    getAccessTokenSilently()
-      .then(token => {
-        fetchInstallations(token)
-          .then(() => {
-            setGroups([
-              {
-                label: 'Installation',
-                teams: installations.map(i => {
-                  return { label: i.name, healthy: i.healthy?.is_healthy ?? false, value: i.id };
-                }),
-              },
-            ]);
-
-            var paramInstallation = installations.filter(i => i.id == installationId);
-
-            // selectedTeam == null breaks infinite loop
-            if (paramInstallation.length > 0 && paramInstallation[0] != null && selectedInstallation == null) {
-              const i = paramInstallation[0];
-              setSelectedTeam({
-                label: i.name,
-                healthy: i.healthy?.is_healthy ?? false,
-                value: i.id,
-              });
-            }
-          })
-          .catch(() => {
-            setVisible(false);
-          })
-          .finally(() => setLoading(false));
-      })
-      .catch(() => {
-        setVisible(false);
-        setLoading(false);
-      });
+    fetchAndSetInstallations();
   }, [
     fetchInstallations,
     user,
@@ -137,6 +128,14 @@ export default function InstallationSwitcher({ className, installationId }: Team
     setSelectedTeam,
     installationId,
   ]);
+
+  React.useEffect(() => {
+    console.log(pathname);
+
+    if (pathname == '/') {
+      setSelectedTeam(null);
+    }
+  }, [pathname]);
 
   return isLoading ? (
     <Skeleton className="h-8 w-[150px]" />
@@ -151,14 +150,14 @@ export default function InstallationSwitcher({ className, installationId }: Team
             aria-label="Select an installation"
             className={cn('w-[220px] justify-between', className)}
           >
-            {selectedInstallation?.label != null ? (
+            {selectedInstallation?.name != null ? (
               <>
-                {selectedInstallation?.healthy ? (
+                {selectedInstallation?.healthy.is_healthy ? (
                   <div className="w-2 h-2 bg-green-600 rounded-full inline-block mr-2"></div>
                 ) : (
                   <div className="w-2 h-2 bg-red-600 rounded-full inline-block mr-2"></div>
                 )}
-                {selectedInstallation.label}
+                {selectedInstallation.name}
               </>
             ) : (
               'Choose installation'
@@ -173,23 +172,23 @@ export default function InstallationSwitcher({ className, installationId }: Team
               <CommandEmpty>No installation found.</CommandEmpty>
               {groups.map(group => (
                 <CommandGroup key={group.label} heading={group.label}>
-                  {group.teams.map((installation: any) => (
+                  {group.installations.map((installation: Installation) => (
                     <CommandItem
-                      key={installation.value}
+                      key={installation.id}
                       onSelect={() => {
                         setSelectedTeam(installation);
                         setOpen(false);
 
-                        router.push('/installations/' + installation.value);
+                        router.push('/installations/' + installation.id);
                       }}
                       className="text-sm"
                     >
-                      {installation?.healthy ? <Dot.green /> : <Dot.red />}
-                      {installation.label}
+                      {installation?.healthy.is_healthy ? <Dot.green /> : <Dot.red />}
+                      {installation.name}
                       <CheckIcon
                         className={cn(
                           'ml-auto h-4 w-4',
-                          selectedInstallation?.value === installation.value ? 'opacity-100' : 'opacity-0',
+                          selectedInstallation?.id === installation.id ? 'opacity-100' : 'opacity-0',
                         )}
                       />
                     </CommandItem>

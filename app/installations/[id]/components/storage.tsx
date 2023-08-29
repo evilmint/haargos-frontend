@@ -18,13 +18,18 @@ export function Storage({ ...params }) {
 
   const { getAccessTokenSilently, user } = useAuth0();
 
+  const asyncFetch = async () => {
+    try {
+      const token = await getAccessTokenSilently();
+      await fetchObservationsForInstallation(installationId, token);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   useEffect(() => {
-    getAccessTokenSilently().then(token => {
-      fetchInstallations(token)
-        .then(() => fetchObservationsForInstallation(installationId, token))
-        .catch(error => console.error(error));
-    });
-  }, [fetchInstallations, user, getAccessTokenSilently, fetchObservationsForInstallation, installationId]);
+    asyncFetch();
+  }, [fetchInstallations, getAccessTokenSilently, fetchObservationsForInstallation, installationId, user]);
 
   return (
     <Card className="col-span-8">
@@ -55,7 +60,7 @@ export function Storage({ ...params }) {
                     <TableCell className="font-medium text-xs">{storage.name}</TableCell>
                     <TableCell className="text-xs">
                       {usePercentage >= 90 ? <p className="text-red-600">{usePercentage}%</p> : <p>{usePercentage}%</p>}
-                <ProgressBar value={usePercentage} color="blue" className="mt-3" />
+                      <ProgressBar value={usePercentage} color="blue" className="mt-3" />
                     </TableCell>
                     <TableCell className="text-xs">{storage.used}</TableCell>
                     <TableCell className="text-xs">{storage.available}</TableCell>

@@ -19,13 +19,18 @@ export function LogsDataTableProxy({ ...params }) {
   const fetchObservationsForInstallation = useInstallationStore(state => state.fetchObservationsForInstallation);
   const { getAccessTokenSilently, user } = useAuth0();
 
+  const asyncFetch = async () => {
+    try {
+      const token = await getAccessTokenSilently();
+      await fetchObservationsForInstallation(installationId, token);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   useEffect(() => {
-    getAccessTokenSilently().then(token => {
-      fetchInstallations(token)
-        .then(() => fetchObservationsForInstallation(installationId, token))
-        .catch(error => console.error(error));
-    });
-  }, [fetchInstallations, fetchObservationsForInstallation, user, getAccessTokenSilently, installationId]);
+    asyncFetch();
+  }, [fetchInstallations, getAccessTokenSilently, fetchObservationsForInstallation, installationId, user]);
 
   const logViews = (logs ?? []).map(log => mapToTableView(log));
 

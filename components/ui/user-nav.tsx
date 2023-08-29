@@ -23,13 +23,20 @@ export function UserNav() {
   const { getAccessTokenSilently, user, logout, isAuthenticated } = useAuth0();
   const [isLoading, setLoading] = useState<boolean>(true);
 
+  const asyncFetch = async () => {
+    try {
+      const token = await getAccessTokenSilently();
+      await fetchUser(token);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
-    getAccessTokenSilently()
-      .then(token => {
-        fetchUser(token);
-      })
-      .finally(() => setLoading(false));
-  }, [fetchUser, user, getAccessTokenSilently]);
+    asyncFetch();
+  }, [fetchUser, getAccessTokenSilently, user]);
 
   return isLoading ? (
     <></>

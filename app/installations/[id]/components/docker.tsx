@@ -15,13 +15,18 @@ export function Docker({ ...params }) {
   const fetchObservationsForInstallation = useInstallationStore(state => state.fetchObservationsForInstallation);
   const { getAccessTokenSilently } = useAuth0();
 
+  const asyncFetch = async () => {
+    try {
+      const token = await getAccessTokenSilently();
+      await fetchObservationsForInstallation(installationId, token);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   useEffect(() => {
-    getAccessTokenSilently().then(token => {
-      fetchInstallations(token)
-        .then(() => fetchObservationsForInstallation(installationId, token))
-        .catch(error => console.error(error));
-    });
-  }, [fetchInstallations, fetchObservationsForInstallation, installationId]);
+    asyncFetch();
+  }, [fetchInstallations, getAccessTokenSilently, fetchObservationsForInstallation, installationId]);
 
   const dockerContainerCount = observations?.length > 0 ? observations[0]?.docker?.containers?.length || 0 : 0;
 

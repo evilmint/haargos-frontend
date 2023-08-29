@@ -61,6 +61,9 @@ interface Observation {
   automations: Automation[];
   scenes: Scene[];
   scripts: Script[];
+  has_low_memory: boolean;
+  has_low_storage: boolean;
+  has_high_cpu_load: boolean;
 }
 
 interface Automation {
@@ -103,6 +106,8 @@ interface ZigbeeDevice {
   battery_level: number | null;
   power_source: string | null;
   integration_type: string;
+  has_low_battery: boolean;
+  has_low_lqi: boolean;
 }
 
 interface ObservationApiResponse {

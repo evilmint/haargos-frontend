@@ -43,14 +43,19 @@ export function DashboardHeaderInstallation({ ...params }) {
   const haVersion = observations?.length > 0 && observations[0].ha_config?.version;
   const isHAUpdateAvailable = latestHaRelease != null && haVersion != null && haVersion != latestHaRelease;
 
+  const asyncFetch = async () => {
+    try {
+      const token = await getAccessTokenSilently();
+      await fetchObservationsForInstallation(installationId, token);
+      setLoading(false);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   useEffect(() => {
-    getAccessTokenSilently().then(token => {
-      fetchInstallations(token)
-        .then(() => fetchObservationsForInstallation(installationId, token))
-        .then(() => setLoading(false))
-        .catch(error => console.error(error));
-    });
-  }, [fetchInstallations, getAccessTokenSilently, user, fetchObservationsForInstallation, installationId]);
+    asyncFetch();
+  }, [fetchInstallations, getAccessTokenSilently, fetchObservationsForInstallation, installationId, user]);
 
   const cpuArchitecture = (observations && observations[0]?.environment.cpu?.architecture) ?? 'n/a';
   return (
@@ -88,8 +93,8 @@ export function DashboardHeaderInstallation({ ...params }) {
                   isLoading == false &&
                   (isHAUpdateAvailable == false ? (
                     <Badge className="ml-2 cursor-pointer" color="orange" icon={Icons.shieldCheck}>
-                        {latestHaRelease} available
-                      </Badge>
+                      {latestHaRelease} available
+                    </Badge>
                   ) : (
                     <a
                       className="cursor-pointer"
@@ -147,19 +152,23 @@ export function DashboardHeaderInstallation({ ...params }) {
               <Skeleton className="h-8" />
             ) : (
               <div>
-              <Flex>
-                <Text>
-                  {highestStorage?.used} &bull;{' '}
-                  {(Number(highestStorage?.used.slice(0, -1)) / Number(highestStorage?.size.slice(0, -1)) * 100).toFixed(0)}%
-                  &bull;{' '}
-                  {highestStorage?.name}
-                </Text>
-                <Text>
-                  {highestStorage?.size}
-                </Text>
-              </Flex>
-              <ProgressBar value={Number(highestStorage?.used.slice(0, -1)) / Number(highestStorage?.size.slice(0, -1)) * 100} color="blue" className="mt-3" />
-            </div>
+                <Flex>
+                  <Text>
+                    {highestStorage?.used} &bull;{' '}
+                    {(
+                      (Number(highestStorage?.used.slice(0, -1)) / Number(highestStorage?.size.slice(0, -1))) *
+                      100
+                    ).toFixed(0)}
+                    % &bull; {highestStorage?.name}
+                  </Text>
+                  <Text>{highestStorage?.size}</Text>
+                </Flex>
+                <ProgressBar
+                  value={(Number(highestStorage?.used.slice(0, -1)) / Number(highestStorage?.size.slice(0, -1))) * 100}
+                  color="blue"
+                  className="mt-3"
+                />
+              </div>
             )}
           </div>
         </CardContent>
@@ -229,7 +238,6 @@ export function DashboardHeaderInstallation({ ...params }) {
           </div>
         </CardContent>
       </Card>
-      
     </div>
   );
 }

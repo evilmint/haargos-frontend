@@ -34,9 +34,9 @@ const useUserStore = create<UserState>((set, get) => ({
 }));
 
 interface InstallationState {
-  selectedInstallation: any | null;
+  selectedInstallation: Installation | null;
   clearInstallation: () => void;
-  setSelectedInstallation: (team: any | null) => void;
+  setSelectedInstallation: (installation: any | null) => void;
 }
 
 const useInstallationSwitcherStore = create<InstallationState>(set => ({
@@ -138,6 +138,38 @@ const useInstallationStore = create<InstallationStoreState>((set, get) => ({
 
           return a.lqi - b.lqi;
         });
+
+        const volumeThreshold = Number(process.env.NEXT_PUBLIC_WARNING_THRESHOLD_VOLUME);
+        const memoryThreshold = Number(process.env.NEXT_PUBLIC_WARNING_THRESHOLD_MEMORY);
+        const cpuLoadThreshold = Number(process.env.NEXT_PUBLIC_WARNING_THRESHOLD_CPU_LOAD);
+
+        observation.has_low_memory = observation.environment?.memory
+          ? (observation.environment.memory.used / observation.environment.memory.total) * 100 >= memoryThreshold
+          : true;
+        observation.has_low_storage = observation.environment?.storage
+          ? observation.environment.storage.filter(s => Number(s.use_percentage.slice(0, -1)) < volumeThreshold)
+              .length == 0
+          : true;
+
+        if (observation.zigbee != null) {
+          const batteryLevelThreshold = Number(process.env.NEXT_PUBLIC_WARNING_THRESHOLD_ZIGBEE_BATTERY_LEVEL);
+          const lqiThreshold = Number(process.env.NEXT_PUBLIC_WARNING_THRESHOLD_ZIGBEE_LQI);
+
+          observation.zigbee.devices =
+            observation.zigbee?.devices.map(z => {
+              const hasGoodBattery =
+                (z.battery_level ?? 0) > batteryLevelThreshold && z.power_source?.toLowerCase() == 'battery';
+
+              z.has_low_battery = !hasGoodBattery;
+              z.has_low_lqi = z.lqi <= lqiThreshold && z.integration_type.toLowerCase() == 'zha';
+              return z;
+            }) ?? [];
+        }
+
+        observation.has_high_cpu_load = observation.environment?.cpu?.load
+          ? observation.environment.cpu.load >= cpuLoadThreshold
+          : true;
+
         return observation;
       });
 

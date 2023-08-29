@@ -13,11 +13,18 @@ export function Installations() {
   const fetchInstallations = useInstallationStore(state => state.fetchInstallations);
   const { getAccessTokenSilently } = useAuth0();
 
+  const asyncFetch = async () => {
+    try {
+      const token = await getAccessTokenSilently();
+      await fetchInstallations(token);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   useEffect(() => {
-    getAccessTokenSilently().then(token => {
-      fetchInstallations(token).catch(error => console.error(error));
-    });
-  }, [fetchInstallations]);
+    asyncFetch();
+  }, [fetchInstallations, getAccessTokenSilently]);
 
   const router = useRouter();
 

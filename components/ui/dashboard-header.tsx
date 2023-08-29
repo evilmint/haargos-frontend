@@ -1,20 +1,28 @@
 'use client';
 
-import { Card, Title, DonutChart } from "@tremor/react";
-import { CardContent, CardHeader, CardTitle } from '@/registry/new-york/ui/card';
+import { Card, Title, DonutChart, Flex, BarList, Bold, Text } from '@tremor/react';
 import { useEffect } from 'react';
 import { useInstallationStore } from '@/app/services/stores';
 import { useAuth0 } from '@auth0/auth0-react';
-import { Legend } from "@tremor/react";
+import { Legend } from '@tremor/react';
+import { Installation } from '@/app/types';
 export function DashboardHeader() {
   const installations = useInstallationStore(state => state.installations);
   const fetchInstallations = useInstallationStore(state => state.fetchInstallations);
   const { getAccessTokenSilently, user } = useAuth0();
+  const latestHARelease = useInstallationStore(state => state.latestHaRelease);
+
+  const asyncFetch = async () => {
+    try {
+      const token = await getAccessTokenSilently();
+      await fetchInstallations(token);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   useEffect(() => {
-    getAccessTokenSilently().then(token => {
-      fetchInstallations(token);
-    });
+    asyncFetch();
   }, [fetchInstallations, getAccessTokenSilently, user]);
 
   const healthyInstallations = installations.reduce((s, i) => {
@@ -27,138 +35,222 @@ export function DashboardHeader() {
   const installationIssues = installations.reduce((s, i) => {
     return s + i.issues.length;
   }, 0);
-  const latestActivityInstallationName = installations.length > 0 ? installations[0].name : '-';
 
-  const cities = [
+  const installationChart = [
     {
-      name: "Healthy",
+      name: 'Healthy',
       sales: healthyInstallations,
     },
     {
-      name: "Unhealthy",
+      name: 'Unhealthy',
       sales: unhealthyInstallations,
     },
     {
-      name: "Issues",
+      name: 'Issues',
       sales: installationIssues,
     },
   ];
-  
-  const valueFormatter = (number: number) => `$ ${Intl.NumberFormat("us").format(number).toString()}`;
-  
+
+  const observations = useInstallationStore(state => state.observations);
+
+  const lowLQICount = installations.reduce((a, i) => {
+    const o = observations[i.id];
+
+    if (!o || o.length == 0) {
+      return a;
+    }
+
+    return a + (o[0].zigbee?.devices.reduce((a, z) => a + (z.has_low_lqi ? 1 : 0), 0) ?? 0);
+  }, 0);
+
+  const lowBatteryCount = installations.reduce((a, i) => {
+    const o = observations[i.id];
+
+    if (!o || o.length == 0) {
+      return a;
+    }
+
+    return a + (o[0].zigbee?.devices.reduce((a, z) => a + (z.has_low_battery ? 1 : 0), 0) ?? 0);
+  }, 0);
+
+  const healthyZigbeeDevices = installations.reduce((a, i) => {
+    const o = observations[i.id];
+
+    if (!o || o.length == 0) {
+      return a;
+    }
+
+    return a + (o[0].zigbee?.devices.reduce((a, z) => a + (!z.has_low_battery && !z.has_low_lqi ? 1 : 0), 0) ?? 0);
+  }, 0);
+
+  const zigbee = [
+    {
+      name: 'Healthy',
+      sales: healthyZigbeeDevices,
+    },
+    {
+      name: 'Low LQI',
+      sales: lowLQICount,
+    },
+    {
+      name: 'Low battery',
+      sales: lowBatteryCount,
+    },
+  ];
+
+  const haVersions = new Map<string, number>();
+
+  installations.forEach((i: Installation) => {
+    const o = observations[i.id];
+
+    if (!o || o.length == 0) {
+      return;
+    }
+
+    const key = o[0].ha_config?.version ?? 'Unknown';
+
+    haVersions?.set(key, (haVersions.get(key) ?? 0) + 1);
+  });
+
+  let data: any[] = [];
+
+  if (latestHARelease != null) {
+    data.push({ name: latestHARelease, value: 0 });
+  }
+
+  haVersions?.forEach((value, key) => {
+    data.push({
+      name: key,
+      value: value,
+    });
+  });
+
+  const highLoadHosts = installations.reduce((a, i) => {
+    const o = observations[i.id];
+
+    if (!o || o.length == 0) {
+      return a;
+    }
+
+    return a + (o[0].has_high_cpu_load ? 1 : 0);
+  }, 0);
+  const lowMemoryHosts = installations.reduce((a, i) => {
+    const o = observations[i.id];
+
+    if (!o || o.length == 0) {
+      return a;
+    }
+
+    return a + (o[0].has_low_memory ? 1 : 0);
+  }, 0);
+
+  const lowStorageHosts = installations.reduce((a, i) => {
+    const o = observations[i.id];
+
+    if (!o || o.length == 0) {
+      return a;
+    }
+
+    return a + (o[0].has_low_storage ? 1 : 0);
+  }, 0);
+
+  const healthyHosts = installations.reduce((a, i) => {
+    const o = observations[i.id];
+
+    if (!o || o.length == 0) {
+      return a;
+    }
+
+    return a + (!o[0].has_high_cpu_load && !o[0].has_low_memory && !o[0].has_low_storage ? 1 : 0);
+  }, 0);
+
+  const host = [
+    {
+      name: 'Healthy',
+      sales: healthyHosts,
+    },
+    {
+      name: 'Low storage %',
+      sales: lowStorageHosts,
+    },
+    {
+      name: 'High load',
+      sales: highLoadHosts,
+    },
+    {
+      name: 'Low memory',
+      sales: lowMemoryHosts,
+    },
+  ];
+
   return (
     <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-      {/* <Card>
-        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-sm font-medium">Healthy installations</CardTitle>
-
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            className="h-4 w-4 text-muted-foreground"
-          >
-            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
-          </svg>
-        </CardHeader>
-        <CardContent>
-          <div className="text-xl font-bold">{healthyInstallations}</div>
-        </CardContent>
+      <Card className="max-w-lg">
+        <Title>Health</Title>
+        <DonutChart
+          className="mt-6"
+          data={installationChart}
+          category="sales"
+          index="name"
+          title=""
+          showLabel={false}
+          colors={['green', 'rose', 'amber', 'rose', 'cyan', 'amber']}
+        />
+        <Legend
+          className="mt-3"
+          categories={['Healthy installations', 'Unhealthy installations', 'Issues']}
+          colors={['green', 'rose', 'amber']}
+        />
       </Card>
-      <Card>
-        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-sm font-medium">Unhealthy installations</CardTitle>
 
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            className="h-4 w-4 text-muted-foreground"
-          >
-            <polygon points="7.86 2 16.14 2 22 7.86 22 16.14 16.14 22 7.86 22 2 16.14 2 7.86 7.86 2"></polygon>
-            <line x1="12" y1="8" x2="12" y2="12"></line>
-            <line x1="12" y1="16" x2="12.01" y2="16"></line>
-          </svg>
-        </CardHeader>
-        <CardContent>
-          <div className="text-xl font-bold">{unhealthyInstallations}</div>
-        </CardContent>
-      </Card> */}
-      {/* <Card>
-        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-sm font-medium">Installations with issues</CardTitle>
+      <Card className="max-w-lg">
+        <Title>Zigbee</Title>
+        <DonutChart
+          className="mt-6"
+          data={zigbee}
+          category="sales"
+          index="name"
+          title=""
+          showLabel={false}
+          colors={['green', 'neutral', 'red']}
+        />
+        <Legend
+          className="mt-3"
+          categories={['Healthy', 'Low LQI', 'Low battery']}
+          colors={['green', 'neutral', 'red']}
+        />
+      </Card>
 
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            className="h-4 w-4 text-muted-foreground"
-          >
-            <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
-            <line x1="12" y1="9" x2="12" y2="13"></line>
-            <line x1="12" y1="17" x2="12.01" y2="17"></line>
-          </svg>
-        </CardHeader>
-        <CardContent>
-          <div className="text-xl font-bold">{installationsWithIssues}</div>
-        </CardContent>
-      </Card> */}
-      {/* <Card>
-        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-sm font-medium">Latest activity</CardTitle>
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth="2"
-            className="h-4 w-4 text-muted-foreground"
-          >
-            <path d="M22 12h-4l-3 9L9 3l-3 9H2" />
-          </svg>
-        </CardHeader>
-        <CardContent>
-          <div className="text-xl font-bold">{latestActivityInstallationName}</div>
-        </CardContent>
-      </Card> */}
+      <Card className="max-w-lg">
+        <Title>Host</Title>
+        <DonutChart
+          className="mt-6"
+          data={host}
+          category="sales"
+          index="name"
+          title=""
+          showLabel={false}
+          colors={['green', 'neutral', 'red', 'indigo', 'emerald']}
+        />
+        <Legend
+          className="mt-3"
+          categories={['Healthy', 'Low storage', 'High load', 'Low memory']}
+          colors={['green', 'neutral', 'red', 'indigo', 'emerald']}
+        />
+      </Card>
 
-<Card className="max-w-lg">
-    <Title>Health</Title>
-    <DonutChart
-      className="mt-6"
-      data={cities}
-      category="sales"
-      index="name"
-      title=""
-      showLabel={false}
-      colors={["green", "rose", "amber", "rose", "cyan", "amber"]}
-    />
-    <Legend
-      className="mt-3"
-      categories={["Healthy installations", "Unhealthy installations", "Issues"]}
-      colors={["green", "rose", "amber"]}
-    />
-  </Card>
+      <Card className="max-w-lg">
+        <Title>HomeAssistant</Title>
+        <Flex className="mt-4">
+          <Text>
+            <Bold>Version</Bold>
+          </Text>
+          <Text>
+            <Bold>Installations</Bold>
+          </Text>
+        </Flex>
+        <BarList data={data} className="mt-2" />
+      </Card>
     </div>
   );
 }

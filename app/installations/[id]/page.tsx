@@ -16,6 +16,31 @@ import { ScriptsDataTableProxy } from './components/scripts/scripts-data-table-p
 import { SceneDataTableProxy } from './components/scenes/scenes-data-table-proxy';
 import { AgentInstallation } from './components/agent-installation';
 import { InstallationOverviewChart } from './components/installation-overview-chart';
+import {
+  Sheet,
+  SheetClose,
+  SheetContent,
+  SheetDescription,
+  SheetFooter,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from '@/registry/default/ui/sheet';
+import { Button } from '@/components/ui/button';
+import { Label } from '@/registry/default/ui/label';
+import { Input } from '@/registry/default/ui/input';
+import { Icons } from '@/components/icons';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from '@/registry/default/ui/alert-dialog';
 
 export default function DashboardInstallationPage({ params }: { params: { id: string } }) {
   const [origin, setOrigin] = useState<string | null>(null);
@@ -72,16 +97,57 @@ export default function DashboardInstallationPage({ params }: { params: { id: st
               }}
               className="space-y-4"
             >
-              <TabsList>
-                <TabsTrigger value="install">Install</TabsTrigger>
-                <TabsTrigger value="overview">Overview</TabsTrigger>
-                <TabsTrigger value="zigbee">Zigbee</TabsTrigger>
-                <TabsTrigger value="automations">Automations</TabsTrigger>
-                <TabsTrigger value="scripts">Scripts</TabsTrigger>
-                <TabsTrigger value="scenes">Scenes</TabsTrigger>
-                <TabsTrigger value="host">Host</TabsTrigger>
-                <TabsTrigger value="docker">Docker</TabsTrigger>
-              </TabsList>
+              <div className="w-[500px] inline">
+                <TabsList>
+                  <TabsTrigger value="install">Install</TabsTrigger>
+                  <TabsTrigger value="overview">Overview</TabsTrigger>
+                  <TabsTrigger value="zigbee">Zigbee</TabsTrigger>
+                  <TabsTrigger value="automations">Automations</TabsTrigger>
+                  <TabsTrigger value="scripts">Scripts</TabsTrigger>
+                  <TabsTrigger value="scenes">Scenes</TabsTrigger>
+                  <TabsTrigger value="host">Host</TabsTrigger>
+                  <TabsTrigger value="docker">Docker</TabsTrigger>
+                </TabsList>
+
+                <AlertDialog>
+                  <Sheet>
+                    <SheetTrigger asChild>
+                      <Button variant="ghost" className="float-right">
+                        <Icons.cog6tooth />
+                      </Button>
+                    </SheetTrigger>
+                    <SheetContent>
+                      <SheetHeader>
+                        <SheetTitle>Installation</SheetTitle>
+                        <SheetDescription>Make changes to your installation here.</SheetDescription>
+                      </SheetHeader>
+
+                      <SheetFooter>
+                        <SheetClose asChild>
+                          <div className="grid grid-cols-1 py-4">
+                            <AlertDialogTrigger asChild>
+                              <Button type="reset">Delete installation</Button>
+                            </AlertDialogTrigger>
+                          </div>
+                        </SheetClose>
+                      </SheetFooter>
+                    </SheetContent>
+                  </Sheet>
+                  <AlertDialogContent>
+                    <AlertDialogHeader>
+                      <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                      <AlertDialogDescription>
+                        This action cannot be undone. This will permanently delete your installation and remove its data
+                        from our servers.
+                      </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                      <AlertDialogCancel>Cancel</AlertDialogCancel>
+                      <AlertDialogAction>Delete</AlertDialogAction>
+                    </AlertDialogFooter>
+                  </AlertDialogContent>
+                </AlertDialog>
+              </div>
 
               <TabsContent value="install" className="space-y-4">
                 <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">

@@ -54,7 +54,7 @@ interface InstallationStoreState {
   isFetchingInstallations: boolean;
   isFetchingObservations: Record<string, boolean>;
   createInstallation: (token: string, instance: string, name: string) => Promise<Installation | null>;
-  fetchInstallations: (token: string) => Promise<void>;
+  fetchInstallations: (token: string) => Promise<Installation[]>;
   fetchObservationsForInstallation: (installationId: string, token: string) => Promise<void>;
   getObservationsForInstallation: (installationId: string) => Observation[];
 }
@@ -84,11 +84,11 @@ const useInstallationStore = create<InstallationStoreState>((set, get) => ({
     return null;
   },
   fetchInstallations: async token => {
-    if (get().isFetchingInstallations) return;
+    if (get().isFetchingInstallations) return [];
     set({ isFetchingInstallations: true });
 
     const { installations } = get();
-    if (installations && installations.length > 0) return;
+    if (installations && installations.length > 0) return installations;
 
     try {
       const installations = await getInstallations(token);
@@ -101,6 +101,8 @@ const useInstallationStore = create<InstallationStoreState>((set, get) => ({
     } finally {
       set({ isFetchingInstallations: false });
     }
+
+    return installations;
   },
   fetchObservationsForInstallation: async (installationId: string, token: string) => {
     if (get().isFetchingObservations[installationId]) return;

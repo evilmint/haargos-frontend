@@ -1,10 +1,11 @@
 'use client';
 
-import { Card, CardContent, CardHeader, CardTitle } from '@/registry/new-york/ui/card';
+import { Card, Title, DonutChart } from "@tremor/react";
+import { CardContent, CardHeader, CardTitle } from '@/registry/new-york/ui/card';
 import { useEffect } from 'react';
 import { useInstallationStore } from '@/app/services/stores';
 import { useAuth0 } from '@auth0/auth0-react';
-
+import { Legend } from "@tremor/react";
 export function DashboardHeader() {
   const installations = useInstallationStore(state => state.installations);
   const fetchInstallations = useInstallationStore(state => state.fetchInstallations);
@@ -17,20 +18,37 @@ export function DashboardHeader() {
   }, [fetchInstallations, getAccessTokenSilently, user]);
 
   const healthyInstallations = installations.reduce((s, i) => {
-    return s + (i.healthy ? 1 : 0);
+    return s + (i.healthy.is_healthy ? 1 : 0);
   }, 0);
 
   const unhealthyInstallations = installations.reduce((s, i) => {
-    return s + (i.healthy ? 0 : 1);
+    return s + (i.healthy.is_healthy ? 0 : 1);
   }, 0);
-  const installationsWithIssues = installations.reduce((s, i) => {
-    return s + (i.issues.length > 0 ? 1 : 0);
+  const installationIssues = installations.reduce((s, i) => {
+    return s + i.issues.length;
   }, 0);
   const latestActivityInstallationName = installations.length > 0 ? installations[0].name : '-';
 
+  const cities = [
+    {
+      name: "Healthy",
+      sales: healthyInstallations,
+    },
+    {
+      name: "Unhealthy",
+      sales: unhealthyInstallations,
+    },
+    {
+      name: "Issues",
+      sales: installationIssues,
+    },
+  ];
+  
+  const valueFormatter = (number: number) => `$ ${Intl.NumberFormat("us").format(number).toString()}`;
+  
   return (
     <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-      <Card>
+      {/* <Card>
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
           <CardTitle className="text-sm font-medium">Healthy installations</CardTitle>
 
@@ -77,8 +95,8 @@ export function DashboardHeader() {
         <CardContent>
           <div className="text-xl font-bold">{unhealthyInstallations}</div>
         </CardContent>
-      </Card>
-      <Card>
+      </Card> */}
+      {/* <Card>
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
           <CardTitle className="text-sm font-medium">Installations with issues</CardTitle>
 
@@ -102,8 +120,8 @@ export function DashboardHeader() {
         <CardContent>
           <div className="text-xl font-bold">{installationsWithIssues}</div>
         </CardContent>
-      </Card>
-      <Card>
+      </Card> */}
+      {/* <Card>
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
           <CardTitle className="text-sm font-medium">Latest activity</CardTitle>
           <svg
@@ -122,7 +140,25 @@ export function DashboardHeader() {
         <CardContent>
           <div className="text-xl font-bold">{latestActivityInstallationName}</div>
         </CardContent>
-      </Card>
+      </Card> */}
+
+<Card className="max-w-lg">
+    <Title>Health</Title>
+    <DonutChart
+      className="mt-6"
+      data={cities}
+      category="sales"
+      index="name"
+      title=""
+      showLabel={false}
+      colors={["green", "rose", "amber", "rose", "cyan", "amber"]}
+    />
+    <Legend
+      className="mt-3"
+      categories={["Healthy installations", "Unhealthy installations", "Issues"]}
+      colors={["green", "rose", "amber"]}
+    />
+  </Card>
     </div>
   );
 }

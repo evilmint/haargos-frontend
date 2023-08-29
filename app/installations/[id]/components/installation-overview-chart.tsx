@@ -29,7 +29,7 @@ export function InstallationOverviewChart({ ...params }) {
   };
 
   const chartdata =
-    observations == null || observations?.length == 0
+    observations == null || observations.length == 0
       ? []
       : [
           {
@@ -38,15 +38,15 @@ export function InstallationOverviewChart({ ...params }) {
           },
           {
             name: 'Automations',
-            'Amount': observations[0].automations.length ?? 0,
+            'Amount': observations[0].automations?.length ?? 0,
           },
           {
             name: 'Scripts',
-            'Amount': observations[0].scripts.length ?? 0,
+            'Amount': observations[0].scripts?.length ?? 0,
           },
           {
             name: 'Scenes',
-            'Amount': observations[0].scenes.length ?? 0,
+            'Amount': observations[0].scenes?.length ?? 0,
           },
           {
             name: 'Error & warning logs',

@@ -8,6 +8,7 @@ import { DashboardHeader } from '@/components/ui/dashboard-header';
 import { UserNav } from '@/components/ui/user-nav';
 import { Auth0Provider } from '@auth0/auth0-react';
 import { useEffect, useState } from 'react';
+import { InstallationsDataTableProxy } from '@/components/installations/installations-data-table-proxy';
 
 export default function DashboardPage() {
   const [origin, setOrigin] = useState<string | null>(null);
@@ -40,16 +41,7 @@ export default function DashboardPage() {
               <Tabs defaultValue="overview" className="space-y-4">
                 <TabsContent value="overview" className="space-y-4">
                   <DashboardHeader />
-                  <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
-                    <Card className="col-span-7">
-                      <CardHeader>
-                        <CardTitle>Issues</CardTitle>
-                      </CardHeader>
-                      <CardContent className="pl-2">
-                        <Overview />
-                      </CardContent>
-                    </Card>
-                  </div>
+                  <InstallationsDataTableProxy />
                 </TabsContent>
               </Tabs>
             )}

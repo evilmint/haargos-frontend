@@ -5,6 +5,12 @@ import { Inter } from 'next/font/google';
 
 const inter = Inter({ subsets: ['latin'] });
 
+const error = console.error;
+console.error = (...args: any) => {
+  if (/defaultProps/.test(args[0])) return;
+  error(...args);
+};
+
 export const metadata: Metadata = {
   title: 'Haargos - HomeAssistant Monitoring Tool',
   description: 'Monitor your client instances with ease.',

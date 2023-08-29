@@ -25,12 +25,19 @@ export function InstallationsDataTableProxy() {
 
   useEffect(() => {
     getAccessTokenSilently().then(token => {
-      const observationPromises = installations.map(installation => {
-        return fetchObservationsForInstallation(installation.id, token).catch(err => {
-          console.error(`Failed to fetch observations for installation ${installation.id}:`, err);
-        });
-      });
-      Promise.all(observationPromises).catch(error => console.error(error));
+      let promiseArray: any[] = [];
+  
+      installations.forEach(installation => {
+        if (observations[installation.id] == null) {
+          promiseArray.push(
+            fetchObservationsForInstallation(installation.id, token).catch(err => {
+              console.error(`Failed to fetch observations for installation ${installation.id}:`, err);
+            })
+          )
+        }
+      })
+
+      Promise.all(promiseArray).catch(error => console.error(error));
     });
   }, [installations, fetchObservationsForInstallation, getAccessTokenSilently]);
 

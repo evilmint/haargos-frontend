@@ -41,7 +41,7 @@
     "react-day-picker": "^8.8.0",
     "react-dom": "18.2.0",
     "react-timeago": "^7.1.0",
-    "recharts": "^2.7.2",
+    "recharts": "^2.8.0",
     "rehype-pretty-code": "^0.10.0",
     "shiki": "^0.14.3",
     "tailwind-merge": "^1.14.0",

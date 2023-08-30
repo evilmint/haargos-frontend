@@ -24,6 +24,8 @@ export default function DashboardPage() {
           redirect_uri: origin ?? process.env.NEXT_PUBLIC_WARNING_AUTH0_REDIRECT_URI_DEFAULT ?? '',
           audience: process.env.NEXT_PUBLIC_WARNING_AUTH0_AUDIENCE ?? '',
         }}
+        useRefreshTokens={true}
+        cacheLocation="localstorage"
       >
         <div className="flex-col sm:flex">
           <div className="border-b">

@@ -12,7 +12,9 @@ export function SceneDataTableProxy({ ...params }) {
 
   const observations = useInstallationStore(state => state.observations[installationId]);
   const fetchInstallations = useInstallationStore(state => state.fetchInstallations);
-  const fetchObservationsForInstallation = useInstallationStore(state => state.fetchObservationsForInstallation);
+  const fetchObservationsForInstallation = useInstallationStore(
+    state => state.fetchObservationsForInstallation,
+  );
   const { getAccessTokenSilently, user } = useAuth0();
 
   const asyncFetch = async () => {
@@ -26,10 +28,18 @@ export function SceneDataTableProxy({ ...params }) {
 
   useEffect(() => {
     asyncFetch();
-  }, [fetchInstallations, getAccessTokenSilently, fetchObservationsForInstallation, installationId, user]);
+  }, [
+    fetchInstallations,
+    getAccessTokenSilently,
+    fetchObservationsForInstallation,
+    installationId,
+    user,
+  ]);
 
   const scenes =
-    observations?.length > 0 ? (observations[0].scenes ?? []).map(a => mapToTableView(a, observations[0])) : [];
+    observations?.length > 0
+      ? (observations[0].scenes ?? []).map(a => mapToTableView(a, observations[0]))
+      : [];
 
   return <SceneDataTable data={scenes} />;
 }

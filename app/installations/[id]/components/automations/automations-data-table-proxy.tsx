@@ -12,7 +12,9 @@ export function AutomationsDataTableProxy({ ...params }) {
 
   const observations = useInstallationStore(state => state.observations[installationId]);
   const fetchInstallations = useInstallationStore(state => state.fetchInstallations);
-  const fetchObservationsForInstallation = useInstallationStore(state => state.fetchObservationsForInstallation);
+  const fetchObservationsForInstallation = useInstallationStore(
+    state => state.fetchObservationsForInstallation,
+  );
   const { getAccessTokenSilently, user } = useAuth0();
 
   const asyncFetch = async () => {
@@ -26,15 +28,23 @@ export function AutomationsDataTableProxy({ ...params }) {
 
   useEffect(() => {
     asyncFetch();
-  }, [fetchInstallations, getAccessTokenSilently, fetchObservationsForInstallation, installationId, user]);
+  }, [
+    fetchInstallations,
+    getAccessTokenSilently,
+    fetchObservationsForInstallation,
+    installationId,
+    user,
+  ]);
 
-  const automations =
-    observations?.length > 0 ? (observations[0].automations ?? []).map(a => mapToTableView(a, observations[0])) : [];
+  let automations: AutomationTableView[] = [];
 
+  if (observations && observations.length > 0) {
+    automations = observations[0].automations.map(mapToTableView);
+  }
   return <AutomationDataTable data={automations} />;
 }
 
-function mapToTableView(automation: Automation, observation: Observation): AutomationTableView {
+function mapToTableView(automation: Automation): AutomationTableView {
   return {
     id: automation.id,
     name: automation.friendly_name ?? '',

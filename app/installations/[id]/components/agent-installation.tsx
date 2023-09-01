@@ -8,10 +8,13 @@ import Code from './code';
 
 export function AgentInstallation({ ...params }) {
   const { installationId } = params;
-  const installations = useInstallationStore(state => state.installations);
-  const installation = installations.find(i => i.id == installationId);
+  const installation = useInstallationStore(state => state.installations).find(
+    i => i.id == installationId,
+  );
   const fetchInstallations = useInstallationStore(state => state.fetchInstallations);
-  const fetchObservationsForInstallation = useInstallationStore(state => state.fetchObservationsForInstallation);
+  const fetchObservationsForInstallation = useInstallationStore(
+    state => state.fetchObservationsForInstallation,
+  );
   const { getAccessTokenSilently, user } = useAuth0();
 
   const asyncFetch = async () => {
@@ -25,7 +28,13 @@ export function AgentInstallation({ ...params }) {
 
   useEffect(() => {
     asyncFetch();
-  }, [fetchInstallations, getAccessTokenSilently, fetchObservationsForInstallation, installationId, user]);
+  }, [
+    fetchInstallations,
+    getAccessTokenSilently,
+    fetchObservationsForInstallation,
+    installationId,
+    user,
+  ]);
 
   const command = process.env.NEXT_PUBLIC_INSTALL_AGENT_COMMAND ?? '';
 

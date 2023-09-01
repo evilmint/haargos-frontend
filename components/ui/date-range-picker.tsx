@@ -10,7 +10,9 @@ import { Button } from '@/registry/new-york/ui/button';
 import { Calendar } from '@/registry/new-york/ui/calendar';
 import { Popover, PopoverContent, PopoverTrigger } from '@/registry/new-york/ui/popover';
 
-export function CalendarDateRangePicker({ className }: React.HTMLAttributes<HTMLDivElement>) {
+export function CalendarDateRangePicker({
+  className,
+}: React.HTMLAttributes<HTMLDivElement>) {
   const [date, setDate] = React.useState<DateRange | undefined>({
     from: new Date(2023, 0, 20),
     to: addDays(new Date(2023, 0, 20), 20),
@@ -23,7 +25,10 @@ export function CalendarDateRangePicker({ className }: React.HTMLAttributes<HTML
           <Button
             id="date"
             variant={'outline'}
-            className={cn('w-[260px] justify-start text-left font-normal', !date && 'text-muted-foreground')}
+            className={cn(
+              'w-[260px] justify-start text-left font-normal',
+              !date && 'text-muted-foreground',
+            )}
           >
             <CalendarIcon className="mr-2 h-4 w-4" />
             {date?.from ? (

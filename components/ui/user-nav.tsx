@@ -63,7 +63,9 @@ export function UserNav() {
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
 
-        <DropdownMenuItem onClick={() => logout({ logoutParams: { returnTo: window.location.origin } })}>
+        <DropdownMenuItem
+          onClick={() => logout({ logoutParams: { returnTo: window.location.origin } })}
+        >
           Log out
         </DropdownMenuItem>
       </DropdownMenuContent>

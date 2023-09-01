@@ -12,7 +12,9 @@ export function ScriptsDataTableProxy({ ...params }) {
 
   const observations = useInstallationStore(state => state.observations[installationId]);
   const fetchInstallations = useInstallationStore(state => state.fetchInstallations);
-  const fetchObservationsForInstallation = useInstallationStore(state => state.fetchObservationsForInstallation);
+  const fetchObservationsForInstallation = useInstallationStore(
+    state => state.fetchObservationsForInstallation,
+  );
   const { getAccessTokenSilently, user } = useAuth0();
 
   const asyncFetch = async () => {
@@ -26,10 +28,19 @@ export function ScriptsDataTableProxy({ ...params }) {
 
   useEffect(() => {
     asyncFetch();
-  }, [fetchInstallations, getAccessTokenSilently, fetchObservationsForInstallation, installationId, user]);
-  const scripts =
-    observations?.length > 0 ? (observations[0].scripts ?? []).map(a => mapToTableView(a, observations[0])) : [];
+  }, [
+    fetchInstallations,
+    getAccessTokenSilently,
+    fetchObservationsForInstallation,
+    installationId,
+    user,
+  ]);
 
+  let scripts: ScriptTableView[] = [];
+
+  if (observations && observations.length > 0) {
+    scripts = observations[0].scripts.map(s => mapToTableView(s, observations[0]));
+  }
   return <ScriptsDataTable data={scripts} />;
 }
 

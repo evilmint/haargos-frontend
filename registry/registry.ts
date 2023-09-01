@@ -94,7 +94,13 @@ const ui: Registry = [
   {
     name: 'form',
     type: 'components:ui',
-    dependencies: ['@radix-ui/react-label', '@radix-ui/react-slot', '@hookform/resolvers', 'zod', 'react-hook-form'],
+    dependencies: [
+      '@radix-ui/react-label',
+      '@radix-ui/react-slot',
+      '@hookform/resolvers',
+      'zod',
+      'react-hook-form',
+    ],
     registryDependencies: ['button', 'label'],
     files: ['ui/form.tsx'],
   },

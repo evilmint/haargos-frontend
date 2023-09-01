@@ -8,7 +8,6 @@ import { ZigbeeDataTableProxy } from './components/zigbee/zigbee-data-table-prox
 import { MainNav } from '@/components/ui/main-nav';
 import { UserNav } from '@/components/ui/user-nav';
 import { DashboardHeaderInstallation } from '@/app/installations/[id]/components/dashboard-header';
-import { Auth0Provider } from '@auth0/auth0-react';
 import { useEffect, useState } from 'react';
 import { LogsDataTableProxy } from './components/logs/logs-data-table-proxy';
 import { AutomationsDataTableProxy } from './components/automations/automations-data-table-proxy';
@@ -40,7 +39,11 @@ import {
   AlertDialogTrigger,
 } from '@/registry/default/ui/alert-dialog';
 
-export default function DashboardInstallationPage({ params }: { params: { id: string } }) {
+export default function DashboardInstallationPage({
+  params,
+}: {
+  params: { id: string };
+}) {
   const [origin, setOrigin] = useState<string | null>(null);
   const [defaultTab, setDefaultTab] = useState<string>('overview');
 
@@ -70,16 +73,7 @@ export default function DashboardInstallationPage({ params }: { params: { id: st
   return (
     defaultTab != null &&
     origin != null && (
-      <Auth0Provider
-        domain={process.env.NEXT_PUBLIC_WARNING_AUTH0_DOMAIN ?? ''}
-        clientId={process.env.NEXT_PUBLIC_WARNING_AUTH0_CLIENT_ID ?? ''}
-        authorizationParams={{
-          redirect_uri: origin ?? process.env.NEXT_PUBLIC_WARNING_AUTH0_REDIRECT_URI_DEFAULT ?? '',
-          audience: process.env.NEXT_PUBLIC_WARNING_AUTH0_AUDIENCE ?? '',
-        }}
-        useRefreshTokens={true}
-        cacheLocation="localstorage"
-      >
+      <>
         <div className="flex-col">
           <div className="border-b">
             <div className="flex h-16 items-center px-4">
@@ -119,7 +113,9 @@ export default function DashboardInstallationPage({ params }: { params: { id: st
                     <SheetContent>
                       <SheetHeader>
                         <SheetTitle>Installation</SheetTitle>
-                        <SheetDescription>Make changes to your installation here.</SheetDescription>
+                        <SheetDescription>
+                          Make changes to your installation here.
+                        </SheetDescription>
                       </SheetHeader>
 
                       <SheetFooter>
@@ -137,8 +133,8 @@ export default function DashboardInstallationPage({ params }: { params: { id: st
                     <AlertDialogHeader>
                       <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
                       <AlertDialogDescription>
-                        This action cannot be undone. This will permanently delete your installation and remove its data
-                        from our servers.
+                        This action cannot be undone. This will permanently delete your
+                        installation and remove its data from our servers.
                       </AlertDialogDescription>
                     </AlertDialogHeader>
                     <AlertDialogFooter>
@@ -202,7 +198,7 @@ export default function DashboardInstallationPage({ params }: { params: { id: st
             </Tabs>
           </div>
         </div>
-      </Auth0Provider>
+      </>
     )
   );
 }

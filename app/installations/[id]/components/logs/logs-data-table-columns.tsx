@@ -5,7 +5,12 @@ import { ColumnDef } from '@tanstack/react-table';
 import { ArrowUpDown } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { LogTableView } from './logs-data-table';
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@/components/ui/tooltip';
 
 export const columns: ColumnDef<LogTableView>[] = [
   {
@@ -15,7 +20,10 @@ export const columns: ColumnDef<LogTableView>[] = [
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger asChild>
-              <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
+              <Button
+                variant="ghost"
+                onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+              >
                 Time
                 <ArrowUpDown className="ml-2 h-4 w-4" />
               </Button>
@@ -30,7 +38,11 @@ export const columns: ColumnDef<LogTableView>[] = [
     sortingFn: 'datetime',
     cell: ({ row }) => {
       const date: Date = row.getValue('time');
-      return <div className="text-xs">{`${date.toLocaleDateString() + ', ' + date.toLocaleTimeString()}`}</div>;
+      return (
+        <div className="text-xs">{`${
+          date.toLocaleDateString() + ', ' + date.toLocaleTimeString()
+        }`}</div>
+      );
     },
   },
   {
@@ -40,13 +52,19 @@ export const columns: ColumnDef<LogTableView>[] = [
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger asChild>
-              <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
+              <Button
+                variant="ghost"
+                onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+              >
                 Type
                 <ArrowUpDown className="ml-2 h-4 w-4" />
               </Button>
             </TooltipTrigger>
             <TooltipContent>
-              <p>The type represents the severity of the log. 'W' means a Warning, whereas 'E' indicates an Error.</p>
+              <p>
+                The type represents the severity of the log. 'W' means a Warning, whereas
+                'E' indicates an Error.
+              </p>
             </TooltipContent>
           </Tooltip>
         </TooltipProvider>
@@ -58,13 +76,21 @@ export const columns: ColumnDef<LogTableView>[] = [
     accessorKey: 'log',
     header: ({ column }) => {
       return (
-        <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+        >
           Log
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       );
     },
-    cell: ({ row }) => <div className="text-xs w-" dangerouslySetInnerHTML={{ __html: row.getValue('log') }}></div>,
+    cell: ({ row }) => (
+      <div
+        className="text-xs w-"
+        dangerouslySetInnerHTML={{ __html: row.getValue('log') }}
+      ></div>
+    ),
   },
   {
     accessorKey: 'thread',
@@ -73,13 +99,19 @@ export const columns: ColumnDef<LogTableView>[] = [
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger asChild>
-              <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
+              <Button
+                variant="ghost"
+                onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+              >
                 Thread
                 <ArrowUpDown className="ml-2 h-4 w-4" />
               </Button>
             </TooltipTrigger>
             <TooltipContent>
-              <p>The thread identifier provides information about the specific process that generated the log entry.</p>
+              <p>
+                The thread identifier provides information about the specific process that
+                generated the log entry.
+              </p>
             </TooltipContent>
           </Tooltip>
         </TooltipProvider>
@@ -88,7 +120,9 @@ export const columns: ColumnDef<LogTableView>[] = [
     cell: ({ row }) => {
       const thread: string = row.getValue('thread');
 
-      return <div className="text-right font-regular text-xs">{thread.toLocaleString()}</div>;
+      return (
+        <div className="text-right font-regular text-xs">{thread.toLocaleString()}</div>
+      );
     },
   },
 ];

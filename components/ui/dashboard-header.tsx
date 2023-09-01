@@ -60,7 +60,9 @@ export function DashboardHeader() {
       return a;
     }
 
-    return a + (o[0].zigbee?.devices.reduce((a, z) => a + (z.has_low_lqi ? 1 : 0), 0) ?? 0);
+    return (
+      a + (o[0].zigbee?.devices.reduce((a, z) => a + (z.has_low_lqi ? 1 : 0), 0) ?? 0)
+    );
   }, 0);
 
   const lowBatteryCount = installations.reduce((a, i) => {
@@ -70,7 +72,9 @@ export function DashboardHeader() {
       return a;
     }
 
-    return a + (o[0].zigbee?.devices.reduce((a, z) => a + (z.has_low_battery ? 1 : 0), 0) ?? 0);
+    return (
+      a + (o[0].zigbee?.devices.reduce((a, z) => a + (z.has_low_battery ? 1 : 0), 0) ?? 0)
+    );
   }, 0);
 
   const healthyZigbeeDevices = installations.reduce((a, i) => {
@@ -80,7 +84,13 @@ export function DashboardHeader() {
       return a;
     }
 
-    return a + (o[0].zigbee?.devices.reduce((a, z) => a + (!z.has_low_battery && !z.has_low_lqi ? 1 : 0), 0) ?? 0);
+    return (
+      a +
+      (o[0].zigbee?.devices.reduce(
+        (a, z) => a + (!z.has_low_battery && !z.has_low_lqi ? 1 : 0),
+        0,
+      ) ?? 0)
+    );
   }, 0);
 
   const zigbee = [
@@ -161,7 +171,10 @@ export function DashboardHeader() {
       return a;
     }
 
-    return a + (!o[0].has_high_cpu_load && !o[0].has_low_memory && !o[0].has_low_storage ? 1 : 0);
+    return (
+      a +
+      (!o[0].has_high_cpu_load && !o[0].has_low_memory && !o[0].has_low_storage ? 1 : 0)
+    );
   }, 0);
 
   const host = [

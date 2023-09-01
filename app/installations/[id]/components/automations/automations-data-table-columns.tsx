@@ -7,15 +7,21 @@ import { Button } from '@/components/ui/button';
 import { AutomationTableView } from './automations-data-table';
 import { Icons } from '@/components/icons';
 
-import TimeAgo from 'react-timeago';
-import { Dot } from '@/components/ui/dots';
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@/components/ui/tooltip';
 export const columns: ColumnDef<AutomationTableView>[] = [
   {
     accessorKey: 'name',
     header: ({ column }) => {
       return (
-        <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+        >
           Name
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
@@ -28,7 +34,10 @@ export const columns: ColumnDef<AutomationTableView>[] = [
     header: ({ column }) => {
       return (
         <div className="text-right">
-          <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
+          <Button
+            variant="ghost"
+            onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+          >
             Last triggered
             <ArrowUpDown className="ml-2 h-4 w-4" />
           </Button>
@@ -42,7 +51,9 @@ export const columns: ColumnDef<AutomationTableView>[] = [
 
       return (
         <div className="text-right font-regular text-xs">
-          {date != null ? date.toLocaleDateString() + ', ' + date.toLocaleTimeString() : 'Never'}
+          {date != null
+            ? date.toLocaleDateString() + ', ' + date.toLocaleTimeString()
+            : 'Never'}
         </div>
       );
     },
@@ -56,14 +67,18 @@ export const columns: ColumnDef<AutomationTableView>[] = [
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger asChild>
-                <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
+                <Button
+                  variant="ghost"
+                  onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+                >
                   State
                   <ArrowUpDown className="ml-2 h-4 w-4" />
                 </Button>
               </TooltipTrigger>
               <TooltipContent>
                 <p>
-                  The green dot indicates that the automation is currently active and running.
+                  The green dot indicates that the automation is currently active and
+                  running.
                   <br />
                   The red dot means it's turned off.
                 </p>

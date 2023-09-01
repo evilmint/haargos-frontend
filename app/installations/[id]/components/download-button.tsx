@@ -1,7 +1,10 @@
 import { Icons } from '@/components/icons';
 import React from 'react';
 
-export default function DownloadButton({ fileName = 'download.txt', textToCopy = 'Copy default' }) {
+export default function DownloadButton({
+  fileName = 'download.txt',
+  textToCopy = 'Copy default',
+}) {
   const download = () => {
     var a = document.createElement('a');
     var blob = new Blob([textToCopy], { type: 'application/text' });

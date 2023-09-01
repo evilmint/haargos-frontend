@@ -21,13 +21,19 @@ export async function getInstallations(token: string): Promise<InstallationBody>
   let data: InstallationApiResponse = await response.json();
 
   data.body.items = data.body.items.sort(
-    (a, b) => new Date(b.last_agent_connection).getTime() - new Date(a.last_agent_connection).getTime(),
+    (a, b) =>
+      new Date(b.last_agent_connection).getTime() -
+      new Date(a.last_agent_connection).getTime(),
   );
 
   return data.body;
 }
 
-export async function createInstallation(token: string, instance: string, name: string): Promise<Installation> {
+export async function createInstallation(
+  token: string,
+  instance: string,
+  name: string,
+): Promise<Installation> {
   const additionalHeaders = new Headers({
     Authorization: `Bearer ${token}`,
     'Content-Type': 'application/json',

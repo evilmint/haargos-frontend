@@ -9,7 +9,12 @@ import { Button } from '@/registry/new-york/ui/button';
 import { useAuth0 } from '@auth0/auth0-react';
 import { Skeleton } from '@/registry/new-york/ui/skeleton';
 import { Icons } from '@/components/icons';
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@/components/ui/tooltip';
 import { Dot } from '@/components/ui/dots';
 import { Badge, BadgeDelta, Flex, ProgressBar, Text } from '@tremor/react';
 import Link from 'next/link';
@@ -19,29 +24,39 @@ export function DashboardHeaderInstallation({ ...params }) {
   const observations = useInstallationStore(state => state.observations[installationId]);
   const installations = useInstallationStore(state => state.installations);
   const installation = installations.find(i => i.id == installationId);
-  const highestStorage = useInstallationStore(state => state.highestStorageByInstallationId[installationId]);
+  const highestStorage = useInstallationStore(
+    state => state.highestStorageByInstallationId[installationId],
+  );
   const fetchInstallations = useInstallationStore(state => state.fetchInstallations);
-  const fetchObservationsForInstallation = useInstallationStore(state => state.fetchObservationsForInstallation);
+  const fetchObservationsForInstallation = useInstallationStore(
+    state => state.fetchObservationsForInstallation,
+  );
   const latestHaRelease = useInstallationStore(state => state.latestHaRelease);
   const { getAccessTokenSilently, user, isAuthenticated } = useAuth0();
   const [isLoading, setLoading] = useState<boolean>(true);
 
   const memoryValues =
     observations && observations.length > 0 && observations[0].environment.memory
-      ? `${numeral(observations[0].environment.memory.used / 1024 / 1024).format('0.0')} / ${numeral(
-          observations[0].environment.memory.total / 1024 / 1024,
-        ).format('0.0')}G `
+      ? `${numeral(observations[0].environment.memory.used / 1024 / 1024).format(
+          '0.0',
+        )} / ${numeral(observations[0].environment.memory.total / 1024 / 1024).format(
+          '0.0',
+        )}G `
       : 'n/a';
 
   const hasObservations = observations?.length > 0;
   const memoryUsed = hasObservations ? observations[0].environment.memory?.used ?? 0 : 0;
-  const memoryTotal = hasObservations ? observations[0].environment.memory?.total ?? 0 : 1;
+  const memoryTotal = hasObservations
+    ? observations[0].environment.memory?.total ?? 0
+    : 1;
   const memoryPercentage = Math.floor((memoryUsed / memoryTotal) * 100);
 
-  const observationsLoading = observations == null || observations == undefined || observations?.length == 0;
+  const observationsLoading =
+    observations == null || observations == undefined || observations?.length == 0;
 
   const haVersion = observations?.length > 0 && observations[0].ha_config?.version;
-  const isHAUpdateAvailable = latestHaRelease != null && haVersion != null && haVersion != latestHaRelease;
+  const isHAUpdateAvailable =
+    latestHaRelease != null && haVersion != null && haVersion != latestHaRelease;
 
   const asyncFetch = async () => {
     try {
@@ -55,9 +70,16 @@ export function DashboardHeaderInstallation({ ...params }) {
 
   useEffect(() => {
     asyncFetch();
-  }, [fetchInstallations, getAccessTokenSilently, fetchObservationsForInstallation, installationId, user]);
+  }, [
+    fetchInstallations,
+    getAccessTokenSilently,
+    fetchObservationsForInstallation,
+    installationId,
+    user,
+  ]);
 
-  const cpuArchitecture = (observations && observations[0]?.environment.cpu?.architecture) ?? 'n/a';
+  const cpuArchitecture =
+    (observations && observations[0]?.environment.cpu?.architecture) ?? 'n/a';
   return (
     <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-5">
       <Card>
@@ -84,7 +106,11 @@ export function DashboardHeaderInstallation({ ...params }) {
         </CardHeader>
         <CardContent>
           <div className="text-xl font-bold inline">
-            {observationsLoading || isLoading ? <Skeleton className="h-8" /> : haVersion ?? 'n/a'}
+            {observationsLoading || isLoading ? (
+              <Skeleton className="h-8" />
+            ) : (
+              haVersion ?? 'n/a'
+            )}
           </div>
           <TooltipProvider>
             <Tooltip>
@@ -92,7 +118,11 @@ export function DashboardHeaderInstallation({ ...params }) {
                 {observationsLoading == false &&
                   isLoading == false &&
                   (isHAUpdateAvailable == false ? (
-                    <Badge className="ml-2 cursor-pointer" color="orange" icon={Icons.shieldCheck}>
+                    <Badge
+                      className="ml-2 cursor-pointer"
+                      color="orange"
+                      icon={Icons.shieldCheck}
+                    >
                       {latestHaRelease} available
                     </Badge>
                   ) : (
@@ -101,14 +131,20 @@ export function DashboardHeaderInstallation({ ...params }) {
                       href="https://github.com/home-assistant/core/releases"
                       target="_blank"
                     >
-                      <Badge className="ml-2 cursor-pointer" color="orange" icon={Icons.shieldExclamation}>
+                      <Badge
+                        className="ml-2 cursor-pointer"
+                        color="orange"
+                        icon={Icons.shieldExclamation}
+                      >
                         {latestHaRelease} available
                       </Badge>
                     </a>
                   ))}
               </TooltipTrigger>
               <TooltipContent>
-                <p>{isHAUpdateAvailable ? `${latestHaRelease} available` : 'Up to date'}</p>
+                <p>
+                  {isHAUpdateAvailable ? `${latestHaRelease} available` : 'Up to date'}
+                </p>
               </TooltipContent>
             </Tooltip>
           </TooltipProvider>
@@ -128,11 +164,16 @@ export function DashboardHeaderInstallation({ ...params }) {
               <div>
                 <Flex>
                   <Text>
-                    {numeral((observations[0]?.environment?.memory?.used ?? 0) / 1024 / 1024).format('0.0')}G &bull;{' '}
-                    {memoryPercentage}%
+                    {numeral(
+                      (observations[0]?.environment?.memory?.used ?? 0) / 1024 / 1024,
+                    ).format('0.0')}
+                    G &bull; {memoryPercentage}%
                   </Text>
                   <Text>
-                    {numeral((observations[0]?.environment?.memory?.total ?? 0) / 1024 / 1024).format('0.0')}G
+                    {numeral(
+                      (observations[0]?.environment?.memory?.total ?? 0) / 1024 / 1024,
+                    ).format('0.0')}
+                    G
                   </Text>
                 </Flex>
                 <ProgressBar value={memoryPercentage} color="blue" className="mt-3" />
@@ -156,7 +197,8 @@ export function DashboardHeaderInstallation({ ...params }) {
                   <Text>
                     {highestStorage?.used} &bull;{' '}
                     {(
-                      (Number(highestStorage?.used.slice(0, -1)) / Number(highestStorage?.size.slice(0, -1))) *
+                      (Number(highestStorage?.used.slice(0, -1)) /
+                        Number(highestStorage?.size.slice(0, -1))) *
                       100
                     ).toFixed(0)}
                     % &bull; {highestStorage?.name}
@@ -164,7 +206,11 @@ export function DashboardHeaderInstallation({ ...params }) {
                   <Text>{highestStorage?.size}</Text>
                 </Flex>
                 <ProgressBar
-                  value={(Number(highestStorage?.used.slice(0, -1)) / Number(highestStorage?.size.slice(0, -1))) * 100}
+                  value={
+                    (Number(highestStorage?.used.slice(0, -1)) /
+                      Number(highestStorage?.size.slice(0, -1))) *
+                    100
+                  }
                   color="blue"
                   className="mt-3"
                 />
@@ -180,7 +226,11 @@ export function DashboardHeaderInstallation({ ...params }) {
         </CardHeader>
         <CardContent>
           <div className="text-xl font-bold">
-            {observationsLoading || isLoading ? <Skeleton className="h-8" /> : cpuArchitecture}
+            {observationsLoading || isLoading ? (
+              <Skeleton className="h-8" />
+            ) : (
+              cpuArchitecture
+            )}
           </div>
         </CardContent>
       </Card>
@@ -227,7 +277,10 @@ export function DashboardHeaderInstallation({ ...params }) {
                       <Tooltip>
                         <TooltipTrigger></TooltipTrigger>
                         <TooltipContent>
-                          <p>This shows the status and last time of a query of the HomeAssistant instance url.</p>
+                          <p>
+                            This shows the status and last time of a query of the
+                            HomeAssistant instance url.
+                          </p>
                         </TooltipContent>
                       </Tooltip>
                     </TooltipProvider>

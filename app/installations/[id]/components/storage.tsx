@@ -1,6 +1,13 @@
 'use client';
 
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table';
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/registry/new-york/ui/card';
 
@@ -14,7 +21,9 @@ export function Storage({ ...params }) {
 
   const observations = useInstallationStore(state => state.observations[installationId]);
   const fetchInstallations = useInstallationStore(state => state.fetchInstallations);
-  const fetchObservationsForInstallation = useInstallationStore(state => state.fetchObservationsForInstallation);
+  const fetchObservationsForInstallation = useInstallationStore(
+    state => state.fetchObservationsForInstallation,
+  );
 
   const { getAccessTokenSilently, user } = useAuth0();
 
@@ -29,12 +38,21 @@ export function Storage({ ...params }) {
 
   useEffect(() => {
     asyncFetch();
-  }, [fetchInstallations, getAccessTokenSilently, fetchObservationsForInstallation, installationId, user]);
+  }, [
+    fetchInstallations,
+    getAccessTokenSilently,
+    fetchObservationsForInstallation,
+    installationId,
+    user,
+  ]);
 
   return (
     <Card className="col-span-8">
       <CardHeader>
-        <CardTitle>Storage ({observations?.length > 0 ? observations[0].environment.storage.length : 0})</CardTitle>
+        <CardTitle>
+          Storage (
+          {observations?.length > 0 ? observations[0].environment.storage.length : 0})
+        </CardTitle>
       </CardHeader>
       <CardContent className="pl-2">
         <Table>
@@ -59,13 +77,19 @@ export function Storage({ ...params }) {
                   <TableRow key={storage.mounted_on} className={abnormalClassName}>
                     <TableCell className="font-medium text-xs">{storage.name}</TableCell>
                     <TableCell className="text-xs">
-                      {usePercentage >= 90 ? <p className="text-red-600">{usePercentage}%</p> : <p>{usePercentage}%</p>}
+                      {usePercentage >= 90 ? (
+                        <p className="text-red-600">{usePercentage}%</p>
+                      ) : (
+                        <p>{usePercentage}%</p>
+                      )}
                       <ProgressBar value={usePercentage} color="blue" className="mt-3" />
                     </TableCell>
                     <TableCell className="text-xs">{storage.used}</TableCell>
                     <TableCell className="text-xs">{storage.available}</TableCell>
                     <TableCell className="text-xs">{storage.size}</TableCell>
-                    <TableCell className="text-xs text-right">{storage.mounted_on}</TableCell>
+                    <TableCell className="text-xs text-right">
+                      {storage.mounted_on}
+                    </TableCell>
                   </TableRow>
                 );
               })}

@@ -7,7 +7,10 @@ type CopyButtonProps = {
   className?: string;
 };
 
-export default function CopyButton({ textToCopy = 'Copy default', className }: CopyButtonProps) {
+export default function CopyButton({
+  textToCopy = 'Copy default',
+  className,
+}: CopyButtonProps) {
   const [copied, setCopied] = useState(false);
 
   const copyToClipboard = async () => {
@@ -20,7 +23,12 @@ export default function CopyButton({ textToCopy = 'Copy default', className }: C
   };
 
   return (
-    <div className={cn('text-center my-5 text-gray-200 mt-1 absolute z-20 right-10', className)}>
+    <div
+      className={cn(
+        'text-center my-5 text-gray-200 mt-1 absolute z-20 right-10',
+        className,
+      )}
+    >
       <button onClick={copyToClipboard} className={'rounded p-2 transition'}>
         {copied ? <Icons.check className="text-green-500" /> : <Icons.copy />}
       </button>

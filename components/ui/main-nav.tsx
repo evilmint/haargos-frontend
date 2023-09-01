@@ -4,7 +4,10 @@ import Link from 'next/link';
 
 import { cn } from '@/lib/utils';
 import InstallationSwitcher from './installation-switcher';
-import { useInstallationStore, useInstallationSwitcherStore } from '@/app/services/stores';
+import {
+  useInstallationStore,
+  useInstallationSwitcherStore,
+} from '@/app/services/stores';
 import { Button } from '@/registry/new-york/ui/button';
 import { ModeToggle } from './mode-toggle';
 

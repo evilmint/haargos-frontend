@@ -1,4 +1,4 @@
-import { ThemeProvider } from '@/components/theme-provider';
+import ProviderSet from '@/lib/provider-set';
 import './globals.css';
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
@@ -19,12 +19,10 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
-      <link rel="preconnect" href="https://api.haargos.smartrezydencja.pl"></link>
+      <link rel="preconnect" href={process.env.NEXT_PUBLIC_PRELOAD_URL}></link>
       <body className={inter.className}>
         {' '}
-        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-          {children}
-        </ThemeProvider>
+        <ProviderSet>{children}</ProviderSet>
       </body>
     </html>
   );

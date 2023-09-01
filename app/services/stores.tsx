@@ -42,7 +42,8 @@ interface InstallationState {
 const useInstallationSwitcherStore = create<InstallationState>(set => ({
   selectedInstallation: null,
   clearInstallation: () => set(() => ({ selectedInstallation: null })),
-  setSelectedInstallation: selectedInstallation => set(() => ({ selectedInstallation: selectedInstallation })),
+  setSelectedInstallation: selectedInstallation =>
+    set(() => ({ selectedInstallation: selectedInstallation })),
 }));
 
 interface InstallationStoreState {
@@ -53,9 +54,16 @@ interface InstallationStoreState {
   highestStorageByInstallationId: Record<string, Storage | null>;
   isFetchingInstallations: boolean;
   isFetchingObservations: Record<string, boolean>;
-  createInstallation: (token: string, instance: string, name: string) => Promise<Installation | null>;
+  createInstallation: (
+    token: string,
+    instance: string,
+    name: string,
+  ) => Promise<Installation | null>;
   fetchInstallations: (token: string) => Promise<Installation[]>;
-  fetchObservationsForInstallation: (installationId: string, token: string) => Promise<void>;
+  fetchObservationsForInstallation: (
+    installationId: string,
+    token: string,
+  ) => Promise<void>;
   getObservationsForInstallation: (installationId: string) => Observation[];
 }
 
@@ -123,13 +131,16 @@ const useInstallationStore = create<InstallationStoreState>((set, get) => ({
       const observations = await getObservations(installationId, token);
       const updatedObservations = observations.map(observation => {
         let volumesUnsorted = observation.environment.storage.sort(
-          (a, b) => Number(b.use_percentage.slice(0, -1)) - Number(a.use_percentage.slice(0, -1)),
+          (a, b) =>
+            Number(b.use_percentage.slice(0, -1)) - Number(a.use_percentage.slice(0, -1)),
         );
 
         observation.environment.storage = extractUniqueVolumes(volumesUnsorted);
         observation.zigbee?.devices.sort((a, b) => {
           if (a.lqi === 0 && b.lqi === 0) {
-            return new Date(b.last_updated).getTime() - new Date(a.last_updated).getTime();
+            return (
+              new Date(b.last_updated).getTime() - new Date(a.last_updated).getTime()
+            );
           } else if (a.lqi === 0) {
             return 1;
           } else if (b.lqi === 0) {
@@ -141,27 +152,38 @@ const useInstallationStore = create<InstallationStoreState>((set, get) => ({
 
         const volumeThreshold = Number(process.env.NEXT_PUBLIC_WARNING_THRESHOLD_VOLUME);
         const memoryThreshold = Number(process.env.NEXT_PUBLIC_WARNING_THRESHOLD_MEMORY);
-        const cpuLoadThreshold = Number(process.env.NEXT_PUBLIC_WARNING_THRESHOLD_CPU_LOAD);
+        const cpuLoadThreshold = Number(
+          process.env.NEXT_PUBLIC_WARNING_THRESHOLD_CPU_LOAD,
+        );
 
         observation.has_low_memory = observation.environment?.memory
-          ? (observation.environment.memory.used / observation.environment.memory.total) * 100 >= memoryThreshold
+          ? (observation.environment.memory.used / observation.environment.memory.total) *
+              100 >=
+            memoryThreshold
           : true;
         observation.has_low_storage = observation.environment?.storage
-          ? observation.environment.storage.filter(s => Number(s.use_percentage.slice(0, -1)) < volumeThreshold)
-              .length == 0
+          ? observation.environment.storage.filter(
+              s => Number(s.use_percentage.slice(0, -1)) < volumeThreshold,
+            ).length == 0
           : true;
 
         if (observation.zigbee != null) {
-          const batteryLevelThreshold = Number(process.env.NEXT_PUBLIC_WARNING_THRESHOLD_ZIGBEE_BATTERY_LEVEL);
-          const lqiThreshold = Number(process.env.NEXT_PUBLIC_WARNING_THRESHOLD_ZIGBEE_LQI);
+          const batteryLevelThreshold = Number(
+            process.env.NEXT_PUBLIC_WARNING_THRESHOLD_ZIGBEE_BATTERY_LEVEL,
+          );
+          const lqiThreshold = Number(
+            process.env.NEXT_PUBLIC_WARNING_THRESHOLD_ZIGBEE_LQI,
+          );
 
           observation.zigbee.devices =
             observation.zigbee?.devices.map(z => {
               const hasGoodBattery =
-                (z.battery_level ?? 0) > batteryLevelThreshold && z.power_source?.toLowerCase() == 'battery';
+                (z.battery_level ?? 0) > batteryLevelThreshold &&
+                z.power_source?.toLowerCase() == 'battery';
 
               z.has_low_battery = !hasGoodBattery;
-              z.has_low_lqi = z.lqi <= lqiThreshold && z.integration_type.toLowerCase() == 'zha';
+              z.has_low_lqi =
+                z.lqi <= lqiThreshold && z.integration_type.toLowerCase() == 'zha';
               return z;
             }) ?? [];
         }
@@ -180,7 +202,10 @@ const useInstallationStore = create<InstallationStoreState>((set, get) => ({
         },
       }));
 
-      let logString = updatedObservations.reduce((acc: string, item: Observation) => acc + item.logs, '');
+      let logString = updatedObservations.reduce(
+        (acc: string, item: Observation) => acc + item.logs,
+        '',
+      );
 
       set(state => ({
         logsByInstallationId: {
@@ -196,7 +221,9 @@ const useInstallationStore = create<InstallationStoreState>((set, get) => ({
         const highestUseStorage = findHighestUseStorage(item.environment.storage);
 
         if (highestUseStorage) {
-          const highestUsePercentage = parseInt(highestUseStorage.use_percentage.replace('%', ''));
+          const highestUsePercentage = parseInt(
+            highestUseStorage.use_percentage.replace('%', ''),
+          );
 
           if (highestUsePercentage > overallHighestUsePercentage) {
             overallHighestUsePercentage = highestUsePercentage;
@@ -240,7 +267,9 @@ const findHighestUseStorage = (storageArray: Storage[]): Storage | null => {
     }
 
     const usePercentage = parseInt(storage.use_percentage.replace('%', ''));
-    return usePercentage > parseInt(highest.use_percentage.replace('%', '')) ? storage : highest;
+    return usePercentage > parseInt(highest.use_percentage.replace('%', ''))
+      ? storage
+      : highest;
   }, null);
 };
 

@@ -8,7 +8,12 @@ import { ZigbeeDeviceTableView } from './zigbee-data-table';
 import { Icons } from '@/components/icons';
 
 import TimeAgo from 'react-timeago';
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@/components/ui/tooltip';
 export const columns: ColumnDef<ZigbeeDeviceTableView>[] = [
   {
     accessorKey: 'ieee',
@@ -20,7 +25,10 @@ export const columns: ColumnDef<ZigbeeDeviceTableView>[] = [
               <Button variant="ghost">IEEE</Button>
             </TooltipTrigger>
             <TooltipContent>
-              <p>IEEE is the unique identifier for the Zigbee device, also known as MAC address.</p>
+              <p>
+                IEEE is the unique identifier for the Zigbee device, also known as MAC
+                address.
+              </p>
             </TooltipContent>
           </Tooltip>
         </TooltipProvider>
@@ -33,7 +41,10 @@ export const columns: ColumnDef<ZigbeeDeviceTableView>[] = [
     accessorKey: 'name',
     header: ({ column }) => {
       return (
-        <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+        >
           Name
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
@@ -50,15 +61,18 @@ export const columns: ColumnDef<ZigbeeDeviceTableView>[] = [
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger asChild>
-                <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
+                <Button
+                  variant="ghost"
+                  onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+                >
                   LQI
                   <ArrowUpDown className="ml-2 h-4 w-4" />
                 </Button>
               </TooltipTrigger>
               <TooltipContent>
                 <p>
-                  LQI (Link Quality Indicator) is a metric used in Zigbee to determine the quality of a link between two
-                  devices.
+                  LQI (Link Quality Indicator) is a metric used in Zigbee to determine the
+                  quality of a link between two devices.
                   <br />A higher value indicates a better link quality.
                 </p>
               </TooltipContent>
@@ -84,7 +98,10 @@ export const columns: ColumnDef<ZigbeeDeviceTableView>[] = [
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger asChild>
-              <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
+              <Button
+                variant="ghost"
+                onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+              >
                 Last updated
                 <ArrowUpDown className="ml-2 h-4 w-4" />
               </Button>
@@ -100,7 +117,9 @@ export const columns: ColumnDef<ZigbeeDeviceTableView>[] = [
     cell: ({ row }) => {
       const amount: Date = row.getValue('last_updated');
 
-      return <div className="text-right font-regular text-xs">{amount.toLocaleString()}</div>;
+      return (
+        <div className="text-right font-regular text-xs">{amount.toLocaleString()}</div>
+      );
     },
   },
   {
@@ -110,14 +129,18 @@ export const columns: ColumnDef<ZigbeeDeviceTableView>[] = [
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger asChild>
-              <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
+              <Button
+                variant="ghost"
+                onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+              >
                 Δ Observation
                 <ArrowUpDown className="ml-2 h-4 w-4" />
               </Button>
             </TooltipTrigger>
             <TooltipContent>
               <p>
-                The relative time between the snapshot of data taken and the time the Zigbee device reported its status.
+                The relative time between the snapshot of data taken and the time the
+                Zigbee device reported its status.
               </p>
             </TooltipContent>
           </Tooltip>
@@ -135,7 +158,8 @@ export const columns: ColumnDef<ZigbeeDeviceTableView>[] = [
     },
 
     cell: ({ row }) => {
-      const { last_updated, timestamp }: { last_updated: Date; timestamp: Date } = row.getValue('timeago');
+      const { last_updated, timestamp }: { last_updated: Date; timestamp: Date } =
+        row.getValue('timeago');
 
       return (
         <div className="text-right font-regular text-xs">
@@ -149,7 +173,10 @@ export const columns: ColumnDef<ZigbeeDeviceTableView>[] = [
     header: ({ column }) => {
       return (
         <div className="text-right">
-          <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
+          <Button
+            variant="ghost"
+            onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+          >
             Device
             <ArrowUpDown className="ml-2 h-4 w-4" />
           </Button>
@@ -169,13 +196,19 @@ export const columns: ColumnDef<ZigbeeDeviceTableView>[] = [
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger asChild>
-              <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
+              <Button
+                variant="ghost"
+                onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+              >
                 Power
                 <ArrowUpDown className="ml-2 h-4 w-4" />
               </Button>
             </TooltipTrigger>
             <TooltipContent>
-              <p>Indicates the power source of the Zigbee device, whether battery-powered or plugged in.</p>
+              <p>
+                Indicates the power source of the Zigbee device, whether battery-powered
+                or plugged in.
+              </p>
             </TooltipContent>
           </Tooltip>
         </TooltipProvider>
@@ -183,7 +216,9 @@ export const columns: ColumnDef<ZigbeeDeviceTableView>[] = [
     ),
     cell: ({ row }) => {
       const power_source: string = row.getValue('power_source');
-      const battery_level: number = power_source.startsWith('Battery') ? Number(power_source.slice(8)) : 0;
+      const battery_level: number = power_source.startsWith('Battery')
+        ? Number(power_source.slice(8))
+        : 0;
       const className = battery_level < 30 ? 'font-semibold text-red-600' : '';
 
       return (
@@ -205,7 +240,10 @@ export const columns: ColumnDef<ZigbeeDeviceTableView>[] = [
     header: ({ column }) => {
       return (
         <div className="text-center">
-          <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
+          <Button
+            variant="ghost"
+            onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+          >
             Source
             <ArrowUpDown className="ml-2 h-4 w-4" />
           </Button>

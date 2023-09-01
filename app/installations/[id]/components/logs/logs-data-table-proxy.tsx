@@ -16,7 +16,9 @@ export function LogsDataTableProxy({ ...params }) {
   const installations = useInstallationStore(state => state.installations);
   const logs = useInstallationStore(state => state.logsByInstallationId[installationId]);
   const fetchInstallations = useInstallationStore(state => state.fetchInstallations);
-  const fetchObservationsForInstallation = useInstallationStore(state => state.fetchObservationsForInstallation);
+  const fetchObservationsForInstallation = useInstallationStore(
+    state => state.fetchObservationsForInstallation,
+  );
   const { getAccessTokenSilently, user } = useAuth0();
 
   const asyncFetch = async () => {
@@ -30,9 +32,15 @@ export function LogsDataTableProxy({ ...params }) {
 
   useEffect(() => {
     asyncFetch();
-  }, [fetchInstallations, getAccessTokenSilently, fetchObservationsForInstallation, installationId, user]);
+  }, [
+    fetchInstallations,
+    getAccessTokenSilently,
+    fetchObservationsForInstallation,
+    installationId,
+    user,
+  ]);
 
-  const logViews = (logs ?? []).map(log => mapToTableView(log));
+  const logViews = (logs ?? []).map(mapToTableView);
 
   const installation = installations.find(i => i.id == installationId);
   const logFilename = `logs-${(installation?.name ?? 'default').replace(
@@ -65,7 +73,10 @@ export function LogsDataTableProxy({ ...params }) {
           <div className="bg-slate-700 text-white p-4 rounded-md">
             <div className="flex justify-between items-center mb-2"></div>
             <div className="overflow-x-auto ">
-              <pre id="code" className="text-gray-300 h-[400px] text-xs leading-4  overflow-y-scroll">
+              <pre
+                id="code"
+                className="text-gray-300 h-[400px] text-xs leading-4  overflow-y-scroll"
+              >
                 <code>{concatenatedLogs}</code>
               </pre>
             </div>

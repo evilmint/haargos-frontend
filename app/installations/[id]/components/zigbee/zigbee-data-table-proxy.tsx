@@ -12,7 +12,9 @@ export function ZigbeeDataTableProxy({ ...params }) {
 
   const observations = useInstallationStore(state => state.observations[installationId]);
   const fetchInstallations = useInstallationStore(state => state.fetchInstallations);
-  const fetchObservationsForInstallation = useInstallationStore(state => state.fetchObservationsForInstallation);
+  const fetchObservationsForInstallation = useInstallationStore(
+    state => state.fetchObservationsForInstallation,
+  );
   const { getAccessTokenSilently, user } = useAuth0();
 
   const asyncFetch = async () => {
@@ -26,23 +28,36 @@ export function ZigbeeDataTableProxy({ ...params }) {
 
   useEffect(() => {
     asyncFetch();
-  }, [fetchInstallations, getAccessTokenSilently, fetchObservationsForInstallation, installationId, user]);
-  const devices =
-    observations?.length > 0
-      ? (observations[0].zigbee?.devices ?? []).map(d => mapToTableView(d, observations[0]))
-      : [];
+  }, [
+    fetchInstallations,
+    getAccessTokenSilently,
+    fetchObservationsForInstallation,
+    installationId,
+    user,
+  ]);
 
+  let devices: ZigbeeDeviceTableView[] = [];
+
+  if (observations && observations.length > 0 && observations[0].zigbee) {
+    devices = observations[0].zigbee.devices.map(d => mapToTableView(d, observations[0]));
+  }
   return <ZigbeeDataTable data={devices} />;
 }
 
-function mapToTableView(device: ZigbeeDevice, observation: Observation): ZigbeeDeviceTableView {
+function mapToTableView(
+  device: ZigbeeDevice,
+  observation: Observation,
+): ZigbeeDeviceTableView {
   return {
     id: device.ieee,
     ieee: device.ieee,
     last_updated: new Date(device.last_updated),
     entity_name: device.entity_name,
     name: device.name_by_user,
-    timeago: { last_updated: new Date(device.last_updated), timestamp: new Date(observation.timestamp) }, //<TimeAgo date={device.last_updated} now={() => new Date(observation.timestamp).getTime()} />,
+    timeago: {
+      last_updated: new Date(device.last_updated),
+      timestamp: new Date(observation.timestamp),
+    }, //<TimeAgo date={device.last_updated} now={() => new Date(observation.timestamp).getTime()} />,
     device: `${device.brand} ${device.entity_name}`,
     lqi: device.lqi,
     power_source: device.power_source + ` ${device.battery_level ?? 'n/a'}`,

@@ -21,7 +21,14 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Input } from '@/components/ui/input';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table';
 import { columns } from './installations-data-table-columns';
 
 export interface InstallationTableView {
@@ -37,9 +44,9 @@ export interface InstallationTableView {
   agent_version: string;
   ha_version: string;
   is_healthy: boolean;
-  volume_ok: boolean;
-  cpu_ok: boolean;
-  memory_ok: boolean;
+  volume: boolean;
+  cpu: boolean;
+  memory: boolean;
   ha_version_tick: boolean;
   log_errors: number;
   log_warnings: number;
@@ -91,13 +98,15 @@ export function InstallationDataTable({ ...params }) {
         <Input
           placeholder="Filter installations..."
           value={(table.getColumn('general')?.getFilterValue() as string) ?? ''}
-          onChange={event => table.getColumn('general')?.setFilterValue(event.target.value)}
+          onChange={event =>
+            table.getColumn('general')?.setFilterValue(event.target.value)
+          }
           className="max-w-sm"
         />
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="outline" className="ml-auto">
-              Columns <ChevronDown className="ml-2 h-4 w-4" />
+              Column <ChevronDown className="ml-2 h-4 w-4" />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
@@ -112,7 +121,11 @@ export function InstallationDataTable({ ...params }) {
                     checked={column.getIsVisible()}
                     onCheckedChange={value => column.toggleVisibility(!!value)}
                   >
-                    {column.id.replace('_', ' ')}
+                    {column.id
+                      .replaceAll('_', ' ')
+                      .replaceAll('ha', 'HA')
+                      .replaceAll('lqi', 'LQI')
+                      .replaceAll('cpu', 'CPU')}
                   </DropdownMenuCheckboxItem>
                 );
               })}
@@ -127,7 +140,9 @@ export function InstallationDataTable({ ...params }) {
                 {headerGroup.headers.map(header => {
                   return (
                     <TableHead key={header.id}>
-                      {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
+                      {header.isPlaceholder
+                        ? null
+                        : flexRender(header.column.columnDef.header, header.getContext())}
                     </TableHead>
                   );
                 })}
@@ -139,7 +154,9 @@ export function InstallationDataTable({ ...params }) {
               table.getRowModel().rows.map(row => (
                 <TableRow key={row.id} data-state={row.getIsSelected() && 'selected'}>
                   {row.getVisibleCells().map(cell => (
-                    <TableCell key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</TableCell>
+                    <TableCell key={cell.id}>
+                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                    </TableCell>
                   ))}
                 </TableRow>
               ))
@@ -167,7 +184,12 @@ export function InstallationDataTable({ ...params }) {
           >
             Previous
           </Button>
-          <Button variant="outline" size="sm" onClick={() => table.nextPage()} disabled={!table.getCanNextPage()}>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => table.nextPage()}
+            disabled={!table.getCanNextPage()}
+          >
             Next
           </Button>
         </div>

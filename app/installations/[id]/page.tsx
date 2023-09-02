@@ -38,6 +38,12 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from '@/registry/default/ui/alert-dialog';
+import {
+  useInstallationStore,
+  useInstallationSwitcherStore,
+} from '@/app/services/stores';
+import { useAuth0 } from '@auth0/auth0-react';
+import { useRouter } from 'next/navigation';
 
 export default function DashboardInstallationPage({
   params,
@@ -46,6 +52,14 @@ export default function DashboardInstallationPage({
 }) {
   const [origin, setOrigin] = useState<string | null>(null);
   const [defaultTab, setDefaultTab] = useState<string>('overview');
+  const deleteInstallation = useInstallationStore(state => state.deleteInstallation);
+  const router = useRouter();
+
+  const clearInstallation = useInstallationSwitcherStore(
+    state => state.clearInstallation,
+  );
+
+  const { getAccessTokenSilently } = useAuth0();
 
   useEffect(() => {
     setOrigin(window.location.origin);
@@ -69,6 +83,14 @@ export default function DashboardInstallationPage({
       window.removeEventListener('hashchange', onHashChanged);
     };
   }, []);
+
+  const deleteOnClick = async (installationId: string) => {
+    const token = await getAccessTokenSilently();
+    await deleteInstallation(token, installationId);
+    clearInstallation();
+
+    router.push('/');
+  };
 
   return (
     defaultTab != null &&
@@ -139,7 +161,13 @@ export default function DashboardInstallationPage({
                     </AlertDialogHeader>
                     <AlertDialogFooter>
                       <AlertDialogCancel>Cancel</AlertDialogCancel>
-                      <AlertDialogAction>Delete</AlertDialogAction>
+                      <AlertDialogAction
+                        onClick={() => {
+                          deleteOnClick(params.id);
+                        }}
+                      >
+                        Delete
+                      </AlertDialogAction>
                     </AlertDialogFooter>
                   </AlertDialogContent>
                 </AlertDialog>

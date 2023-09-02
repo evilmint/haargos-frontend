@@ -1,7 +1,11 @@
 import { getUserMe } from './users';
 import { create } from 'zustand';
 import { Installation, Observation, Log, User, Storage } from '@/app/types';
-import { createInstallation, getInstallations } from './installations';
+import {
+  createInstallation,
+  deleteInstallation,
+  getInstallations,
+} from './installations';
 import { getObservations } from './observations';
 
 interface UserState {
@@ -64,6 +68,7 @@ interface InstallationStoreState {
     installationId: string,
     token: string,
   ) => Promise<void>;
+  deleteInstallation: (token: string, id: string) => Promise<any>;
   getObservationsForInstallation: (installationId: string) => Observation[];
 }
 
@@ -251,6 +256,25 @@ const useInstallationStore = create<InstallationStoreState>((set, get) => ({
         },
       }));
     }
+  },
+  deleteInstallation: async (token: string, id: string) => {
+    const { installations } = get();
+
+    try {
+      await deleteInstallation(token, id);
+
+      const returned = {
+        installations: installations.filter(i => i.id != id),
+      };
+
+      set(returned);
+
+      return returned;
+    } catch (error) {
+      console.log(error);
+    }
+
+    return {};
   },
   getObservationsForInstallation: (installationId: string) => {
     return get().observations[installationId] || [];

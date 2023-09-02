@@ -65,3 +65,36 @@ export async function createInstallation(
   const data: Installation = await response.json();
   return data;
 }
+
+export async function deleteInstallation(
+  token: string,
+  id: string,
+): Promise<Installation> {
+  const additionalHeaders = new Headers({
+    Authorization: `Bearer ${token}`,
+    'Content-Type': 'application/json',
+  });
+
+  const mergedHeaders = new Headers({
+    ...Object.fromEntries(baseHeaders),
+    ...Object.fromEntries(additionalHeaders),
+  });
+
+  const requestOptions: RequestInit = {
+    method: 'DELETE',
+    headers: mergedHeaders,
+    redirect: 'follow',
+  };
+
+  const response = await fetch(
+    `${apiSettings.baseUrl}/installations/${id}`,
+    requestOptions,
+  );
+
+  if (!response.ok) {
+    throw new Error(`Failed to delete installation ${id}`);
+  }
+
+  const data = await response.json();
+  return data;
+}

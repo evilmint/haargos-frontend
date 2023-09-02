@@ -13,12 +13,10 @@ export function InstallationOverviewChart({
   const {
     observations,
     logsByInstallationId: logs,
-    fetchInstallations,
     fetchObservationsForInstallation,
   } = useInstallationStore(state => ({
     observations: state.observations[installationId],
     logsByInstallationId: state.logsByInstallationId[installationId],
-    fetchInstallations: state.fetchInstallations,
     fetchObservationsForInstallation: state.fetchObservationsForInstallation,
   }));
 
@@ -34,13 +32,7 @@ export function InstallationOverviewChart({
       }
     };
     asyncFetch();
-  }, [
-    installationId,
-    getAccessTokenSilently,
-    fetchObservationsForInstallation,
-    fetchInstallations,
-    user,
-  ]);
+  }, [installationId, getAccessTokenSilently, fetchObservationsForInstallation, user]);
 
   const dataFormatter = (number: any) =>
     Intl.NumberFormat('us').format(number).toString();

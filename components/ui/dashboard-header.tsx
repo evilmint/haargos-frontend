@@ -15,7 +15,7 @@ export function DashboardHeader() {
   const asyncFetch = async () => {
     try {
       const token = await getAccessTokenSilently();
-      await fetchInstallations(token);
+      await fetchInstallations(token, false);
     } catch (error) {
       console.log(error);
     }

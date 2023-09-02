@@ -59,7 +59,7 @@ export default function InstallationSwitcher({
   const fetchAndSetInstallations = async () => {
     try {
       const token = await getAccessTokenSilently();
-      await fetchInstallations(token);
+      await fetchInstallations(token, false);
 
       setGroups([
         {

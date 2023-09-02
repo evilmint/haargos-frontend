@@ -6,8 +6,7 @@ import { useInstallationStore } from '@/app/services/stores';
 import { useAuth0 } from '@auth0/auth0-react';
 import Code from './code';
 
-export function AgentInstallation({ ...params }) {
-  const { installationId } = params;
+export function AgentInstallation({ installationId }: { installationId: string }) {
   const installation = useInstallationStore(state => state.installations).find(
     i => i.id == installationId,
   );

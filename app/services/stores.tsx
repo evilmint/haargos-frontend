@@ -59,7 +59,7 @@ interface InstallationStoreState {
     instance: string,
     name: string,
   ) => Promise<Installation | null>;
-  fetchInstallations: (token: string) => Promise<Installation[]>;
+  fetchInstallations: (token: string, force: boolean) => Promise<Installation[]>;
   fetchObservationsForInstallation: (
     installationId: string,
     token: string,
@@ -91,12 +91,13 @@ const useInstallationStore = create<InstallationStoreState>((set, get) => ({
 
     return null;
   },
-  fetchInstallations: async token => {
-    if (get().isFetchingInstallations) return [];
+  fetchInstallations: async (token, force) => {
+    if (get().isFetchingInstallations && !force) return [];
     set({ isFetchingInstallations: true });
 
     const { installations } = get();
-    if (installations && installations.length > 0) return installations;
+
+    if (force == false && installations && installations.length > 0) return installations;
 
     try {
       const installations = await getInstallations(token);

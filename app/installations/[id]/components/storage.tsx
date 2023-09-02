@@ -20,7 +20,6 @@ export function Storage({ ...params }) {
   const { installationId } = params;
 
   const observations = useInstallationStore(state => state.observations[installationId]);
-  const fetchInstallations = useInstallationStore(state => state.fetchInstallations);
   const fetchObservationsForInstallation = useInstallationStore(
     state => state.fetchObservationsForInstallation,
   );
@@ -38,13 +37,7 @@ export function Storage({ ...params }) {
 
   useEffect(() => {
     asyncFetch();
-  }, [
-    fetchInstallations,
-    getAccessTokenSilently,
-    fetchObservationsForInstallation,
-    installationId,
-    user,
-  ]);
+  }, [getAccessTokenSilently, fetchObservationsForInstallation, installationId, user]);
 
   return (
     <Card className="col-span-8">

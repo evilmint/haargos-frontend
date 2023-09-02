@@ -15,6 +15,7 @@ import { useState } from 'react';
 import { Label } from '@/registry/new-york/ui/label';
 import { Installation } from '@/app/types';
 import { Button } from '@/registry/new-york/ui/button';
+import { useInstallationStore } from '@/app/services/stores';
 
 interface CreateInstallationFormProps {
   children: React.ReactNode;
@@ -32,6 +33,17 @@ export function CreateInstallationForm({
   const { getAccessTokenSilently } = useAuth0();
   const [nameValue, setNameValue] = useState('');
   const [instanceValue, setInstanceValue] = useState('');
+
+  const fetchInstallations = useInstallationStore(state => state.fetchInstallations);
+  const asyncFetch = async () => {
+    try {
+      const token = await getAccessTokenSilently();
+      await fetchInstallations(token, true);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const handleSubmit = async () => {
     if (nameValue.trim().length > 0) {
       setUpdating(true);
@@ -47,6 +59,8 @@ export function CreateInstallationForm({
         if (installation != null && params.onCreateInstallation != null) {
           params.onCreateInstallation(installation);
         }
+
+        asyncFetch();
       } catch (error) {
         console.error(error);
       } finally {

@@ -22,7 +22,7 @@ export function InstallationsDataTableProxy() {
 
   useEffect(() => {
     getAccessTokenSilently().then(token => {
-      fetchInstallations(token).catch(error => console.error(error));
+      fetchInstallations(token, false).catch(error => console.error(error));
     });
   }, [fetchInstallations, getAccessTokenSilently]);
 

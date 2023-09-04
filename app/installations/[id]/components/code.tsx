@@ -17,7 +17,7 @@ export default function Code({ children, allowCopy = true }: CodeProps) {
         <div className="overflow-x-auto">
           <pre
             id="code"
-            className="text-gray-300 text-xs right-0 leading-4 overflow-y-scroll"
+            className="text-gray-300 text-xs right-0 leading-4 "
           >
             <code>{children}</code>
           </pre>

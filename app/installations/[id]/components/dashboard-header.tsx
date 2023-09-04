@@ -51,8 +51,7 @@ export function DashboardHeaderInstallation({ ...params }) {
     : 1;
   const memoryPercentage = Math.floor((memoryUsed / memoryTotal) * 100);
 
-  const observationsLoading =
-    observations == null || observations == undefined || observations?.length == 0;
+  const observationsLoading = observations == null || observations == undefined;
 
   const haVersion = observations?.length > 0 && observations[0].ha_config?.version;
   const isHAUpdateAvailable =
@@ -117,28 +116,32 @@ export function DashboardHeaderInstallation({ ...params }) {
               <TooltipTrigger>
                 {observationsLoading == false &&
                   isLoading == false &&
-                  (isHAUpdateAvailable == false ? (
-                    <Badge
-                      className="ml-2 cursor-pointer"
-                      color="orange"
-                      icon={Icons.shieldCheck}
-                    >
-                      {latestHaRelease} available
-                    </Badge>
-                  ) : (
-                    <a
-                      className="cursor-pointer"
-                      href="https://github.com/home-assistant/core/releases"
-                      target="_blank"
-                    >
+                  (observations.length > 0 ? (
+                    isHAUpdateAvailable == false ? (
                       <Badge
                         className="ml-2 cursor-pointer"
                         color="orange"
-                        icon={Icons.shieldExclamation}
+                        icon={Icons.shieldCheck}
                       >
                         {latestHaRelease} available
                       </Badge>
-                    </a>
+                    ) : (
+                      <a
+                        className="cursor-pointer"
+                        href="https://github.com/home-assistant/core/releases"
+                        target="_blank"
+                      >
+                        <Badge
+                          className="ml-2 cursor-pointer"
+                          color="orange"
+                          icon={Icons.shieldExclamation}
+                        >
+                          {latestHaRelease} available
+                        </Badge>
+                      </a>
+                    )
+                  ) : (
+                    <div className="text-xl font-bold">n/a</div>
                   ))}
               </TooltipTrigger>
               <TooltipContent>
@@ -244,8 +247,10 @@ export function DashboardHeaderInstallation({ ...params }) {
           <div className="text-xl font-bold">
             {observationsLoading || isLoading ? (
               <Skeleton className="h-8" />
-            ) : (
+            ) : observations.length > 0 ? (
               <TimeAgo date={observations[0]?.timestamp} />
+            ) : (
+              'n/a'
             )}
           </div>
         </CardContent>
@@ -260,7 +265,7 @@ export function DashboardHeaderInstallation({ ...params }) {
           <div className="">
             {observationsLoading || isLoading ? (
               <Skeleton className="h-8" />
-            ) : (
+            ) : observations.length > 0 ? (
               <div>
                 {installation?.healthy.is_healthy ? (
                   <Badge color="green" icon={Icons.signal}>
@@ -287,6 +292,8 @@ export function DashboardHeaderInstallation({ ...params }) {
                   </div>
                 )}
               </div>
+            ) : (
+              <div className="text-xl font-bold">n/a</div>
             )}
           </div>
         </CardContent>

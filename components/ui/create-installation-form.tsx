@@ -5,17 +5,24 @@ import {
   Dialog,
   DialogContent,
   DialogDescription,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
 } from '@/registry/new-york/ui/dialog';
 import { useAuth0 } from '@auth0/auth0-react';
 import { Input } from '@/registry/new-york/ui/input';
 import { useState } from 'react';
-import { Label } from '@/registry/new-york/ui/label';
 import { Installation } from '@/app/types';
 import { Button } from '@/registry/new-york/ui/button';
 import { useInstallationStore } from '@/app/services/stores';
+import {
+  AlertDialog,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/registry/default/ui/alert-dialog';
 
 interface CreateInstallationFormProps {
   children: React.ReactNode;
@@ -23,6 +30,32 @@ interface CreateInstallationFormProps {
   onOpenChange?(open: boolean): void;
   onCreateInstallation?: (installation: Installation) => void;
 }
+import * as z from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useForm } from 'react-hook-form';
+import {
+  Form,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormControl,
+  FormDescription,
+  FormMessage,
+} from '@/registry/default/ui/form';
+
+const createInstallationFormSchema = z.object({
+  name: z
+    .string()
+    .min(2, {
+      message: 'Name must be at least 2 characters.',
+    })
+    .max(30, {
+      message: 'Name must not be longer than 32 characters.',
+    }),
+  instance: z.string().min(0).max(64),
+});
+
+type CreateInstallationFormValues = z.infer<typeof createInstallationFormSchema>;
 
 export function CreateInstallationForm({
   children,
@@ -31,8 +64,7 @@ export function CreateInstallationForm({
   const [isUpdating, setUpdating] = useState<boolean>(false);
 
   const { getAccessTokenSilently } = useAuth0();
-  const [nameValue, setNameValue] = useState('');
-  const [instanceValue, setInstanceValue] = useState('');
+  const [alertOpen, setAlertOpen] = useState(false);
 
   const fetchInstallations = useInstallationStore(state => state.fetchInstallations);
   const asyncFetch = async () => {
@@ -44,77 +76,107 @@ export function CreateInstallationForm({
     }
   };
 
-  const handleSubmit = async () => {
-    if (nameValue.trim().length > 0) {
-      setUpdating(true);
+  const defaultValues: Partial<CreateInstallationFormValues> = {
+    name: '',
+    instance: '',
+  };
 
-      try {
-        const accessToken = await getAccessTokenSilently();
-        const installation = await createInstallation(
-          accessToken,
-          instanceValue,
-          nameValue,
-        );
+  const form = useForm<CreateInstallationFormValues>({
+    resolver: zodResolver(createInstallationFormSchema),
+    defaultValues,
+  });
 
-        if (installation != null && params.onCreateInstallation != null) {
-          params.onCreateInstallation(installation);
-        }
+  async function onSubmit(data: CreateInstallationFormValues) {
+    setUpdating(true);
 
-        asyncFetch();
-      } catch (error) {
-        console.error(error);
-      } finally {
-        params.onOpenChange?.(false);
-        setUpdating(false);
+    try {
+      const accessToken = await getAccessTokenSilently();
+      const installation = await createInstallation(
+        accessToken,
+        data.instance ?? '',
+        data.name,
+      );
+
+      if (installation != null && params.onCreateInstallation != null) {
+        params.onCreateInstallation(installation);
       }
-    }
-  };
 
-  const handleChange = (event: any) => {
-    if (event.target.id == 'url') {
-      setInstanceValue(event.target.value);
-    } else if (event.target.id == 'name') {
-      setNameValue(event.target.value);
+      asyncFetch();
+      params.onOpenChange?.(false);
+    } catch (error) {
+      setAlertOpen(true);
+    } finally {
+      setUpdating(false);
     }
-  };
+  }
 
   return (
-    <Dialog open={params.open} onOpenChange={params.onOpenChange}>
-      {children}
-      <DialogContent>
-        <DialogHeader>
-          <DialogTitle>Create installation</DialogTitle>
-          <DialogDescription>Add a new HomeAssistant installation</DialogDescription>
-        </DialogHeader>
-        <div>
-          <div className="space-y-4 py-2 pb-4">
-            <div className="space-y-2">
-              <Label htmlFor="name">Name</Label>
-              <Input id="name" onChange={handleChange} placeholder="My Parents' Home" />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="url">Public HomeAssistant URL (optional)</Label>
-              <Input
-                id="url"
-                onChange={handleChange}
-                placeholder="https://my.homeassistant.url"
+    <AlertDialog open={alertOpen}>
+      <Dialog open={params.open} onOpenChange={params.onOpenChange}>
+        {children}
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Create installation</DialogTitle>
+            <DialogDescription>Add a new HomeAssistant installation</DialogDescription>
+          </DialogHeader>
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+              <FormField
+                control={form.control}
+                name="name"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Installation name</FormLabel>
+                    <FormControl>
+                      <Input placeholder="My Parents' Home" {...field} />
+                    </FormControl>
+                    {/* <FormDescription>
+                      This is the name that will be displayed on your profile and in
+                      emails.
+                    </FormDescription> */}
+                    <FormMessage />
+                  </FormItem>
+                )}
               />
-            </div>
-          </div>
-        </div>
-        <DialogFooter>
-          <Button
-            disabled={isUpdating}
-            variant="outline"
-            onClick={() => params.onOpenChange?.(false)}
-          >
-            Cancel
-          </Button>
-          <Button disabled={isUpdating} type="submit" onClick={handleSubmit}>
-            Create
-          </Button>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
+              <FormField
+                control={form.control}
+                name="instance"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Instance URL</FormLabel>
+                    <FormControl>
+                      <Input placeholder="https://my.homeassistant.url" {...field} />
+                    </FormControl>
+                    <FormDescription>
+                      This is the URL of your HomeAssistant instance. Leave blank if not
+                      applicable.
+                    </FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <Button type="submit">Create</Button>
+            </form>
+          </Form>
+        </DialogContent>
+      </Dialog>
+
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          <AlertDialogTitle>Failed to create installation.</AlertDialogTitle>
+          <AlertDialogDescription>
+            We might have a hiccup! Try again or reach out to support via{' '}
+            <strong>
+              <a href={`mailto:${process.env.NEXT_PUBLIC_SUPPORT_EMAIL}`}>
+                {process.env.NEXT_PUBLIC_SUPPORT_EMAIL}
+              </a>
+            </strong>
+          </AlertDialogDescription>
+        </AlertDialogHeader>
+        <AlertDialogFooter>
+          <AlertDialogCancel onClick={() => setAlertOpen(false)}>Close</AlertDialogCancel>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
   );
 }

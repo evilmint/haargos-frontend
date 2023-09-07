@@ -27,7 +27,7 @@ const profileFormSchema = z.object({
       required_error: 'Please select an email to display.',
     })
     .email(),
-  full_name: z.string().max(64, 'Maximum length of 64.'),
+  full_name: z.string().max(32, 'Maximum length of 32.'),
 });
 
 type ProfileFormValues = z.infer<typeof profileFormSchema>;
@@ -36,7 +36,7 @@ export function AccountForm() {
   const [isUpdating, setIsUpdating] = useState(false);
   const [alertOpen, setAlertOpen] = useState(false);
 
-  const user = useUserStore(state => state.user);
+  const { setUser, user } = useUserStore(state => state);
   const updateAccount = useAccountStore(state => state.updateAccount);
 
   const form = useForm<ProfileFormValues>({
@@ -61,6 +61,13 @@ export function AccountForm() {
       const token = await getAccessTokenSilently();
       console.log(data);
       await updateAccount(token, data);
+
+      let newUser = user;
+      if (newUser) {
+        newUser.email = data.email;
+        newUser.full_name = data.full_name;
+        setUser(newUser);
+      }
     } catch {
       setAlertOpen(true);
     } finally {

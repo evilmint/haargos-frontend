@@ -136,10 +136,7 @@ export function DashboardHeader() {
     haVersions?.set(key, (haVersions.get(key) ?? 0) + 1);
   });
 
-  let data: {
-    name: string;
-    value: Number;
-  }[] = [];
+  let data: any[] = [];
 
   haVersions?.forEach((value, key) => {
     data.push({

@@ -20,7 +20,7 @@ import { LoginButton } from './login-button';
 import { useRouter } from 'next/navigation';
 
 export function UserNav() {
-  const fetchUser = useUserStore(state => state.fetchUser);
+  const { fetchUser, user: apiUser } = useUserStore(state => state);
   const { getAccessTokenSilently, user, logout, isAuthenticated } = useAuth0();
   const [isLoading, setLoading] = useState<boolean>(true);
   const router = useRouter();
@@ -48,15 +48,15 @@ export function UserNav() {
         <Button variant="ghost" className="relative h-8 w-8 rounded-full">
           <Avatar className="h-8 w-8">
             <AvatarImage src={user?.picture} alt="@shadcn" />
-            <AvatarFallback>{fullNameInitials(user)}</AvatarFallback>
+            <AvatarFallback>{fullNameInitials(apiUser?.full_name)}</AvatarFallback>
           </Avatar>
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56" align="end" forceMount>
         <DropdownMenuLabel className="font-normal">
           <div className="flex flex-col space-y-1">
-            <p className="text-sm font-medium leading-none">{`${user?.name}`}</p>
-            <p className="text-xs leading-none text-muted-foreground">{user?.email}</p>
+            <p className="text-sm font-medium leading-none">{`${apiUser?.full_name}`}</p>
+            <p className="text-xs leading-none text-muted-foreground">{apiUser?.email}</p>
           </div>
         </DropdownMenuLabel>
         <DropdownMenuSeparator />

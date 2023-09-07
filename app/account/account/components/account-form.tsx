@@ -16,8 +16,10 @@ import {
   FormMessage,
 } from '@/registry/new-york/ui/form';
 import { Input } from '@/registry/new-york/ui/input';
-import { useUserStore } from '@/app/services/stores';
-import { useEffect } from 'react';
+import { useAccountStore, useUserStore } from '@/app/services/stores';
+import { useEffect, useState } from 'react';
+import { FailureAlert } from '@/components/ui/FailureAlert';
+import { useAuth0 } from '@auth0/auth0-react';
 
 const profileFormSchema = z.object({
   email: z
@@ -25,12 +27,17 @@ const profileFormSchema = z.object({
       required_error: 'Please select an email to display.',
     })
     .email(),
+  full_name: z.string().max(64, 'Maximum length of 64.'),
 });
 
 type ProfileFormValues = z.infer<typeof profileFormSchema>;
 
 export function AccountForm() {
+  const [isUpdating, setIsUpdating] = useState(false);
+  const [alertOpen, setAlertOpen] = useState(false);
+
   const user = useUserStore(state => state.user);
+  const updateAccount = useAccountStore(state => state.updateAccount);
 
   const form = useForm<ProfileFormValues>({
     resolver: zodResolver(profileFormSchema),
@@ -40,36 +47,70 @@ export function AccountForm() {
   useEffect(() => {
     const defaultValues: Partial<ProfileFormValues> = {
       email: user?.email ?? '',
+      full_name: user?.full_name ?? '',
     };
     form.reset(defaultValues);
   }, [user]);
 
-  function onSubmit(data: ProfileFormValues) {}
+  const { getAccessTokenSilently } = useAuth0();
+
+  async function onSubmit(data: ProfileFormValues) {
+    setIsUpdating(true);
+
+    try {
+      const token = await getAccessTokenSilently();
+      console.log(data);
+      await updateAccount(token, data);
+    } catch {
+      setAlertOpen(true);
+    } finally {
+      setIsUpdating(false);
+    }
+  }
 
   return (
-    <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-        <FormField
-          control={form.control}
-          name="email"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Email</FormLabel>
-              <FormControl>
-                <Input disabled={true} placeholder="shadcn" {...field} />
-              </FormControl>
-              <FormDescription>
-                You can manage verified email addresses in your{' '}
-                <Link href="/examples/forms">email settings</Link>.
-              </FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <Button type="submit" disabled={true}>
-          Update
-        </Button>
-      </form>
-    </Form>
+    <FailureAlert
+      title={'Failed to update account'}
+      openChange={setAlertOpen}
+      open={alertOpen}
+    >
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+          <FormField
+            control={form.control}
+            name="email"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Email</FormLabel>
+                <FormControl>
+                  <Input disabled={true} {...field} />
+                </FormControl>
+                <FormDescription>
+                  You can manage verified email addresses in your{' '}
+                  <Link href="/examples/forms">email settings</Link>.
+                </FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="full_name"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Full name</FormLabel>
+                <FormControl>
+                  <Input placeholder="Display name (optional)" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <Button type="submit" disabled={isUpdating}>
+            Update
+          </Button>
+        </form>
+      </Form>
+    </FailureAlert>
   );
 }

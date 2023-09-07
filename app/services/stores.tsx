@@ -7,10 +7,12 @@ import {
   getInstallations,
 } from './installations';
 import { getObservations } from './observations';
+import { deleteAccount, updateAccount } from './account';
 
 interface UserState {
   user: User | null;
   setUser: (user: User | null) => void;
+  clear: () => void;
   isFetchingUser: boolean;
   fetchUser: (token: string) => Promise<void>;
 }
@@ -19,6 +21,7 @@ const useUserStore = create<UserState>((set, get) => ({
   user: null,
   isFetchingUser: false,
   setUser: user => set(() => ({ user })),
+  clear: () => set(() => ({ user: null, isFetchingUser: false })),
   fetchUser: async token => {
     const { user } = get();
     if (user) return;
@@ -37,15 +40,32 @@ const useUserStore = create<UserState>((set, get) => ({
   },
 }));
 
+interface AccountState {
+  deleteAccount: (token: string) => Promise<void>;
+  updateAccount: (token: string, data: any) => Promise<void>;
+}
+
+const useAccountStore = create<AccountState>(set => ({
+  deleteAccount: async (token) => {
+    
+    await deleteAccount(token);
+  },
+  updateAccount: async (token, data) => {
+    await updateAccount(token, data);
+  },
+}));
+
 interface InstallationState {
   selectedInstallation: Installation | null;
   clearInstallation: () => void;
+  clear: () => void;
   setSelectedInstallation: (installation: any | null) => void;
 }
 
 const useInstallationSwitcherStore = create<InstallationState>(set => ({
   selectedInstallation: null,
   clearInstallation: () => set(() => ({ selectedInstallation: null })),
+  clear: () => set(() => ({ selectedInstallation: null })),
   setSelectedInstallation: selectedInstallation =>
     set(() => ({ selectedInstallation: selectedInstallation })),
 }));
@@ -58,6 +78,7 @@ interface InstallationStoreState {
   highestStorageByInstallationId: Record<string, Storage | null>;
   isFetchingInstallations: boolean;
   isFetchingObservations: Record<string, boolean>;
+  clear: () => void;
   createInstallation: (
     token: string,
     instance: string,
@@ -80,6 +101,15 @@ const useInstallationStore = create<InstallationStoreState>((set, get) => ({
   highestStorageByInstallationId: {},
   isFetchingInstallations: false,
   isFetchingObservations: {},
+  clear: () => {
+    set(_ => ({
+      installations: [],
+      observations: {},
+      logsByInstallationId: {},
+      highestStorageByInstallationId: {},
+      isFetchingObservations: {}
+    }))
+  },
   createInstallation: async (token: string, instance: string, name: string) => {
     try {
       const newInstallation = await createInstallation(token, instance, name);
@@ -338,4 +368,4 @@ const extractUniqueVolumes = (volumesUnsorted: Storage[]): Storage[] => {
   }, []);
 };
 
-export { useUserStore, useInstallationStore, useInstallationSwitcherStore };
+export { useUserStore, useAccountStore, useInstallationStore, useInstallationSwitcherStore };

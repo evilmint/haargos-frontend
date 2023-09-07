@@ -18,6 +18,14 @@ import {
   AlertDialogTrigger,
 } from '@/registry/default/ui/alert-dialog';
 import { useRef, useState } from 'react';
+import { useAuth0 } from '@auth0/auth0-react';
+import {
+  useAccountStore,
+  useInstallationStore,
+  useInstallationSwitcherStore,
+  useUserStore,
+} from '@/app/services/stores';
+import { FailureAlert } from '@/components/ui/FailureAlert';
 
 const deleteFormSchema = z.object({});
 
@@ -32,53 +40,77 @@ export function DeleteAccountForm() {
     defaultValues,
   });
 
-  const [isDeleting, setDeleting] = useState(false);
+  const { logout, getAccessTokenSilently } = useAuth0();
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [alertOpen, setAlertOpen] = useState(false);
 
-  async function onSubmit(data: DeleteFormValues) {
-    // setDeleting(true);
-    // uncomment ^
+  const deleteAccount = useAccountStore(state => state.deleteAccount);
+  const clearInstallationSwitcherStore = useInstallationSwitcherStore(
+    state => state.clear,
+  );
+  const clearInstallationStore = useInstallationStore(state => state.clear);
+  const clearUserStore = useUserStore(state => state.clear);
 
+  async function onSubmit(_data: DeleteFormValues) {
+    setIsDeleting(true);
 
-    // TODO: First mock logging out
-
-    // TODO: API call for deleting account DELETE /account
-    // TODO: Log out
+    try {
+      const token = await getAccessTokenSilently();
+      await deleteAccount(token);
+      clearInstallationSwitcherStore();
+      clearInstallationStore();
+      clearUserStore();
+      await logout();
+    } catch {
+      setIsDeleting(false);
+      setAlertOpen(true);
+    }
   }
 
   return (
-    <AlertDialog>
-      <Form {...form}>
-        <form ref={formRef} onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-          <AlertDialogContent>
-            <AlertDialogHeader>
-              <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
-              <AlertDialogDescription>
-                This action cannot be undone. This will permanently delete your
-                installation and remove its data from our servers.
-              </AlertDialogDescription>
-            </AlertDialogHeader>
-            <AlertDialogFooter>
-              <AlertDialogCancel>Cancel</AlertDialogCancel>
-              <AlertDialogAction
-                type="submit"
-                onClick={() => {
-                  if (formRef.current) {
-                    formRef.current.dispatchEvent(
-                      new Event('submit', { cancelable: true, bubbles: true }),
-                    );
-                  }
-                }}
-              >
-                Delete
-              </AlertDialogAction>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </form>
-      </Form>
+    <FailureAlert
+      title={'Failed to delete account'}
+      openChange={setAlertOpen}
+      open={alertOpen}
+    >
+      <AlertDialog>
+        <Form {...form}>
+          <form
+            ref={formRef}
+            onSubmit={form.handleSubmit(onSubmit)}
+            className="space-y-8"
+          >
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                <AlertDialogDescription>
+                  This action cannot be undone. This will permanently delete your
+                  installation and remove its data from our servers.
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                <AlertDialogAction
+                  type="submit"
+                  onClick={() => {
+                    if (formRef.current) {
+                      formRef.current.dispatchEvent(
+                        new Event('submit', { cancelable: true, bubbles: true }),
+                      );
+                    }
+                  }}
+                >
+                  Delete
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </form>
+        </Form>
 
-      <AlertDialogTrigger asChild>
-        <Button disabled={isDeleting}>Delete account</Button>
-      </AlertDialogTrigger>
-    </AlertDialog>
+        <AlertDialogTrigger asChild>
+          <Button disabled={isDeleting}>Delete account</Button>
+        </AlertDialogTrigger>
+      </AlertDialog>
+    </FailureAlert>
   );
 }

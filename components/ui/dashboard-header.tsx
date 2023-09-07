@@ -1,11 +1,21 @@
 'use client';
 
-import { Card, Title, DonutChart, Flex, BarList, Bold, Text } from '@tremor/react';
 import { useEffect } from 'react';
-import { useInstallationStore } from '@/app/services/stores';
 import { useAuth0 } from '@auth0/auth0-react';
-import { Legend } from '@tremor/react';
+
+import {
+  Card,
+  Title,
+  DonutChart,
+  Flex,
+  BarList,
+  Bold,
+  Text,
+  Legend,
+} from '@tremor/react';
+import { useInstallationStore } from '@/app/services/stores';
 import { Installation } from '@/app/types';
+
 export function DashboardHeader() {
   const installations = useInstallationStore(state => state.installations);
   const fetchInstallations = useInstallationStore(state => state.fetchInstallations);
@@ -110,6 +120,10 @@ export function DashboardHeader() {
 
   const haVersions = new Map<string, number>();
 
+  if (latestHARelease != null) {
+    haVersions?.set(latestHARelease, 0);
+  }
+
   installations.forEach((i: Installation) => {
     const o = observations[i.id];
 
@@ -122,11 +136,10 @@ export function DashboardHeader() {
     haVersions?.set(key, (haVersions.get(key) ?? 0) + 1);
   });
 
-  let data: any[] = [];
-
-  if (latestHARelease != null) {
-    data.push({ name: latestHARelease, value: 0 });
-  }
+  let data: {
+    name: string;
+    value: Number;
+  }[] = [];
 
   haVersions?.forEach((value, key) => {
     data.push({

@@ -43,6 +43,7 @@ import {
   FormMessage,
 } from '@/registry/default/ui/form';
 import { CreateInstallationFormValues, createInstallationFormSchema } from '@/lib/zod';
+import { FailureAlert } from './FailureAlert';
 
 export function CreateInstallationForm({
   children,
@@ -98,7 +99,7 @@ export function CreateInstallationForm({
   }
 
   return (
-    <AlertDialog open={alertOpen}>
+    <FailureAlert title={'Failed to create installation.'} openChange={setAlertOpen} open={alertOpen}>
       <Dialog open={params.open} onOpenChange={params.onOpenChange}>
         {children}
         <DialogContent>
@@ -117,10 +118,6 @@ export function CreateInstallationForm({
                     <FormControl>
                       <Input placeholder="My Parents' Home" {...field} />
                     </FormControl>
-                    {/* <FormDescription>
-                      This is the name that will be displayed on your profile and in
-                      emails.
-                    </FormDescription> */}
                     <FormMessage />
                   </FormItem>
                 )}
@@ -142,28 +139,13 @@ export function CreateInstallationForm({
                   </FormItem>
                 )}
               />
-              <Button type="submit" disabled={isUpdating}>Create</Button>
+              <Button type="submit" disabled={isUpdating}>
+                Create
+              </Button>
             </form>
           </Form>
         </DialogContent>
       </Dialog>
-
-      <AlertDialogContent>
-        <AlertDialogHeader>
-          <AlertDialogTitle>Failed to create installation.</AlertDialogTitle>
-          <AlertDialogDescription>
-            We might have a hiccup! Try again or reach out to support via{' '}
-            <strong>
-              <a href={`mailto:${process.env.NEXT_PUBLIC_SUPPORT_EMAIL}`}>
-                {process.env.NEXT_PUBLIC_SUPPORT_EMAIL}
-              </a>
-            </strong>
-          </AlertDialogDescription>
-        </AlertDialogHeader>
-        <AlertDialogFooter>
-          <AlertDialogCancel onClick={() => setAlertOpen(false)}>Close</AlertDialogCancel>
-        </AlertDialogFooter>
-      </AlertDialogContent>
-    </AlertDialog>
+    </FailureAlert>
   );
 }

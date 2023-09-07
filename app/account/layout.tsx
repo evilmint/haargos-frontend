@@ -51,7 +51,7 @@ export default function SettingsLayout({ children }: SettingsLayoutProps) {
           </div>
         </div>
       </div>
-      <div className="flex-2 w-3/5 mx-auto space-y-4 p-8 pt-6">
+      <div className="flex-2  2xl:w-3/5 mx-auto space-y-4 p-8 pt-6">
         <div className="md:hidden">
           <Image
             src="/examples/forms-light.png"

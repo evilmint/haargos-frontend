@@ -155,17 +155,11 @@ export default function DashboardInstallationPage({
 
     try {
       const accessToken = await getAccessTokenSilently();
-      const installation = await updateInstallation(
-        accessToken,
-        params.id,
-        data.instance ?? '',
-        data.name,
-      );
-      // TODO: Update in store
+      await updateInstallation(accessToken, params.id, data.instance ?? '', data.name);
 
       asyncFetch();
     } catch (error) {
-      setAlertOpen(true); // TODO: Handle error alert
+      setAlertOpen(true);
     } finally {
       setUpdating(false);
       setSheetOpen(false);

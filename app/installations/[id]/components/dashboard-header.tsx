@@ -104,7 +104,7 @@ export function DashboardHeaderInstallation({ ...params }) {
           <Icons.git />
         </CardHeader>
         <CardContent>
-          <div className="text-xl font-bold inline">
+          <div className="text-xl font-bold mr-2 inline">
             {observationsLoading || isLoading ? (
               <Skeleton className="h-8" />
             ) : (
@@ -114,35 +114,35 @@ export function DashboardHeaderInstallation({ ...params }) {
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger>
-                {observationsLoading == false &&
-                  isLoading == false &&
-                  (observations.length > 0 ? (
-                    isHAUpdateAvailable == false ? (
-                      <Badge
-                        className="ml-2 cursor-pointer"
-                        color="orange"
-                        icon={Icons.shieldCheck}
-                      >
-                        {latestHaRelease} available
-                      </Badge>
-                    ) : (
-                      <a
-                        className="cursor-pointer"
-                        href="https://github.com/home-assistant/core/releases"
-                        target="_blank"
-                      >
+                <a
+                  className="cursor-pointer"
+                  href="https://github.com/home-assistant/core/releases"
+                  target="_blank"
+                >
+                  {observationsLoading == false &&
+                    isLoading == false &&
+                    (observations.length > 0 ? (
+                      isHAUpdateAvailable == false ? (
                         <Badge
-                          className="ml-2 cursor-pointer"
+                          className="cursor-pointer"
+                          color="green"
+                          icon={Icons.shieldCheck}
+                        >
+                          Up to date
+                        </Badge>
+                      ) : (
+                        <Badge
+                          className="cursor-pointer"
                           color="orange"
                           icon={Icons.shieldExclamation}
                         >
                           {latestHaRelease} available
                         </Badge>
-                      </a>
-                    )
-                  ) : (
-                    <div className="text-xl font-bold">n/a</div>
-                  ))}
+                      )
+                    ) : (
+                      <div className="text-xl font-bold">n/a</div>
+                    ))}
+                </a>
               </TooltipTrigger>
               <TooltipContent>
                 <p>

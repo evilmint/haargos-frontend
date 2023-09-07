@@ -66,6 +66,48 @@ export async function createInstallation(
   return data;
 }
 
+export async function updateInstallation(
+  token: string,
+  id: string,
+  instance: string,
+  name: string,
+): Promise<Installation> {
+  const additionalHeaders = new Headers({
+    Authorization: `Bearer ${token}`,
+    'Content-Type': 'application/json',
+  });
+
+  const mergedHeaders = new Headers({
+    ...Object.fromEntries(baseHeaders),
+    ...Object.fromEntries(additionalHeaders),
+  });
+
+  const requestBody = JSON.stringify({
+    id,
+    instance,
+    name,
+  });
+
+  const requestOptions: RequestInit = {
+    method: 'PUT',
+    headers: mergedHeaders,
+    body: requestBody,
+    redirect: 'follow',
+  };
+
+  const response = await fetch(
+    `${apiSettings.baseUrl}/installations/${id}`,
+    requestOptions,
+  );
+
+  if (!response.ok) {
+    throw new Error('Failed to update installation');
+  }
+
+  const data: Installation = await response.json();
+  return data;
+}
+
 export async function deleteInstallation(
   token: string,
   id: string,

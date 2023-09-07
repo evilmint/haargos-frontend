@@ -42,20 +42,7 @@ import {
   FormDescription,
   FormMessage,
 } from '@/registry/default/ui/form';
-
-const createInstallationFormSchema = z.object({
-  name: z
-    .string()
-    .min(2, {
-      message: 'Name must be at least 2 characters.',
-    })
-    .max(30, {
-      message: 'Name must not be longer than 32 characters.',
-    }),
-  instance: z.string().min(0).max(64),
-});
-
-type CreateInstallationFormValues = z.infer<typeof createInstallationFormSchema>;
+import { CreateInstallationFormValues, createInstallationFormSchema } from '@/lib/zod';
 
 export function CreateInstallationForm({
   children,
@@ -155,7 +142,7 @@ export function CreateInstallationForm({
                   </FormItem>
                 )}
               />
-              <Button type="submit">Create</Button>
+              <Button type="submit" disabled={isUpdating}>Create</Button>
             </form>
           </Form>
         </DialogContent>

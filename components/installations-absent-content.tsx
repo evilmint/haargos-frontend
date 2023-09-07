@@ -5,17 +5,6 @@ import { CreateInstallationForm } from './ui/create-installation-form';
 import { useInstallationSwitcherStore } from '@/app/services/stores';
 import { useRouter } from 'next/navigation';
 import React from 'react';
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from '@/registry/new-york/ui/dialog';
-import { Label } from '@/registry/new-york/ui/label';
-import { Input } from '@/registry/new-york/ui/input';
 import { Icons } from './icons';
 
 export function InstallationsAbsentContent() {

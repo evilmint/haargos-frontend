@@ -101,6 +101,25 @@ export default function InstallationSwitcher({
     }
   }, [pathname]);
 
+  React.useEffect(() => {
+    setGroups([
+      {
+        label: 'Installation',
+        installations: installations,
+      },
+    ]);
+
+    const paramInstallation = installations.filter(i => i.id === installationId);
+    if (
+      paramInstallation.length > 0 &&
+      paramInstallation[0] != null &&
+      (selectedInstallation == null ||
+        selectedInstallation.name != paramInstallation[0].name)
+    ) {
+      setSelectedInstallation(paramInstallation[0]);
+    }
+  }, [installations]);
+
   return isLoading ? (
     <Skeleton className="h-8 w-[150px]" />
   ) : true ? (

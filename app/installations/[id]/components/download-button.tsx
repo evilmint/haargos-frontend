@@ -4,10 +4,11 @@ import React from 'react';
 export default function DownloadButton({
   fileName = 'download.txt',
   textToCopy = 'Copy default',
+  mimeType = 'application/text'
 }) {
   const download = () => {
     var a = document.createElement('a');
-    var blob = new Blob([textToCopy], { type: 'application/text' });
+    var blob = new Blob([textToCopy], { type: mimeType });
     a.href = window.URL.createObjectURL(blob);
     a.download = fileName;
     a.click();

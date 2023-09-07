@@ -17,11 +17,13 @@ import React, { useEffect, useState } from 'react';
 import { fullNameInitials } from '@/app/tools';
 import { useAuth0 } from '@auth0/auth0-react';
 import { LoginButton } from './login-button';
+import { useRouter } from 'next/navigation';
 
 export function UserNav() {
   const fetchUser = useUserStore(state => state.fetchUser);
   const { getAccessTokenSilently, user, logout, isAuthenticated } = useAuth0();
   const [isLoading, setLoading] = useState<boolean>(true);
+  const router = useRouter();
 
   const asyncFetch = async () => {
     try {
@@ -59,7 +61,9 @@ export function UserNav() {
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
-          <DropdownMenuItem>Profile</DropdownMenuItem>
+          <DropdownMenuItem onClick={() => router.push('/account/account')}>
+            Account
+          </DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
 

@@ -1,32 +1,13 @@
 'use client';
-import { Card, CardContent, CardHeader, CardTitle } from '@/registry/new-york/ui/card';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/registry/new-york/ui/tabs';
-import { Storage } from './components/storage';
-import { Docker } from './components/docker';
-import { Environment } from './components/environment';
-import { ZigbeeDataTableProxy } from './components/zigbee/zigbee-data-table-proxy';
+import { DashboardHeaderInstallation } from '@/app/installations/[id]/components/dashboard-header';
+import {
+  useInstallationStore,
+  useInstallationSwitcherStore,
+} from '@/app/services/stores';
+import { Icons } from '@/components/icons';
+import { Button } from '@/components/ui/button';
 import { MainNav } from '@/components/ui/main-nav';
 import { UserNav } from '@/components/ui/user-nav';
-import { DashboardHeaderInstallation } from '@/app/installations/[id]/components/dashboard-header';
-import { useEffect, useState } from 'react';
-import { LogsDataTableProxy } from './components/logs/logs-data-table-proxy';
-import { AutomationsDataTableProxy } from './components/automations/automations-data-table-proxy';
-import { ScriptsDataTableProxy } from './components/scripts/scripts-data-table-proxy';
-import { SceneDataTableProxy } from './components/scenes/scenes-data-table-proxy';
-import { AgentInstallation } from './components/agent-installation';
-import { InstallationOverviewChart } from './components/installation-overview-chart';
-import {
-  Sheet,
-  SheetClose,
-  SheetContent,
-  SheetDescription,
-  SheetFooter,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from '@/registry/default/ui/sheet';
-import { Button } from '@/components/ui/button';
-import { Icons } from '@/components/icons';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -39,11 +20,59 @@ import {
   AlertDialogTrigger,
 } from '@/registry/default/ui/alert-dialog';
 import {
-  useInstallationStore,
-  useInstallationSwitcherStore,
-} from '@/app/services/stores';
+  Sheet,
+  SheetClose,
+  SheetContent,
+  SheetDescription,
+  SheetFooter,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from '@/registry/default/ui/sheet';
+import { Card, CardContent, CardHeader, CardTitle } from '@/registry/new-york/ui/card';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/registry/new-york/ui/tabs';
 import { useAuth0 } from '@auth0/auth0-react';
 import { useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
+import { AgentInstallation } from './components/agent-installation';
+import { AutomationsDataTableProxy } from './components/automations/automations-data-table-proxy';
+import { Docker } from './components/docker';
+import { Environment } from './components/environment';
+import { InstallationOverviewChart } from './components/installation-overview-chart';
+import { LogsDataTableProxy } from './components/logs/logs-data-table-proxy';
+import { SceneDataTableProxy } from './components/scenes/scenes-data-table-proxy';
+import { ScriptsDataTableProxy } from './components/scripts/scripts-data-table-proxy';
+import { Storage } from './components/storage';
+import { ZigbeeDataTableProxy } from './components/zigbee/zigbee-data-table-proxy';
+
+import { createInstallation, updateInstallation } from '@/app/services/installations';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useForm } from 'react-hook-form';
+import * as z from 'zod';
+import {
+  Form,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormControl,
+  FormMessage,
+  FormDescription,
+} from '@/registry/default/ui/form';
+import { Input } from '@/registry/new-york/ui/input';
+
+const updateInstallationFormSchema = z.object({
+  name: z
+    .string()
+    .min(2, {
+      message: 'Name must be at least 2 characters.',
+    })
+    .max(30, {
+      message: 'Name must not be longer than 32 characters.',
+    }),
+  instance: z.string().min(0).max(64),
+});
+
+type UpdateInstallationFormValues = z.infer<typeof updateInstallationFormSchema>;
 
 export default function DashboardInstallationPage({
   params,
@@ -92,6 +121,57 @@ export default function DashboardInstallationPage({
     router.push('/');
   };
 
+  const installation = useInstallationStore(state => state.installations).find(
+    i => i.id == params.id,
+  );
+
+  const [alertOpen, setAlertOpen] = useState(false);
+  const [sheetOpen, setSheetOpen] = useState(false);
+  const [isUpdating, setUpdating] = useState<boolean>(false);
+
+  const fetchInstallations = useInstallationStore(state => state.fetchInstallations);
+  const asyncFetch = async () => {
+    try {
+      const token = await getAccessTokenSilently();
+      await fetchInstallations(token, true);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const { ...form } = useForm<UpdateInstallationFormValues>({
+    resolver: zodResolver(updateInstallationFormSchema),
+  });
+
+  useEffect(() => {
+    const defaultValues: Partial<UpdateInstallationFormValues> = {
+      name: installation?.name ?? '',
+      instance: installation?.urls.instance ?? '',
+    };
+    form.reset(defaultValues);
+  }, [installation]);
+
+  async function onSubmit(data: UpdateInstallationFormValues) {
+    setUpdating(true);
+
+    try {
+      const accessToken = await getAccessTokenSilently();
+      const installation = await updateInstallation(
+        accessToken,
+        params.id,
+        data.instance ?? '',
+        data.name,
+      );
+      // TODO: Update in store
+
+      asyncFetch();
+    } catch (error) {
+      setAlertOpen(true); // TODO: Handle error alert
+    } finally {
+      setUpdating(false);
+      setSheetOpen(false);
+    }
+  }
+
   return (
     defaultTab != null &&
     origin != null && (
@@ -126,7 +206,7 @@ export default function DashboardInstallationPage({
                 </TabsList>
 
                 <AlertDialog>
-                  <Sheet>
+                  <Sheet onOpenChange={setSheetOpen} open={sheetOpen}>
                     <SheetTrigger asChild>
                       <Button variant="ghost" className="float-right">
                         <Icons.cog6tooth />
@@ -140,11 +220,59 @@ export default function DashboardInstallationPage({
                         </SheetDescription>
                       </SheetHeader>
 
+                      <br />
+
+                      <Form {...form}>
+                        <form
+                          onSubmit={form.handleSubmit(onSubmit)}
+                          className="space-y-8"
+                        >
+                          <FormField
+                            control={form.control}
+                            name="name"
+                            render={({ field }) => (
+                              <FormItem>
+                                <FormLabel>Installation name</FormLabel>
+                                <FormControl>
+                                  <Input placeholder="My Parents' Home" {...field} />
+                                </FormControl>
+                                <FormMessage />
+                              </FormItem>
+                            )}
+                          />
+                          <FormField
+                            control={form.control}
+                            name="instance"
+                            render={({ field }) => (
+                              <FormItem>
+                                <FormLabel>Instance URL</FormLabel>
+                                <FormControl>
+                                  <Input
+                                    placeholder="https://my.homeassistant.url"
+                                    {...field}
+                                  />
+                                </FormControl>
+                                <FormDescription>
+                                  This is the URL of your HomeAssistant instance. Leave
+                                  blank if not applicable.
+                                </FormDescription>
+                                <FormMessage />
+                              </FormItem>
+                            )}
+                          />
+                          <Button type="submit" disabled={isUpdating}>
+                            Save
+                          </Button>
+                        </form>
+                      </Form>
+
                       <SheetFooter>
                         <SheetClose asChild>
                           <div className="grid grid-cols-1 py-4">
                             <AlertDialogTrigger asChild>
-                              <Button type="reset">Delete installation</Button>
+                              <Button type="reset" disabled={isUpdating}>
+                                Delete installation
+                              </Button>
                             </AlertDialogTrigger>
                           </div>
                         </SheetClose>

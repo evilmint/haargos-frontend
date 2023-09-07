@@ -15,17 +15,17 @@ export default function ProviderSet({ children }: ProviderSetProps) {
     setOrigin(window.location.origin);
   }, []);
 
-  return (
+  return process.env.NEXT_PUBLIC_WARNING_AUTH0_CLIENT_ID && (
     <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
       <Auth0Provider
         domain={process.env.NEXT_PUBLIC_WARNING_AUTH0_DOMAIN ?? ''}
-        clientId={process.env.NEXT_PUBLIC_WARNING_AUTH0_CLIENT_ID ?? ''}
+        clientId={'3EGUK8VIxgWNygQ1My32IIMeFz2KFeXm'}
         authorizationParams={{
-          redirect_uri:
-            origin ?? process.env.NEXT_PUBLIC_WARNING_AUTH0_REDIRECT_URI_DEFAULT ?? '',
-          audience: process.env.NEXT_PUBLIC_WARNING_AUTH0_AUDIENCE ?? '',
+          redirect_uri: 'http://localhost:3000',
+          audience: process.env.NEXT_PUBLIC_WARNING_AUTH0_AUDIENCE ?? 'https://api.haargos.smartrezydencja.pl',
         }}
         useRefreshTokens={true}
+        useRefreshTokensFallback={false}
         cacheLocation="localstorage"
       >
         {children}

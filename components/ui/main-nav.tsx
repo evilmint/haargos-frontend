@@ -7,6 +7,7 @@ import InstallationSwitcher from './installation-switcher';
 import {
   useInstallationStore,
   useInstallationSwitcherStore,
+  useUserStore,
 } from '@/app/services/stores';
 import { Button } from '@/registry/new-york/ui/button';
 import { ModeToggle } from './mode-toggle';
@@ -15,6 +16,7 @@ export function MainNav({ ...props }, { className }: React.HTMLAttributes<HTMLEl
   const { installationId } = props;
   const dashboardClicked = useInstallationSwitcherStore(state => state.clearInstallation);
 
+  const { user } = useUserStore(state => state);
   const installations = useInstallationStore(state => state.installations);
 
   const installation = installations.find(i => i.id == installationId);
@@ -22,14 +24,19 @@ export function MainNav({ ...props }, { className }: React.HTMLAttributes<HTMLEl
 
   return (
     <nav className={cn('flex items-center space-x-4 lg:space-x-6', className)}>
-      <Link
-        href="/"
-        onClick={() => dashboardClicked()}
-        className="text-sm font-medium transition-colors hover:text-primary"
-      >
-        Dashboard
-      </Link>
-      <InstallationSwitcher installationId={installationId} className={''} />
+      {user && (
+        <>
+          <Link
+            href="/"
+            onClick={() => dashboardClicked()}
+            className="text-sm font-medium transition-colors hover:text-primary"
+          >
+            Dashboard
+          </Link>
+
+          <InstallationSwitcher installationId={installationId} />
+        </>
+      )}
 
       {installationInstanceLink && (
         <Button

@@ -30,7 +30,7 @@ import { CreateInstallationForm } from './create-installation-form';
 
 interface InstallationSwitcherProps {
   installationId: string;
-  className: string;
+  className?: string;
 }
 
 export default function InstallationSwitcher({

@@ -17,6 +17,8 @@ interface UserState {
   fetchUser: (token: string) => Promise<void>;
 }
 
+class UserDoesNotExistError extends Error {}
+
 const useUserStore = create<UserState>((set, get) => ({
   user: null,
   isFetchingUser: false,
@@ -31,9 +33,12 @@ const useUserStore = create<UserState>((set, get) => ({
 
     try {
       const user = await getUserMe(token);
+      if (!user) {
+        throw new UserDoesNotExistError();
+      }
       set({ user });
     } catch (error) {
-      console.log(error);
+      return Promise.reject(error);
     } finally {
       set({ isFetchingUser: false });
     }
@@ -46,8 +51,7 @@ interface AccountState {
 }
 
 const useAccountStore = create<AccountState>(set => ({
-  deleteAccount: async (token) => {
-    
+  deleteAccount: async token => {
     await deleteAccount(token);
   },
   updateAccount: async (token, data) => {
@@ -107,8 +111,8 @@ const useInstallationStore = create<InstallationStoreState>((set, get) => ({
       observations: {},
       logsByInstallationId: {},
       highestStorageByInstallationId: {},
-      isFetchingObservations: {}
-    }))
+      isFetchingObservations: {},
+    }));
   },
   createInstallation: async (token: string, instance: string, name: string) => {
     try {
@@ -368,4 +372,10 @@ const extractUniqueVolumes = (volumesUnsorted: Storage[]): Storage[] => {
   }, []);
 };
 
-export { useUserStore, useAccountStore, useInstallationStore, useInstallationSwitcherStore };
+export {
+  useUserStore,
+  useAccountStore,
+  useInstallationStore,
+  useInstallationSwitcherStore,
+  UserDoesNotExistError
+};

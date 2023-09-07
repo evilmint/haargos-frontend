@@ -12,7 +12,7 @@ import {
   DropdownMenuTrigger,
 } from '@/registry/new-york/ui/dropdown-menu';
 
-import { useUserStore } from '@/app/services/stores';
+import { UserDoesNotExistError, useUserStore } from '@/app/services/stores';
 import React, { useEffect, useState } from 'react';
 import { fullNameInitials } from '@/app/tools';
 import { useAuth0 } from '@auth0/auth0-react';
@@ -29,8 +29,10 @@ export function UserNav() {
     try {
       const token = await getAccessTokenSilently();
       await fetchUser(token);
-    } catch (error) {
-      console.log(error);
+    } catch (error: any) {
+      if (error instanceof UserDoesNotExistError) {
+        logout({ logoutParams: { returnTo: window.location.origin } });
+      }
     } finally {
       setLoading(false);
     }
@@ -42,7 +44,7 @@ export function UserNav() {
 
   return isLoading ? (
     <></>
-  ) : isAuthenticated ? (
+  ) : isAuthenticated && apiUser ? (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button variant="ghost" className="relative h-8 w-8 rounded-full">
@@ -55,8 +57,16 @@ export function UserNav() {
       <DropdownMenuContent className="w-56" align="end" forceMount>
         <DropdownMenuLabel className="font-normal">
           <div className="flex flex-col space-y-1">
-            <p className="text-sm font-medium leading-none">{`${apiUser?.full_name}`}</p>
-            <p className="text-xs leading-none text-muted-foreground">{apiUser?.email}</p>
+            <p className="text-sm font-medium leading-none">{`${
+              apiUser.full_name.trim().length > 0 ? apiUser.full_name : apiUser.email
+            }`}</p>
+            {apiUser.full_name.trim().length == 0 ? (
+              <></>
+            ) : (
+              <p className="text-xs leading-none text-muted-foreground">
+                {apiUser.email}
+              </p>
+            )}
           </div>
         </DropdownMenuLabel>
         <DropdownMenuSeparator />

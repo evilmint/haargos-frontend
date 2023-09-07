@@ -99,7 +99,11 @@ export function CreateInstallationForm({
   }
 
   return (
-    <FailureAlert title={'Failed to create installation.'} openChange={setAlertOpen} open={alertOpen}>
+    <FailureAlert
+      title={'Failed to create installation.'}
+      openChange={setAlertOpen}
+      open={alertOpen}
+    >
       <Dialog open={params.open} onOpenChange={params.onOpenChange}>
         {children}
         <DialogContent>

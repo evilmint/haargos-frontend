@@ -15,10 +15,7 @@ export default function Code({ children, allowCopy = true }: CodeProps) {
       <div className="bg-slate-700 text-white p-4 rounded-md">
         <div className="flex justify-between items-center mb-2"></div>
         <div className="overflow-x-auto">
-          <pre
-            id="code"
-            className="text-gray-300 text-xs right-0 leading-4 "
-          >
+          <pre id="code" className="text-gray-300 text-xs right-0 leading-4 ">
             <code>{children}</code>
           </pre>
         </div>

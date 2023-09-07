@@ -377,5 +377,5 @@ export {
   useAccountStore,
   useInstallationStore,
   useInstallationSwitcherStore,
-  UserDoesNotExistError
+  UserDoesNotExistError,
 };

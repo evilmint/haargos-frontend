@@ -4,7 +4,7 @@ import React from 'react';
 export default function DownloadButton({
   fileName = 'download.txt',
   textToCopy = 'Copy default',
-  mimeType = 'application/text'
+  mimeType = 'application/text',
 }) {
   const download = () => {
     var a = document.createElement('a');

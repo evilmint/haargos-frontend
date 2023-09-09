@@ -188,7 +188,7 @@ export default function DashboardInstallationPage({
               }}
               className="space-y-4"
             >
-              <div className="w-[500px] inline">
+              <div className="flex-col flex-1">
                 <TabsList>
                   <TabsTrigger value="install">
                     <Icons.cog6tooth className="w-5 h-5" />
@@ -302,9 +302,7 @@ export default function DashboardInstallationPage({
 
               <TabsContent value="overview" className="space-y-4">
                 <DashboardHeaderInstallation installationId={params.id} />
-
                 <InstallationOverviewChart installationId={params.id} />
-
                 <LogsDataTableProxy installationId={params.id} />
               </TabsContent>
 
@@ -345,22 +343,41 @@ export default function DashboardInstallationPage({
               </TabsContent>
 
               <TabsContent value="host" className="space-y-4">
-                <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
-                  <Card className="col-span-7">
-                    <CardHeader>
-                      <CardTitle>CPU</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <Environment installationId={params.id} />
-                    </CardContent>
-                  </Card>
-
-                  <Storage installationId={params.id} />
-                </div>
-
-                <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
-                  <Docker installationId={params.id} />
-                </div>
+                <TabGroup>
+                  <TabList className="mt-8">
+                    <Tab>CPU</Tab>
+                    <Tab>Storage</Tab>
+                    <Tab>Docker</Tab>
+                  </TabList>
+                  <TabPanels>
+                    <TabPanel>
+                      <div className="mt-10">
+                        <Card className="col-span-7">
+                          <CardHeader>
+                            <CardTitle>CPU</CardTitle>
+                          </CardHeader>
+                          <CardContent>
+                            <Environment installationId={params.id} />
+                          </CardContent>
+                        </Card>
+                      </div>
+                    </TabPanel>
+                    <TabPanel>
+                      <div className="mt-10">
+                        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
+                          <Storage installationId={params.id} />
+                        </div>
+                      </div>
+                    </TabPanel>
+                    <TabPanel>
+                      <div className="mt-10">
+                        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
+                          <Docker installationId={params.id} />
+                        </div>
+                      </div>
+                    </TabPanel>
+                  </TabPanels>
+                </TabGroup>
               </TabsContent>
             </Tabs>
           </div>

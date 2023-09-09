@@ -190,11 +190,12 @@ export default function DashboardInstallationPage({
             >
               <div className="w-[500px] inline">
                 <TabsList>
-                  <TabsTrigger value="install">Install</TabsTrigger>
+                  <TabsTrigger value="install">
+                    <Icons.cog6tooth className="w-5 h-5" />
+                  </TabsTrigger>
                   <TabsTrigger value="overview">Overview</TabsTrigger>
                   <TabsTrigger value="homeassistant">Home Assistant</TabsTrigger>
                   <TabsTrigger value="host">Host</TabsTrigger>
-                  <TabsTrigger value="docker">Docker</TabsTrigger>
                 </TabsList>
 
                 <AlertDialog>
@@ -356,9 +357,7 @@ export default function DashboardInstallationPage({
 
                   <Storage installationId={params.id} />
                 </div>
-              </TabsContent>
 
-              <TabsContent value="docker" className="space-y-4">
                 <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
                   <Docker installationId={params.id} />
                 </div>

@@ -14,12 +14,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip';
-import {
-  Badge,
-  Flex,
-  ProgressBar,
-  Text,
-} from '@tremor/react';
+import { Badge, Flex, ProgressBar, Text } from '@tremor/react';
 
 export function DashboardHeaderInstallation({ ...params }) {
   const { installationId } = params;
@@ -120,7 +115,7 @@ export function DashboardHeaderInstallation({ ...params }) {
                 </Text>
               </Flex>
             ) : (
-              <div className='font-bold'>n/a</div>
+              <div className="font-bold">n/a</div>
             )}
           </div>
         </CardContent>

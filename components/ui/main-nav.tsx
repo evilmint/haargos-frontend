@@ -11,6 +11,8 @@ import {
 } from '@/app/services/stores';
 import { Button } from '@/registry/new-york/ui/button';
 import { ModeToggle } from './mode-toggle';
+import { Icons } from '../icons';
+import { LucideExternalLink } from 'lucide-react';
 
 export function MainNav({ ...props }, { className }: React.HTMLAttributes<HTMLElement>) {
   const { installationId } = props;
@@ -23,7 +25,7 @@ export function MainNav({ ...props }, { className }: React.HTMLAttributes<HTMLEl
   const installationInstanceLink = installation?.urls?.instance;
 
   return (
-    <nav className={cn('flex items-center space-x-4 lg:space-x-6', className)}>
+    <nav className={cn('flex items-center w-auto space-x-4 lg:space-x-6', className)}>
       {user && (
         <>
           <Link
@@ -31,7 +33,7 @@ export function MainNav({ ...props }, { className }: React.HTMLAttributes<HTMLEl
             onClick={() => dashboardClicked()}
             className="text-sm font-medium transition-colors hover:text-primary"
           >
-            Dashboard
+            <Icons.home />
           </Link>
 
           <InstallationSwitcher installationId={installationId} />
@@ -45,7 +47,7 @@ export function MainNav({ ...props }, { className }: React.HTMLAttributes<HTMLEl
             window.open(installationInstanceLink, '_blank');
           }}
         >
-          Home Assistant
+          <LucideExternalLink className="h-4 w-4" />
         </Button>
       )}
 

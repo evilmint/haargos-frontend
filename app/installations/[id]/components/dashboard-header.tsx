@@ -1,11 +1,10 @@
 'use client';
 import numeral from 'numeral';
-
+import { Color, Tracker } from '@tremor/react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/registry/new-york/ui/card';
 import { useEffect, useState } from 'react';
 import TimeAgo from 'react-timeago';
 import { useInstallationStore } from '@/app/services/stores';
-import { Button } from '@/registry/new-york/ui/button';
 import { useAuth0 } from '@auth0/auth0-react';
 import { Skeleton } from '@/registry/new-york/ui/skeleton';
 import { Icons } from '@/components/icons';
@@ -15,14 +14,18 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip';
-import { Dot } from '@/components/ui/dots';
-import { Badge, BadgeDelta, Flex, ProgressBar, Text } from '@tremor/react';
-import Link from 'next/link';
+import {
+  Badge,
+  Flex,
+  ProgressBar,
+  Text,
+} from '@tremor/react';
 
 export function DashboardHeaderInstallation({ ...params }) {
   const { installationId } = params;
   const observations = useInstallationStore(state => state.observations[installationId]);
   const installations = useInstallationStore(state => state.installations);
+
   const installation = installations.find(i => i.id == installationId);
   const highestStorage = useInstallationStore(
     state => state.highestStorageByInstallationId[installationId],
@@ -32,17 +35,8 @@ export function DashboardHeaderInstallation({ ...params }) {
     state => state.fetchObservationsForInstallation,
   );
   const latestHaRelease = useInstallationStore(state => state.latestHaRelease);
-  const { getAccessTokenSilently, user, isAuthenticated } = useAuth0();
+  const { getAccessTokenSilently, user } = useAuth0();
   const [isLoading, setLoading] = useState<boolean>(true);
-
-  const memoryValues =
-    observations && observations.length > 0 && observations[0].environment.memory
-      ? `${numeral(observations[0].environment.memory.used / 1024 / 1024).format(
-          '0.0',
-        )} / ${numeral(observations[0].environment.memory.total / 1024 / 1024).format(
-          '0.0',
-        )}G `
-      : 'n/a';
 
   const hasObservations = observations?.length > 0;
   const memoryUsed = hasObservations ? observations[0].environment.memory?.used ?? 0 : 0;
@@ -56,6 +50,33 @@ export function DashboardHeaderInstallation({ ...params }) {
   const haVersion = observations?.length > 0 && observations[0].ha_config?.version;
   const isHAUpdateAvailable =
     latestHaRelease != null && haVersion != null && haVersion != latestHaRelease;
+
+  interface Tracker {
+    color: Color;
+    tooltip: string;
+  }
+
+  const data: Tracker[] = [
+    { color: 'emerald', tooltip: 'Operational' },
+    { color: 'emerald', tooltip: 'Operational' },
+    { color: 'emerald', tooltip: 'Operational' },
+    { color: 'emerald', tooltip: 'Operational' },
+    { color: 'emerald', tooltip: 'Operational' },
+    { color: 'emerald', tooltip: 'Operational' },
+    { color: 'emerald', tooltip: 'Operational' },
+    { color: 'rose', tooltip: 'Downtime' },
+    { color: 'emerald', tooltip: 'Operational' },
+    { color: 'emerald', tooltip: 'Operational' },
+    { color: 'emerald', tooltip: 'Operational' },
+    { color: 'emerald', tooltip: 'Operational' },
+    { color: 'gray', tooltip: 'Maintenance' },
+    { color: 'emerald', tooltip: 'Operational' },
+    { color: 'emerald', tooltip: 'Operational' },
+    { color: 'emerald', tooltip: 'Operational' },
+    { color: 'yellow', tooltip: 'Degraded' },
+    { color: 'yellow', tooltip: 'Degraded' },
+    { color: 'yellow', tooltip: 'Degraded' },
+  ]; // max 20 visually
 
   const asyncFetch = async () => {
     try {
@@ -83,17 +104,23 @@ export function DashboardHeaderInstallation({ ...params }) {
     <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-5">
       <Card>
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-sm font-medium">Agent version</CardTitle>
+          <CardTitle className="text-sm font-medium">Agent</CardTitle>
           <Icons.git />
         </CardHeader>
         <CardContent>
-          <div className="text-xl font-bold">
+          <div className="text-xl">
             {observationsLoading || isLoading ? (
               <Skeleton className="h-8" />
             ) : observations && observations.length > 0 ? (
-              observations[0].agent_version
+              <Flex>
+                <Text>{observations[0].agent_version}</Text>
+                <Text>
+                  Last connection{' '}
+                  <TimeAgo className="font-semibold" date={observations[0]?.timestamp} />
+                </Text>
+              </Flex>
             ) : (
-              'n/a'
+              <div className='font-bold'>n/a</div>
             )}
           </div>
         </CardContent>
@@ -237,24 +264,6 @@ export function DashboardHeaderInstallation({ ...params }) {
           </div>
         </CardContent>
       </Card>
-      <Card>
-        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-sm font-medium">Latest agent activity</CardTitle>
-
-          <Icons.healthline />
-        </CardHeader>
-        <CardContent>
-          <div className="text-xl font-bold">
-            {observationsLoading || isLoading ? (
-              <Skeleton className="h-8" />
-            ) : observations.length > 0 ? (
-              <TimeAgo date={observations[0]?.timestamp} />
-            ) : (
-              'n/a'
-            )}
-          </div>
-        </CardContent>
-      </Card>
 
       <Card>
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
@@ -291,6 +300,8 @@ export function DashboardHeaderInstallation({ ...params }) {
                     </TooltipProvider>
                   </div>
                 )}
+
+                <Tracker data={data} className="mt-2" />
               </div>
             ) : (
               <div className="text-xl font-bold">n/a</div>

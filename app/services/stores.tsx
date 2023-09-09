@@ -247,10 +247,12 @@ const useInstallationStore = create<InstallationStoreState>((set, get) => ({
         '',
       );
 
+      const logs = parseLog(logString);
+
       set(state => ({
         logsByInstallationId: {
           ...state.logsByInstallationId,
-          [installationId]: parseLog(logString),
+          [installationId]: logs,
         },
       }));
 
@@ -339,10 +341,20 @@ function parseISOLocal(s: any) {
 
 const parseLog = (logString: string): Log[] => {
   let logs = logString.split('\n');
+
+  const seenTimes = new Set<number>();
+
   let reduced = logs.reduce((acc: Log[], log: string) => {
     const parts = log.split(/\s+/);
     if (parts.length >= 5) {
       const time = parseISOLocal(parts[0] + 'T' + parts[1]);
+
+      if (seenTimes.has(time.getTime())) {
+        return acc; // skip if this time has already been seen
+      }
+
+      seenTimes.add(time.getTime());
+
       const logType = parts[2][0];
       const thread = parts[3].replace('(', '').replace(')', '');
       const restOfLog = parts.slice(4).join(' ');

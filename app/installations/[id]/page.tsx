@@ -59,6 +59,7 @@ import {
   FormDescription,
 } from '@/registry/default/ui/form';
 import { Input } from '@/registry/new-york/ui/input';
+import { Flex, Tab, TabGroup, TabList, TabPanel, TabPanels } from '@tremor/react';
 
 const updateInstallationFormSchema = z.object({
   name: z
@@ -191,10 +192,7 @@ export default function DashboardInstallationPage({
                 <TabsList>
                   <TabsTrigger value="install">Install</TabsTrigger>
                   <TabsTrigger value="overview">Overview</TabsTrigger>
-                  <TabsTrigger value="zigbee">Zigbee</TabsTrigger>
-                  <TabsTrigger value="automations">Automations</TabsTrigger>
-                  <TabsTrigger value="scripts">Scripts</TabsTrigger>
-                  <TabsTrigger value="scenes">Scenes</TabsTrigger>
+                  <TabsTrigger value="homeassistant">Home Assistant</TabsTrigger>
                   <TabsTrigger value="host">Host</TabsTrigger>
                   <TabsTrigger value="docker">Docker</TabsTrigger>
                 </TabsList>
@@ -309,20 +307,40 @@ export default function DashboardInstallationPage({
                 <LogsDataTableProxy installationId={params.id} />
               </TabsContent>
 
-              <TabsContent value="zigbee" className="space-y-4">
-                <ZigbeeDataTableProxy installationId={params.id} />
-              </TabsContent>
+              <TabsContent value="homeassistant" className="space-y-4">
+                <TabGroup>
+                  <TabList className="mt-8">
+                    <Tab>Zigbee</Tab>
+                    <Tab>Automations</Tab>
+                    <Tab>Scene</Tab>
+                    <Tab>Scripts</Tab>
+                  </TabList>
+                  <TabPanels>
+                    <TabPanel>
+                      <div className="mt-10">
+                        <ZigbeeDataTableProxy installationId={params.id} />
+                      </div>
+                    </TabPanel>
 
-              <TabsContent value="automations" className="space-y-4">
-                <AutomationsDataTableProxy installationId={params.id} />
-              </TabsContent>
+                    <TabPanel>
+                      <div className="mt-10">
+                        <AutomationsDataTableProxy installationId={params.id} />
+                      </div>
+                    </TabPanel>
 
-              <TabsContent value="scripts" className="space-y-4">
-                <ScriptsDataTableProxy installationId={params.id} />
-              </TabsContent>
+                    <TabPanel>
+                      <div className="mt-10">
+                        <SceneDataTableProxy installationId={params.id} />
+                      </div>
+                    </TabPanel>
 
-              <TabsContent value="scenes" className="space-y-4">
-                <SceneDataTableProxy installationId={params.id} />
+                    <TabPanel>
+                      <div className="mt-10">
+                        <ScriptsDataTableProxy installationId={params.id} />
+                      </div>
+                    </TabPanel>
+                  </TabPanels>
+                </TabGroup>
               </TabsContent>
 
               <TabsContent value="host" className="space-y-4">

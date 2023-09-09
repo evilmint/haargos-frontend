@@ -22,7 +22,7 @@ export default function ProviderSet({ children }: ProviderSetProps) {
           domain={process.env.NEXT_PUBLIC_WARNING_AUTH0_DOMAIN ?? ''}
           clientId={'3EGUK8VIxgWNygQ1My32IIMeFz2KFeXm'}
           authorizationParams={{
-            redirect_uri: 'http://localhost:3000',
+            redirect_uri: origin ?? 'https://haargos.smartrezydencja.pl',
             audience:
               process.env.NEXT_PUBLIC_WARNING_AUTH0_AUDIENCE ??
               'https://api.haargos.smartrezydencja.pl',

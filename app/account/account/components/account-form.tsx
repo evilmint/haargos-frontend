@@ -18,7 +18,7 @@ import {
 import { Input } from '@/registry/new-york/ui/input';
 import { useAccountStore, useUserStore } from '@/app/services/stores';
 import { useEffect, useState } from 'react';
-import { FailureAlert } from '@/components/ui/FailureAlert';
+import { FailureAlert } from '@/components/ui/failure-alert';
 import { useAuth0 } from '@auth0/auth0-react';
 
 const profileFormSchema = z.object({

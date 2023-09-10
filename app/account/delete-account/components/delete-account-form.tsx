@@ -25,7 +25,7 @@ import {
   useInstallationSwitcherStore,
   useUserStore,
 } from '@/app/services/stores';
-import { FailureAlert } from '@/components/ui/FailureAlert';
+import { FailureAlert } from '@/components/ui/failure-alert';
 
 const deleteFormSchema = z.object({});
 

@@ -25,7 +25,7 @@ export function MainNav({ ...props }, { className }: React.HTMLAttributes<HTMLEl
   const installationInstanceLink = installation?.urls?.instance;
 
   return (
-    <nav className={cn('flex items-center w-auto space-x-4 lg:space-x-6', className)}>
+    <nav className={cn('flex items-center w-auto space-x-3', className)}>
       {user && (
         <>
           <Link
@@ -33,7 +33,7 @@ export function MainNav({ ...props }, { className }: React.HTMLAttributes<HTMLEl
             onClick={() => dashboardClicked()}
             className="text-sm font-medium transition-colors hover:text-primary"
           >
-            <Icons.home />
+            <Icons.home className="w-5 h-5" />
           </Link>
 
           <InstallationSwitcher installationId={installationId} />

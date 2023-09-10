@@ -43,7 +43,7 @@ import {
   FormMessage,
 } from '@/registry/default/ui/form';
 import { CreateInstallationFormValues, createInstallationFormSchema } from '@/lib/zod';
-import { FailureAlert } from './FailureAlert';
+import { FailureAlert } from './failure-alert';
 
 export function CreateInstallationForm({
   children,

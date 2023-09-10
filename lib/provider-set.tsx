@@ -1,8 +1,9 @@
 'use client';
 
+import React, { useEffect, useState } from 'react';
+import { RedirectProvider } from './redirect-provider';
 import { ThemeProvider } from '@/components/theme-provider';
 import { Auth0Provider } from '@auth0/auth0-react';
-import React, { useEffect, useState } from 'react';
 
 type ProviderSetProps = {
   children: React.ReactNode;
@@ -20,7 +21,7 @@ export default function ProviderSet({ children }: ProviderSetProps) {
       <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
         <Auth0Provider
           domain={process.env.NEXT_PUBLIC_WARNING_AUTH0_DOMAIN ?? ''}
-          clientId={'3EGUK8VIxgWNygQ1My32IIMeFz2KFeXm'}
+          clientId={process.env.NEXT_PUBLIC_WARNING_AUTH0_CLIENT_ID}
           authorizationParams={{
             redirect_uri: origin ?? 'https://haargos.smartrezydencja.pl',
             audience:
@@ -31,7 +32,7 @@ export default function ProviderSet({ children }: ProviderSetProps) {
           useRefreshTokensFallback={false}
           cacheLocation="localstorage"
         >
-          {children}
+          <RedirectProvider>{children}</RedirectProvider>
         </Auth0Provider>
       </ThemeProvider>
     )

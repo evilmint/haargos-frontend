@@ -23,7 +23,7 @@ export function RedirectProvider(props: RedirectProps) {
       }
     };
     check();
-  }, [window, getAccessTokenSilently]);
+  }, [getAccessTokenSilently]);
 
   return props.children;
 }

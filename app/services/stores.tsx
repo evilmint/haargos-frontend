@@ -233,7 +233,7 @@ const useInstallationStore = create<InstallationStoreState>((set, get) => ({
           : true;
 
         return observation;
-      });
+      }).sort((o1, o2) => new Date(o2.timestamp).getTime() - new Date(o1.timestamp).getTime());
 
       set(state => ({
         observations: {
@@ -341,7 +341,7 @@ function parseISOLocal(s: any) {
 
 const parseLog = (logString: string): Log[] => {
   let logs = logString.split('\n');
-
+  
   const seenTimes = new Set<number>();
 
   let reduced = logs.reduce((acc: Log[], log: string) => {

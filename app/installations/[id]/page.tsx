@@ -165,7 +165,7 @@ export default function DashboardInstallationPage({
   useEffect(() => {
     const defaultValues: Partial<UpdateInstallationFormValues> = {
       name: installation?.name ?? '',
-      instance: installation?.urls.instance ?? '',
+      instance: installation?.urls.instance.url ?? '',
     };
     form.reset(defaultValues);
   }, [installation]);

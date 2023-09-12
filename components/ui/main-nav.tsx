@@ -22,7 +22,7 @@ export function MainNav({ ...props }, { className }: React.HTMLAttributes<HTMLEl
   const installations = useInstallationStore(state => state.installations);
 
   const installation = installations.find(i => i.id == installationId);
-  const installationInstanceLink = installation?.urls?.instance;
+  const installationInstanceLink = installation?.urls?.instance.url;
 
   return (
     <nav className={cn('flex items-center w-auto space-x-3', className)}>

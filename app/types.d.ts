@@ -117,7 +117,7 @@ interface ObservationApiResponse {
 }
 
 interface InstallationUrls {
-  instance: string | null;
+  instance: { url: string; is_verified: boolean };
 }
 
 interface Installation {

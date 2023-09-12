@@ -52,10 +52,12 @@ export function DashboardHeaderInstallation({ ...params }) {
     tooltip: string;
   }
 
-  const degradedLinkThreshold = Number(process.env.NEXT_PUBLIC_DEGRADED_LINK_THRESHOLD_MS);
+  const degradedLinkThreshold = Number(
+    process.env.NEXT_PUBLIC_DEGRADED_LINK_THRESHOLD_MS,
+  );
   const data: Tracker[] = (installation?.health_statuses ?? []).map(status => {
     const isDegradedLink = status.time >= degradedLinkThreshold;
-    const color = !status.is_up ? 'rose' : isDegradedLink ? 'yellow' : 'emerald';
+    const color: Color = !status.is_up ? 'rose' : isDegradedLink ? 'yellow' : 'emerald';
     const tooltip = isDegradedLink
       ? 'Degraded'
       : status.is_up
@@ -98,7 +100,7 @@ export function DashboardHeaderInstallation({ ...params }) {
     (a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime(),
   );
 
-  const healthy =
+  const healthy: { is_healthy: boolean; last_updated: string | null; color: Color } =
     installation && installation.health_statuses.length > 0
       ? {
           is_healthy: recent_health_status[0].is_up ?? false,
@@ -288,7 +290,7 @@ export function DashboardHeaderInstallation({ ...params }) {
             ) : observations.length > 0 ? (
               <div>
                 <Badge color={healthy.color} icon={Icons.signal}>
-                  <TimeAgo date={healthy.last_updated} />
+                  <TimeAgo date={healthy.last_updated ?? ''} />
                 </Badge>
 
                 {healthy.last_updated && (

@@ -144,7 +144,7 @@ export default function InstallationSwitcher({
             {selectedInstallation?.name != null ? (
               <>
                 {selectedInstallation && selectedInstallation.health_statuses.length > 0 &&
-                selectedInstallation.health_statuses[0].is_up ? (
+                selectedInstallation.health_statuses[selectedInstallation.health_statuses.length - 1].is_up ? (
                   <div className="w-2 h-2 bg-green-600 rounded-full inline-block mr-2"></div>
                 ) : (
                   <div className="w-2 h-2 bg-red-600 rounded-full inline-block mr-2"></div>
@@ -176,7 +176,7 @@ export default function InstallationSwitcher({
                       className="text-sm"
                     >
                       {installation && installation.health_statuses.length > 0 &&
-                      installation.health_statuses[0].is_up ? (
+                      installation.health_statuses[installation.health_statuses.length - 1].is_up ? (
                         <Dot.green />
                       ) : (
                         <Dot.red />

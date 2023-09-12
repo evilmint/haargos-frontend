@@ -14,7 +14,8 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/registry/new-york/ui
 import { useEffect } from 'react';
 import { useInstallationStore } from '@/app/services/stores';
 import { useAuth0 } from '@auth0/auth0-react';
-import { ProgressBar } from '@tremor/react';
+import { LineChart, ProgressBar } from '@tremor/react';
+import moment from 'moment';
 
 export function Storage({ ...params }) {
   const { installationId } = params;
@@ -34,6 +35,21 @@ export function Storage({ ...params }) {
       console.log(error);
     }
   };
+
+  const dataFormatter = (number: number) =>
+    `${Intl.NumberFormat('us').format(number).toString()}%`;
+
+  const chartdata = (observations ?? []).reverse().map(o => {
+    const checkStorages = o.environment.storage.filter(f => f.name != 'overlay');
+
+    return {
+      year: moment(o.timestamp).format('HH:mm'),
+      Used:
+        checkStorages.reduce((acc, o) => {
+          return acc + Number(o.use_percentage.slice(0, -1));
+        }, 0) / checkStorages.length,
+    };
+  });
 
   useEffect(() => {
     asyncFetch();
@@ -88,6 +104,20 @@ export function Storage({ ...params }) {
               })}
           </TableBody>
         </Table>
+      </CardContent>
+
+      <CardHeader>
+        <CardTitle>Used total</CardTitle>
+      </CardHeader>
+      <CardContent>
+        <LineChart
+          data={chartdata}
+          index="year"
+          categories={['Used']}
+          colors={['blue']}
+          valueFormatter={dataFormatter}
+          yAxisWidth={40}
+        />
       </CardContent>
     </Card>
   );

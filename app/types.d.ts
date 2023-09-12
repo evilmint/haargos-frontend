@@ -128,8 +128,15 @@ interface Installation {
   notes: string;
   last_agent_connection: string;
   id: string;
+  health_statuses: HealthStatus[];
   name: string;
   agent_token: string;
+}
+
+interface HealthStatus {
+  time: number;
+  is_up: boolean;
+  timestamp: string;
 }
 
 interface InstallationHealthy {

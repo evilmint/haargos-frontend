@@ -15,6 +15,7 @@ import {
   TooltipTrigger,
 } from '@/components/ui/tooltip';
 import { Badge, Flex, ProgressBar, Text } from '@tremor/react';
+import moment from 'moment';
 
 export function DashboardHeaderInstallation({ ...params }) {
   const { installationId } = params;
@@ -51,27 +52,22 @@ export function DashboardHeaderInstallation({ ...params }) {
     tooltip: string;
   }
 
-  const data: Tracker[] = [
-    { color: 'emerald', tooltip: 'Operational' },
-    { color: 'emerald', tooltip: 'Operational' },
-    { color: 'emerald', tooltip: 'Operational' },
-    { color: 'emerald', tooltip: 'Operational' },
-    { color: 'emerald', tooltip: 'Operational' },
-    { color: 'emerald', tooltip: 'Operational' },
-    { color: 'emerald', tooltip: 'Operational' },
-    { color: 'rose', tooltip: 'Downtime' },
-    { color: 'emerald', tooltip: 'Operational' },
-    { color: 'emerald', tooltip: 'Operational' },
-    { color: 'emerald', tooltip: 'Operational' },
-    { color: 'emerald', tooltip: 'Operational' },
-    { color: 'gray', tooltip: 'Maintenance' },
-    { color: 'emerald', tooltip: 'Operational' },
-    { color: 'emerald', tooltip: 'Operational' },
-    { color: 'emerald', tooltip: 'Operational' },
-    { color: 'yellow', tooltip: 'Degraded' },
-    { color: 'yellow', tooltip: 'Degraded' },
-    { color: 'yellow', tooltip: 'Degraded' },
-  ]; // max 20 visually
+  const data: Tracker[] = (installation?.health_statuses ?? []).map(status => {
+    const isDegradedLink = status.time >= 500;
+    const color = isDegradedLink ? 'yellow' : status.is_up ? 'emerald' : 'rose';
+    const tooltip = isDegradedLink
+      ? 'Degraded'
+      : status.is_up
+      ? 'Operational'
+      : 'Downtime';
+
+    return {
+      color: color,
+      tooltip: `${moment(status.timestamp).format(
+        'DD.MM HH:mm',
+      )} - ${tooltip} (${status.time.toFixed(0)}ms)`,
+    };
+  });
 
   const asyncFetch = async () => {
     try {
@@ -296,7 +292,7 @@ export function DashboardHeaderInstallation({ ...params }) {
                   </div>
                 )}
 
-                <Tracker data={data} className="mt-2" />
+                {data.length > 0 && <Tracker data={data} className="mt-2" />}
               </div>
             ) : (
               <div className="text-xl font-bold">n/a</div>

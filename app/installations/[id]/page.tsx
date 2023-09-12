@@ -352,14 +352,7 @@ export default function DashboardInstallationPage({
                   <TabPanels>
                     <TabPanel>
                       <div className="mt-10">
-                        <Card className="col-span-7">
-                          <CardHeader>
-                            <CardTitle>CPU</CardTitle>
-                          </CardHeader>
-                          <CardContent>
-                            <Environment installationId={params.id} />
-                          </CardContent>
-                        </Card>
+                        <Environment installationId={params.id} />
                       </div>
                     </TabPanel>
                     <TabPanel>

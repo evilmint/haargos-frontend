@@ -52,9 +52,10 @@ export function DashboardHeaderInstallation({ ...params }) {
     tooltip: string;
   }
 
+  const degradedLinkThreshold = Number(process.env.NEXT_PUBLIC_DEGRADED_LINK_THRESHOLD_MS);
   const data: Tracker[] = (installation?.health_statuses ?? []).map(status => {
-    const isDegradedLink = status.time >= 500;
-    const color = isDegradedLink ? 'yellow' : status.is_up ? 'emerald' : 'rose';
+    const isDegradedLink = status.time >= degradedLinkThreshold;
+    const color = !status.is_up ? 'rose' : isDegradedLink ? 'yellow' : 'emerald';
     const tooltip = isDegradedLink
       ? 'Degraded'
       : status.is_up
@@ -92,13 +93,23 @@ export function DashboardHeaderInstallation({ ...params }) {
   const cpuArchitecture =
     (observations && observations[0]?.environment.cpu?.architecture) ?? 'n/a';
 
+  const copyStatuses = [...(installation?.health_statuses ?? [])];
+  const recent_health_status = copyStatuses.sort(
+    (a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime(),
+  );
+
   const healthy =
     installation && installation.health_statuses.length > 0
       ? {
-          is_healthy: installation.health_statuses[0].is_up ?? false,
-          last_updated: installation?.health_statuses[0].timestamp,
+          is_healthy: recent_health_status[0].is_up ?? false,
+          last_updated: recent_health_status[0].timestamp,
+          color: recent_health_status[0].is_up
+            ? recent_health_status[0].time > degradedLinkThreshold
+              ? 'yellow'
+              : 'green'
+            : 'red',
         }
-      : { is_healthy: false, last_updated: null };
+      : { is_healthy: false, last_updated: null, color: 'red' };
 
   return (
     <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-5">
@@ -276,15 +287,10 @@ export function DashboardHeaderInstallation({ ...params }) {
               <Skeleton className="h-8" />
             ) : observations.length > 0 ? (
               <div>
-                {healthy.is_healthy ? (
-                  <Badge color="green" icon={Icons.signal}>
-                    <TimeAgo date={healthy.last_updated ?? ''} />
-                  </Badge>
-                ) : (
-                  <Badge color="red" icon={Icons.signal}>
-                    <TimeAgo date={healthy.last_updated ?? ''} />
-                  </Badge>
-                )}
+                <Badge color={healthy.color} icon={Icons.signal}>
+                  <TimeAgo date={healthy.last_updated} />
+                </Badge>
+
                 {healthy.last_updated && (
                   <div className="text-sm font-normal ml-2 inline">
                     <TooltipProvider>

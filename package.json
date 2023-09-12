@@ -30,6 +30,8 @@
     "eslint": "8.45.0",
     "eslint-config-next": "13.4.10",
     "highlight.js": "^11.8.0",
+    "ipaddr": "^0.1.0",
+    "ipaddr.js": "^2.1.0",
     "lucide-react": "^0.262.0",
     "moment": "^2.29.4",
     "next": "^13.4.19",

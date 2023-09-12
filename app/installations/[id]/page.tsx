@@ -8,6 +8,7 @@ import { Icons } from '@/components/icons';
 import { Button } from '@/components/ui/button';
 import { MainNav } from '@/components/ui/main-nav';
 import { UserNav } from '@/components/ui/user-nav';
+import ipaddr from 'ipaddr.js';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -60,6 +61,7 @@ import {
 } from '@/registry/default/ui/form';
 import { Input } from '@/registry/new-york/ui/input';
 import { Flex, Tab, TabGroup, TabList, TabPanel, TabPanels } from '@tremor/react';
+import { _ } from 'numeral';
 
 const updateInstallationFormSchema = z.object({
   name: z
@@ -70,7 +72,24 @@ const updateInstallationFormSchema = z.object({
     .max(30, {
       message: 'Name must not be longer than 32 characters.',
     }),
-  instance: z.string().min(0).max(64),
+  instance: z.union([
+    z.literal(''),
+    z
+      .string()
+      .trim()
+      .url()
+      .refine(i => {
+        return new URL(i).protocol.toLowerCase() == 'https:';
+      }, 'Only HTTPS URLs are allowed.')
+      .refine(i => {
+        try {
+          const _ = ipaddr.parse(new URL(i).host);
+          return false;
+        } catch {
+          return true;
+        }
+      }, 'IP addresses are not allowed.'),
+  ]),
 });
 
 type UpdateInstallationFormValues = z.infer<typeof updateInstallationFormSchema>;

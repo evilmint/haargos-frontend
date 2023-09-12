@@ -140,8 +140,16 @@ const useInstallationStore = create<InstallationStoreState>((set, get) => ({
 
     try {
       const installations = await getInstallations(token);
+
       set({
-        installations: installations.items,
+        installations: installations.items.map(i => {
+          i.health_statuses = i.health_statuses.map(h => {
+            h.time = Number(h.time); // because of fractions, time is sent as a string
+            return h;
+          });
+  
+          return i;
+        }),
         latestHaRelease: installations.latest_ha_release,
       });
     } catch (error) {

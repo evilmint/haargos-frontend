@@ -45,7 +45,7 @@ export function Environment({ ...params }) {
     return {
       timestamp: moment(o.timestamp).format('HH:mm'),
       'Memory usage':
-        (o.environment.memory?.used ?? 0) / (o.environment.memory?.total ?? 1) * 100,
+        ((o.environment.memory?.used ?? 0) / (o.environment.memory?.total ?? 1)) * 100,
     };
   });
 
@@ -58,8 +58,7 @@ export function Environment({ ...params }) {
     installationId,
   ]);
 
-  const dataFormatter = (number: number) =>
-    `${number.toFixed(1)}%`;
+  const dataFormatter = (number: number) => `${number.toFixed(1)}%`;
 
   return (
     observations?.length > 0 &&

@@ -95,13 +95,15 @@ function mapToTableView(
       },
       goToHomeAssistant: goToHomeAssistant,
       name: installation.name,
-      is_up: installation?.healthy.is_healthy ?? false,
+      is_up:
+        installation?.health_statuses.length > 0 && installation.health_statuses[0].is_up,
       installation_url: `/installations/${installation.id}`,
       instance_url: installation.urls.instance,
     },
     agent_version: observation?.agent_version ?? '-',
     ha_version: observation?.ha_config?.version ?? '-',
-    is_healthy: installation.healthy.is_healthy,
+    is_healthy:
+      installation?.health_statuses.length > 0 && installation.health_statuses[0].is_up,
     volume: observation?.has_low_storage != null ? !observation.has_low_storage : false,
     cpu: observation?.has_high_cpu_load != null ? !observation.has_high_cpu_load : false,
     memory: observation?.has_low_memory != null ? !observation.has_low_memory : false,

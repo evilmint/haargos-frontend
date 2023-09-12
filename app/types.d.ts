@@ -122,7 +122,6 @@ interface InstallationUrls {
 
 interface Installation {
   urls: InstallationUrls;
-  healthy: InstallationHealthy;
   userId: string;
   issues: string[];
   notes: string;
@@ -137,11 +136,6 @@ interface HealthStatus {
   time: number;
   is_up: boolean;
   timestamp: string;
-}
-
-interface InstallationHealthy {
-  is_healthy: boolean;
-  last_updated: string;
 }
 
 interface InstallationBody {

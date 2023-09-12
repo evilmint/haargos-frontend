@@ -36,11 +36,11 @@ export function DashboardHeader() {
   }, [fetchInstallations, getAccessTokenSilently, user]);
 
   const healthyInstallations = installations.reduce((s, i) => {
-    return s + (i.healthy.is_healthy ? 1 : 0);
+    return s + (i?.health_statuses.length > 0 && i.health_statuses[0].is_up ? 1 : 0);
   }, 0);
 
   const unhealthyInstallations = installations.reduce((s, i) => {
-    return s + (i.healthy.is_healthy ? 0 : 1);
+    return s + (i?.health_statuses.length > 0 && i.health_statuses[0].is_up ? 0 : 1);
   }, 0);
   const installationIssues = installations.reduce((s, i) => {
     return s + i.issues.length;

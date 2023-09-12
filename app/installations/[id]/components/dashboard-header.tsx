@@ -63,9 +63,9 @@ export function DashboardHeaderInstallation({ ...params }) {
 
     return {
       color: color,
-      tooltip: `${moment(status.timestamp).format(
-        'DD.MM HH:mm',
-      )} - ${tooltip} (${status.time.toFixed(0)}ms)`,
+      tooltip: `${moment(status.timestamp).calendar()}, ${tooltip} (${status.time.toFixed(
+        0,
+      )}ms)`,
     };
   });
 
@@ -91,6 +91,15 @@ export function DashboardHeaderInstallation({ ...params }) {
 
   const cpuArchitecture =
     (observations && observations[0]?.environment.cpu?.architecture) ?? 'n/a';
+
+  const healthy =
+    installation && installation.health_statuses.length > 0
+      ? {
+          is_healthy: installation.health_statuses[0].is_up ?? false,
+          last_updated: installation?.health_statuses[0].timestamp,
+        }
+      : { is_healthy: false, last_updated: null };
+
   return (
     <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-5">
       <Card>
@@ -103,13 +112,13 @@ export function DashboardHeaderInstallation({ ...params }) {
             {observationsLoading || isLoading ? (
               <Skeleton className="h-8" />
             ) : observations && observations.length > 0 ? (
-              <Flex>
+              <div>
                 <Text>{observations[0].agent_version}</Text>
                 <Text>
-                  Last connection{' '}
+                  Last seen{' '}
                   <TimeAgo className="font-semibold" date={observations[0]?.timestamp} />
                 </Text>
-              </Flex>
+              </div>
             ) : (
               <div className="font-bold">n/a</div>
             )}
@@ -267,16 +276,16 @@ export function DashboardHeaderInstallation({ ...params }) {
               <Skeleton className="h-8" />
             ) : observations.length > 0 ? (
               <div>
-                {installation?.healthy.is_healthy ? (
+                {healthy.is_healthy ? (
                   <Badge color="green" icon={Icons.signal}>
-                    <TimeAgo date={installation?.healthy.last_updated ?? ''} />
+                    <TimeAgo date={healthy.last_updated ?? ''} />
                   </Badge>
                 ) : (
                   <Badge color="red" icon={Icons.signal}>
-                    <TimeAgo date={installation?.healthy.last_updated ?? ''} />
+                    <TimeAgo date={healthy.last_updated ?? ''} />
                   </Badge>
                 )}
-                {installation?.healthy.last_updated && (
+                {healthy.last_updated && (
                   <div className="text-sm font-normal ml-2 inline">
                     <TooltipProvider>
                       <Tooltip>

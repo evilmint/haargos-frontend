@@ -169,71 +169,81 @@ const useInstallationStore = create<InstallationStoreState>((set, get) => ({
 
     try {
       const observations = await getObservations(installationId, token);
-      const updatedObservations = observations.map(observation => {
-        let volumesUnsorted = observation.environment.storage.sort(
-          (a, b) =>
-            Number(b.use_percentage.slice(0, -1)) - Number(a.use_percentage.slice(0, -1)),
-        );
+      const updatedObservations = observations
+        .map(observation => {
+          let volumesUnsorted = observation.environment.storage.sort(
+            (a, b) =>
+              Number(b.use_percentage.slice(0, -1)) -
+              Number(a.use_percentage.slice(0, -1)),
+          );
 
-        observation.environment.storage = extractUniqueVolumes(volumesUnsorted);
-        observation.zigbee?.devices.sort((a, b) => {
-          if (a.lqi === 0 && b.lqi === 0) {
-            return (
-              new Date(b.last_updated).getTime() - new Date(a.last_updated).getTime()
+          observation.environment.storage = extractUniqueVolumes(volumesUnsorted);
+          observation.zigbee?.devices.sort((a, b) => {
+            if (a.lqi === 0 && b.lqi === 0) {
+              return (
+                new Date(b.last_updated).getTime() - new Date(a.last_updated).getTime()
+              );
+            } else if (a.lqi === 0) {
+              return 1;
+            } else if (b.lqi === 0) {
+              return -1;
+            }
+
+            return a.lqi - b.lqi;
+          });
+
+          const volumeThreshold = Number(
+            process.env.NEXT_PUBLIC_WARNING_THRESHOLD_VOLUME,
+          );
+          const memoryThreshold = Number(
+            process.env.NEXT_PUBLIC_WARNING_THRESHOLD_MEMORY,
+          );
+          const cpuLoadThreshold = Number(
+            process.env.NEXT_PUBLIC_WARNING_THRESHOLD_CPU_LOAD,
+          );
+
+          observation.has_low_memory = observation.environment?.memory
+            ? (observation.environment.memory.used /
+                observation.environment.memory.total) *
+                100 >=
+              memoryThreshold
+            : true;
+          observation.has_low_storage = observation.environment?.storage
+            ? observation.environment.storage.filter(
+                s => Number(s.use_percentage.slice(0, -1)) < volumeThreshold,
+              ).length == 0
+            : true;
+
+          if (observation.zigbee != null) {
+            const batteryLevelThreshold = Number(
+              process.env.NEXT_PUBLIC_WARNING_THRESHOLD_ZIGBEE_BATTERY_LEVEL,
             );
-          } else if (a.lqi === 0) {
-            return 1;
-          } else if (b.lqi === 0) {
-            return -1;
+            const lqiThreshold = Number(
+              process.env.NEXT_PUBLIC_WARNING_THRESHOLD_ZIGBEE_LQI,
+            );
+
+            observation.zigbee.devices =
+              observation.zigbee?.devices.map(z => {
+                const hasGoodBattery =
+                  (z.battery_level ?? 0) > batteryLevelThreshold &&
+                  z.power_source?.toLowerCase() == 'battery';
+
+                z.has_low_battery = !hasGoodBattery;
+                z.has_low_lqi =
+                  z.lqi <= lqiThreshold && z.integration_type.toLowerCase() == 'zha';
+                return z;
+              }) ?? [];
           }
 
-          return a.lqi - b.lqi;
-        });
+          observation.has_high_cpu_load = observation.environment?.cpu?.load
+            ? observation.environment.cpu.load >= cpuLoadThreshold
+            : true;
 
-        const volumeThreshold = Number(process.env.NEXT_PUBLIC_WARNING_THRESHOLD_VOLUME);
-        const memoryThreshold = Number(process.env.NEXT_PUBLIC_WARNING_THRESHOLD_MEMORY);
-        const cpuLoadThreshold = Number(
-          process.env.NEXT_PUBLIC_WARNING_THRESHOLD_CPU_LOAD,
+          return observation;
+        })
+        .sort(
+          (o1, o2) => new Date(o2.timestamp).getTime() - new Date(o1.timestamp).getTime(),
         );
-
-        observation.has_low_memory = observation.environment?.memory
-          ? (observation.environment.memory.used / observation.environment.memory.total) *
-              100 >=
-            memoryThreshold
-          : true;
-        observation.has_low_storage = observation.environment?.storage
-          ? observation.environment.storage.filter(
-              s => Number(s.use_percentage.slice(0, -1)) < volumeThreshold,
-            ).length == 0
-          : true;
-
-        if (observation.zigbee != null) {
-          const batteryLevelThreshold = Number(
-            process.env.NEXT_PUBLIC_WARNING_THRESHOLD_ZIGBEE_BATTERY_LEVEL,
-          );
-          const lqiThreshold = Number(
-            process.env.NEXT_PUBLIC_WARNING_THRESHOLD_ZIGBEE_LQI,
-          );
-
-          observation.zigbee.devices =
-            observation.zigbee?.devices.map(z => {
-              const hasGoodBattery =
-                (z.battery_level ?? 0) > batteryLevelThreshold &&
-                z.power_source?.toLowerCase() == 'battery';
-
-              z.has_low_battery = !hasGoodBattery;
-              z.has_low_lqi =
-                z.lqi <= lqiThreshold && z.integration_type.toLowerCase() == 'zha';
-              return z;
-            }) ?? [];
-        }
-
-        observation.has_high_cpu_load = observation.environment?.cpu?.load
-          ? observation.environment.cpu.load >= cpuLoadThreshold
-          : true;
-
-        return observation;
-      }).sort((o1, o2) => new Date(o2.timestamp).getTime() - new Date(o1.timestamp).getTime());
 
       set(state => ({
         observations: {
@@ -341,7 +351,7 @@ function parseISOLocal(s: any) {
 
 const parseLog = (logString: string): Log[] => {
   let logs = logString.split('\n');
-  
+
   const seenTimes = new Set<number>();
 
   let reduced = logs.reduce((acc: Log[], log: string) => {

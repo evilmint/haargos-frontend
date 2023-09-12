@@ -143,7 +143,8 @@ export default function InstallationSwitcher({
           >
             {selectedInstallation?.name != null ? (
               <>
-                {selectedInstallation?.healthy.is_healthy ? (
+                {selectedInstallation?.health_statuses.length > 0 &&
+                selectedInstallation.health_statuses[0].is_up ? (
                   <div className="w-2 h-2 bg-green-600 rounded-full inline-block mr-2"></div>
                 ) : (
                   <div className="w-2 h-2 bg-red-600 rounded-full inline-block mr-2"></div>
@@ -174,7 +175,12 @@ export default function InstallationSwitcher({
                       }}
                       className="text-sm"
                     >
-                      {installation?.healthy.is_healthy ? <Dot.green /> : <Dot.red />}
+                      {installation?.health_statuses.length > 0 &&
+                      installation.health_statuses[0].is_up ? (
+                        <Dot.green />
+                      ) : (
+                        <Dot.red />
+                      )}
                       {installation.name}
                       <CheckIcon
                         className={cn(

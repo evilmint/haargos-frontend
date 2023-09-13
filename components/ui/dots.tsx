@@ -7,6 +7,9 @@ export const Dot = {
   red: (props: DotProps) => (
     <div className="w-2 h-2 bg-red-600 rounded-full inline-block mr-2" {...props}></div>
   ),
+  gray: (props: DotProps) => (
+    <div className="w-2 h-2 bg-gray-600 rounded-full inline-block mr-2" {...props}></div>
+  ),
   yellow: (props: DotProps) => (
     <div
       className="w-2 h-2 bg-yellow-600 rounded-full inline-block mr-2"

@@ -120,6 +120,18 @@ export default function InstallationSwitcher({
     }
   }, [installations]);
 
+  function dotForInstallation(installation: Installation) {
+    return installation && installation.health_statuses.length > 0 ? (
+      installation.health_statuses[installation.health_statuses.length - 1].is_up ? (
+        <Dot.green />
+      ) : (
+        <Dot.red />
+      )
+    ) : (
+      <Dot.gray />
+    );
+  }
+
   return isLoading ? (
     <Skeleton className="h-8 w-[150px]" />
   ) : true ? (
@@ -143,12 +155,8 @@ export default function InstallationSwitcher({
           >
             {selectedInstallation?.name != null ? (
               <>
-                {selectedInstallation && selectedInstallation.health_statuses.length > 0 &&
-                selectedInstallation.health_statuses[selectedInstallation.health_statuses.length - 1].is_up ? (
-                  <div className="w-2 h-2 bg-green-600 rounded-full inline-block mr-2"></div>
-                ) : (
-                  <div className="w-2 h-2 bg-red-600 rounded-full inline-block mr-2"></div>
-                )}
+                {dotForInstallation(selectedInstallation)}
+
                 {selectedInstallation.name}
               </>
             ) : (
@@ -175,12 +183,8 @@ export default function InstallationSwitcher({
                       }}
                       className="text-sm"
                     >
-                      {installation && installation.health_statuses.length > 0 &&
-                      installation.health_statuses[installation.health_statuses.length - 1].is_up ? (
-                        <Dot.green />
-                      ) : (
-                        <Dot.red />
-                      )}
+                      {dotForInstallation(installation)}
+
                       {installation.name}
                       <CheckIcon
                         className={cn(

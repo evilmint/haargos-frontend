@@ -102,7 +102,9 @@ export const columns: ColumnDef<InstallationTableView>[] = [
             {' '}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="default">{general.name}</Button>
+                <Button variant="default" className="whitespace-nowrap">
+                  {general.name}
+                </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent className="w-56">
                 <DropdownMenuLabel>{general.name}</DropdownMenuLabel>
@@ -131,13 +133,10 @@ export const columns: ColumnDef<InstallationTableView>[] = [
               </DropdownMenuContent>
             </DropdownMenu>
           </div>
-          {general.is_up ? (
-            <Badge color="green" icon={Icons.signal}>
-              live
-            </Badge>
-          ) : (
-            <Badge color="red" icon={Icons.signal}>
-              down
+
+          {general.instance_url && (
+            <Badge color={general.is_up ? 'green' : 'red'} icon={Icons.signal}>
+              {general.is_up ? 'live' : 'down'}
             </Badge>
           )}
         </div>

@@ -147,7 +147,7 @@ const useInstallationStore = create<InstallationStoreState>((set, get) => ({
             h.time = Number(h.time); // because of fractions, time is sent as a string
             return h;
           });
-  
+
           return i;
         }),
         latestHaRelease: installations.latest_ha_release,

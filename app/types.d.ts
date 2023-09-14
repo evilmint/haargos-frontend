@@ -117,7 +117,13 @@ interface ObservationApiResponse {
 }
 
 interface InstallationUrls {
-  instance: { url: string; is_verified: boolean };
+  instance?: {
+    url: string;
+    is_verified: boolean;
+    verification_status: 'PENDING' | 'FAILED' | 'SUCCESS';
+    subdomain?: string;
+    subdomain_value?: string;
+  };
 }
 
 interface Installation {

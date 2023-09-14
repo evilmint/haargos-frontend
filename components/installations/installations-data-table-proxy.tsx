@@ -96,7 +96,8 @@ function mapToTableView(
       goToHomeAssistant: goToHomeAssistant,
       name: installation.name,
       is_up:
-        installation?.health_statuses.length > 0 && installation.health_statuses[installation.health_statuses.length - 1].is_up,
+        installation?.health_statuses.length > 0 &&
+        installation.health_statuses[installation.health_statuses.length - 1].is_up,
       installation_url: `/installations/${installation.id}`,
       instance_url: installation.urls.instance.url,
     },

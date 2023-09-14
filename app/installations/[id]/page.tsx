@@ -60,7 +60,16 @@ import {
   FormDescription,
 } from '@/registry/default/ui/form';
 import { Input } from '@/registry/new-york/ui/input';
-import { Flex, Tab, TabGroup, TabList, TabPanel, TabPanels } from '@tremor/react';
+import {
+  Badge,
+  Flex,
+  Tab,
+  TabGroup,
+  TabList,
+  TabPanel,
+  TabPanels,
+  Text,
+} from '@tremor/react';
 import { _ } from 'numeral';
 
 const updateInstallationFormSchema = z.object({
@@ -165,7 +174,7 @@ export default function DashboardInstallationPage({
   useEffect(() => {
     const defaultValues: Partial<UpdateInstallationFormValues> = {
       name: installation?.name ?? '',
-      instance: installation?.urls.instance.url ?? '',
+      instance: installation?.urls.instance?.url ?? '',
     };
     form.reset(defaultValues);
   }, [installation]);
@@ -182,8 +191,39 @@ export default function DashboardInstallationPage({
       setAlertOpen(true);
     } finally {
       setUpdating(false);
-      setSheetOpen(false);
+      //setSheetOpen(false);
     }
+  }
+
+  let verification: {
+    raw_status: 'SUCCESS' | 'FAILED' | 'PENDING';
+    status: string;
+    subdomain?: string;
+    verification_value?: string;
+  };
+
+  switch (installation?.urls.instance?.verification_status) {
+    case 'SUCCESS':
+      verification = {
+        raw_status: installation.urls.instance?.verification_status,
+        status: 'Verified',
+      };
+      break;
+
+    case 'FAILED':
+      verification = {
+        raw_status: installation.urls.instance?.verification_status,
+        status: 'DNS verification failed',
+      };
+      break;
+    case 'PENDING':
+      verification = {
+        raw_status: installation.urls.instance?.verification_status,
+        status: 'DNS verification pending',
+        subdomain: installation.urls.instance?.subdomain,
+        verification_value: installation.urls.instance?.subdomain_value,
+      };
+      break;
   }
 
   return (
@@ -258,6 +298,15 @@ export default function DashboardInstallationPage({
                             render={({ field }) => (
                               <FormItem>
                                 <FormLabel>Instance URL</FormLabel>
+                                {verification.raw_status == 'SUCCESS' && (
+                                  <Badge
+                                    className="ml-2"
+                                    color="green"
+                                    icon={Icons.shieldCheck}
+                                  >
+                                    Verified
+                                  </Badge>
+                                )}
                                 <FormControl>
                                   <Input
                                     placeholder="https://my.homeassistant.url"
@@ -268,7 +317,45 @@ export default function DashboardInstallationPage({
                                   This is the URL of your HomeAssistant instance. Leave
                                   blank if not applicable.
                                 </FormDescription>
+
                                 <FormMessage />
+                                <br />
+
+                                {verification && verification.raw_status != 'SUCCESS' && (
+                                  <h3 className="font-semibold text-large">
+                                    DNS verification{' '}
+                                    <Badge
+                                      color={
+                                        verification.raw_status == 'PENDING'
+                                          ? 'yellow'
+                                          : 'red'
+                                      }
+                                    >
+                                      {verification && verification.raw_status}
+                                    </Badge>
+                                  </h3>
+                                )}
+                                {verification?.raw_status == 'PENDING' && (
+                                  <>
+                                    <FormLabel>Subdomain</FormLabel>
+                                    <FormControl>
+                                      <Input
+                                        placeholder="https://my.homeassistant.url"
+                                        readOnly
+                                        value={verification.subdomain}
+                                      />
+                                    </FormControl>
+
+                                    <FormLabel>Value</FormLabel>
+                                    <FormControl>
+                                      <Input
+                                        placeholder="https://my.homeassistant.url"
+                                        readOnly
+                                        value={verification.verification_value}
+                                      />
+                                    </FormControl>
+                                  </>
+                                )}
                               </FormItem>
                             )}
                           />

@@ -289,9 +289,26 @@ export function DashboardHeaderInstallation({ ...params }) {
               <Skeleton className="h-8" />
             ) : observations.length > 0 ? (
               <div>
-                <Badge color={healthy.color} icon={Icons.signal}>
-                  <TimeAgo date={healthy.last_updated ?? ''} />
-                </Badge>
+                {installation && installation.urls.instance?.is_verified ? (
+                  <Badge color={healthy.color} icon={Icons.signal}>
+                    <TimeAgo date={healthy.last_updated ?? ''} />
+                  </Badge>
+                ) : installation && installation.urls.instance ? (
+                  installation &&
+                  installation.urls.instance.verification_status == 'FAILED' ? (
+                    <Badge color="red" icon={Icons.shieldExclamation}>
+                      Verification failed
+                    </Badge>
+                  ) : (
+                    <Badge color="yellow" icon={Icons.cog6tooth}>
+                      Verification pending
+                    </Badge>
+                  )
+                ) : (
+                  <Badge color="gray" icon={Icons.cog6tooth}>
+                    No instance URL provided
+                  </Badge>
+                )}
 
                 {healthy.last_updated && (
                   <div className="text-sm font-normal ml-2 inline">
@@ -309,7 +326,9 @@ export function DashboardHeaderInstallation({ ...params }) {
                   </div>
                 )}
 
-                {data.length > 0 && <Tracker data={data} className="mt-2" />}
+                {installation &&
+                  installation.urls.instance?.is_verified &&
+                  data.length > 0 && <Tracker data={data} className="mt-2" />}
               </div>
             ) : (
               <div className="text-xl font-bold">n/a</div>

@@ -336,6 +336,27 @@ export function DashboardHeaderInstallation({ ...params }) {
           </div>
         </CardContent>
       </Card>
+
+      <Card>
+        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+          <CardTitle className="text-sm font-medium">Last boot</CardTitle>
+          <Icons.zap />
+        </CardHeader>
+        <CardContent>
+          <div className="">
+            {observationsLoading || isLoading ? (
+              <Skeleton className="h-8" />
+            ) : observations.length > 0 ? (
+              <div><Text>
+                <TimeAgo date={observations[observations.length - 1].environment.boot_time ?? ''} />
+                </Text>
+              </div>
+            ) : (
+              <div className="text-xl font-bold">n/a</div>
+            )}
+          </div>
+        </CardContent>
+      </Card>
     </div>
   );
 }

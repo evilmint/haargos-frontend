@@ -38,7 +38,7 @@ export interface ZigbeeDeviceTableView {
   timeago: { last_updated: Date; timestamp: Date };
   name: string | null;
   device: string;
-  lqi: number;
+  lqi: { min: number; max: number; mean: number; median: number };
   power_source: string | null;
   integration_type: string;
   id: string;

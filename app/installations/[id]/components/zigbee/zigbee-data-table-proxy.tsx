@@ -39,15 +39,24 @@ export function ZigbeeDataTableProxy({ ...params }) {
   let devices: ZigbeeDeviceTableView[] = [];
 
   if (observations && observations.length > 0 && observations[0].zigbee) {
-    devices = observations[0].zigbee.devices.map(d => mapToTableView(d, observations[0]));
+    devices = observations[0].zigbee.devices.map(d => mapToTableView(d, observations));
   }
   return <ZigbeeDataTable data={devices} />;
 }
 
 function mapToTableView(
   device: ZigbeeDevice,
-  observation: Observation,
+  observations: Observation[],
 ): ZigbeeDeviceTableView {
+  const devices = observations.flatMap(o => o.zigbee?.devices ?? []).filter(d => d.ieee == device.ieee);
+
+  const lqi_min = devices.reduce((a, d) => a > d.lqi ? d.lqi : a, 99999);
+  const lqi_max = devices.reduce((a, d) => a < d.lqi ? d.lqi : a, -1);
+  const mean = devices.reduce((a, d) => a + d.lqi, 0) / devices.length;
+
+  console.log(devices);
+  const median = devices.sort((a,b) => a.lqi - b.lqi)[Math.ceil(devices.length / 2)].lqi;
+
   return {
     id: device.ieee,
     ieee: device.ieee,
@@ -56,10 +65,10 @@ function mapToTableView(
     name: device.name_by_user,
     timeago: {
       last_updated: new Date(device.last_updated),
-      timestamp: new Date(observation.timestamp),
+      timestamp: new Date(observations[0].timestamp),
     }, //<TimeAgo date={device.last_updated} now={() => new Date(observation.timestamp).getTime()} />,
     device: `${device.brand} ${device.entity_name}`,
-    lqi: device.lqi,
+    lqi: { min: lqi_min, max: lqi_max, mean: mean, median: median },
     power_source: device.power_source + ` ${device.battery_level ?? 'n/a'}`,
     integration_type: device.integration_type.toLocaleUpperCase(),
   };

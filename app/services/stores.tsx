@@ -177,6 +177,7 @@ const useInstallationStore = create<InstallationStoreState>((set, get) => ({
 
     try {
       const observations = await getObservations(installationId, token);
+
       const updatedObservations = observations
         .map(observation => {
           let volumesUnsorted = observation.environment.storage.sort(
@@ -234,7 +235,7 @@ const useInstallationStore = create<InstallationStoreState>((set, get) => ({
               observation.zigbee?.devices.map(z => {
                 const hasGoodBattery =
                   (z.battery_level ?? 0) > batteryLevelThreshold &&
-                  z.power_source?.toLowerCase() == 'battery';
+                  z.power_source == 'Battery';
 
                 z.has_low_battery = !hasGoodBattery;
                 z.has_low_lqi =
@@ -253,6 +254,7 @@ const useInstallationStore = create<InstallationStoreState>((set, get) => ({
           (o1, o2) => new Date(o2.timestamp).getTime() - new Date(o1.timestamp).getTime(),
         );
 
+   
       set(state => ({
         observations: {
           ...state.observations,

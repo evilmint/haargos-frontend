@@ -16,7 +16,7 @@ export default function ProviderSet({ children }: ProviderSetProps) {
     setOrigin(window.location.origin);
   }, []);
 
-  return (
+  return origin && (
     process.env.NEXT_PUBLIC_WARNING_AUTH0_CLIENT_ID && (
       <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
         <Auth0Provider

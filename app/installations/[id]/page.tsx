@@ -38,7 +38,7 @@ import { useEffect, useState } from 'react';
 import { AgentInstallation } from './components/agent-installation';
 import { AutomationsDataTableProxy } from './components/automations/automations-data-table-proxy';
 import { Docker } from './components/docker';
-import { Environment } from './components/environment';
+import { CPU } from './components/cpu';
 import { InstallationOverviewChart } from './components/installation-overview-chart';
 import { LogsDataTableProxy } from './components/logs/logs-data-table-proxy';
 import { SceneDataTableProxy } from './components/scenes/scenes-data-table-proxy';
@@ -71,6 +71,7 @@ import {
   Text,
 } from '@tremor/react';
 import { _ } from 'numeral';
+import { Memory } from './components/memory';
 
 const updateInstallationFormSchema = z.object({
   name: z
@@ -452,13 +453,19 @@ export default function DashboardInstallationPage({
                 <TabGroup>
                   <TabList className="mt-8">
                     <Tab>CPU</Tab>
+                    <Tab>Memory</Tab>
                     <Tab>Storage</Tab>
                     <Tab>Docker</Tab>
                   </TabList>
                   <TabPanels>
                     <TabPanel>
                       <div className="mt-10">
-                        <Environment installationId={params.id} />
+                        <CPU installationId={params.id} />
+                      </div>
+                    </TabPanel>
+                    <TabPanel>
+                      <div className="mt-10">
+                        <Memory installationId={params.id} />
                       </div>
                     </TabPanel>
                     <TabPanel>

@@ -12,7 +12,9 @@ interface Environment {
     load: number;
     cpu_mhz: string;
     architecture: string;
+    temp: string | null;
   } | null;
+  boot_time: string | null;
   memory: {
     available: number;
     shared: number;
@@ -20,6 +22,8 @@ interface Environment {
     buff_cache: number;
     used: number;
     free: number;
+    swap_used: number | null;
+    swap_total: number | null;
   } | null;
   storage: Array<Storage>;
 }
@@ -104,8 +108,8 @@ interface ZigbeeDevice {
   brand: string;
   lqi: number;
   battery_level: number | null;
-  power_source: string | null;
-  integration_type: string;
+  power_source: 'Mains' | 'Battery' | null;
+  integration_type: 'zha' | 'z2m';
   has_low_battery: boolean;
   has_low_lqi: boolean;
 }

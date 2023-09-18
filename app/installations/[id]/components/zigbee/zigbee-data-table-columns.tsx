@@ -81,14 +81,36 @@ export const columns: ColumnDef<ZigbeeDeviceTableView>[] = [
         </div>
       );
     },
-    sortingFn: 'alphanumeric',
+    sortingFn: (rowA, rowB) => {
+      const { mean: meanA }: { mean: number } = rowA.getValue('LQI');
+      const { mean: meanB }: { mean: number } = rowB.getValue('LQI');
+
+      return meanA - meanB;
+    },
     cell: ({ row }) => {
-      const lqi = parseFloat(row.getValue('LQI'));
-      const isAbnormalLQI = lqi <= 32;
+      const {
+        min,
+        max,
+        mean,
+        median,
+      }: { min: number; max: number; mean: number; median: number } = row.getValue('LQI');
+      const isAbnormalLQI =
+        min <= Number(process.env.NEXT_PUBLIC_WARNING_THRESHOLD_ZIGBEE_LQI);
       const className = isAbnormalLQI ? 'text-red-600 font-semibold' : ' font-regular';
       const classNames = ` ${className} text-center text-xs`;
 
-      return <div className={classNames}>{lqi}</div>;
+      return (
+        <div className={classNames}>
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger>{min != max ? `${min} - ${max}` : `${min}`}</TooltipTrigger>
+              <TooltipContent>
+                Mean: {mean} Median: {median}
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+        </div>
+      );
     },
   },
   {

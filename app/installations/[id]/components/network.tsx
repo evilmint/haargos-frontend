@@ -1,28 +1,12 @@
 'use client';
 
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table';
-import {
-  Flex,
-  LineChart,
-  Title,
-  Text,
-  Card as TremorCard,
-  Bold,
-  BarList,
-} from '@tremor/react';
+import { BarList } from '@tremor/react';
 
 import { useInstallationStore } from '@/app/services/stores';
 import { useEffect } from 'react';
 import { useAuth0 } from '@auth0/auth0-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/registry/new-york/ui/card';
-import moment from 'moment';
+import { formatUnit } from '@/lib/format-unit';
 
 export function Network({ ...params }) {
   const { installationId } = params;
@@ -42,13 +26,17 @@ export function Network({ ...params }) {
     }
   };
 
-  const packetData: any[] = [];
-  const byteData: any[] = [];
+  const packetRxData: any[] = [];
+  const packetTxData: any[] = [];
+  const byteRxData: any[] = [];
+  const byteTxData: any[] = [];
 
   if (observations && observations.length > 0) {
     observations[0].environment.network?.interfaces.forEach(i => {
-      packetData.push({ name: i.name, value: i.tx.packets + i.rx.packets });
-      byteData.push({ name: i.name, value: i.tx.bytes + i.rx.bytes });
+      packetTxData.push({ name: i.name, value: i.tx.packets });
+      packetRxData.push({ name: i.name, value: i.rx.packets });
+      byteTxData.push({ name: i.name, value: i.tx.bytes });
+      byteRxData.push({ name: i.name, value: i.rx.bytes });
     });
   }
 
@@ -61,29 +49,54 @@ export function Network({ ...params }) {
     installationId,
   ]);
 
-
   return (
     observations?.length > 0 &&
     observations[0].environment.cpu && (
       <div>
         <Card className="col-span-7">
           <CardHeader>
-            <CardTitle>Bytes</CardTitle>
+            <CardTitle>Bytes RX</CardTitle>
           </CardHeader>
           <CardContent>
             <BarList
-              valueFormatter={(number: number) =>
-                `${(number / 1024 / 1024).toFixed(1)} MB`
-              }
-              data={byteData}
+              valueFormatter={(number: number) => formatUnit(number, 'B')}
+              data={byteRxData}
               className="mt-2"
             />
           </CardContent>
           <CardHeader>
-            <CardTitle>Packets</CardTitle>
+            <CardTitle>Bytes TX</CardTitle>
           </CardHeader>
           <CardContent>
-            <BarList data={packetData} className="mt-2" />
+            <BarList
+              valueFormatter={(number: number) => formatUnit(number, 'B')}
+              data={byteTxData}
+              className="mt-2"
+            />
+          </CardContent>
+          <CardHeader>
+            <CardTitle>Packets RX</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <BarList
+              valueFormatter={(number: number) => {
+                return formatUnit(number);
+              }}
+              data={packetRxData}
+              className="mt-2"
+            />
+          </CardContent>
+          <CardHeader>
+            <CardTitle>Packets TX</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <BarList
+              valueFormatter={(number: number) => {
+                return formatUnit(number);
+              }}
+              data={packetTxData}
+              className="mt-2"
+            />
           </CardContent>
         </Card>
       </div>

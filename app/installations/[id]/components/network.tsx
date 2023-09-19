@@ -8,7 +8,15 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { LineChart, Title, Card as TremorCard } from '@tremor/react';
+import {
+  Flex,
+  LineChart,
+  Title,
+  Text,
+  Card as TremorCard,
+  Bold,
+  BarList,
+} from '@tremor/react';
 
 import { useInstallationStore } from '@/app/services/stores';
 import { useEffect } from 'react';
@@ -16,7 +24,7 @@ import { useAuth0 } from '@auth0/auth0-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/registry/new-york/ui/card';
 import moment from 'moment';
 
-export function Memory({ ...params }) {
+export function Network({ ...params }) {
   const { installationId } = params;
   const observations = useInstallationStore(state => state.observations[installationId]);
   const fetchInstallations = useInstallationStore(state => state.fetchInstallations);
@@ -34,21 +42,15 @@ export function Memory({ ...params }) {
     }
   };
 
-  const memoryChartData = (observations ?? []).reverse().map(o => {
-    return {
-      timestamp: moment(o.timestamp).format('HH:mm'),
-      'Memory usage':
-        ((o.environment.memory?.used ?? 0) / (o.environment.memory?.total ?? 1)) * 100,
-    };
-  });
+  const packetData: any[] = [];
+  const byteData: any[] = [];
 
-  const swapChartData = (observations ?? []).reverse().map(o => {
-    return {
-      timestamp: moment(o.timestamp).format('HH:mm'),
-      'Swap usage':
-        ((o.environment.memory?.swap_used ?? 0) / (o.environment.memory?.swap_total ?? 1)) * 100,
-    };
-  });
+  if (observations && observations.length > 0) {
+    observations[observations.length - 1].environment.network?.interfaces.forEach(i => {
+      packetData.push({ name: i.name, value: i.tx.packets + i.rx.packets });
+      byteData.push({ name: i.name, value: i.tx.bytes + i.rx.bytes });
+    });
+  }
 
   useEffect(() => {
     asyncFetch();
@@ -59,40 +61,30 @@ export function Memory({ ...params }) {
     installationId,
   ]);
 
-  const dataFormatter = (number: number) => `${number.toFixed(1)}%`;
-
+  console.log(packetData);
+  console.log(byteData);
   return (
     observations?.length > 0 &&
     observations[0].environment.cpu && (
       <div>
         <Card className="col-span-7">
           <CardHeader>
-            <CardTitle>Memory used</CardTitle>
+            <CardTitle>Bytes</CardTitle>
           </CardHeader>
           <CardContent>
-            <LineChart
-              data={memoryChartData}
-              index="timestamp"
-              categories={['Memory usage']}
-              colors={['blue']}
-              valueFormatter={dataFormatter}
-              yAxisWidth={40}
+            <BarList
+              valueFormatter={(number: number) =>
+                `${(number / 1024 / 1024).toFixed(1)} MB`
+              }
+              data={byteData}
+              className="mt-2"
             />
           </CardContent>
-
-
           <CardHeader>
-            <CardTitle>Swap used</CardTitle>
+            <CardTitle>Packets</CardTitle>
           </CardHeader>
           <CardContent>
-            <LineChart
-              data={swapChartData}
-              index="timestamp"
-              categories={['Swap usage']}
-              colors={['blue']}
-              valueFormatter={dataFormatter}
-              yAxisWidth={40}
-            />
+            <BarList data={packetData} className="mt-2" />
           </CardContent>
         </Card>
       </div>

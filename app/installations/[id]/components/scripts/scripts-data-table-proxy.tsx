@@ -20,7 +20,7 @@ export function ScriptsDataTableProxy({ ...params }) {
   const asyncFetch = async () => {
     try {
       const token = await getAccessTokenSilently();
-      await fetchObservationsForInstallation(installationId, token);
+      await fetchObservationsForInstallation(installationId, token, false);
     } catch (error) {
       console.log(error);
     }
@@ -49,6 +49,6 @@ function mapToTableView(script: Script, observation: Observation): ScriptTableVi
     alias: script.alias,
     name: script.friendly_name ?? '',
     state: script.state ?? 'n/a',
-    last_triggered: script.lastTriggered,
+    last_triggered: script.last_triggered,
   };
 }

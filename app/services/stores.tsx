@@ -92,6 +92,7 @@ interface InstallationStoreState {
   fetchObservationsForInstallation: (
     installationId: string,
     token: string,
+    force: boolean,
   ) => Promise<void>;
   deleteInstallation: (token: string, id: string) => Promise<any>;
   getObservationsForInstallation: (installationId: string) => Observation[];
@@ -160,7 +161,11 @@ const useInstallationStore = create<InstallationStoreState>((set, get) => ({
 
     return installations;
   },
-  fetchObservationsForInstallation: async (installationId: string, token: string) => {
+  fetchObservationsForInstallation: async (
+    installationId: string,
+    token: string,
+    force: boolean = false,
+  ) => {
     if (get().isFetchingObservations[installationId]) return;
     set(state => ({
       isFetchingObservations: {
@@ -169,10 +174,12 @@ const useInstallationStore = create<InstallationStoreState>((set, get) => ({
       },
     }));
 
-    const observations = get().observations[installationId];
+    if (!force) {
+      const observations = get().observations[installationId];
 
-    if (observations != null && observations.length > 0) {
-      return;
+      if (observations != null && observations.length > 0) {
+        return;
+      }
     }
 
     try {
@@ -254,7 +261,6 @@ const useInstallationStore = create<InstallationStoreState>((set, get) => ({
           (o1, o2) => new Date(o2.timestamp).getTime() - new Date(o1.timestamp).getTime(),
         );
 
-   
       set(state => ({
         observations: {
           ...state.observations,

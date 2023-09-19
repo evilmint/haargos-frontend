@@ -59,7 +59,6 @@ export function AccountForm() {
 
     try {
       const token = await getAccessTokenSilently();
-      console.log(data);
       await updateAccount(token, data);
 
       let newUser = user;

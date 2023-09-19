@@ -20,7 +20,7 @@ export function ZigbeeDataTableProxy({ ...params }) {
   const asyncFetch = async () => {
     try {
       const token = await getAccessTokenSilently();
-      await fetchObservationsForInstallation(installationId, token);
+      await fetchObservationsForInstallation(installationId, token, false);
     } catch (error) {
       console.log(error);
     }
@@ -54,7 +54,6 @@ function mapToTableView(
   const lqi_max = devices.reduce((a, d) => a < d.lqi ? d.lqi : a, -1);
   const mean = devices.reduce((a, d) => a + d.lqi, 0) / devices.length;
 
-  console.log(devices);
   const median = devices.sort((a,b) => a.lqi - b.lqi)[Math.ceil(devices.length / 2)].lqi;
 
   return {

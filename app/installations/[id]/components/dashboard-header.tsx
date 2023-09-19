@@ -75,7 +75,7 @@ export function DashboardHeaderInstallation({ ...params }) {
   const asyncFetch = async () => {
     try {
       const token = await getAccessTokenSilently();
-      await fetchObservationsForInstallation(installationId, token);
+      await fetchObservationsForInstallation(installationId, token, false);
       setLoading(false);
     } catch (error) {
       console.log(error);

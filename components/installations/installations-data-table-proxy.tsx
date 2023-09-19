@@ -33,7 +33,7 @@ export function InstallationsDataTableProxy() {
       installations.forEach(installation => {
         if (observations[installation.id] == null) {
           promiseArray.push(
-            fetchObservationsForInstallation(installation.id, token).catch(err => {
+            fetchObservationsForInstallation(installation.id, token, false).catch(err => {
               console.error(
                 `Failed to fetch observations for installation ${installation.id}:`,
                 err,

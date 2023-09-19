@@ -30,7 +30,7 @@ export function Storage({ ...params }) {
   const asyncFetch = async () => {
     try {
       const token = await getAccessTokenSilently();
-      await fetchObservationsForInstallation(installationId, token);
+      await fetchObservationsForInstallation(installationId, token, false);
     } catch (error) {
       console.log(error);
     }

@@ -6,6 +6,23 @@ interface Log {
   log: string;
 }
 
+interface NetworkInterfaceData {
+  bytes: number;
+  packets: number;
+}
+
+interface NetworkInterface {
+  name: string;
+  rx: NetworkInterfaceData;
+  tx: NetworkInterfaceData;
+}
+
+interface Network {
+  interfaces: NetworkInterface[];
+}
+
+// Update the
+
 interface Environment {
   cpu: {
     model_name: string;
@@ -26,6 +43,7 @@ interface Environment {
     swap_total: number | null;
   } | null;
   storage: Array<Storage>;
+  network?: Network | null;
 }
 
 interface Storage {
@@ -89,7 +107,7 @@ interface Script {
   state: string | null;
   alias: string;
   friendly_name: string | null;
-  lastTriggered: string | null;
+  last_triggered: string | null;
 }
 
 interface HAConfig {
@@ -179,6 +197,9 @@ export {
   DockerContainer,
   Observation,
   InstallationBody,
+  Network,
+  NetworkInterface,
+  NetworkInterfaceData,
   UserApiResponse,
   Zigbee,
   ZigbeeDevice,

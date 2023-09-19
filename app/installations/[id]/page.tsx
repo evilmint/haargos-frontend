@@ -72,6 +72,7 @@ import {
 } from '@tremor/react';
 import { _ } from 'numeral';
 import { Memory } from './components/memory';
+import { Network } from './components/network';
 
 const updateInstallationFormSchema = z.object({
   name: z
@@ -89,7 +90,11 @@ const updateInstallationFormSchema = z.object({
       .trim()
       .url()
       .refine(i => {
-        return new URL(i).protocol.toLowerCase() == 'https:';
+        try {
+          return new URL(i).protocol.toLowerCase() == 'https:';
+        } catch {
+          return false;
+        }
       }, 'Only HTTPS URLs are allowed.')
       .refine(i => {
         try {
@@ -201,7 +206,7 @@ export default function DashboardInstallationPage({
     status: string;
     subdomain?: string;
     verification_value?: string;
-  };
+  } | null;
 
   switch (installation?.urls.instance?.verification_status) {
     case 'SUCCESS':
@@ -299,7 +304,7 @@ export default function DashboardInstallationPage({
                             render={({ field }) => (
                               <FormItem>
                                 <FormLabel>Instance URL</FormLabel>
-                                {verification.raw_status == 'SUCCESS' && (
+                                {verification?.raw_status == 'SUCCESS' && (
                                   <Badge
                                     className="ml-2"
                                     color="green"
@@ -454,6 +459,7 @@ export default function DashboardInstallationPage({
                   <TabList className="mt-8">
                     <Tab>CPU</Tab>
                     <Tab>Memory</Tab>
+                    <Tab>Network</Tab>
                     <Tab>Storage</Tab>
                     <Tab>Docker</Tab>
                   </TabList>
@@ -466,6 +472,11 @@ export default function DashboardInstallationPage({
                     <TabPanel>
                       <div className="mt-10">
                         <Memory installationId={params.id} />
+                      </div>
+                    </TabPanel>
+                    <TabPanel>
+                      <div className="mt-10">
+                        <Network installationId={params.id} />
                       </div>
                     </TabPanel>
                     <TabPanel>

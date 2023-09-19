@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { RedirectProvider } from './redirect-provider';
 import { ThemeProvider } from '@/components/theme-provider';
 import { Auth0Provider } from '@auth0/auth0-react';
+import { RefreshDataProvider } from './refresh-data-provider';
 
 type ProviderSetProps = {
   children: React.ReactNode;
@@ -32,7 +33,11 @@ export default function ProviderSet({ children }: ProviderSetProps) {
           useRefreshTokensFallback={false}
           cacheLocation="localstorage"
         >
-          <RedirectProvider>{children}</RedirectProvider>
+          <RedirectProvider>
+            <RefreshDataProvider>
+              {children}
+            </RefreshDataProvider>
+          </RedirectProvider>
         </Auth0Provider>
       </ThemeProvider>
     )

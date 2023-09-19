@@ -46,7 +46,7 @@ export function Network({ ...params }) {
   const byteData: any[] = [];
 
   if (observations && observations.length > 0) {
-    observations[observations.length - 1].environment.network?.interfaces.forEach(i => {
+    observations[0].environment.network?.interfaces.forEach(i => {
       packetData.push({ name: i.name, value: i.tx.packets + i.rx.packets });
       byteData.push({ name: i.name, value: i.tx.bytes + i.rx.bytes });
     });
@@ -61,8 +61,7 @@ export function Network({ ...params }) {
     installationId,
   ]);
 
-  console.log(packetData);
-  console.log(byteData);
+
   return (
     observations?.length > 0 &&
     observations[0].environment.cpu && (

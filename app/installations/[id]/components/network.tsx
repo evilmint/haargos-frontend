@@ -32,7 +32,7 @@ export function Network({ ...params }) {
   const byteTxData: any[] = [];
 
   if (observations && observations.length > 0) {
-    observations[0].environment.network?.interfaces.forEach(i => {
+    observations[observations.length - 1].environment.network?.interfaces.forEach(i => {
       packetTxData.push({ name: i.name, value: i.tx.packets });
       packetRxData.push({ name: i.name, value: i.rx.packets });
       byteTxData.push({ name: i.name, value: i.tx.bytes });

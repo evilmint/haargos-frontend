@@ -35,7 +35,8 @@ export function AgentInstallation({ installationId }: { installationId: string }
     user,
   ]);
 
-  const command = process.env.NEXT_PUBLIC_INSTALL_AGENT_COMMAND ?? '';
+  const commandAmd64 = process.env.NEXT_PUBLIC_INSTALL_AGENT_COMMAND_AMD64 ?? '';
+  const commandi386 = process.env.NEXT_PUBLIC_INSTALL_AGENT_COMMAND_I386 ?? '';
 
   return (
     installation && (
@@ -47,8 +48,11 @@ export function AgentInstallation({ installationId }: { installationId: string }
           <h5>Agent token</h5>
           <Code>{installation.agent_token}</Code>
 
-          <h5 className="mt-6">Install script</h5>
-          <Code>{command}</Code>
+          <h5 className="mt-6">Install Linux amd64</h5>
+          <Code>{commandAmd64}</Code>
+
+          <h5 className="mt-6">Install Linux i386</h5>
+          <Code>{commandi386}</Code>
         </CardContent>
       </Card>
     )

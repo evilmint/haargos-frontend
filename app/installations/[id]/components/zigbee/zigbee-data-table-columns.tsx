@@ -95,7 +95,7 @@ export const columns: ColumnDef<ZigbeeDeviceTableView>[] = [
         median,
       }: { min: number; max: number; mean: number; median: number } = row.getValue('LQI');
       const isAbnormalLQI =
-        min <= Number(process.env.NEXT_PUBLIC_WARNING_THRESHOLD_ZIGBEE_LQI);
+        mean <= Number(process.env.NEXT_PUBLIC_WARNING_THRESHOLD_ZIGBEE_LQI);
       const className = isAbnormalLQI ? 'text-red-600 font-semibold' : ' font-regular';
       const classNames = ` ${className} text-center text-xs`;
 

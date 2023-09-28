@@ -14,6 +14,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip';
+import { BatteryType } from '@/app/types';
 export const columns: ColumnDef<ZigbeeDeviceTableView>[] = [
   {
     accessorKey: 'ieee',
@@ -255,6 +256,36 @@ export const columns: ColumnDef<ZigbeeDeviceTableView>[] = [
           )}
         </div>
       );
+    },
+  },
+  {
+    accessorKey: 'battery_type',
+    header: ({ column }) => {
+      return (
+        <div className="text-center">
+          <Button
+            variant="ghost"
+            onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+          >
+            Battery type
+            <ArrowUpDown className="ml-2 h-4 w-4" />
+          </Button>
+        </div>
+      );
+    },
+    cell: ({ row }) => {
+      const batteryType: BatteryType | null = row.getValue('battery_type');
+      let displayBattery: string = '';
+
+      if (!batteryType) {
+        displayBattery = 'unk.';
+      } else if ((batteryType.count ?? 0) > 1) {
+        displayBattery = `${batteryType.count}x ${batteryType.type}`
+      } else {
+        displayBattery = batteryType.type;
+      }
+
+      return <div className="text-center font-regular text-xs">{displayBattery}</div>;
     },
   },
   {

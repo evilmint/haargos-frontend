@@ -30,6 +30,7 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { columns } from './zigbee-data-table-columns';
+import { BatteryType } from '@/app/types';
 
 export interface ZigbeeDeviceTableView {
   ieee: string;
@@ -40,6 +41,7 @@ export interface ZigbeeDeviceTableView {
   device: string;
   lqi: { min: number; max: number; mean: number; median: number };
   power_source: string | null;
+  battery_type: BatteryType | null;
   integration_type: string;
   id: string;
 }

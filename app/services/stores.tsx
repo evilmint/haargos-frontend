@@ -1,6 +1,6 @@
 import { getUserMe } from './users';
 import { create } from 'zustand';
-import { Installation, Observation, Log, User, Storage } from '@/app/types';
+import { Installation, Observation, Log, User, Storage, BatteryType } from '@/app/types';
 import {
   createInstallation,
   deleteInstallation,
@@ -243,6 +243,50 @@ const useInstallationStore = create<InstallationStoreState>((set, get) => ({
                 const hasGoodBattery =
                   (z.battery_level ?? 0) > batteryLevelThreshold &&
                   z.power_source == 'Battery';
+
+                const modelToBatteryMap = new Map<string, BatteryType>([
+                  ['eWeLink TH01', { type: 'CR 2450', count: 1 }],
+                  ['XIAOMI lumi.sen_ill.mgl01', { type: 'CR 2450', count: 1 }],
+                  ['eWeLink MS01', { type: 'CR 2450', count: 1 }],
+                  ['LUMI lumi.sensor_wleak.aq1', { type: 'CR 2032', count: 1 }],
+                  ['LUMI lumi.sensor_magnet.aq2', { type: 'CR 1632', count: 1 }],
+                  ['LUMI lumi.sensor_motion.aq2', { type: 'CR 2450', count: 2 }],
+                  ['LUMI lumi.sensor_smoke', { type: 'CR 123A', count: 1 }],
+                  ['LUMI lumi.airrtc.agl001', { type: 'AA', count: 1 }],
+                  ['LUMI lumi.sensor_switch', { type: 'CR 2032', count: 1 }],
+                  ['LUMI lumi.weather', { type: 'CR 2032', count: 1 }],
+                  ['_TZ2000_a476raq2 TS0201', { type: 'AAA', count: 2 }],
+                ]);
+
+                const mainsDevices = [
+                  '_TZE200_ikvncluo TS0601',
+                  '_TZE200_lyetpprm TS0601',
+                  '_TZE200_wukb7rhc TS0601',
+                  '_TZE200_jva8ink8 TS0601',
+                  '_TZE204_ztc6ggyl TS0601',
+                  '_TZE200_ztc6ggyl TS0601',
+                  '_TZ3400_keyjqthh TS0041',
+                  '_TZ3000_tk3s5tyg TS0041',
+                  '_TYZB01_ef5xlc9q TS0202',
+                  '_TZ3000_kmh5qpmb TS0202',
+                  '_TYZB01_zwvaj5wy TS0202',
+                  '_TYZB01_tv3wxhcz TS0202',
+                  '_TYZB01_jytabjkb TS0202',
+                ];
+
+                const fingerprint = `${z.brand} ${z.entity_name}`;
+
+                if (
+                  z.power_source == 'Mains' ||
+                  z.entity_name.indexOf('CC2652') != -1 ||
+                  mainsDevices.indexOf(fingerprint) != -1 ||
+                  z.entity_name.indexOf('TS0503A') != -1
+                ) {
+                  z.battery = { type: 'N/A', count: null };
+                  z.power_source = 'Mains'; // Make sure this is true every time the condition is changed
+                } else {
+                  z.battery = modelToBatteryMap.get(fingerprint) ?? null;
+                }
 
                 z.has_low_battery = !hasGoodBattery;
                 z.has_low_lqi =

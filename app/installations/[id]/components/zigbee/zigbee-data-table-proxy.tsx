@@ -65,10 +65,11 @@ function mapToTableView(
     timeago: {
       last_updated: new Date(device.last_updated),
       timestamp: new Date(observations[0].timestamp),
-    }, //<TimeAgo date={device.last_updated} now={() => new Date(observation.timestamp).getTime()} />,
+    },
     device: `${device.brand} ${device.entity_name}`,
     lqi: { min: lqi_min, max: lqi_max, mean: mean, median: median },
     power_source: device.power_source + ` ${device.battery_level ?? 'n/a'}`,
+    battery_type: device.battery,
     integration_type: device.integration_type.toLocaleUpperCase(),
   };
 }

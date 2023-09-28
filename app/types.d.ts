@@ -21,8 +21,6 @@ interface Network {
   interfaces: NetworkInterface[];
 }
 
-// Update the
-
 interface Environment {
   cpu: {
     model_name: string;
@@ -118,12 +116,18 @@ interface Zigbee {
   devices: ZigbeeDevice[];
 }
 
+type BatteryType = {
+  type: 'N/A' | 'AA' | 'AAA' | 'CR 123A' | 'CR 1632' | 'CR 2032' | 'CR 2450';
+  count: number | null;
+}
+
 interface ZigbeeDevice {
   ieee: string;
   last_updated: string;
   entity_name: string;
   name_by_user: string | null;
   brand: string;
+  battery: BatteryType | null;
   lqi: number;
   battery_level: number | null;
   power_source: 'Mains' | 'Battery' | null;
@@ -200,6 +204,7 @@ export {
   Network,
   NetworkInterface,
   NetworkInterfaceData,
+  BatteryType,
   UserApiResponse,
   Zigbee,
   ZigbeeDevice,

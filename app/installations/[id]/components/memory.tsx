@@ -46,7 +46,9 @@ export function Memory({ ...params }) {
     return {
       timestamp: moment(o.timestamp).format('HH:mm'),
       'Swap usage':
-        ((o.environment.memory?.swap_used ?? 0) / (o.environment.memory?.swap_total ?? 1)) * 100,
+        ((o.environment.memory?.swap_used ?? 0) /
+          (o.environment.memory?.swap_total ?? 1)) *
+        100,
     };
   });
 
@@ -79,7 +81,6 @@ export function Memory({ ...params }) {
               yAxisWidth={40}
             />
           </CardContent>
-
 
           <CardHeader>
             <CardTitle>Swap used</CardTitle>

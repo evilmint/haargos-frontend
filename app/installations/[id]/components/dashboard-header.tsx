@@ -347,8 +347,13 @@ export function DashboardHeaderInstallation({ ...params }) {
             {observationsLoading || isLoading ? (
               <Skeleton className="h-8" />
             ) : observations.length > 0 ? (
-              <div><Text>
-                <TimeAgo date={observations[observations.length - 1].environment.boot_time ?? ''} />
+              <div>
+                <Text>
+                  <TimeAgo
+                    date={
+                      observations[observations.length - 1].environment.boot_time ?? ''
+                    }
+                  />
                 </Text>
               </div>
             ) : (

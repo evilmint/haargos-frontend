@@ -119,7 +119,7 @@ interface Zigbee {
 type BatteryType = {
   type: 'N/A' | 'AA' | 'AAA' | 'CR 123A' | 'CR 1632' | 'CR 2032' | 'CR 2450';
   count: number | null;
-}
+};
 
 interface ZigbeeDevice {
   ieee: string;

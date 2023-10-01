@@ -280,7 +280,7 @@ export const columns: ColumnDef<ZigbeeDeviceTableView>[] = [
       if (!batteryType) {
         displayBattery = 'unk.';
       } else if ((batteryType.count ?? 0) > 1) {
-        displayBattery = `${batteryType.count}x ${batteryType.type}`
+        displayBattery = `${batteryType.count}x ${batteryType.type}`;
       } else {
         displayBattery = batteryType.type;
       }

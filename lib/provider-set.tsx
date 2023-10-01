@@ -17,7 +17,8 @@ export default function ProviderSet({ children }: ProviderSetProps) {
     setOrigin(window.location.origin);
   }, []);
 
-  return origin && (
+  return (
+    origin &&
     process.env.NEXT_PUBLIC_WARNING_AUTH0_CLIENT_ID && (
       <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
         <Auth0Provider
@@ -34,9 +35,7 @@ export default function ProviderSet({ children }: ProviderSetProps) {
           cacheLocation="localstorage"
         >
           <RedirectProvider>
-            <RefreshDataProvider>
-              {children}
-            </RefreshDataProvider>
+            <RefreshDataProvider>{children}</RefreshDataProvider>
           </RedirectProvider>
         </Auth0Provider>
       </ThemeProvider>

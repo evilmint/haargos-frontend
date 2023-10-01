@@ -48,13 +48,15 @@ function mapToTableView(
   device: ZigbeeDevice,
   observations: Observation[],
 ): ZigbeeDeviceTableView {
-  const devices = observations.flatMap(o => o.zigbee?.devices ?? []).filter(d => d.ieee == device.ieee);
+  const devices = observations
+    .flatMap(o => o.zigbee?.devices ?? [])
+    .filter(d => d.ieee == device.ieee);
 
-  const lqi_min = devices.reduce((a, d) => a > d.lqi ? d.lqi : a, 99999);
-  const lqi_max = devices.reduce((a, d) => a < d.lqi ? d.lqi : a, -1);
+  const lqi_min = devices.reduce((a, d) => (a > d.lqi ? d.lqi : a), 99999);
+  const lqi_max = devices.reduce((a, d) => (a < d.lqi ? d.lqi : a), -1);
   const mean = devices.reduce((a, d) => a + d.lqi, 0) / devices.length;
 
-  const median = devices.sort((a,b) => a.lqi - b.lqi)[Math.ceil(devices.length / 2)].lqi;
+  const median = devices.sort((a, b) => a.lqi - b.lqi)[Math.ceil(devices.length / 2)].lqi;
 
   return {
     id: device.ieee,

@@ -56,6 +56,7 @@ export function ZigbeeDataTable({ ...params }) {
     ieee: false,
     integration_type: false,
     device: false,
+    battery_type: false,
   });
   const [rowSelection, setRowSelection] = React.useState({});
 

@@ -30,6 +30,8 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { columns } from './installations-data-table-columns';
+import { ColumnVisibilityManager } from '@/lib/column-visibility-manager';
+import { useEffect } from 'react';
 
 export interface InstallationTableView {
   id: string;
@@ -57,18 +59,30 @@ export interface InstallationTableView {
   navigate_to_homeassistant: string | null;
 }
 
+const columnVisibilityManager = new ColumnVisibilityManager(
+  {
+    ieee: false,
+    integration_type: false,
+    device: false,
+  },
+  'InstallationDataTable_columnVisibility',
+);
+
 export function InstallationDataTable({ ...params }) {
   const { data } = params;
 
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
-  const [pageSize] = React.useState<number>(20);
-  const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({
-    ieee: false,
-    integration_type: false,
-    device: false,
-  });
+  const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = React.useState({});
+
+  useEffect(() => {
+    setColumnVisibility(columnVisibilityManager.getVisibility());
+  }, []);
+
+  useEffect(() => {
+    columnVisibilityManager.setVisibility(columnVisibility);
+  }, [columnVisibility]);
 
   const table = useReactTable({
     data,

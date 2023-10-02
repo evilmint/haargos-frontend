@@ -30,6 +30,8 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { columns } from './logs-data-table-columns';
+import { useEffect } from 'react';
+import { ColumnVisibilityManager } from '@/lib/column-visibility-manager';
 
 export interface LogTableView {
   id: string;
@@ -39,14 +41,30 @@ export interface LogTableView {
   thread: string;
 }
 
+const columnVisibilityManager = new ColumnVisibilityManager(
+  {
+    ieee: false,
+    integration_type: false,
+    device: false,
+  },
+  'LogsDataTable_columnVisibility',
+);
+
 export function LogsDataTable({ ...params }) {
   const { data } = params;
 
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
-  const [pageSize] = React.useState<number>(20);
   const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = React.useState({});
+
+  useEffect(() => {
+    setColumnVisibility(columnVisibilityManager.getVisibility());
+  }, []);
+
+  useEffect(() => {
+    columnVisibilityManager.setVisibility(columnVisibility);
+  }, [columnVisibility]);
 
   const table = useReactTable({
     data,

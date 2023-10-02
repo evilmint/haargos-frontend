@@ -30,6 +30,8 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { columns } from './scripts-data-table-columns';
+import { useEffect } from 'react';
+import { ColumnVisibilityManager } from '@/lib/column-visibility-manager';
 
 export interface ScriptTableView {
   name: string;
@@ -38,18 +40,31 @@ export interface ScriptTableView {
   last_triggered: string | null;
 }
 
+const columnVisibilityManager = new ColumnVisibilityManager(
+  {
+    ieee: false,
+    integration_type: false,
+    device: false,
+  },
+  'ScriptsDataTable_columnVisibility',
+);
+
 export function ScriptsDataTable({ ...params }) {
   const { data, installationId } = params;
 
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
   const [pageSize] = React.useState<number>(20);
-  const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({
-    ieee: false,
-    integration_type: false,
-    device: false,
-  });
+  const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = React.useState({});
+
+  useEffect(() => {
+    setColumnVisibility(columnVisibilityManager.getVisibility());
+  }, []);
+
+  useEffect(() => {
+    columnVisibilityManager.setVisibility(columnVisibility);
+  }, [columnVisibility]);
 
   const table = useReactTable({
     data,

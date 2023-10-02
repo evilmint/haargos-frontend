@@ -31,6 +31,8 @@ import {
 } from '@/components/ui/table';
 import { columns } from './zigbee-data-table-columns';
 import { BatteryType } from '@/app/types';
+import { useEffect } from 'react';
+import { ColumnVisibilityManager } from '@/lib/column-visibility-manager';
 
 export interface ZigbeeDeviceTableView {
   ieee: string;
@@ -46,19 +48,32 @@ export interface ZigbeeDeviceTableView {
   id: string;
 }
 
-export function ZigbeeDataTable({ ...params }) {
-  const { data, installationId } = params;
-
-  const [sorting, setSorting] = React.useState<SortingState>([]);
-  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
-  const [pageSize] = React.useState<number>(20);
-  const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({
+const columnVisibilityManager = new ColumnVisibilityManager(
+  {
     ieee: false,
     integration_type: false,
     device: false,
     battery_type: false,
-  });
+  },
+  'ZigbeeDataTable_columnVisibility',
+);
+
+export function ZigbeeDataTable({ ...params }) {
+  const { data } = params;
+
+  const [sorting, setSorting] = React.useState<SortingState>([]);
+  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
+
+  const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = React.useState({});
+
+  useEffect(() => {
+    setColumnVisibility(columnVisibilityManager.getVisibility());
+  }, []);
+
+  useEffect(() => {
+    columnVisibilityManager.setVisibility(columnVisibility);
+  }, [columnVisibility]);
 
   const table = useReactTable({
     data,

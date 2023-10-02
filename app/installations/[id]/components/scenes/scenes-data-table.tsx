@@ -30,6 +30,8 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { columns } from './scenes-data-table-columns';
+import { useEffect } from 'react';
+import { ColumnVisibilityManager } from '@/lib/column-visibility-manager';
 
 export interface SceneTableView {
   id: string;
@@ -38,18 +40,31 @@ export interface SceneTableView {
   friendly_name: string | null;
 }
 
+const columnVisibilityManager = new ColumnVisibilityManager(
+  {
+    ieee: false,
+    integration_type: false,
+    device: false,
+  },
+  'SceneDataTable_columnVisibility',
+);
+
 export function SceneDataTable({ ...params }) {
   const { data, installationId } = params;
 
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
   const [pageSize] = React.useState<number>(20);
-  const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({
-    ieee: false,
-    integration_type: false,
-    device: false,
-  });
+  const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = React.useState({});
+
+  useEffect(() => {
+    setColumnVisibility(columnVisibilityManager.getVisibility());
+  }, []);
+
+  useEffect(() => {
+    columnVisibilityManager.setVisibility(columnVisibility);
+  }, [columnVisibility]);
 
   const table = useReactTable({
     data,

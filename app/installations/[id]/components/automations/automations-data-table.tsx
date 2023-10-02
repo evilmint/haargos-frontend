@@ -30,6 +30,8 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { columns } from './automations-data-table-columns';
+import { useEffect } from 'react';
+import { ColumnVisibilityManager } from '@/lib/column-visibility-manager';
 
 export interface AutomationTableView {
   id: string;
@@ -38,18 +40,30 @@ export interface AutomationTableView {
   last_triggered: string | null;
 }
 
-export function AutomationDataTable({ ...params }) {
-  const { data, installationId } = params;
-
-  const [sorting, setSorting] = React.useState<SortingState>([]);
-  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
-  const [pageSize] = React.useState<number>(20);
-  const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({
+const columnVisibilityManager = new ColumnVisibilityManager(
+  {
     ieee: false,
     integration_type: false,
     device: false,
-  });
+  },
+  'AutomationDataTable_columnVisibility',
+);
+
+export function AutomationDataTable({ ...params }) {
+  const { data } = params;
+
+  const [sorting, setSorting] = React.useState<SortingState>([]);
+  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
+  const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = React.useState({});
+
+  useEffect(() => {
+    setColumnVisibility(columnVisibilityManager.getVisibility());
+  }, []);
+
+  useEffect(() => {
+    columnVisibilityManager.setVisibility(columnVisibility);
+  }, [columnVisibility]);
 
   const table = useReactTable({
     data,

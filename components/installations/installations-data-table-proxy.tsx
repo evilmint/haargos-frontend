@@ -5,8 +5,10 @@ import { useEffect } from 'react';
 import { useInstallationStore } from '@/app/services/stores';
 import { useAuth0 } from '@auth0/auth0-react';
 import { Installation, Log, Observation } from '@/app/types';
-import { InstallationDataTable, InstallationTableView } from './installations-data-table';
 import { useRouter } from 'next/navigation';
+import { GenericDataTable } from '@/lib/generic-data-table';
+import { InstallationTableView, columns } from './installations-data-table-columns';
+import { toLower } from 'ramda';
 
 export function InstallationsDataTableProxy() {
   const observations = useInstallationStore(state => state.observations);
@@ -65,7 +67,13 @@ export function InstallationsDataTableProxy() {
         )
       : [];
 
-  return <InstallationDataTable data={installationsNew} />;
+  return (
+    <GenericDataTable
+      columns={columns}
+      columnVisibilityKey="InstallationDataTableColumns"
+      data={installationsNew}
+    />
+  );
 }
 
 function mapToTableView(

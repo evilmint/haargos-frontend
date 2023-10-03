@@ -4,8 +4,21 @@ import * as React from 'react';
 import { ColumnDef } from '@tanstack/react-table';
 import { ArrowUpDown } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { ZigbeeDeviceTableView } from './zigbee-data-table';
 import { Icons } from '@/components/icons';
+
+export interface ZigbeeDeviceTableView {
+  ieee: string;
+  last_updated: Date;
+  entity_name: string;
+  timeago: { last_updated: Date; timestamp: Date };
+  name: string | null;
+  device: string;
+  lqi: { min: number; max: number; mean: number; median: number };
+  power_source: string | null;
+  battery_type: BatteryType | null;
+  integration_type: string;
+  id: string;
+}
 
 import TimeAgo from 'react-timeago';
 import {

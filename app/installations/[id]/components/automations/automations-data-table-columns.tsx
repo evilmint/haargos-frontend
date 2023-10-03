@@ -4,7 +4,6 @@ import * as React from 'react';
 import { ColumnDef } from '@tanstack/react-table';
 import { ArrowUpDown } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { AutomationTableView } from './automations-data-table';
 import { Icons } from '@/components/icons';
 
 import {
@@ -13,6 +12,14 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip';
+
+export interface AutomationTableView {
+  id: string;
+  name: string;
+  state: string | null;
+  last_triggered: string | null;
+}
+
 export const columns: ColumnDef<AutomationTableView>[] = [
   {
     accessorKey: 'name',

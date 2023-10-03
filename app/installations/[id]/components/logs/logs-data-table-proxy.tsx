@@ -5,10 +5,11 @@ import { useEffect } from 'react';
 import { useInstallationStore } from '@/app/services/stores';
 import { useAuth0 } from '@auth0/auth0-react';
 import { Log } from '@/app/types';
-import { LogsDataTable, LogTableView } from './logs-data-table';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/registry/new-york/ui/tabs';
 import CopyButton from '../copy-button';
 import DownloadButton from '../download-button';
+import { GenericDataTable } from '@/lib/generic-data-table';
+import { LogTableView, columns } from './logs-data-table-columns';
 
 export function LogsDataTableProxy({ ...params }) {
   const { installationId } = params;
@@ -59,7 +60,11 @@ export function LogsDataTableProxy({ ...params }) {
         </TabsTrigger>
       </TabsList>
       <TabsContent value="logtable" className="space-y-4">
-        <LogsDataTable data={logViews} />
+        <GenericDataTable
+          columns={columns}
+          columnVisibilityKey="LogsDataTable_columnVisibility"
+          data={logViews}
+        />
       </TabsContent>
 
       <TabsContent value="lograw">

@@ -1,6 +1,7 @@
 'use client';
 import * as React from 'react';
 import {
+  ColumnDef,
   ColumnFiltersState,
   SortingState,
   VisibilityState,
@@ -29,28 +30,24 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { columns } from './automations-data-table-columns';
-import { useEffect } from 'react';
 import { ColumnVisibilityManager } from '@/lib/column-visibility-manager';
+import { useEffect } from 'react';
 
-export interface AutomationTableView {
-  id: string;
-  name: string;
-  state: string | null;
-  last_triggered: string | null;
-}
+type GenericDataTableParams = {
+  defaultColumnVisibility?: VisibilityState;
+  columnVisibilityKey: string;
+  columnIdToNameTransformer?: (column: string) => string;
+  columns: ColumnDef<any>[];
+  data: any;
+};
 
-const columnVisibilityManager = new ColumnVisibilityManager(
-  {
-    ieee: false,
-    integration_type: false,
-    device: false,
-  },
-  'AutomationDataTable_columnVisibility',
-);
+export function GenericDataTable({ ...params }: GenericDataTableParams) {
+  const { columns, columnVisibilityKey, defaultColumnVisibility, data } = params;
 
-export function AutomationDataTable({ ...params }) {
-  const { data } = params;
+  const columnVisibilityManager = new ColumnVisibilityManager(
+    defaultColumnVisibility ?? {},
+    columnVisibilityKey,
+  );
 
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
@@ -64,6 +61,18 @@ export function AutomationDataTable({ ...params }) {
   useEffect(() => {
     columnVisibilityManager.setVisibility(columnVisibility);
   }, [columnVisibility]);
+
+  function defaultColumnIdTransform(id: string): string {
+    const transformed = id
+      .toLocaleLowerCase()
+      .replaceAll('_', ' ')
+      .replaceAll('ha', 'HA')
+      .replaceAll('lqi', 'LQI')
+      .replaceAll('cpu', 'CPU')
+      .replaceAll('zigbee', 'Zigbee');
+
+    return transformed.slice(0, 1).toLocaleUpperCase() + transformed.slice(1);
+  }
 
   const table = useReactTable({
     data,
@@ -91,15 +100,17 @@ export function AutomationDataTable({ ...params }) {
     <div className="w-full">
       <div className="flex items-center py-4">
         <Input
-          placeholder="Filter automations..."
-          value={(table.getColumn('name')?.getFilterValue() as string) ?? ''}
-          onChange={event => table.getColumn('name')?.setFilterValue(event.target.value)}
+          placeholder="Filter installations..."
+          value={(table.getColumn('general')?.getFilterValue() as string) ?? ''}
+          onChange={event =>
+            table.getColumn('general')?.setFilterValue(event.target.value)
+          }
           className="max-w-sm"
         />
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="outline" className="ml-auto">
-              Columns <ChevronDown className="ml-2 h-4 w-4" />
+              Column <ChevronDown className="ml-2 h-4 w-4" />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
@@ -110,11 +121,11 @@ export function AutomationDataTable({ ...params }) {
                 return (
                   <DropdownMenuCheckboxItem
                     key={column.id}
-                    className="capitalize"
                     checked={column.getIsVisible()}
                     onCheckedChange={value => column.toggleVisibility(!!value)}
                   >
-                    {column.id.replace('_', ' ')}
+                    {params?.columnIdToNameTransformer?.(column.id) ??
+                      defaultColumnIdTransform(column.id)}
                   </DropdownMenuCheckboxItem>
                 );
               })}
@@ -152,7 +163,7 @@ export function AutomationDataTable({ ...params }) {
             ) : (
               <TableRow>
                 <TableCell colSpan={columns.length} className="h-24 text-center">
-                  No automations.
+                  No entities.
                 </TableCell>
               </TableRow>
             )}
@@ -160,10 +171,6 @@ export function AutomationDataTable({ ...params }) {
         </Table>
       </div>
       <div className="flex items-center justify-end space-x-2 py-4">
-        {/* <div className="flex-1 text-sm text-muted-foreground">
-          {table.getFilteredSelectedRowModel().rows.length} of {table.getFilteredRowModel().rows.length} row(s)
-          selected.
-        </div> */}
         <div className="space-x-2">
           <Button
             variant="outline"

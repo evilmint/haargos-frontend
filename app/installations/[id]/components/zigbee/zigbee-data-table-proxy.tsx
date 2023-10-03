@@ -5,7 +5,8 @@ import { useEffect } from 'react';
 import { useInstallationStore } from '@/app/services/stores';
 import { useAuth0 } from '@auth0/auth0-react';
 import { Observation, ZigbeeDevice } from '@/app/types';
-import { ZigbeeDataTable, ZigbeeDeviceTableView } from './zigbee-data-table';
+import { GenericDataTable } from '@/lib/generic-data-table';
+import { ZigbeeDeviceTableView, columns } from './zigbee-data-table-columns';
 
 export function ZigbeeDataTableProxy({ ...params }) {
   const { installationId } = params;
@@ -41,7 +42,19 @@ export function ZigbeeDataTableProxy({ ...params }) {
   if (observations && observations.length > 0 && observations[0].zigbee) {
     devices = observations[0].zigbee.devices.map(d => mapToTableView(d, observations));
   }
-  return <ZigbeeDataTable data={devices} />;
+  return (
+    <GenericDataTable
+      defaultColumnVisibility={{
+        ieee: false,
+        integration_type: false,
+        device: false,
+        battery_type: false,
+      }}
+      columns={columns}
+      columnVisibilityKey="ZigbeeDataTable_columnVisibility"
+      data={devices}
+    />
+  );
 }
 
 function mapToTableView(

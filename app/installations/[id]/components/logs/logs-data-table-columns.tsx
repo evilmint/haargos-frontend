@@ -4,13 +4,20 @@ import * as React from 'react';
 import { ColumnDef } from '@tanstack/react-table';
 import { ArrowUpDown } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { LogTableView } from './logs-data-table';
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip';
+
+export interface LogTableView {
+  id: string;
+  log: string;
+  type: string;
+  time: Date;
+  thread: string;
+}
 
 export const columns: ColumnDef<LogTableView>[] = [
   {

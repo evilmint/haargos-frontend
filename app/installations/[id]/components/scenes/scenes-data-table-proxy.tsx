@@ -5,7 +5,8 @@ import { useEffect } from 'react';
 import { useInstallationStore } from '@/app/services/stores';
 import { useAuth0 } from '@auth0/auth0-react';
 import { Observation, Automation, Scene } from '@/app/types';
-import { SceneDataTable, SceneTableView } from './scenes-data-table';
+import { SceneTableView, columns } from './scenes-data-table-columns';
+import { GenericDataTable } from '@/lib/generic-data-table';
 
 export function SceneDataTableProxy({ ...params }) {
   const { installationId } = params;
@@ -41,7 +42,13 @@ export function SceneDataTableProxy({ ...params }) {
       ? (observations[0].scenes ?? []).map(a => mapToTableView(a, observations[0]))
       : [];
 
-  return <SceneDataTable data={scenes} />;
+  return (
+    <GenericDataTable
+      columns={columns}
+      columnVisibilityKey="SceneDataTable_columnVisibility"
+      data={scenes}
+    />
+  );
 }
 
 function mapToTableView(scene: Scene, observation: Observation): SceneTableView {

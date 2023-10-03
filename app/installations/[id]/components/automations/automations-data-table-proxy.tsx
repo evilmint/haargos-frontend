@@ -4,8 +4,9 @@ import * as React from 'react';
 import { useEffect } from 'react';
 import { useInstallationStore } from '@/app/services/stores';
 import { useAuth0 } from '@auth0/auth0-react';
-import { Observation, Automation } from '@/app/types';
-import { AutomationDataTable, AutomationTableView } from './automations-data-table';
+import { Automation } from '@/app/types';
+import { AutomationTableView, columns } from './automations-data-table-columns';
+import { GenericDataTable } from '@/lib/generic-data-table';
 
 export function AutomationsDataTableProxy({ ...params }) {
   const { installationId } = params;
@@ -41,7 +42,12 @@ export function AutomationsDataTableProxy({ ...params }) {
   if (observations && observations.length > 0) {
     automations = observations[0].automations.map(mapToTableView);
   }
-  return <AutomationDataTable data={automations} />;
+  
+  return <GenericDataTable
+    columns={columns}
+    columnVisibilityKey="AutomationDataTable_columnVisibility"
+    data={automations}
+  />;
 }
 
 function mapToTableView(automation: Automation): AutomationTableView {

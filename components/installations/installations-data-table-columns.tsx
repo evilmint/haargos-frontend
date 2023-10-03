@@ -5,7 +5,6 @@ import { ColumnDef } from '@tanstack/react-table';
 import { ArrowUpDown, LucideExternalLink } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
-import { InstallationTableView } from './installations-data-table';
 import { Icons } from '../icons';
 import { Badge } from '@tremor/react';
 import {
@@ -17,57 +16,32 @@ import {
   DropdownMenuGroup,
   DropdownMenuItem,
 } from '../ui/dropdown-menu';
+import { makeBooleanCell, makeSimpleCell } from '@/lib/table-cells-helper';
 
-function makeSimpleCell(
-  label: string,
-  name: string,
-  width = '100px',
-): ColumnDef<InstallationTableView> {
-  return {
-    accessorKey: name,
-    header: ({ column }) => (
-      <div className="flex justify-center">
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-        >
-          {label}
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      </div>
-    ),
-    cell: ({ row }) => (
-      <div className={`text-xs flex justify-center text-center`}>
-        {row.getValue(name)}
-      </div>
-    ),
+export interface InstallationTableView {
+  id: string;
+  general: {
+    goToHomeAssistant: (url: string) => void;
+    goToInstallation: () => void;
+    name: string;
+    is_up: boolean;
+    instance_url: string | null;
+    installation_url: string;
   };
-}
-
-function makeBooleanCell(label: string, name: string): ColumnDef<InstallationTableView> {
-  return {
-    accessorKey: name,
-    header: ({ column }) => (
-      <div className="flex justify-center">
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-        >
-          {label}
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      </div>
-    ),
-    cell: ({ row }) => (
-      <div className="text-xs text-center flex justify-center">
-        {row.getValue(name) ? (
-          <Icons.checkCircle className="w-6 h-6 text-green-600" />
-        ) : (
-          <Icons.xCircle className="w-6 h-6 text-red-600" />
-        )}
-      </div>
-    ),
-  };
+  agent_version: string;
+  ha_version: string;
+  is_healthy: boolean;
+  volume: boolean;
+  cpu: boolean;
+  memory: boolean;
+  ha_version_tick: boolean;
+  log_errors: number;
+  log_warnings: number;
+  low_lqi_zigbee_devices: number;
+  low_battery_devices: number;
+  unhealthy_docker_containers: number;
+  navigate_to_installation: string;
+  navigate_to_homeassistant: string | null;
 }
 
 export const columns: ColumnDef<InstallationTableView>[] = [

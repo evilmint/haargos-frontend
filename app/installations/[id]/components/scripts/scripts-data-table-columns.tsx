@@ -4,17 +4,22 @@ import * as React from 'react';
 import { ColumnDef } from '@tanstack/react-table';
 import { ArrowUpDown } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { ScriptTableView } from './scripts-data-table';
 import { Icons } from '@/components/icons';
 
-import TimeAgo from 'react-timeago';
-import { Dot } from '@/components/ui/dots';
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip';
+
+export interface ScriptTableView {
+  name: string;
+  state: string | null;
+  alias: string | null;
+  last_triggered: string | null;
+}
+
 export const columns: ColumnDef<ScriptTableView>[] = [
   {
     accessorKey: 'alias',

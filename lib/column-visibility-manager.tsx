@@ -1,5 +1,3 @@
-import { de } from "date-fns/locale";
-
 type VisibilityState = { [key: string]: boolean };
 
 export class ColumnVisibilityManager {

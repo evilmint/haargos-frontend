@@ -4,8 +4,9 @@ import * as React from 'react';
 import { useEffect } from 'react';
 import { useInstallationStore } from '@/app/services/stores';
 import { useAuth0 } from '@auth0/auth0-react';
-import { Observation, Automation, Script } from '@/app/types';
-import { ScriptsDataTable, ScriptTableView } from './scripts-data-table';
+import { Script } from '@/app/types';
+import { ScriptTableView, columns } from './scripts-data-table-columns';
+import { GenericDataTable } from '@/lib/generic-data-table';
 
 export function ScriptsDataTableProxy({ ...params }) {
   const { installationId } = params;
@@ -39,12 +40,19 @@ export function ScriptsDataTableProxy({ ...params }) {
   let scripts: ScriptTableView[] = [];
 
   if (observations && observations.length > 0) {
-    scripts = observations[0].scripts.map(s => mapToTableView(s, observations[0]));
+    scripts = observations[0].scripts.map(mapToTableView);
   }
-  return <ScriptsDataTable data={scripts} />;
+
+  return (
+    <GenericDataTable
+      columns={columns}
+      columnVisibilityKey="ScriptsDataTableColumns"
+      data={scripts}
+    />
+  );
 }
 
-function mapToTableView(script: Script, observation: Observation): ScriptTableView {
+function mapToTableView(script: Script): ScriptTableView {
   return {
     alias: script.alias,
     name: script.friendly_name ?? '',

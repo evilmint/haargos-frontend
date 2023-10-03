@@ -4,8 +4,13 @@ import * as React from 'react';
 import { ColumnDef } from '@tanstack/react-table';
 import { ArrowUpDown } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { SceneTableView } from './scenes-data-table';
 import { Icons } from '@/components/icons';
+export interface SceneTableView {
+  id: string;
+  name: string;
+  state: string | null;
+  friendly_name: string | null;
+}
 
 import TimeAgo from 'react-timeago';
 export const columns: ColumnDef<SceneTableView>[] = [

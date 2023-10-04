@@ -1,5 +1,3 @@
-import React from 'react';
-
 export function SVGWithText({ ...props }) {
   const { showSVG, textWithSVG, fallbackText } = props;
 

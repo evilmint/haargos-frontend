@@ -1,12 +1,12 @@
 'use client';
 
-import TimeAgo from 'react-timeago';
 import { Button } from '@/registry/new-york/ui/button';
 import { useRouter } from 'next/navigation';
+import TimeAgo from 'react-timeago';
 
-import { useEffect } from 'react';
 import { useInstallationStore } from '@/app/services/stores';
 import { useAuth0 } from '@auth0/auth0-react';
+import { useEffect } from 'react';
 
 export function Installations() {
   const installations = useInstallationStore(state => state.installations);

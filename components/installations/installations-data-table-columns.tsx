@@ -1,22 +1,21 @@
 'use client';
 
-import * as React from 'react';
+import { Button } from '@/components/ui/button';
 import { ColumnDef } from '@tanstack/react-table';
 import { ArrowUpDown, LucideExternalLink } from 'lucide-react';
-import { Button } from '@/components/ui/button';
 
-import { Icons } from '../icons';
+import { makeBooleanCell, makeSimpleCell } from '@/lib/table-cells-helper';
 import { Badge } from '@tremor/react';
+import { Icons } from '../icons';
 import {
   DropdownMenu,
-  DropdownMenuTrigger,
   DropdownMenuContent,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
   DropdownMenuGroup,
   DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
 } from '../ui/dropdown-menu';
-import { makeBooleanCell, makeSimpleCell } from '@/lib/table-cells-helper';
 
 export interface InstallationTableView {
   id: string;

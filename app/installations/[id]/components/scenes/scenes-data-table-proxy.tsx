@@ -1,12 +1,11 @@
 'use client';
-import * as React from 'react';
 
-import { useEffect } from 'react';
 import { useInstallationStore } from '@/app/services/stores';
-import { useAuth0 } from '@auth0/auth0-react';
-import { Observation, Automation, Scene } from '@/app/types';
-import { SceneTableView, columns } from './scenes-data-table-columns';
+import { Observation, Scene } from '@/app/types';
 import { GenericDataTable } from '@/lib/generic-data-table';
+import { useAuth0 } from '@auth0/auth0-react';
+import { useEffect } from 'react';
+import { SceneTableView, columns } from './scenes-data-table-columns';
 
 export function SceneDataTableProxy({ ...params }) {
   const { installationId } = params;

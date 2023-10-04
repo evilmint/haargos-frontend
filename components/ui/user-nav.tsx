@@ -13,11 +13,11 @@ import {
 } from '@/registry/new-york/ui/dropdown-menu';
 
 import { UserDoesNotExistError, useUserStore } from '@/app/services/stores';
-import React, { useEffect, useState } from 'react';
 import { fullNameInitials } from '@/app/tools';
 import { useAuth0 } from '@auth0/auth0-react';
-import { LoginButton } from './login-button';
 import { useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
+import { LoginButton } from './login-button';
 
 export function UserNav() {
   const { fetchUser, user: apiUser } = useUserStore(state => state);

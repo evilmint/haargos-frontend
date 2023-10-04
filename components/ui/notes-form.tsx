@@ -1,18 +1,30 @@
 'use client';
 
 import { updateInstallation } from '@/app/services/installations';
+import { useInstallationStore } from '@/app/services/stores';
+import { Installation } from '@/app/types';
+import { NotesFormValues, notesFormSchema } from '@/lib/zod';
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage
+} from '@/registry/default/ui/form';
+import { Button } from '@/registry/new-york/ui/button';
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
 } from '@/registry/new-york/ui/dialog';
+import { Textarea } from '@/registry/new-york/ui/textarea';
 import { useAuth0 } from '@auth0/auth0-react';
-import { Input } from '@/registry/new-york/ui/input';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { useEffect, useState } from 'react';
-import { Installation } from '@/app/types';
-import { Button } from '@/registry/new-york/ui/button';
-import { useInstallationStore } from '@/app/services/stores';
+import { useForm } from 'react-hook-form';
+import { FailureAlert } from './failure-alert';
 
 interface NotesFormProps {
   children: React.ReactNode;
@@ -21,21 +33,6 @@ interface NotesFormProps {
   onOpenChange?(open: boolean): void;
   onUpdatedInstallation?: (installation: Installation) => void;
 }
-import * as z from 'zod';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useForm } from 'react-hook-form';
-import {
-  Form,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormControl,
-  FormDescription,
-  FormMessage,
-} from '@/registry/default/ui/form';
-import { NotesFormValues, notesFormSchema } from '@/lib/zod';
-import { FailureAlert } from './failure-alert';
-import { Textarea } from '@/registry/new-york/ui/textarea';
 
 export function NotesForm({ children, ...params }: NotesFormProps) {
   const [isUpdating, setUpdating] = useState<boolean>(false);

@@ -2,17 +2,17 @@
 
 import Link from 'next/link';
 
-import { cn } from '@/lib/utils';
-import InstallationSwitcher from './installation-switcher';
 import {
   useInstallationStore,
   useInstallationSwitcherStore,
   useUserStore,
 } from '@/app/services/stores';
+import { cn } from '@/lib/utils';
 import { Button } from '@/registry/new-york/ui/button';
-import { ModeToggle } from './mode-toggle';
-import { Icons } from '../icons';
 import { LucideExternalLink } from 'lucide-react';
+import { Icons } from '../icons';
+import InstallationSwitcher from './installation-switcher';
+import { ModeToggle } from './mode-toggle';
 
 export function MainNav({ ...props }, { className }: React.HTMLAttributes<HTMLElement>) {
   const { installationId } = props;

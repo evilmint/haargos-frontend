@@ -1,13 +1,13 @@
-import { getUserMe } from './users';
+import { BatteryType, Installation, Log, Observation, Storage, User } from '@/app/types';
 import { create } from 'zustand';
-import { Installation, Observation, Log, User, Storage, BatteryType } from '@/app/types';
+import { deleteAccount, updateAccount } from './account';
 import {
   createInstallation,
   deleteInstallation,
   getInstallations,
 } from './installations';
 import { getObservations } from './observations';
-import { deleteAccount, updateAccount } from './account';
+import { getUserMe } from './users';
 
 interface UserState {
   user: User | null;
@@ -455,9 +455,9 @@ const extractUniqueVolumes = (volumesUnsorted: Storage[]): Storage[] => {
 };
 
 export {
-  useUserStore,
+  UserDoesNotExistError,
   useAccountStore,
   useInstallationStore,
   useInstallationSwitcherStore,
-  UserDoesNotExistError,
+  useUserStore,
 };

@@ -1,10 +1,9 @@
 'use client';
 
-import * as React from 'react';
+import { Icons } from '@/components/icons';
+import { Button } from '@/components/ui/button';
 import { ColumnDef } from '@tanstack/react-table';
 import { ArrowUpDown } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Icons } from '@/components/icons';
 
 export interface ZigbeeDeviceTableView {
   ieee: string;
@@ -20,14 +19,14 @@ export interface ZigbeeDeviceTableView {
   id: string;
 }
 
-import TimeAgo from 'react-timeago';
+import { BatteryType } from '@/app/types';
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip';
-import { BatteryType } from '@/app/types';
+import TimeAgo from 'react-timeago';
 export const columns: ColumnDef<ZigbeeDeviceTableView>[] = [
   {
     accessorKey: 'ieee',

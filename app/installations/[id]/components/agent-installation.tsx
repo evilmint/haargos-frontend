@@ -1,9 +1,9 @@
 'use client';
 
-import { Card, CardContent, CardHeader, CardTitle } from '@/registry/new-york/ui/card';
-import { useEffect } from 'react';
 import { useInstallationStore } from '@/app/services/stores';
+import { Card, CardContent, CardHeader, CardTitle } from '@/registry/new-york/ui/card';
 import { useAuth0 } from '@auth0/auth0-react';
+import { useEffect } from 'react';
 import Code from './code';
 
 export function AgentInstallation({ installationId }: { installationId: string }) {

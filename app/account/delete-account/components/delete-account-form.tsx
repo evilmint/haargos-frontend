@@ -4,21 +4,6 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import * as z from 'zod';
 
-import { Button } from '@/registry/new-york/ui/button';
-import { Form } from '@/registry/new-york/ui/form';
-import {
-  AlertDialogContent,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogCancel,
-  AlertDialogAction,
-  AlertDialog,
-  AlertDialogTrigger,
-} from '@/registry/default/ui/alert-dialog';
-import { useRef, useState } from 'react';
-import { useAuth0 } from '@auth0/auth0-react';
 import {
   useAccountStore,
   useInstallationStore,
@@ -26,6 +11,21 @@ import {
   useUserStore,
 } from '@/app/services/stores';
 import { FailureAlert } from '@/components/ui/failure-alert';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from '@/registry/default/ui/alert-dialog';
+import { Button } from '@/registry/new-york/ui/button';
+import { Form } from '@/registry/new-york/ui/form';
+import { useAuth0 } from '@auth0/auth0-react';
+import { useRef, useState } from 'react';
 
 const deleteFormSchema = z.object({});
 

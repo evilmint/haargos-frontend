@@ -1,20 +1,12 @@
 'use client';
 
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table';
-import { LineChart, Title, Card as TremorCard } from '@tremor/react';
+import { LineChart } from '@tremor/react';
 
 import { useInstallationStore } from '@/app/services/stores';
-import { useEffect } from 'react';
-import { useAuth0 } from '@auth0/auth0-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/registry/new-york/ui/card';
+import { useAuth0 } from '@auth0/auth0-react';
 import moment from 'moment';
+import { useEffect } from 'react';
 
 export function Memory({ ...params }) {
   const { installationId } = params;

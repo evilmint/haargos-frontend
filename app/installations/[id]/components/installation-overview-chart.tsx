@@ -1,9 +1,9 @@
 'use client';
 
-import { useEffect } from 'react';
-import { Card, Title, BarChart } from '@tremor/react';
-import { useAuth0 } from '@auth0/auth0-react';
 import { useInstallationStore } from '@/app/services/stores';
+import { useAuth0 } from '@auth0/auth0-react';
+import { BarChart, Card, Title } from '@tremor/react';
+import { useEffect } from 'react';
 
 export function InstallationOverviewChart({
   installationId,

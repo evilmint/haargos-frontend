@@ -1,12 +1,11 @@
 'use client';
-import * as React from 'react';
 
-import { useEffect } from 'react';
 import { useInstallationStore } from '@/app/services/stores';
-import { useAuth0 } from '@auth0/auth0-react';
 import { Automation } from '@/app/types';
-import { AutomationTableView, columns } from './automations-data-table-columns';
 import { GenericDataTable } from '@/lib/generic-data-table';
+import { useAuth0 } from '@auth0/auth0-react';
+import { useEffect } from 'react';
+import { AutomationTableView, columns } from './automations-data-table-columns';
 
 export function AutomationsDataTableProxy({ ...params }) {
   const { installationId } = params;
@@ -42,12 +41,14 @@ export function AutomationsDataTableProxy({ ...params }) {
   if (observations && observations.length > 0) {
     automations = observations[0].automations.map(mapToTableView);
   }
-  
-  return <GenericDataTable
-    columns={columns}
-    columnVisibilityKey="AutomationDataTable_columnVisibility"
-    data={automations}
-  />;
+
+  return (
+    <GenericDataTable
+      columns={columns}
+      columnVisibilityKey="AutomationDataTable_columnVisibility"
+      data={automations}
+    />
+  );
 }
 
 function mapToTableView(automation: Automation): AutomationTableView {

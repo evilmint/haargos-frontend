@@ -1,9 +1,9 @@
 'use client';
 
-import { MainNav } from '@/components/ui/main-nav';
-import { UserNav } from '@/components/ui/user-nav';
 import { InstallationsAbsentContent } from '@/components/installations-absent-content';
 import { InstallationsPresentContent } from '@/components/installations-present-content';
+import { MainNav } from '@/components/ui/main-nav';
+import { UserNav } from '@/components/ui/user-nav';
 import { useInstallationStore, useUserStore } from './services/stores';
 
 export default function DashboardPage() {

@@ -1,6 +1,6 @@
 import { Icons } from '@/components/icons';
 import { cn } from '@/lib/utils';
-import React, { useState } from 'react';
+import { useState } from 'react';
 
 type CopyButtonProps = {
   textToCopy?: string;

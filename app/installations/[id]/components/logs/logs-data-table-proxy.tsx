@@ -1,14 +1,13 @@
 'use client';
-import * as React from 'react';
 
-import { useEffect } from 'react';
 import { useInstallationStore } from '@/app/services/stores';
-import { useAuth0 } from '@auth0/auth0-react';
 import { Log } from '@/app/types';
+import { GenericDataTable } from '@/lib/generic-data-table';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/registry/new-york/ui/tabs';
+import { useAuth0 } from '@auth0/auth0-react';
+import { useEffect } from 'react';
 import CopyButton from '../copy-button';
 import DownloadButton from '../download-button';
-import { GenericDataTable } from '@/lib/generic-data-table';
 import { LogTableView, columns } from './logs-data-table-columns';
 
 export function LogsDataTableProxy({ ...params }) {

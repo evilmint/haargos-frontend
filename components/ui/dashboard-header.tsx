@@ -1,20 +1,20 @@
 'use client';
 
-import { useEffect } from 'react';
 import { useAuth0 } from '@auth0/auth0-react';
+import { useEffect } from 'react';
 
-import {
-  Card,
-  Title,
-  DonutChart,
-  Flex,
-  BarList,
-  Bold,
-  Text,
-  Legend,
-} from '@tremor/react';
 import { useInstallationStore } from '@/app/services/stores';
 import { Installation } from '@/app/types';
+import {
+  BarList,
+  Bold,
+  Card,
+  DonutChart,
+  Flex,
+  Legend,
+  Text,
+  Title,
+} from '@tremor/react';
 
 export function DashboardHeader() {
   const installations = useInstallationStore(state => state.installations);

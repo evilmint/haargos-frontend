@@ -1,10 +1,12 @@
 'use client';
 
-import Link from 'next/link';
 import { zodResolver } from '@hookform/resolvers/zod';
+import Link from 'next/link';
 import { useForm } from 'react-hook-form';
 import * as z from 'zod';
 
+import { useAccountStore, useUserStore } from '@/app/services/stores';
+import { FailureAlert } from '@/components/ui/failure-alert';
 import { Button } from '@/registry/new-york/ui/button';
 import {
   Form,
@@ -16,10 +18,8 @@ import {
   FormMessage,
 } from '@/registry/new-york/ui/form';
 import { Input } from '@/registry/new-york/ui/input';
-import { useAccountStore, useUserStore } from '@/app/services/stores';
-import { useEffect, useState } from 'react';
-import { FailureAlert } from '@/components/ui/failure-alert';
 import { useAuth0 } from '@auth0/auth0-react';
+import { useEffect, useState } from 'react';
 
 const profileFormSchema = z.object({
   email: z

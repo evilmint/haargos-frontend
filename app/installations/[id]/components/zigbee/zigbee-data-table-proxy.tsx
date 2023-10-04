@@ -1,11 +1,10 @@
 'use client';
-import * as React from 'react';
 
-import { useEffect } from 'react';
 import { useInstallationStore } from '@/app/services/stores';
-import { useAuth0 } from '@auth0/auth0-react';
 import { Observation, ZigbeeDevice } from '@/app/types';
 import { GenericDataTable } from '@/lib/generic-data-table';
+import { useAuth0 } from '@auth0/auth0-react';
+import { useEffect } from 'react';
 import { ZigbeeDeviceTableView, columns } from './zigbee-data-table-columns';
 
 export function ZigbeeDataTableProxy({ ...params }) {

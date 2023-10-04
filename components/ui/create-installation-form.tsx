@@ -1,6 +1,19 @@
 'use client';
 
 import { createInstallation } from '@/app/services/installations';
+import { useInstallationStore } from '@/app/services/stores';
+import { Installation } from '@/app/types';
+import { CreateInstallationFormValues, createInstallationFormSchema } from '@/lib/zod';
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/registry/default/ui/form';
+import { Button } from '@/registry/new-york/ui/button';
 import {
   Dialog,
   DialogContent,
@@ -8,21 +21,12 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/registry/new-york/ui/dialog';
-import { useAuth0 } from '@auth0/auth0-react';
 import { Input } from '@/registry/new-york/ui/input';
+import { useAuth0 } from '@auth0/auth0-react';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { useState } from 'react';
-import { Installation } from '@/app/types';
-import { Button } from '@/registry/new-york/ui/button';
-import { useInstallationStore } from '@/app/services/stores';
-import {
-  AlertDialog,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from '@/registry/default/ui/alert-dialog';
+import { useForm } from 'react-hook-form';
+import { FailureAlert } from './failure-alert';
 
 interface CreateInstallationFormProps {
   children: React.ReactNode;
@@ -30,20 +34,6 @@ interface CreateInstallationFormProps {
   onOpenChange?(open: boolean): void;
   onCreateInstallation?: (installation: Installation) => void;
 }
-import * as z from 'zod';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useForm } from 'react-hook-form';
-import {
-  Form,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormControl,
-  FormDescription,
-  FormMessage,
-} from '@/registry/default/ui/form';
-import { CreateInstallationFormValues, createInstallationFormSchema } from '@/lib/zod';
-import { FailureAlert } from './failure-alert';
 
 export function CreateInstallationForm({
   children,

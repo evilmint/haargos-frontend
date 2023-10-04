@@ -1,10 +1,8 @@
 'use client';
 
-import * as React from 'react';
+import { Button } from '@/components/ui/button';
 import { ColumnDef } from '@tanstack/react-table';
 import { ArrowUpDown } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Icons } from '@/components/icons';
 export interface SceneTableView {
   id: string;
   name: string;
@@ -12,7 +10,6 @@ export interface SceneTableView {
   friendly_name: string | null;
 }
 
-import TimeAgo from 'react-timeago';
 export const columns: ColumnDef<SceneTableView>[] = [
   {
     accessorKey: 'friendly_name',

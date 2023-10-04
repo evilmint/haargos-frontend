@@ -1,4 +1,4 @@
-import { ObservationApiResponse, Observation } from '../types';
+import { Observation, ObservationApiResponse } from '../types';
 import { apiSettings, baseHeaders } from './api-settings';
 
 export async function getObservations(

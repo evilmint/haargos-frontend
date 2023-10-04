@@ -1,12 +1,11 @@
 'use client';
-import * as React from 'react';
 
-import { useEffect } from 'react';
 import { useInstallationStore } from '@/app/services/stores';
-import { useAuth0 } from '@auth0/auth0-react';
 import { Script } from '@/app/types';
-import { ScriptTableView, columns } from './scripts-data-table-columns';
 import { GenericDataTable } from '@/lib/generic-data-table';
+import { useAuth0 } from '@auth0/auth0-react';
+import { useEffect } from 'react';
+import { ScriptTableView, columns } from './scripts-data-table-columns';
 
 export function ScriptsDataTableProxy({ ...params }) {
   const { installationId } = params;

@@ -8,7 +8,6 @@ import { Icons } from '@/components/icons';
 import { Button } from '@/components/ui/button';
 import { MainNav } from '@/components/ui/main-nav';
 import { UserNav } from '@/components/ui/user-nav';
-import ipaddr from 'ipaddr.js';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -30,15 +29,15 @@ import {
   SheetTitle,
   SheetTrigger,
 } from '@/registry/default/ui/sheet';
-import { Card, CardContent, CardHeader, CardTitle } from '@/registry/new-york/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/registry/new-york/ui/tabs';
 import { useAuth0 } from '@auth0/auth0-react';
+import ipaddr from 'ipaddr.js';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { AgentInstallation } from './components/agent-installation';
 import { AutomationsDataTableProxy } from './components/automations/automations-data-table-proxy';
-import { Docker } from './components/docker';
 import { CPU } from './components/cpu';
+import { Docker } from './components/docker';
 import { InstallationOverviewChart } from './components/installation-overview-chart';
 import { LogsDataTableProxy } from './components/logs/logs-data-table-proxy';
 import { SceneDataTableProxy } from './components/scenes/scenes-data-table-proxy';
@@ -46,31 +45,28 @@ import { ScriptsDataTableProxy } from './components/scripts/scripts-data-table-p
 import { Storage } from './components/storage';
 import { ZigbeeDataTableProxy } from './components/zigbee/zigbee-data-table-proxy';
 
-import { createInstallation, updateInstallation } from '@/app/services/installations';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useForm } from 'react-hook-form';
-import * as z from 'zod';
+import { updateInstallation } from '@/app/services/installations';
 import {
   Form,
+  FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
-  FormControl,
   FormMessage,
-  FormDescription,
 } from '@/registry/default/ui/form';
 import { Input } from '@/registry/new-york/ui/input';
+import { zodResolver } from '@hookform/resolvers/zod';
 import {
   Badge,
-  Flex,
   Tab,
   TabGroup,
   TabList,
   TabPanel,
-  TabPanels,
-  Text,
+  TabPanels
 } from '@tremor/react';
-import { _ } from 'numeral';
+import { useForm } from 'react-hook-form';
+import * as z from 'zod';
 import { Memory } from './components/memory';
 import { Network } from './components/network';
 

@@ -1,14 +1,12 @@
 'use client';
-import * as React from 'react';
 
-import { useEffect } from 'react';
 import { useInstallationStore } from '@/app/services/stores';
-import { useAuth0 } from '@auth0/auth0-react';
 import { Installation, Log, Observation } from '@/app/types';
-import { useRouter } from 'next/navigation';
 import { GenericDataTable } from '@/lib/generic-data-table';
+import { useAuth0 } from '@auth0/auth0-react';
+import { useRouter } from 'next/navigation';
+import { useEffect } from 'react';
 import { InstallationTableView, columns } from './installations-data-table-columns';
-import { toLower } from 'ramda';
 
 export function InstallationsDataTableProxy() {
   const observations = useInstallationStore(state => state.observations);

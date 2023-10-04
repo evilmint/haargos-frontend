@@ -1,6 +1,5 @@
 'use client';
 
-import { Button } from '@/registry/new-york/ui/button';
 import { Tabs, TabsContent } from '@radix-ui/react-tabs';
 import { InstallationsDataTableProxy } from './installations/installations-data-table-proxy';
 import { DashboardHeader } from './ui/dashboard-header';

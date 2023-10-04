@@ -1,9 +1,5 @@
 import { useInstallationStore } from '@/app/services/stores';
 import { NotesForm } from '@/components/ui/notes-form';
-import { cn } from '@/lib/utils';
-import { Button } from '@/registry/new-york/ui/button';
-import { Popover, PopoverTrigger, PopoverContent } from '@/registry/new-york/ui/popover';
-import { CaretSortIcon } from '@radix-ui/react-icons';
 import { useState } from 'react';
 
 type NoteParams = {
@@ -28,7 +24,7 @@ export function Notes(params: NoteParams) {
     <div>
       <NotesForm
         installationId={installationId}
-        onUpdatedInstallation={installation => {
+        onUpdatedInstallation={_installation => {
           setOpen(false);
         }}
         open={showNewInstallationDialog}

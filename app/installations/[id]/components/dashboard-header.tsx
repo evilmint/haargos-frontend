@@ -1,12 +1,5 @@
 'use client';
-import numeral from 'numeral';
-import { Color, Tracker } from '@tremor/react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/registry/new-york/ui/card';
-import { useEffect, useState } from 'react';
-import TimeAgo from 'react-timeago';
 import { useInstallationStore } from '@/app/services/stores';
-import { useAuth0 } from '@auth0/auth0-react';
-import { Skeleton } from '@/registry/new-york/ui/skeleton';
 import { Icons } from '@/components/icons';
 import {
   Tooltip,
@@ -14,8 +7,14 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip';
-import { Badge, Flex, ProgressBar, Text } from '@tremor/react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/registry/new-york/ui/card';
+import { Skeleton } from '@/registry/new-york/ui/skeleton';
+import { useAuth0 } from '@auth0/auth0-react';
+import { Badge, Color, Flex, ProgressBar, Text, Tracker } from '@tremor/react';
 import moment from 'moment';
+import numeral from 'numeral';
+import { useEffect, useState } from 'react';
+import TimeAgo from 'react-timeago';
 import { Notes } from './notes';
 
 export function DashboardHeaderInstallation({ ...params }) {

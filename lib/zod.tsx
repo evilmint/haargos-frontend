@@ -29,12 +29,9 @@ export const createInstallationFormSchema = z.object({
 export type CreateInstallationFormValues = z.infer<typeof createInstallationFormSchema>;
 
 export const notesFormSchema = z.object({
-  notes: z
-    .string()
-    .trim()
-    .max(255, {
-      message: 'Notes must not be longer than 255 characters.',
-    }),
+  notes: z.string().trim().max(255, {
+    message: 'Notes must not be longer than 255 characters.',
+  }),
 });
 
 export type NotesFormValues = z.infer<typeof notesFormSchema>;

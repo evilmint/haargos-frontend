@@ -1,11 +1,11 @@
 import { Metadata } from 'next';
 import Image from 'next/image';
 
-import { Separator } from '@/registry/new-york/ui/separator';
-import { SidebarNav } from './components/sidebar-nav';
 import { MainNav } from '@/components/ui/main-nav';
 import { UserNav } from '@/components/ui/user-nav';
-import { Card, CardContent, CardHeader, CardTitle } from '@/registry/new-york/ui/card';
+import { Card, CardContent } from '@/registry/new-york/ui/card';
+import { Separator } from '@/registry/new-york/ui/separator';
+import { SidebarNav } from './components/sidebar-nav';
 
 export const metadata: Metadata = {
   title: 'Forms',

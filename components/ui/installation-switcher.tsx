@@ -1,8 +1,13 @@
 'use client';
 
-import * as React from 'react';
 import { CaretSortIcon, CheckIcon, PlusCircledIcon } from '@radix-ui/react-icons';
+import * as React from 'react';
 
+import {
+  useInstallationStore,
+  useInstallationSwitcherStore,
+} from '@/app/services/stores';
+import { Installation } from '@/app/types';
 import { cn } from '@/lib/utils';
 import { Button } from '@/registry/new-york/ui/button';
 import {
@@ -16,17 +21,12 @@ import {
 } from '@/registry/new-york/ui/command';
 import { DialogTrigger } from '@/registry/new-york/ui/dialog';
 import { Popover, PopoverContent, PopoverTrigger } from '@/registry/new-york/ui/popover';
-import { usePathname, useRouter } from 'next/navigation';
-import {
-  useInstallationStore,
-  useInstallationSwitcherStore,
-} from '@/app/services/stores';
-import { useAuth0 } from '@auth0/auth0-react';
-import { useState } from 'react';
 import { Skeleton } from '@/registry/new-york/ui/skeleton';
-import { Dot } from './dots';
-import { Installation } from '@/app/types';
+import { useAuth0 } from '@auth0/auth0-react';
+import { usePathname, useRouter } from 'next/navigation';
+import { useState } from 'react';
 import { CreateInstallationForm } from './create-installation-form';
+import { Dot } from './dots';
 
 interface InstallationSwitcherProps {
   installationId: string;

@@ -1,4 +1,3 @@
-import React, { ReactNode } from 'react';
 import CopyButton from './copy-button';
 
 type CodeProps = {

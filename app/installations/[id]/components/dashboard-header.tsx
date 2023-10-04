@@ -16,6 +16,7 @@ import {
 } from '@/components/ui/tooltip';
 import { Badge, Flex, ProgressBar, Text } from '@tremor/react';
 import moment from 'moment';
+import { Notes } from './notes';
 
 export function DashboardHeaderInstallation({ ...params }) {
   const { installationId } = params;
@@ -114,254 +115,263 @@ export function DashboardHeaderInstallation({ ...params }) {
       : { is_healthy: false, last_updated: null, color: 'red' };
 
   return (
-    <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-5">
-      <Card>
-        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-sm font-medium">Agent</CardTitle>
-          <Icons.git />
-        </CardHeader>
-        <CardContent>
-          <div className="text-xl">
-            {observationsLoading || isLoading ? (
-              <Skeleton className="h-8" />
-            ) : observations && observations.length > 0 ? (
-              <div>
-                <Text>{observations[0].agent_version}</Text>
-                <Text>
-                  Last seen{' '}
-                  <TimeAgo className="font-semibold" date={observations[0]?.timestamp} />
-                </Text>
-              </div>
-            ) : (
-              <div className="font-bold">n/a</div>
-            )}
-          </div>
-        </CardContent>
-      </Card>
-      <Card>
-        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-sm font-medium">HA version</CardTitle>
-          <Icons.git />
-        </CardHeader>
-        <CardContent>
-          <div className="text-xl font-bold mr-2 inline">
-            {observationsLoading || isLoading ? (
-              <Skeleton className="h-8" />
-            ) : (
-              haVersion ?? 'n/a'
-            )}
-          </div>
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger>
-                <a
-                  className="cursor-pointer"
-                  href="https://github.com/home-assistant/core/releases"
-                  target="_blank"
-                >
-                  {observationsLoading == false &&
-                    isLoading == false &&
-                    (observations.length > 0 ? (
-                      isHAUpdateAvailable == false ? (
-                        <Badge
-                          className="cursor-pointer"
-                          color="green"
-                          icon={Icons.shieldCheck}
-                        >
-                          Up to date
-                        </Badge>
-                      ) : (
-                        <Badge
-                          className="cursor-pointer"
-                          color="orange"
-                          icon={Icons.shieldExclamation}
-                        >
-                          {latestHaRelease} available
-                        </Badge>
-                      )
-                    ) : (
-                      <div className="text-xl font-bold">n/a</div>
-                    ))}
-                </a>
-              </TooltipTrigger>
-              <TooltipContent>
-                <p>
-                  {isHAUpdateAvailable ? `${latestHaRelease} available` : 'Up to date'}
-                </p>
-              </TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
-        </CardContent>
-      </Card>
-      <Card>
-        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-sm font-medium">Memory</CardTitle>
+    <div>
+      <div className="my-4 text-sm">
+        <Notes installationId={installationId} />
+      </div>
 
-          <Icons.memory />
-        </CardHeader>
-        <CardContent>
-          <div className="text-xl">
-            {observationsLoading || isLoading ? (
-              <Skeleton className="h-8" />
-            ) : (
-              <div>
-                <Flex>
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-5">
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Agent</CardTitle>
+            <Icons.git />
+          </CardHeader>
+          <CardContent>
+            <div className="text-xl">
+              {observationsLoading || isLoading ? (
+                <Skeleton className="h-8" />
+              ) : observations && observations.length > 0 ? (
+                <div>
+                  <Text>{observations[0].agent_version}</Text>
                   <Text>
-                    {numeral(
-                      (observations[0]?.environment?.memory?.used ?? 0) / 1024 / 1024,
-                    ).format('0.0')}
-                    G &bull; {memoryPercentage}%
+                    Last seen{' '}
+                    <TimeAgo
+                      className="font-semibold"
+                      date={observations[0]?.timestamp}
+                    />
                   </Text>
-                  <Text>
-                    {numeral(
-                      (observations[0]?.environment?.memory?.total ?? 0) / 1024 / 1024,
-                    ).format('0.0')}
-                    G
-                  </Text>
-                </Flex>
-                <ProgressBar value={memoryPercentage} color="blue" className="mt-3" />
-              </div>
-            )}
-          </div>
-        </CardContent>
-      </Card>
-      <Card>
-        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-sm font-medium">Volume max</CardTitle>
-          <Icons.storage />
-        </CardHeader>
-        <CardContent>
-          <div className="text-xl">
-            {observationsLoading || isLoading ? (
-              <Skeleton className="h-8" />
-            ) : (
-              <div>
-                <Flex>
-                  <Text>
-                    {highestStorage?.used} &bull;{' '}
-                    {(
+                </div>
+              ) : (
+                <div className="font-bold">n/a</div>
+              )}
+            </div>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">HA version</CardTitle>
+            <Icons.git />
+          </CardHeader>
+          <CardContent>
+            <div className="text-xl font-bold mr-2 inline">
+              {observationsLoading || isLoading ? (
+                <Skeleton className="h-8" />
+              ) : (
+                haVersion ?? 'n/a'
+              )}
+            </div>
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger>
+                  <a
+                    className="cursor-pointer"
+                    href="https://github.com/home-assistant/core/releases"
+                    target="_blank"
+                  >
+                    {observationsLoading == false &&
+                      isLoading == false &&
+                      (observations.length > 0 ? (
+                        isHAUpdateAvailable == false ? (
+                          <Badge
+                            className="cursor-pointer"
+                            color="green"
+                            icon={Icons.shieldCheck}
+                          >
+                            Up to date
+                          </Badge>
+                        ) : (
+                          <Badge
+                            className="cursor-pointer"
+                            color="orange"
+                            icon={Icons.shieldExclamation}
+                          >
+                            {latestHaRelease} available
+                          </Badge>
+                        )
+                      ) : (
+                        <div className="text-xl font-bold">n/a</div>
+                      ))}
+                  </a>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>
+                    {isHAUpdateAvailable ? `${latestHaRelease} available` : 'Up to date'}
+                  </p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Memory</CardTitle>
+
+            <Icons.memory />
+          </CardHeader>
+          <CardContent>
+            <div className="text-xl">
+              {observationsLoading || isLoading ? (
+                <Skeleton className="h-8" />
+              ) : (
+                <div>
+                  <Flex>
+                    <Text>
+                      {numeral(
+                        (observations[0]?.environment?.memory?.used ?? 0) / 1024 / 1024,
+                      ).format('0.0')}
+                      G &bull; {memoryPercentage}%
+                    </Text>
+                    <Text>
+                      {numeral(
+                        (observations[0]?.environment?.memory?.total ?? 0) / 1024 / 1024,
+                      ).format('0.0')}
+                      G
+                    </Text>
+                  </Flex>
+                  <ProgressBar value={memoryPercentage} color="blue" className="mt-3" />
+                </div>
+              )}
+            </div>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Volume max</CardTitle>
+            <Icons.storage />
+          </CardHeader>
+          <CardContent>
+            <div className="text-xl">
+              {observationsLoading || isLoading ? (
+                <Skeleton className="h-8" />
+              ) : (
+                <div>
+                  <Flex>
+                    <Text>
+                      {highestStorage?.used} &bull;{' '}
+                      {(
+                        (Number(highestStorage?.used.slice(0, -1)) /
+                          Number(highestStorage?.size.slice(0, -1))) *
+                        100
+                      ).toFixed(0)}
+                      % &bull; {highestStorage?.name}
+                    </Text>
+                    <Text>{highestStorage?.size}</Text>
+                  </Flex>
+                  <ProgressBar
+                    value={
                       (Number(highestStorage?.used.slice(0, -1)) /
                         Number(highestStorage?.size.slice(0, -1))) *
                       100
-                    ).toFixed(0)}
-                    % &bull; {highestStorage?.name}
-                  </Text>
-                  <Text>{highestStorage?.size}</Text>
-                </Flex>
-                <ProgressBar
-                  value={
-                    (Number(highestStorage?.used.slice(0, -1)) /
-                      Number(highestStorage?.size.slice(0, -1))) *
-                    100
-                  }
-                  color="blue"
-                  className="mt-3"
-                />
-              </div>
-            )}
-          </div>
-        </CardContent>
-      </Card>
-      <Card>
-        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-sm font-medium">Architecture</CardTitle>
-          <Icons.cpu />
-        </CardHeader>
-        <CardContent>
-          <div className="text-xl font-bold">
-            {observationsLoading || isLoading ? (
-              <Skeleton className="h-8" />
-            ) : (
-              cpuArchitecture
-            )}
-          </div>
-        </CardContent>
-      </Card>
-
-      <Card>
-        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-sm font-medium">Instance status</CardTitle>
-          <Icons.healthline />
-        </CardHeader>
-        <CardContent>
-          <div className="">
-            {observationsLoading || isLoading ? (
-              <Skeleton className="h-8" />
-            ) : observations.length > 0 ? (
-              <div>
-                {installation && installation.urls.instance?.is_verified ? (
-                  <Badge color={healthy.color} icon={Icons.signal}>
-                    <TimeAgo date={healthy.last_updated ?? ''} />
-                  </Badge>
-                ) : installation && installation.urls.instance ? (
-                  installation &&
-                  installation.urls.instance.verification_status == 'FAILED' ? (
-                    <Badge color="red" icon={Icons.shieldExclamation}>
-                      Verification failed
-                    </Badge>
-                  ) : (
-                    <Badge color="yellow" icon={Icons.cog6tooth}>
-                      Verification pending
-                    </Badge>
-                  )
-                ) : (
-                  <Badge color="gray" icon={Icons.cog6tooth}>
-                    No instance URL provided
-                  </Badge>
-                )}
-
-                {healthy.last_updated && (
-                  <div className="text-sm font-normal ml-2 inline">
-                    <TooltipProvider>
-                      <Tooltip>
-                        <TooltipTrigger></TooltipTrigger>
-                        <TooltipContent>
-                          <p>
-                            This shows the status and last time of a query of the
-                            HomeAssistant instance url.
-                          </p>
-                        </TooltipContent>
-                      </Tooltip>
-                    </TooltipProvider>
-                  </div>
-                )}
-
-                {installation &&
-                  installation.urls.instance?.is_verified &&
-                  data.length > 0 && <Tracker data={data} className="mt-2" />}
-              </div>
-            ) : (
-              <div className="text-xl font-bold">n/a</div>
-            )}
-          </div>
-        </CardContent>
-      </Card>
-
-      <Card>
-        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-sm font-medium">Last boot</CardTitle>
-          <Icons.zap />
-        </CardHeader>
-        <CardContent>
-          <div className="">
-            {observationsLoading || isLoading ? (
-              <Skeleton className="h-8" />
-            ) : observations.length > 0 ? (
-              <div>
-                <Text>
-                  <TimeAgo
-                    date={
-                      observations[observations.length - 1].environment.boot_time ?? ''
                     }
+                    color="blue"
+                    className="mt-3"
                   />
-                </Text>
-              </div>
-            ) : (
-              <div className="text-xl font-bold">n/a</div>
-            )}
-          </div>
-        </CardContent>
-      </Card>
+                </div>
+              )}
+            </div>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Architecture</CardTitle>
+            <Icons.cpu />
+          </CardHeader>
+          <CardContent>
+            <div className="text-xl font-bold">
+              {observationsLoading || isLoading ? (
+                <Skeleton className="h-8" />
+              ) : (
+                cpuArchitecture
+              )}
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Instance status</CardTitle>
+            <Icons.healthline />
+          </CardHeader>
+          <CardContent>
+            <div className="">
+              {observationsLoading || isLoading ? (
+                <Skeleton className="h-8" />
+              ) : observations.length > 0 ? (
+                <div>
+                  {installation && installation.urls.instance?.is_verified ? (
+                    <Badge color={healthy.color} icon={Icons.signal}>
+                      <TimeAgo date={healthy.last_updated ?? ''} />
+                    </Badge>
+                  ) : installation && installation.urls.instance ? (
+                    installation &&
+                    installation.urls.instance.verification_status == 'FAILED' ? (
+                      <Badge color="red" icon={Icons.shieldExclamation}>
+                        Verification failed
+                      </Badge>
+                    ) : (
+                      <Badge color="yellow" icon={Icons.cog6tooth}>
+                        Verification pending
+                      </Badge>
+                    )
+                  ) : (
+                    <Badge color="gray" icon={Icons.cog6tooth}>
+                      No instance URL provided
+                    </Badge>
+                  )}
+
+                  {healthy.last_updated && (
+                    <div className="text-sm font-normal ml-2 inline">
+                      <TooltipProvider>
+                        <Tooltip>
+                          <TooltipTrigger></TooltipTrigger>
+                          <TooltipContent>
+                            <p>
+                              This shows the status and last time of a query of the
+                              HomeAssistant instance url.
+                            </p>
+                          </TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
+                    </div>
+                  )}
+
+                  {installation &&
+                    installation.urls.instance?.is_verified &&
+                    data.length > 0 && <Tracker data={data} className="mt-2" />}
+                </div>
+              ) : (
+                <div className="text-xl font-bold">n/a</div>
+              )}
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Last boot</CardTitle>
+            <Icons.zap />
+          </CardHeader>
+          <CardContent>
+            <div className="">
+              {observationsLoading || isLoading ? (
+                <Skeleton className="h-8" />
+              ) : observations.length > 0 ? (
+                <div>
+                  <Text>
+                    <TimeAgo
+                      date={
+                        observations[observations.length - 1].environment.boot_time ?? ''
+                      }
+                    />
+                  </Text>
+                </div>
+              ) : (
+                <div className="text-xl font-bold">n/a</div>
+              )}
+            </div>
+          </CardContent>
+        </Card>
+      </div>
     </div>
   );
 }

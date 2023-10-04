@@ -71,6 +71,7 @@ export async function updateInstallation(
   id: string,
   instance: string,
   name: string,
+  notes: string,
 ): Promise<Installation> {
   const additionalHeaders = new Headers({
     Authorization: `Bearer ${token}`,
@@ -86,6 +87,7 @@ export async function updateInstallation(
     id,
     instance,
     name,
+    notes,
   });
 
   const requestOptions: RequestInit = {

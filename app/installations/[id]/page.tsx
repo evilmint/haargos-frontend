@@ -190,7 +190,7 @@ export default function DashboardInstallationPage({
 
     try {
       const accessToken = await getAccessTokenSilently();
-      await updateInstallation(accessToken, params.id, data.instance ?? '', data.name);
+      await updateInstallation(accessToken, params.id, data.instance ?? '', data.name, installation?.notes ?? '');
 
       asyncFetch();
     } catch (error) {

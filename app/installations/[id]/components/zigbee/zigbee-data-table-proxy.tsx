@@ -50,6 +50,7 @@ export function ZigbeeDataTableProxy({ ...params }) {
         battery_type: false,
       }}
       columns={columns}
+      pluralEntityName="zigbee"
       columnVisibilityKey="ZigbeeDataTable_columnVisibility"
       data={devices}
     />

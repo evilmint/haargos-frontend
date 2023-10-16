@@ -36,6 +36,7 @@ import { useEffect } from 'react';
 type GenericDataTableParams = {
   defaultColumnVisibility?: VisibilityState;
   columnVisibilityKey: string;
+  pluralEntityName?: string;
   columnIdToNameTransformer?: (column: string) => string;
   columns: ColumnDef<any>[];
   data: any;
@@ -100,7 +101,7 @@ export function GenericDataTable({ ...params }: GenericDataTableParams) {
     <div className="w-full">
       <div className="flex items-center py-4">
         <Input
-          placeholder="Filter installations..."
+          placeholder={`Filter ${params.pluralEntityName ?? 'entities'}...`}
           value={(table.getColumn('general')?.getFilterValue() as string) ?? ''}
           onChange={event =>
             table.getColumn('general')?.setFilterValue(event.target.value)
@@ -163,7 +164,7 @@ export function GenericDataTable({ ...params }: GenericDataTableParams) {
             ) : (
               <TableRow>
                 <TableCell colSpan={columns.length} className="h-24 text-center">
-                  No entities.
+                  No {params.pluralEntityName ?? 'entities'}
                 </TableCell>
               </TableRow>
             )}

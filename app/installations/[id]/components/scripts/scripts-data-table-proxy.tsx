@@ -45,6 +45,7 @@ export function ScriptsDataTableProxy({ ...params }) {
   return (
     <GenericDataTable
       columns={columns}
+      pluralEntityName="scripts"
       columnVisibilityKey="ScriptsDataTableColumns"
       data={scripts}
     />

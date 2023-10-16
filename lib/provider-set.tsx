@@ -26,6 +26,7 @@ export default function ProviderSet({ children }: ProviderSetProps) {
           clientId={process.env.NEXT_PUBLIC_WARNING_AUTH0_CLIENT_ID}
           authorizationParams={{
             redirect_uri: origin ?? 'https://haargos.smartrezydencja.pl',
+            scope: 'openid offline_access profile email',
             audience:
               process.env.NEXT_PUBLIC_WARNING_AUTH0_AUDIENCE ??
               'https://api.haargos.smartrezydencja.pl',

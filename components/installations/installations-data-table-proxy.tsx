@@ -68,6 +68,7 @@ export function InstallationsDataTableProxy() {
   return (
     <GenericDataTable
       columns={columns}
+      pluralEntityName="installations"
       columnVisibilityKey="InstallationDataTableColumns"
       data={installationsNew}
     />

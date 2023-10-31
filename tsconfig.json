@@ -29,7 +29,8 @@
     "**/*.tsx",
     ".next/types/**/*.ts",
     "components/ui/*.tsx",
-    "app/services/observations.js"
+    "app/services/observations.js",
+    "app/tools.js"
   ],
   "exclude": ["node_modules"]
 }

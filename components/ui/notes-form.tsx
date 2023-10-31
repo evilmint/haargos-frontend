@@ -10,7 +10,7 @@ import {
   FormField,
   FormItem,
   FormLabel,
-  FormMessage
+  FormMessage,
 } from '@/registry/default/ui/form';
 import { Button } from '@/registry/new-york/ui/button';
 import {

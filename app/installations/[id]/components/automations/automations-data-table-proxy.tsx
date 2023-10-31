@@ -44,7 +44,7 @@ export function AutomationsDataTableProxy({ ...params }) {
 
   return (
     <GenericDataTable
-      pluralEntityName='automations'
+      pluralEntityName="automations"
       columns={columns}
       columnVisibilityKey="AutomationDataTable_columnVisibility"
       data={automations}

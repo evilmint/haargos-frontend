@@ -57,14 +57,7 @@ import {
 } from '@/registry/default/ui/form';
 import { Input } from '@/registry/new-york/ui/input';
 import { zodResolver } from '@hookform/resolvers/zod';
-import {
-  Badge,
-  Tab,
-  TabGroup,
-  TabList,
-  TabPanel,
-  TabPanels
-} from '@tremor/react';
+import { Badge, Tab, TabGroup, TabList, TabPanel, TabPanels } from '@tremor/react';
 import { useForm } from 'react-hook-form';
 import * as z from 'zod';
 import { Memory } from './components/memory';
@@ -186,7 +179,13 @@ export default function DashboardInstallationPage({
 
     try {
       const accessToken = await getAccessTokenSilently();
-      await updateInstallation(accessToken, params.id, data.instance ?? '', data.name, installation?.notes ?? '');
+      await updateInstallation(
+        accessToken,
+        params.id,
+        data.instance ?? '',
+        data.name,
+        installation?.notes ?? '',
+      );
 
       asyncFetch();
     } catch (error) {

@@ -14,7 +14,12 @@ export function RedirectProvider(props: RedirectProps) {
 
   useEffect(() => {
     const check = async () => {
-      if (window.location.pathname == '/') return;
+      if (
+        window.location.pathname == '/' ||
+        window.location.pathname.startsWith('/signup') ||
+        window.location.pathname.startsWith('/about')
+      )
+        return;
 
       try {
         await getAccessTokenSilently();

@@ -56,4 +56,3 @@ export function makeBooleanCell<T>(label: string, name: string): ColumnDef<T> {
     ),
   };
 }
-

@@ -60,7 +60,7 @@ export function LogsDataTableProxy({ ...params }) {
       </TabsList>
       <TabsContent value="logtable" className="space-y-4">
         <GenericDataTable
-        pluralEntityName='logs'
+          pluralEntityName="logs"
           columns={columns}
           columnVisibilityKey="LogsDataTable_columnVisibility"
           data={logViews}

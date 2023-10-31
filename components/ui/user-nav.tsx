@@ -14,7 +14,10 @@ import {
 
 import { UserDoesNotExistError, useUserStore } from '@/app/services/stores';
 import { fullNameInitials } from '@/app/tools';
+import { cn } from '@/lib/utils';
+import { buttonVariants } from '@/registry/new-york/ui/button';
 import { useAuth0 } from '@auth0/auth0-react';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { LoginButton } from './login-button';
@@ -85,6 +88,11 @@ export function UserNav() {
       </DropdownMenuContent>
     </DropdownMenu>
   ) : (
-    <LoginButton />
+    <>
+      <Link className={cn(buttonVariants({ variant: 'secondary' }), '')} href="/signup">
+        Sign up
+      </Link>
+      <LoginButton />
+    </>
   );
 }

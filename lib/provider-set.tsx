@@ -12,10 +12,14 @@ type ProviderSetProps = {
 
 export default function ProviderSet({ children }: ProviderSetProps) {
   const [origin, setOrigin] = useState<string | null>(null);
+  const [pathname, setPathname] = useState<string | null>(null);
 
   useEffect(() => {
     setOrigin(window.location.origin);
+    setPathname(window.location.pathname);
   }, []);
+
+  // Possibility to detect code here
 
   return (
     origin &&
@@ -25,7 +29,9 @@ export default function ProviderSet({ children }: ProviderSetProps) {
           domain={process.env.NEXT_PUBLIC_WARNING_AUTH0_DOMAIN ?? ''}
           clientId={process.env.NEXT_PUBLIC_WARNING_AUTH0_CLIENT_ID}
           authorizationParams={{
-            redirect_uri: origin ?? 'https://haargos.smartrezydencja.pl',
+            redirect_uri:
+              (origin ?? 'https://haargos.smartrezydencja.pl') +
+              (pathname?.startsWith('/signup') ? '/signup' : ''),
             scope: 'openid offline_access profile email',
             audience:
               process.env.NEXT_PUBLIC_WARNING_AUTH0_AUDIENCE ??

@@ -9,10 +9,14 @@ type RedirectProps = {
 };
 
 export function RedirectProvider(props: RedirectProps) {
-  const { getAccessTokenSilently } = useAuth0();
+  const { getAccessTokenSilently, user, isAuthenticated, isLoading } = useAuth0();
   const router = useRouter();
 
+
+  console.log(JSON.stringify(user));
+
   useEffect(() => {
+    console.log(`isLoading: ${isLoading}, isAuthenticated: ${isAuthenticated}`)
     const check = async () => {
       if (
         window.location.pathname == '/' ||
@@ -22,13 +26,27 @@ export function RedirectProvider(props: RedirectProps) {
         return;
 
       try {
-        await getAccessTokenSilently();
+        const token = await getAccessTokenSilently();
+        console.log(token)
       } catch {
         router.push('/');
       }
     };
     check();
   }, [getAccessTokenSilently]);
+
+
+  useEffect(() => {
+    console.log(`isLoading: ${isLoading}, isAuthenticated: ${isAuthenticated}`)
+    const check = async () => {
+      if (isLoading || !isAuthenticated) return;
+
+      console.log('ready')
+      const token = await getAccessTokenSilently();
+      console.log(token)
+    };
+    check();
+  }, [getAccessTokenSilently, isLoading, isAuthenticated]);
 
   return props.children;
 }

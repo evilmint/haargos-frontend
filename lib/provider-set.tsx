@@ -15,7 +15,7 @@ export default function ProviderSet({ children }: ProviderSetProps) {
   const [origin, setOrigin] = useState<string | null>(null);
   const [pathname, setPathname] = useState<string | null>(null);
 
-  const pathX = usePathname();
+  const path = usePathname();
 
   useEffect(() => {
     setOrigin(window.location.origin);
@@ -23,8 +23,8 @@ export default function ProviderSet({ children }: ProviderSetProps) {
   }, []);
 
   useEffect(() => {
-    setPathname(pathX);
-  }, [pathX]);
+    setPathname(path);
+  }, [path]);
 
   const redirectUri = (origin ?? '') + (pathname?.startsWith('/signup') ? '/signup' : '');
 

@@ -6,8 +6,19 @@ import { UserAuthForm } from './components/user-auth-form';
 
 import { cn } from '@/lib/utils';
 import { buttonVariants } from '@/registry/new-york/ui/button';
+import { useAuth0 } from '@auth0/auth0-react';
+import { useRouter } from 'next/navigation';
+import { useUserStore } from '../services/stores';
+import { RegisterForm } from './components/register-form';
 
 export default function SignupPage() {
+  const auth0User = useAuth0().user;
+
+  const router = useRouter();
+  const user = useUserStore(store => store.user);
+  const signup = !auth0User;
+  const register = auth0User && !user;
+
   return (
     <>
       <div className="md:hidden">
@@ -59,31 +70,68 @@ export default function SignupPage() {
         </div>
         <div className="lg:p-8">
           <div className="mx-auto flex w-full flex-col justify-center space-y-6 sm:w-[350px]">
-            <div className="flex flex-col space-y-2 text-center">
-              <h1 className="text-2xl font-semibold tracking-tight">Create an account</h1>
-              <p className="text-sm text-muted-foreground">
-                Clicking Sign Up will be redirect you to our authentication provider which
-                will authenticate and bring you back here.
-              </p>
-            </div>
-            <UserAuthForm />
-            <p className="px-8 text-center text-sm text-muted-foreground">
-              By clicking continue, you agree to our{' '}
-              <Link
-                href="/about/terms"
-                className="underline underline-offset-4 hover:text-primary"
-              >
-                Terms of Service
-              </Link>{' '}
-              and{' '}
-              <Link
-                href="/about/privacy"
-                className="underline underline-offset-4 hover:text-primary"
-              >
-                Privacy Policy
-              </Link>
-              .
-            </p>
+            {signup && (
+              <>
+                <div className="flex flex-col space-y-2 text-center">
+                  <h1 className="text-2xl font-semibold tracking-tight">
+                    Create an account
+                  </h1>
+                  <p className="text-sm text-muted-foreground">
+                    Clicking Sign Up will be redirect you to our authentication provider
+                    which will authenticate and bring you back here.
+                  </p>
+                </div>
+                <UserAuthForm />
+                <p className="px-8 text-center text-sm text-muted-foreground">
+                  By clicking continue, you agree to our{' '}
+                  <Link
+                    href="/about/terms"
+                    className="underline underline-offset-4 hover:text-primary"
+                  >
+                    Terms of Service
+                  </Link>{' '}
+                  and{' '}
+                  <Link
+                    href="/about/privacy"
+                    className="underline underline-offset-4 hover:text-primary"
+                  >
+                    Privacy Policy
+                  </Link>
+                  .
+                </p>
+              </>
+            )}
+
+            {register && (
+              <>
+                <div className="flex flex-col space-y-2 text-center">
+                  <h1 className="text-2xl font-semibold tracking-tight">Register</h1>
+                  <p className="text-sm text-muted-foreground">Fill out forms</p>
+                </div>
+                <RegisterForm
+                  onRegister={() => {
+                    router.push('/');
+                  }}
+                />
+                <p className="px-8 text-center text-sm text-muted-foreground">
+                  By clicking register, you agree to our{' '}
+                  <Link
+                    href="/about/terms"
+                    className="underline underline-offset-4 hover:text-primary"
+                  >
+                    Terms of Service
+                  </Link>{' '}
+                  and{' '}
+                  <Link
+                    href="/about/privacy"
+                    className="underline underline-offset-4 hover:text-primary"
+                  >
+                    Privacy Policy
+                  </Link>
+                  .
+                </p>
+              </>
+            )}
           </div>
         </div>
       </div>

@@ -2,6 +2,7 @@
 
 import { ThemeProvider } from '@/components/theme-provider';
 import { Auth0Provider } from '@auth0/auth0-react';
+import { usePathname } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
 import { RedirectProvider } from './redirect-provider';
 import { RefreshDataProvider } from './refresh-data-provider';
@@ -14,13 +15,19 @@ export default function ProviderSet({ children }: ProviderSetProps) {
   const [origin, setOrigin] = useState<string | null>(null);
   const [pathname, setPathname] = useState<string | null>(null);
 
+  const pathX = usePathname();
+
   useEffect(() => {
     setOrigin(window.location.origin);
     setPathname(window.location.pathname);
   }, []);
 
-  // Possibility to detect code here
+  useEffect(() => {
+    setPathname(pathX);
+  }, [pathX]);
 
+  const redirectUri = (origin ?? '') + (pathname?.startsWith('/signup') ? '/signup' : '');
+  console.log(`redirectUri: ${redirectUri}`);
   return (
     origin &&
     process.env.NEXT_PUBLIC_WARNING_AUTH0_CLIENT_ID && (
@@ -29,13 +36,9 @@ export default function ProviderSet({ children }: ProviderSetProps) {
           domain={process.env.NEXT_PUBLIC_WARNING_AUTH0_DOMAIN ?? ''}
           clientId={process.env.NEXT_PUBLIC_WARNING_AUTH0_CLIENT_ID}
           authorizationParams={{
-            redirect_uri:
-              (origin ?? 'https://haargos.smartrezydencja.pl') +
-              (pathname?.startsWith('/signup') ? '/signup' : ''),
-            scope: 'openid offline_access profile email',
-            audience:
-              process.env.NEXT_PUBLIC_WARNING_AUTH0_AUDIENCE ??
-              'https://api.haargos.smartrezydencja.pl',
+            redirect_uri: redirectUri,
+            scope: process.env.NEXT_PUBLIC_WARNING_AUTH0_SCOPE,
+            audience: process.env.NEXT_PUBLIC_WARNING_AUTH0_AUDIENCE,
           }}
           useRefreshTokens={true}
           useRefreshTokensFallback={false}

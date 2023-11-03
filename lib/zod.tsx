@@ -28,6 +28,19 @@ export const createInstallationFormSchema = z.object({
 
 export type CreateInstallationFormValues = z.infer<typeof createInstallationFormSchema>;
 
+export const registerFormSchema = z.object({
+  userFullName: z
+    .string()
+    .min(3, {
+      message: 'Full name must be at least 3 characters.',
+    })
+    .max(128, {
+      message: 'Name must not be longer than 128 characters.',
+    }),
+});
+
+export type RegisterFormValues = z.infer<typeof registerFormSchema>;
+
 export const notesFormSchema = z.object({
   notes: z.string().trim().max(255, {
     message: 'Notes must not be longer than 255 characters.',

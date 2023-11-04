@@ -110,7 +110,7 @@ export function Contact() {
                           <FormItem>
                             <FormControl>
                               <Textarea
-                                className="bg-white"
+                                className="bg-white dark:bg-background"
                                 placeholder="Your Message"
                                 {...field}
                               />
@@ -120,7 +120,6 @@ export function Contact() {
                         )}
                       />
                       <PrimaryButton
-                        type="submit"
                         className="w-[100%]"
                         disabled={isSubmitting}
                       >

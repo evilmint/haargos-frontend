@@ -22,7 +22,7 @@ export default function SignupPage() {
   const register = auth0User && !user;
 
   let createAccountText;
-  
+
   switch (searchParams.get('tier')) {
     case 'explorer':
       createAccountText = 'Become an Explorer';

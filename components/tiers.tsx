@@ -82,15 +82,21 @@ export default function PricingTiers() {
 
   return (
     <>
-      <div className="mx-auto text-center my-12">
+      <div className="mx-auto text-center mt-8 mb-4">
         <h1 className="text-4xl font-semibold mb-3 dark:text-white">Haargos</h1>
         <p className="dark:text-gray-300">
           Your Clients' Smart Homes, Flawlessly Managed
         </p>
       </div>
-      <div id="pricing" className="flex space-x-10 pt-0 mx-24 mb-16">
+      <div
+        id="pricing"
+        className="flex overflow-auto no-scrollbar  md:space-x-10 md:mx-24 space-x-10 pt-0 mx-24 mb-16"
+      >
         {tiers.map((tier, index) => (
-          <div key={index} className="flex-1">
+          <div
+            key={index}
+            className="flex-1 pt-8 pb-10 overflow-x min-w-[80%] md:min-w-0"
+          >
             <Link href={tier.href} passHref>
               <div className="flex flex-col h-full pt-4 rounded-xl space-y-6 overflow-hidden transition-all duration-500 transform hover:-translate-y-2 hover:scale-101 shadow-xl cursor-pointer dark:bg-gray-700 bg-slate-100">
                 <div className="px-8 flex justify-between items-center">
@@ -105,7 +111,9 @@ export default function PricingTiers() {
                 </p>
                 <ul className="text-center flex-1 leading-relaxed dark:text-gray-200">
                   {tier.features.map((feature, featureIndex) => (
-                    <li key={featureIndex}>{feature}</li>
+                    <li className="font-semibold" key={featureIndex}>
+                      {feature}
+                    </li>
                   ))}
                 </ul>
                 <div className="text-center mt-auto dark:bg-indigo-sr-700 bg-sr-600">

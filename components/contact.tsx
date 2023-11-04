@@ -7,7 +7,9 @@ export default function Contact() {
             {/* Content for the first column if needed */}
           </div>
           <div className="w-full md:w-1/2 lg:w-1/3 mb-6 md:mb-0">
-            <h2 className="text-4xl font-semibold text-gray-800 dark:text-white mb-6">Get in Touch</h2>
+            <h2 className="text-4xl font-semibold text-gray-800 dark:text-white mb-6">
+              Get in Touch
+            </h2>
             <p className="text-gray-600 dark:text-gray-300 mb-4">
               Have questions? Our team is ready to help you!
             </p>

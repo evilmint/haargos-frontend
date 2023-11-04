@@ -28,13 +28,12 @@ export default function DashboardPage() {
         ) : (
           <InstallationsAbsentContent />
         ))}
-
     </div>
   );
 
   if (user) {
-    return Dashboard
+    return Dashboard;
   } else {
-    return <HomeComponent />
+    return <HomeComponent />;
   }
 }

@@ -10,5 +10,13 @@ type PrimaryButtonProps = {
 };
 
 export function PrimaryButton({ ...props }: PrimaryButtonProps) {
-  return <Button onClick={props.onClick} disabled={props.disabled} className={cn(props.className, 'bg-sr-600 dark:text-white')}>{props.children}</Button>;
+  return (
+    <Button
+      onClick={props.onClick}
+      disabled={props.disabled}
+      className={cn(props.className, 'bg-sr-600 dark:text-white')}
+    >
+      {props.children}
+    </Button>
+  );
 }

@@ -12,25 +12,25 @@ export default function Features() {
       title: 'Real-time Alerts',
       description:
         'Get instant notifications for any issues, ensuring prompt action when necessary.',
-      icon: <Icons.bell />, // Replace with your actual alert icon component
+      icon: <Icons.bell />,
     },
     {
       title: 'Automated Reports',
       description:
         'Automatically diagnose and receive reports on the health and performance of your smart home systems.',
-      icon: <Icons.mail />, // Replace with your actual diagnostics icon component
+      icon: <Icons.mail />,
     },
     {
       title: 'Comprehensive Dashboards',
       description:
         'Visualize your smart home data with customizable dashboards that provide insightful analytics.',
-      icon: <Icons.monitor />, // Replace with your actual dashboard icon component
+      icon: <Icons.monitor />,
     },
     {
       title: 'Multi-Installation Management',
       description:
         'Easily manage multiple HomeAssistant installations from a single, intuitive interface.',
-      icon: <Icons.layers />, // Replace with your actual management icon component
+      icon: <Icons.layers />,
     },
   ];
 

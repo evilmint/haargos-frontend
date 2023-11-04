@@ -1,6 +1,7 @@
 import { BatteryType, Installation, Log, Observation, Storage, User } from '@/app/types';
 import { create } from 'zustand';
 import { createAccount, deleteAccount, updateAccount } from './account';
+import { contact } from './contact';
 import {
   createInstallation,
   deleteInstallation,
@@ -42,6 +43,16 @@ const useUserStore = create<UserState>((set, get) => ({
     } finally {
       set({ isFetchingUser: false });
     }
+  },
+}));
+
+interface ContactState {
+  contact: (name: string, email: string, message: string) => Promise<void>;
+}
+
+const useContactStore = create<ContactState>(() => ({
+  contact: async (name, email, message) => {
+    await contact(name, email, message);
   },
 }));
 
@@ -461,6 +472,7 @@ const extractUniqueVolumes = (volumesUnsorted: Storage[]): Storage[] => {
 export {
   UserDoesNotExistError,
   useAccountStore,
+  useContactStore,
   useInstallationStore,
   useInstallationSwitcherStore,
   useUserStore,

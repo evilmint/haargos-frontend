@@ -15,10 +15,10 @@ export default function PricingTiers() {
   const tiers: Tier[] = [
     {
       title: 'Explorer',
-      price: 0.0,
+      price: 5.0,
       icon: <Icons.healthline className="h-5 w-5" />,
       description:
-        'Monitor one HomeAssistant installation with basic analytics and limited email alerts.',
+        'Monitor one HomeAssistant installation with basic analytics and limited email alerts.<br /><br /><b>Try for free, cancel anytime.</b>',
       features: [
         '1 installation',
         'Basic analytics',
@@ -27,11 +27,11 @@ export default function PricingTiers() {
         'Data history for 1 day',
       ],
       href: '/signup?tier=explorer',
-      footer: 'Sign up for free',
+      footer: 'Try for free (14 days)',
     },
     {
       title: 'Navigator',
-      price: 5.0,
+      price: 10.0,
       icon: <Icons.zap className="h-5 w-5" />,
       description:
         'Ideal for individual users with up to 3 installations requiring enhanced analytics.',
@@ -47,7 +47,7 @@ export default function PricingTiers() {
     },
     {
       title: 'Pro',
-      price: 15.0,
+      price: 20.0,
       icon: <Icons.cpu className="h-5 w-5" />,
       description:
         'Unlimited installations and full analytics suite for professional installers.',
@@ -106,9 +106,10 @@ export default function PricingTiers() {
                 <h1 className="text-4xl text-center font-bold dark:text-white">
                   {tier.price != null ? `$${tier.price}` : 'Contact Us'}
                 </h1>
-                <p className="px-4 text-center text-sm dark:text-gray-300">
-                  {tier.description}
-                </p>
+                <p
+                  className="px-4 text-center text-sm dark:text-gray-300"
+                  dangerouslySetInnerHTML={{ __html: tier.description }}
+                />
                 <ul className="text-center flex-1 leading-relaxed dark:text-gray-200">
                   {tier.features.map((feature, featureIndex) => (
                     <li className="font-semibold" key={featureIndex}>

@@ -2,7 +2,7 @@
 
 import { MainNav } from '@/components/ui/main-nav';
 import { UserNav } from '@/components/ui/user-nav';
-import Contact from './contact';
+import { Contact } from './contact';
 import Features from './features';
 import Footer from './footer';
 import Hero from './hero';

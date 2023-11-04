@@ -108,9 +108,10 @@ export function DeleteAccountForm() {
         </Form>
 
         <AlertDialogTrigger asChild>
-          <Button disabled={isDeleting}>Delete account</Button>
+          <Button className='bg-sr-600 hover:bg-sr-700' disabled={isDeleting}>Delete account</Button>
         </AlertDialogTrigger>
       </AlertDialog>
     </FailureAlert>
   );
 }
+

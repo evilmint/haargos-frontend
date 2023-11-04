@@ -68,6 +68,22 @@
   }
 }
 
+.text-sr-600 {
+  color: #2488d7;
+}
+
+.bg-sr-600 {
+  background-color: #2488d7;
+}
+
+.text-sr-700 {
+  color: #4c8cfa;
+}
+
+.bg-sr-700 {
+  color: #4c8cfa;
+}
+
 @layer base {
   * {
     @apply border-border;

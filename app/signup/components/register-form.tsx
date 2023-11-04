@@ -93,7 +93,7 @@ export function RegisterForm({ children, ...params }: RegisterFormProps) {
               </FormItem>
             )}
           />
-          <Button type="submit" disabled={isUpdating}>
+          <Button type="submit" className='bg-sr-600' disabled={isUpdating}>
             Create
           </Button>
         </form>

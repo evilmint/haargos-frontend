@@ -45,7 +45,6 @@ export function UserNav() {
     asyncFetch();
   }, [fetchUser, getAccessTokenSilently, user]);
 
-  console.log(JSON.stringify(apiUser));
   return isLoading ? (
     <></>
   ) : isAuthenticated && apiUser ? (

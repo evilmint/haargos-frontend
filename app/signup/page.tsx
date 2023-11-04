@@ -7,17 +7,38 @@ import { UserAuthForm } from './components/user-auth-form';
 import { cn } from '@/lib/utils';
 import { buttonVariants } from '@/registry/new-york/ui/button';
 import { useAuth0 } from '@auth0/auth0-react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useUserStore } from '../services/stores';
 import { RegisterForm } from './components/register-form';
 
 export default function SignupPage() {
   const auth0User = useAuth0().user;
 
+  const searchParams = useSearchParams();
+
   const router = useRouter();
   const user = useUserStore(store => store.user);
   const signup = !auth0User;
   const register = auth0User && !user;
+
+  let createAccountText;
+  
+  switch (searchParams.get('tier')) {
+    case 'explorer':
+      createAccountText = 'Become an Explorer';
+      break;
+    case 'navigator':
+      createAccountText = 'Become a Navigator';
+      break;
+    case 'pro':
+      createAccountText = 'Become Pro';
+      break;
+    case 'enterprise':
+      createAccountText = 'Embrace Enterprise'; // Or your chosen cool alternative
+      break;
+    default:
+      createAccountText = 'Create an account';
+  }
 
   return (
     <>
@@ -39,11 +60,11 @@ export default function SignupPage() {
       </div>
       <div className="container relative hidden h-[800px] flex-col items-center justify-center md:grid lg:max-w-none lg:grid-cols-2 lg:px-0">
         <div className="relative hidden h-full flex-col bg-muted p-10 text-white dark:border-r lg:flex">
-          <div className="absolute inset-0 bg-zinc-900" />
+          <div className="absolute inset-0 bg-sr-600" />
           <div className="relative z-20 flex items-center text-lg font-medium">
             <Link
               href="/"
-              className={cn(buttonVariants({ variant: 'default' }), 'absolute left-0')}
+              className={cn(buttonVariants({ variant: 'ghost' }), 'absolute left-0')}
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -74,7 +95,7 @@ export default function SignupPage() {
               <>
                 <div className="flex flex-col space-y-2 text-center">
                   <h1 className="text-2xl font-semibold tracking-tight">
-                    Create an account
+                    {createAccountText}
                   </h1>
                   <p className="text-sm text-muted-foreground">
                     Clicking Sign Up will be redirect you to our authentication provider

@@ -119,10 +119,7 @@ export function Contact() {
                           </FormItem>
                         )}
                       />
-                      <PrimaryButton
-                        className="w-[100%]"
-                        disabled={isSubmitting}
-                      >
+                      <PrimaryButton className="w-[100%]" disabled={isSubmitting}>
                         {isSubmitting ? 'Sending...' : 'Send Message'}
                       </PrimaryButton>
                     </form>

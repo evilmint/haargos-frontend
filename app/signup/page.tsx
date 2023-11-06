@@ -21,23 +21,31 @@ export default function SignupPage() {
   const signup = !auth0User;
   const register = auth0User && !user;
 
-  let createAccountText;
+  let createAccountText: string;
 
-  switch (searchParams.get('tier')) {
+  const tier = searchParams.get('tier') ?? '';
+  let tierName: string;
+
+  switch (tier) {
     case 'explorer':
       createAccountText = 'Become an Explorer';
+      tierName = 'Explorer';
       break;
     case 'navigator':
       createAccountText = 'Become a Navigator';
+      tierName = 'Navigator';
       break;
     case 'pro':
       createAccountText = 'Become Pro';
+      tierName = 'Pro';
       break;
     case 'enterprise':
       createAccountText = 'Embrace Enterprise'; // Or your chosen cool alternative
+      tierName = 'Enterprise';
       break;
     default:
       createAccountText = 'Create an account';
+      tierName = 'Sign Up';
   }
 
   return (
@@ -62,24 +70,25 @@ export default function SignupPage() {
         <div className="relative hidden h-full flex-col bg-muted p-10 text-white dark:border-r lg:flex">
           <div className="absolute inset-0 bg-sr-600" />
           <div className="relative z-20 flex items-center text-lg font-medium">
-            <Link
-              href="/"
-              className={cn(buttonVariants({ variant: 'ghost' }), 'absolute left-0')}
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                className="mr-2 h-6 w-6"
-              >
-                <path d="M15 6v12a3 3 0 1 0 3-3H6a3 3 0 1 0 3 3V6a3 3 0 1 0-3 3h12a3 3 0 1 0-3-3" />
-              </svg>
-              Haargos
-            </Link>
+            <div className="block">
+              <Link href="/" className={cn(buttonVariants({ variant: 'ghost' }), '')}>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className="mr-2 h-6 w-6"
+                >
+                  <path d="M15 6v12a3 3 0 1 0 3-3H6a3 3 0 1 0 3 3V6a3 3 0 1 0-3 3h12a3 3 0 1 0-3-3" />
+                </svg>
+                Haargos
+              </Link>
+
+              <h1 className="ml-4 mt-6 font-semibold text-4xl">{tierName}</h1>
+            </div>
           </div>
           <div className="relative z-20 mt-auto">
             <blockquote className="space-y-2">

@@ -10,6 +10,7 @@ import {
 import { cn } from '@/lib/utils';
 import { Button } from '@/registry/new-york/ui/button';
 import { LucideExternalLink } from 'lucide-react';
+import { usePathname } from 'next/navigation';
 import { Icons } from '../icons';
 import InstallationSwitcher from './installation-switcher';
 import { ModeToggle } from './mode-toggle';
@@ -21,11 +22,24 @@ export function MainNav({ ...props }, { className }: React.HTMLAttributes<HTMLEl
   const { user } = useUserStore(state => state);
   const installations = useInstallationStore(state => state.installations);
 
+  const pathname = usePathname();
+
   const installation = installations.find(i => i.id == installationId);
   const installationInstanceLink = installation?.urls?.instance?.url;
 
   return (
     <nav className={cn('flex items-center w-auto space-x-3', className)}>
+      {!user && pathname != '/' && (
+        <>
+          <Link
+            href="/"
+            onClick={() => dashboardClicked()}
+            className="text-sm font-medium transition-colors hover:text-primary"
+          >
+            <Icons.home className="w-5 h-5" />
+          </Link>
+        </>
+      )}
       {user && (
         <>
           <Link

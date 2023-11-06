@@ -40,7 +40,7 @@ export function Installations() {
         <div className="ml-auto space-x-2 font-medium">
           <Button
             onClick={() => {
-              router.push('/installations/' + installation.id);
+              router.push('/dashboard/installations/' + installation.id);
             }}
           >
             Open

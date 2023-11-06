@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/registry/new-york/ui
 
 export default function TermsOfService() {
   return (
-    <Card className="mx-6 mt-6">
+    <Card className="mx-6 my-6">
       <CardHeader className="space-y-1">
         <CardTitle className="text-2xl">Terms of Service</CardTitle>
       </CardHeader>

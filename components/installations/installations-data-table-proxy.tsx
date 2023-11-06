@@ -105,7 +105,7 @@ function mapToTableView(
       is_up:
         installation?.health_statuses.length > 0 &&
         installation.health_statuses[installation.health_statuses.length - 1].is_up,
-      installation_url: `/installations/${installation.id}`,
+      installation_url: `/dashboard/installations/${installation.id}`,
       instance_url: installation.urls.instance?.url ?? null,
     },
     agent_version: observation?.agent_version ?? '-',
@@ -123,7 +123,7 @@ function mapToTableView(
     low_lqi_zigbee_devices: lowLqiZigbeeDevices,
     low_battery_devices: lowBatteryDevices,
     unhealthy_docker_containers: unhealthyDockerContainers,
-    navigate_to_installation: `/installations/${installation.id}`,
+    navigate_to_installation: `/dashboard/installations/${installation.id}`,
     navigate_to_homeassistant: installation.urls.instance?.url ?? null,
   };
 }

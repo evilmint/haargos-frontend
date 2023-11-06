@@ -139,7 +139,7 @@ export default function InstallationSwitcher({
       onCreateInstallation={installation => {
         setSelectedInstallation(installation);
         setOpen(false);
-        router.push('/installations/' + installation.id + '#install');
+        router.push('/dashboard/installations/' + installation.id + '#install');
       }}
       open={showNewInstallationDialog}
       onOpenChange={setShowNewInstallationDialog}
@@ -179,7 +179,7 @@ export default function InstallationSwitcher({
                         setSelectedInstallation(installation);
                         setOpen(false);
 
-                        router.push('/installations/' + installation.id);
+                        router.push('/dashboard/installations/' + installation.id);
                       }}
                       className="text-sm"
                     >

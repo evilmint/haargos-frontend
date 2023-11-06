@@ -1,4 +1,5 @@
 import '@/app/globals.css';
+import Footer from '@/components/footer';
 import { MainNav } from '@/components/ui/main-nav';
 import { UserNav } from '@/components/ui/user-nav';
 import type { Metadata } from 'next';
@@ -32,6 +33,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       </div>
 
       {children}
+
+      <Footer />
     </div>
   );
 }

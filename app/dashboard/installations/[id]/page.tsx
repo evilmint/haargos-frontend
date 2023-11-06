@@ -1,5 +1,5 @@
 'use client';
-import { DashboardHeaderInstallation } from '@/app/installations/[id]/components/dashboard-header';
+import { DashboardHeaderInstallation } from '@/app/dashboard/installations/[id]/components/dashboard-header';
 import {
   useInstallationStore,
   useInstallationSwitcherStore,

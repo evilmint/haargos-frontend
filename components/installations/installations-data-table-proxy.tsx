@@ -56,7 +56,7 @@ export function InstallationsDataTableProxy() {
             observations[i.id]?.length > 0 ? observations[i.id][0] : undefined,
             latestHaRelease,
             id => {
-              router.push('installations/' + id);
+              router.push('/dashboard/installations/' + id);
             },
             url => {
               window.open(url, '_blank', 'noopener,noreferrer');

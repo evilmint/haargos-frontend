@@ -27,7 +27,7 @@ export function InstallationsAbsentContent() {
           <CreateInstallationForm
             onCreateInstallation={installation => {
               setSelectedTeam(installation);
-              router.push('/installations/' + installation.id + '#install');
+              router.push('/dashboard/installations/' + installation.id + '#install');
             }}
             open={showNewInstallationDialog}
             onOpenChange={setShowNewInstallationDialog}

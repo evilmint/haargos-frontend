@@ -183,10 +183,13 @@ interface UserApiResponse {
   body: User;
 }
 
+type Tier = 'Explorer' | 'Navigator' | 'Pro' | 'Enterprise';
+
 interface User {
   userId: string;
   full_name: string;
   email: string;
+  tier: Tier;
 }
 
 export {
@@ -209,5 +212,6 @@ export {
   User,
   UserApiResponse,
   Zigbee,
-  ZigbeeDevice,
+  ZigbeeDevice
 };
+

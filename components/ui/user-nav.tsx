@@ -17,6 +17,7 @@ import { fullNameInitials } from '@/app/tools';
 import { cn } from '@/lib/utils';
 import { buttonVariants } from '@/registry/new-york/ui/button';
 import { useAuth0 } from '@auth0/auth0-react';
+import { Badge } from '@tremor/react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
@@ -72,10 +73,15 @@ export function UserNav() {
             )}
           </div>
         </DropdownMenuLabel>
+        <Badge className="ml-2">{apiUser.tier}</Badge>
         <DropdownMenuSeparator />
+  
         <DropdownMenuGroup>
           <DropdownMenuItem onClick={() => router.push('/account/account')}>
             Account
+          </DropdownMenuItem>
+          <DropdownMenuItem onClick={() => router.push('/#pricing')}>
+            Upgrade
           </DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />

@@ -25,9 +25,12 @@ export default function PricingTiers() {
         'Email alerts with daily rate limit',
         'Basic e-mail support',
         'Data history for 1 day',
+        'Ping external hosts (limited)',
+        'Frequency of data points: once per 8 hours',
+        'Notification for new HomeAssistant version',
       ],
-      href: '/signup?tier=explorer',
       footer: 'Try for free (14 days)',
+      href: '/signup?tier=explorer',
     },
     {
       title: 'Navigator',
@@ -41,9 +44,14 @@ export default function PricingTiers() {
         'Unlimited email alerts',
         'Priority email support',
         'Data history for 3 days',
+        'Ping external hosts',
+        'External host ping data count (basic)',
+        'Battery info on Zigbee devices',
+        'Frequency of data points: once per 4 hours',
+        'Basic reports',
       ],
-      href: '/signup?tier=navigator',
       footer: 'Start with Navigator',
+      href: '/signup?tier=navigator',
     },
     {
       title: 'Pro',
@@ -56,11 +64,14 @@ export default function PricingTiers() {
         'Full analytics suite',
         'Instant email and SMS alerts',
         'High priority support',
-        'API',
         'Data history for 1 week',
+        'Battery info on Zigbee devices',
+        'Advanced external host ping data count',
+        'Frequency of data points: once per hour',
+        'Advanced reports with more frequent updates',
       ],
-      href: '/signup?tier=pro',
       footer: 'Upgrade to Professional',
+      href: '/signup?tier=pro',
     },
     {
       title: 'Enterprise',
@@ -69,14 +80,19 @@ export default function PricingTiers() {
       description:
         'Customizable solutions with white labeling and on-premises options for enterprises.',
       features: [
-        'All Professional features plus custom options',
+        'All Pro features plus custom options',
+        'API access',
         'White labeling',
         'On-premises deployment',
         '24/7 support and dedicated account manager',
         'Training sessions for staff',
+        'Advanced data (LQI) on Zigbee devices',
+        'Custom frequency of data points: user-defined',
+        'Instant notifications about new HomeAssistant version',
+        'Comprehensive reports & advanced analytics',
       ],
-      href: '/signup?tier=free',
       footer: 'Contact for Enterprise solution',
+      href: '/signup?tier=enterprise',
     },
   ];
 
@@ -110,9 +126,9 @@ export default function PricingTiers() {
                   className="px-4 text-center text-sm dark:text-gray-300"
                   dangerouslySetInnerHTML={{ __html: tier.description }}
                 />
-                <ul className="text-center flex-1 leading-relaxed dark:text-gray-200">
+                <ul className="text-left mx-4 ml-8 list-disc flex-1 leading-normal dark:text-gray-200">
                   {tier.features.map((feature, featureIndex) => (
-                    <li className="font-semibold" key={featureIndex}>
+                    <li className="font-semibold my-2" key={featureIndex}>
                       {feature}
                     </li>
                   ))}

@@ -475,5 +475,6 @@ export {
   useContactStore,
   useInstallationStore,
   useInstallationSwitcherStore,
-  useUserStore,
+  useUserStore
 };
+

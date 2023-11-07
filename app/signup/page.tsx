@@ -140,7 +140,7 @@ export default function SignupPage() {
                 </div>
                 <RegisterForm
                   onRegister={() => {
-                    router.push('/');
+                    router.push('/dashboard');
                   }}
                 />
                 <p className="px-8 text-center text-sm text-muted-foreground">

@@ -1,5 +1,5 @@
 const apiSettings = {
-  baseUrl: 'https://api.haargos.smartrezydencja.pl',
+  baseUrl: 'https://api.haargos.com',
 };
 const baseHeaders = new Headers({});
 

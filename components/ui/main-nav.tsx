@@ -42,8 +42,9 @@ export function MainNav({ ...props }, { className }: React.HTMLAttributes<HTMLEl
       )}
       {user && (
         <>
+          <h4>Haargos</h4>
           <Link
-            href="/"
+            href="/dashboard"
             onClick={() => dashboardClicked()}
             className="text-sm font-medium transition-colors hover:text-primary"
           >

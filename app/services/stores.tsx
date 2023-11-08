@@ -214,19 +214,32 @@ const useInstallationStore = create<InstallationStoreState>((set, get) => ({
           );
 
           observation.environment.storage = extractUniqueVolumes(volumesUnsorted);
-          observation.zigbee?.devices.sort((a, b) => {
-            if (a.lqi === 0 && b.lqi === 0) {
-              return (
-                new Date(b.last_updated).getTime() - new Date(a.last_updated).getTime()
-              );
-            } else if (a.lqi === 0) {
-              return 1;
-            } else if (b.lqi === 0) {
-              return -1;
-            }
 
-            return a.lqi - b.lqi;
-          });
+          if (
+            observation.zigbee &&
+            observation.zigbee.devices.length > 0 &&
+            observation.zigbee.devices[0].lqi
+          ) {
+            observation.zigbee?.devices.sort((a, b) => {
+              if (a.lqi == undefined) {
+                return -1;
+              } else if (b.lqi == undefined) {
+                return 1;
+              }
+
+              if (a.lqi === 0 && b.lqi === 0) {
+                return (
+                  new Date(b.last_updated).getTime() - new Date(a.last_updated).getTime()
+                );
+              } else if (a.lqi === 0) {
+                return 1;
+              } else if (b.lqi === 0) {
+                return -1;
+              }
+
+              return (a.lqi ?? 0) - (b.lqi ?? 0);
+            });
+          }
 
           const volumeThreshold = Number(
             process.env.NEXT_PUBLIC_WARNING_THRESHOLD_VOLUME,
@@ -309,8 +322,9 @@ const useInstallationStore = create<InstallationStoreState>((set, get) => ({
                 }
 
                 z.has_low_battery = !hasGoodBattery;
-                z.has_low_lqi =
-                  z.lqi <= lqiThreshold && z.integration_type.toLowerCase() == 'zha';
+                z.has_low_lqi = z.lqi !== undefined
+                  ? z.lqi <= lqiThreshold && z.integration_type.toLowerCase() == 'zha'
+                  : false;
                 return z;
               }) ?? [];
           }
@@ -480,5 +494,6 @@ export {
   useContactStore,
   useInstallationStore,
   useInstallationSwitcherStore,
-  useUserStore,
+  useUserStore
 };
+

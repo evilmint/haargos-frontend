@@ -68,15 +68,10 @@ function mapToTableView(
     .flatMap(o => o.zigbee?.devices ?? [])
     .filter(d => d.ieee == device.ieee);
 
-  const lqi_min = devices.reduce((a, d) => (a > d.lqi ? d.lqi : a), 99999);
-  const lqi_max = devices.reduce((a, d) => (a < d.lqi ? d.lqi : a), -1);
-  let mean = (devices.reduce((a, d) => a + d.lqi, 0) / devices.length).toFixed(1);
-
-  if (mean.substring(mean.length - 2) == '.0') {
-    mean = mean.substring(0, mean.length - 2);
-  }
-
-  const median = devices.sort((a, b) => a.lqi - b.lqi)[Math.ceil(devices.length / 2)].lqi;
+  const lqi_min = devices.reduce((a, d) => (a > (d.lqi ?? 0) ? (d.lqi ?? 0) : a), 99999);
+  const lqi_max = devices.reduce((a, d) => (a < (d.lqi ?? 0) ? (d.lqi ?? 0) : a), -1);
+  const mean = (devices.reduce((a, d) => a + (d.lqi ?? 0), 0) / devices.length);
+  const median = devices.sort((a, b) => (a.lqi ?? 0) - (b.lqi ?? 0))[Math.ceil(devices.length / 2)].lqi;
 
   return {
     id: device.ieee,
@@ -89,9 +84,9 @@ function mapToTableView(
       timestamp: new Date(observations[0].timestamp),
     },
     device: `${device.brand} ${device.entity_name}`,
-    lqi: { min: lqi_min, max: lqi_max, mean: mean, median: median },
+    lqi: { min: lqi_min, max: lqi_max, mean: mean, median: median ?? 0 },
     power_source: device.power_source + ` ${device.battery_level ?? 'n/a'}`,
-    battery_type: device.battery,
+    battery_type: device.battery ?? null,
     integration_type: device.integration_type.toLocaleUpperCase(),
   };
 }

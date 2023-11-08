@@ -118,7 +118,11 @@ export function getColumnsByTier(tier: Tier): ColumnDef<ZigbeeDeviceTableView>[]
           mean <= Number(process.env.NEXT_PUBLIC_WARNING_THRESHOLD_ZIGBEE_LQI);
         const className = isAbnormalLQI ? 'text-red-600 font-semibold' : ' font-regular';
         const classNames = ` ${className} text-center text-xs`;
-
+        
+        let meanFormatted = mean.toFixed(1);
+        if (meanFormatted.substring(meanFormatted.length - 2) == '.0') {
+          meanFormatted = meanFormatted.substring(0, meanFormatted.length - 2);
+        }
         return (
           <div className={classNames}>
             <TooltipProvider>
@@ -127,7 +131,7 @@ export function getColumnsByTier(tier: Tier): ColumnDef<ZigbeeDeviceTableView>[]
                   {min != max ? `${min} - ${max}` : `${min}`}
                 </TooltipTrigger>
                 <TooltipContent>
-                  Mean: {mean} Median: {median}
+                  Mean: {meanFormatted} Median: {median}
                 </TooltipContent>
               </Tooltip>
             </TooltipProvider>

@@ -1,12 +1,15 @@
 'use client';
 
-import { useInstallationStore } from '@/app/services/stores';
+import { useInstallationStore, useUserStore } from '@/app/services/stores';
 import { Installation, Log, Observation } from '@/app/types';
 import { GenericDataTable } from '@/lib/generic-data-table';
 import { useAuth0 } from '@auth0/auth0-react';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
-import { InstallationTableView, columns } from './installations-data-table-columns';
+import {
+  InstallationTableView,
+  getColumnsByTier,
+} from './installations-data-table-columns';
 
 export function InstallationsDataTableProxy() {
   const observations = useInstallationStore(state => state.observations);
@@ -16,6 +19,7 @@ export function InstallationsDataTableProxy() {
   const fetchObservationsForInstallation = useInstallationStore(
     state => state.fetchObservationsForInstallation,
   );
+  const { user: apiUser } = useUserStore(state => state);
   const { getAccessTokenSilently } = useAuth0();
   const latestHaRelease = useInstallationStore(state => state.latestHaRelease);
   const router = useRouter();
@@ -67,7 +71,7 @@ export function InstallationsDataTableProxy() {
 
   return (
     <GenericDataTable
-      columns={columns}
+      columns={getColumnsByTier(apiUser?.tier ?? 'Expired')}
       pluralEntityName="installations"
       columnVisibilityKey="InstallationDataTableColumns"
       data={installationsNew}

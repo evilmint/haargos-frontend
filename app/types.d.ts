@@ -127,8 +127,8 @@ interface ZigbeeDevice {
   entity_name: string;
   name_by_user: string | null;
   brand: string;
-  battery: BatteryType | null;
-  lqi: number;
+  battery?: BatteryType | null;
+  lqi?: number;
   battery_level: number | null;
   power_source: 'Mains' | 'Battery' | null;
   integration_type: 'zha' | 'z2m';
@@ -214,5 +214,6 @@ export {
   User,
   UserApiResponse,
   Zigbee,
-  ZigbeeDevice,
+  ZigbeeDevice
 };
+

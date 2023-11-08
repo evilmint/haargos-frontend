@@ -19,114 +19,125 @@ export interface ZigbeeDeviceTableView {
   id: string;
 }
 
-import { BatteryType } from '@/app/types';
+import { BatteryType, Tier } from '@/app/types';
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip';
+import { TierResolver } from '@/lib/tier-resolver';
 import TimeAgo from 'react-timeago';
-export const columns: ColumnDef<ZigbeeDeviceTableView>[] = [
-  {
-    accessorKey: 'ieee',
-    header: () => (
-      <div className="text-center">
-        <TooltipProvider>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Button variant="ghost">IEEE</Button>
-            </TooltipTrigger>
-            <TooltipContent>
-              <p>
-                IEEE is the unique identifier for the Zigbee device, also known as MAC
-                address.
-              </p>
-            </TooltipContent>
-          </Tooltip>
-        </TooltipProvider>
-      </div>
-    ),
-    id: 'IEEE',
-    cell: ({ row }) => <div className="lowercase text-xs">{row.getValue('IEEE')}</div>,
-  },
-  {
-    accessorKey: 'name',
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-        >
-          Name
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      );
-    },
-    cell: ({ row }) => <div className="text-xs">{row.getValue('name')}</div>,
-  },
-  {
-    accessorKey: 'lqi',
-    id: 'LQI',
-    header: ({ column }) => {
-      return (
+
+export function getColumnsByTier(tier: Tier): ColumnDef<ZigbeeDeviceTableView>[] {
+  let columns: ColumnDef<ZigbeeDeviceTableView>[] = [
+    {
+      accessorKey: 'ieee',
+      header: () => (
         <div className="text-center">
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger asChild>
-                <Button
-                  variant="ghost"
-                  onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-                >
-                  LQI
-                  <ArrowUpDown className="ml-2 h-4 w-4" />
-                </Button>
+                <Button variant="ghost">IEEE</Button>
               </TooltipTrigger>
               <TooltipContent>
                 <p>
-                  LQI (Link Quality Indicator) is a metric used in Zigbee to determine the
-                  quality of a link between two devices.
-                  <br />A higher value indicates a better link quality.
+                  IEEE is the unique identifier for the Zigbee device, also known as MAC
+                  address.
                 </p>
               </TooltipContent>
             </Tooltip>
           </TooltipProvider>
         </div>
-      );
+      ),
+      id: 'IEEE',
+      cell: ({ row }) => <div className="lowercase text-xs">{row.getValue('IEEE')}</div>,
     },
-    sortingFn: (rowA, rowB) => {
-      const { mean: meanA }: { mean: number } = rowA.getValue('LQI');
-      const { mean: meanB }: { mean: number } = rowB.getValue('LQI');
+    {
+      accessorKey: 'name',
+      header: ({ column }) => {
+        return (
+          <Button
+            variant="ghost"
+            onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+          >
+            Name
+            <ArrowUpDown className="ml-2 h-4 w-4" />
+          </Button>
+        );
+      },
+      cell: ({ row }) => <div className="text-xs">{row.getValue('name')}</div>,
+    },
+  ];
 
-      return meanA - meanB;
-    },
-    cell: ({ row }) => {
-      const {
-        min,
-        max,
-        mean,
-        median,
-      }: { min: number; max: number; mean: number; median: number } = row.getValue('LQI');
-      const isAbnormalLQI =
-        mean <= Number(process.env.NEXT_PUBLIC_WARNING_THRESHOLD_ZIGBEE_LQI);
-      const className = isAbnormalLQI ? 'text-red-600 font-semibold' : ' font-regular';
-      const classNames = ` ${className} text-center text-xs`;
+  if (TierResolver.isAdvancedAnalyticsEnabled(tier)) {
+    columns.push({
+      accessorKey: 'lqi',
+      id: 'LQI',
+      header: ({ column }) => {
+        return (
+          <div className="text-center">
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    variant="ghost"
+                    onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+                  >
+                    LQI
+                    <ArrowUpDown className="ml-2 h-4 w-4" />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>
+                    LQI (Link Quality Indicator) is a metric used in Zigbee to determine
+                    the quality of a link between two devices.
+                    <br />A higher value indicates a better link quality.
+                  </p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+          </div>
+        );
+      },
+      sortingFn: (rowA, rowB) => {
+        const { mean: meanA }: { mean: number } = rowA.getValue('LQI');
+        const { mean: meanB }: { mean: number } = rowB.getValue('LQI');
 
-      return (
-        <div className={classNames}>
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger>{min != max ? `${min} - ${max}` : `${min}`}</TooltipTrigger>
-              <TooltipContent>
-                Mean: {mean} Median: {median}
-              </TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
-        </div>
-      );
-    },
-  },
-  {
+        return meanA - meanB;
+      },
+      cell: ({ row }) => {
+        const {
+          min,
+          max,
+          mean,
+          median,
+        }: { min: number; max: number; mean: number; median: number } =
+          row.getValue('LQI');
+        const isAbnormalLQI =
+          mean <= Number(process.env.NEXT_PUBLIC_WARNING_THRESHOLD_ZIGBEE_LQI);
+        const className = isAbnormalLQI ? 'text-red-600 font-semibold' : ' font-regular';
+        const classNames = ` ${className} text-center text-xs`;
+
+        return (
+          <div className={classNames}>
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger>
+                  {min != max ? `${min} - ${max}` : `${min}`}
+                </TooltipTrigger>
+                <TooltipContent>
+                  Mean: {mean} Median: {median}
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+          </div>
+        );
+      },
+    });
+  }
+
+  columns.push({
     accessorKey: 'last_updated',
     header: ({ column }) => (
       <div className="text-right">
@@ -156,8 +167,8 @@ export const columns: ColumnDef<ZigbeeDeviceTableView>[] = [
         <div className="text-right font-regular text-xs">{amount.toLocaleString()}</div>
       );
     },
-  },
-  {
+  });
+  columns.push({
     accessorKey: 'timeago',
     header: ({ column }) => (
       <div className="text-right">
@@ -202,8 +213,8 @@ export const columns: ColumnDef<ZigbeeDeviceTableView>[] = [
         </div>
       );
     },
-  },
-  {
+  });
+  columns.push({
     accessorKey: 'device',
     header: ({ column }) => {
       return (
@@ -223,8 +234,8 @@ export const columns: ColumnDef<ZigbeeDeviceTableView>[] = [
 
       return <div className="text-right font-regular text-xs">{device ?? ''}</div>;
     },
-  },
-  {
+  });
+  columns.push({
     accessorKey: 'power_source',
     header: ({ column }) => (
       <div className="text-center">
@@ -269,38 +280,42 @@ export const columns: ColumnDef<ZigbeeDeviceTableView>[] = [
         </div>
       );
     },
-  },
-  {
-    accessorKey: 'battery_type',
-    header: ({ column }) => {
-      return (
-        <div className="text-center">
-          <Button
-            variant="ghost"
-            onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-          >
-            Battery type
-            <ArrowUpDown className="ml-2 h-4 w-4" />
-          </Button>
-        </div>
-      );
-    },
-    cell: ({ row }) => {
-      const batteryType: BatteryType | null = row.getValue('battery_type');
-      let displayBattery: string = '';
+  });
 
-      if (!batteryType) {
-        displayBattery = 'unk.';
-      } else if ((batteryType.count ?? 0) > 1) {
-        displayBattery = `${batteryType.count}x ${batteryType.type}`;
-      } else {
-        displayBattery = batteryType.type;
-      }
+  if (TierResolver.isAdvancedAnalyticsEnabled(tier)) {
+    columns.push({
+      accessorKey: 'battery_type',
+      header: ({ column }) => {
+        return (
+          <div className="text-center">
+            <Button
+              variant="ghost"
+              onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+            >
+              Battery type
+              <ArrowUpDown className="ml-2 h-4 w-4" />
+            </Button>
+          </div>
+        );
+      },
+      cell: ({ row }) => {
+        const batteryType: BatteryType | null = row.getValue('battery_type');
+        let displayBattery: string = '';
 
-      return <div className="text-center font-regular text-xs">{displayBattery}</div>;
-    },
-  },
-  {
+        if (!batteryType) {
+          displayBattery = 'unk.';
+        } else if ((batteryType.count ?? 0) > 1) {
+          displayBattery = `${batteryType.count}x ${batteryType.type}`;
+        } else {
+          displayBattery = batteryType.type;
+        }
+
+        return <div className="text-center font-regular text-xs">{displayBattery}</div>;
+      },
+    });
+  }
+
+  columns.push({
     accessorKey: 'integration_type',
     header: ({ column }) => {
       return (
@@ -320,5 +335,7 @@ export const columns: ColumnDef<ZigbeeDeviceTableView>[] = [
 
       return <div className="text-center font-regular text-xs">{source}</div>;
     },
-  },
-];
+  });
+
+  return columns;
+}

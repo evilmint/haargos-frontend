@@ -14,6 +14,7 @@ import {
 
 import { UserDoesNotExistError, useUserStore } from '@/app/services/stores';
 import { fullNameInitials } from '@/app/tools';
+import { TierResolver } from '@/lib/tier-resolver';
 import { cn } from '@/lib/utils';
 import { buttonVariants } from '@/registry/new-york/ui/button';
 import { useAuth0 } from '@auth0/auth0-react';
@@ -46,6 +47,9 @@ export function UserNav() {
     asyncFetch();
   }, [fetchUser, getAccessTokenSilently, user]);
 
+  const isLowTier = apiUser?.tier == 'Explorer' || apiUser?.tier == 'Expired';
+  let tierBadgeColor = TierResolver.badgeColor(apiUser?.tier ?? 'Expired');
+
   return isLoading ? (
     <></>
   ) : isAuthenticated && apiUser ? (
@@ -73,14 +77,19 @@ export function UserNav() {
             )}
           </div>
         </DropdownMenuLabel>
-        <Badge className="ml-2">{apiUser.tier}</Badge>
+        <Badge color={tierBadgeColor} className="ml-2">
+          {apiUser.tier}
+        </Badge>
         <DropdownMenuSeparator />
-  
+
         <DropdownMenuGroup>
           <DropdownMenuItem onClick={() => router.push('/account/account')}>
             Account
           </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => router.push('/#pricing')}>
+          <DropdownMenuItem
+            className={isLowTier ? 'font-semibold' : ''}
+            onClick={() => router.push('/#pricing')}
+          >
             Upgrade
           </DropdownMenuItem>
         </DropdownMenuGroup>

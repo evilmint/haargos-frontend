@@ -138,7 +138,8 @@ interface ZigbeeDevice {
 
 interface ObservationApiResponse {
   body: {
-    items: Observation[];
+    Items: Observation[];
+    logs: string;
   };
 }
 
@@ -183,7 +184,7 @@ interface UserApiResponse {
   body: User;
 }
 
-type Tier = 'Explorer' | 'Navigator' | 'Pro' | 'Enterprise';
+type Tier = 'Expired' | 'Explorer' | 'Navigator' | 'Pro' | 'Enterprise';
 
 interface User {
   userId: string;
@@ -209,9 +210,9 @@ export {
   Scene,
   Script,
   Storage,
+  Tier,
   User,
   UserApiResponse,
   Zigbee,
-  ZigbeeDevice
+  ZigbeeDevice,
 };
-

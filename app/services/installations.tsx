@@ -1,3 +1,4 @@
+import { UpgradeTierError } from '@/lib/errors';
 import { Installation, InstallationApiResponse, InstallationBody } from '../types';
 import { apiSettings, baseHeaders } from './api-settings';
 
@@ -59,6 +60,10 @@ export async function createInstallation(
   const response = await fetch(`${apiSettings.baseUrl}/installations`, requestOptions);
 
   if (!response.ok) {
+    if (response.status == 409) {
+      throw new UpgradeTierError('Upgrade Tier');
+    }
+
     throw new Error('Failed to create installation');
   }
 

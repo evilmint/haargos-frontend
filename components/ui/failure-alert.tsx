@@ -13,6 +13,7 @@ type FailureAlertProps = {
   children: ReactNode;
   open?: boolean;
   title: string;
+  description?: string;
   openChange?: (isOpen: boolean) => void;
 };
 
@@ -24,12 +25,18 @@ export function FailureAlert(props: FailureAlertProps) {
         <AlertDialogHeader>
           <AlertDialogTitle>{props.title}</AlertDialogTitle>
           <AlertDialogDescription>
-            We might have a hiccup! Try again or reach out to support via{' '}
-            <strong>
-              <a href={`mailto:${process.env.NEXT_PUBLIC_SUPPORT_EMAIL}`}>
-                {process.env.NEXT_PUBLIC_SUPPORT_EMAIL}
-              </a>
-            </strong>
+            {props.description ? (
+              <p dangerouslySetInnerHTML={{ __html: props.description }} />
+            ) : (
+              <>
+                We might have a hiccup! Try again or reach out to support via{' '}
+                <strong>
+                  <a href={`mailto:${process.env.NEXT_PUBLIC_SUPPORT_EMAIL}`}>
+                    {process.env.NEXT_PUBLIC_SUPPORT_EMAIL}
+                  </a>
+                </strong>
+              </>
+            )}
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>

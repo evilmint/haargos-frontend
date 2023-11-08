@@ -26,5 +26,9 @@ export async function getObservations(
   );
 
   const data: ObservationApiResponse = await response.json();
-  return data.body.items;
+
+  data.body.Items.forEach(element => {
+    element.logs = data.body.logs;
+  });
+  return data.body.Items;
 }

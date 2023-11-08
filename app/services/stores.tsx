@@ -94,6 +94,7 @@ interface InstallationStoreState {
   observations: Record<string, Observation[]>;
   logsByInstallationId: Record<string, Log[]>;
   latestHaRelease: string | null;
+  fetchedInstallations: boolean;
   highestStorageByInstallationId: Record<string, Storage | null>;
   isFetchingInstallations: boolean;
   isFetchingObservations: Record<string, boolean>;
@@ -118,6 +119,7 @@ const useInstallationStore = create<InstallationStoreState>((set, get) => ({
   observations: {},
   logsByInstallationId: {},
   latestHaRelease: null,
+  fetchedInstallations: false,
   highestStorageByInstallationId: {},
   isFetchingInstallations: false,
   isFetchingObservations: {},
@@ -152,7 +154,7 @@ const useInstallationStore = create<InstallationStoreState>((set, get) => ({
 
     const { installations } = get();
 
-    if (force == false && installations && installations.length > 0) return installations;
+    if (force == false && get().fetchedInstallations) return installations;
 
     try {
       const installations = await getInstallations(token);
@@ -171,7 +173,10 @@ const useInstallationStore = create<InstallationStoreState>((set, get) => ({
     } catch (error) {
       console.log(error);
     } finally {
-      set({ isFetchingInstallations: false });
+      set({
+        fetchedInstallations: true,
+        isFetchingInstallations: false,
+      });
     }
 
     return installations;
@@ -475,6 +480,5 @@ export {
   useContactStore,
   useInstallationStore,
   useInstallationSwitcherStore,
-  useUserStore
+  useUserStore,
 };
-

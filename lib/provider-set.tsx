@@ -29,7 +29,6 @@ export default function ProviderSet({ children }: ProviderSetProps) {
   const redirectUri =
     (origin ?? '') + (pathname?.startsWith('/signup') ? '/signup' : '/dashboard');
 
-    console.log(redirectUri);
   return (
     origin &&
     process.env.NEXT_PUBLIC_WARNING_AUTH0_CLIENT_ID && (

@@ -3,6 +3,7 @@
 import { createInstallation } from '@/app/services/installations';
 import { useInstallationStore } from '@/app/services/stores';
 import { Installation } from '@/app/types';
+import { UpgradeTierError } from '@/lib/errors';
 import { CreateInstallationFormValues, createInstallationFormSchema } from '@/lib/zod';
 import {
   Form,
@@ -43,6 +44,7 @@ export function CreateInstallationForm({
 
   const { getAccessTokenSilently } = useAuth0();
   const [alertOpen, setAlertOpen] = useState(false);
+  const [alertDescription, setAlertDescription] = useState<string | undefined>(undefined);
 
   const fetchInstallations = useInstallationStore(state => state.fetchInstallations);
   const asyncFetch = async () => {
@@ -82,6 +84,11 @@ export function CreateInstallationForm({
       asyncFetch();
       params.onOpenChange?.(false);
     } catch (error) {
+      if (error instanceof UpgradeTierError) {
+        setAlertDescription(
+          'You have used up your installation limit.<br /><strong><a href="/#pricing">Upgrade now to benefit from Haargos even more!</a></strong>',
+        );
+      }
       setAlertOpen(true);
     } finally {
       setUpdating(false);
@@ -91,6 +98,7 @@ export function CreateInstallationForm({
   return (
     <FailureAlert
       title={'Failed to create installation.'}
+      description={alertDescription}
       openChange={setAlertOpen}
       open={alertOpen}
     >

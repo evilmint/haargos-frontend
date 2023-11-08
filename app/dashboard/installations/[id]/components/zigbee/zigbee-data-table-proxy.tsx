@@ -1,11 +1,11 @@
 'use client';
 
-import { useInstallationStore } from '@/app/services/stores';
+import { useInstallationStore, useUserStore } from '@/app/services/stores';
 import { Observation, ZigbeeDevice } from '@/app/types';
 import { GenericDataTable } from '@/lib/generic-data-table';
 import { useAuth0 } from '@auth0/auth0-react';
 import { useEffect } from 'react';
-import { ZigbeeDeviceTableView, columns } from './zigbee-data-table-columns';
+import { ZigbeeDeviceTableView, getColumnsByTier } from './zigbee-data-table-columns';
 
 export function ZigbeeDataTableProxy({ ...params }) {
   const { installationId } = params;
@@ -16,6 +16,7 @@ export function ZigbeeDataTableProxy({ ...params }) {
     state => state.fetchObservationsForInstallation,
   );
   const { getAccessTokenSilently, user } = useAuth0();
+  const { user: apiUser } = useUserStore(state => state);
 
   const asyncFetch = async () => {
     try {
@@ -41,6 +42,8 @@ export function ZigbeeDataTableProxy({ ...params }) {
   if (observations && observations.length > 0 && observations[0].zigbee) {
     devices = observations[0].zigbee.devices.map(d => mapToTableView(d, observations));
   }
+
+  const columns = getColumnsByTier(apiUser?.tier ?? 'Expired');
   return (
     <GenericDataTable
       defaultColumnVisibility={{
@@ -67,7 +70,11 @@ function mapToTableView(
 
   const lqi_min = devices.reduce((a, d) => (a > d.lqi ? d.lqi : a), 99999);
   const lqi_max = devices.reduce((a, d) => (a < d.lqi ? d.lqi : a), -1);
-  const mean = devices.reduce((a, d) => a + d.lqi, 0) / devices.length;
+  let mean = (devices.reduce((a, d) => a + d.lqi, 0) / devices.length).toFixed(1);
+
+  if (mean.substring(mean.length - 2) == '.0') {
+    mean = mean.substring(0, mean.length - 2);
+  }
 
   const median = devices.sort((a, b) => a.lqi - b.lqi)[Math.ceil(devices.length / 2)].lqi;
 

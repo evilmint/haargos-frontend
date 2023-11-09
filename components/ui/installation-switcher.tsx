@@ -1,7 +1,6 @@
 'use client';
 
 import { CaretSortIcon, CheckIcon, PlusCircledIcon } from '@radix-ui/react-icons';
-import * as React from 'react';
 
 import {
   useInstallationStore,
@@ -24,7 +23,7 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/registry/new-york/ui/
 import { Skeleton } from '@/registry/new-york/ui/skeleton';
 import { useAuth0 } from '@auth0/auth0-react';
 import { usePathname, useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { CreateInstallationForm } from './create-installation-form';
 import { Dot } from './dots';
 
@@ -39,9 +38,9 @@ export default function InstallationSwitcher({
 }: InstallationSwitcherProps) {
   const installations = useInstallationStore(state => state.installations);
   const fetchInstallations = useInstallationStore(state => state.fetchInstallations);
-  const [open, setOpen] = React.useState(false);
-  const [groups, setGroups] = React.useState<any[]>([]);
-  const [showNewInstallationDialog, setShowNewInstallationDialog] = React.useState(false);
+  const [open, setOpen] = useState(false);
+  const [groups, setGroups] = useState<any[]>([]);
+  const [showNewInstallationDialog, setShowNewInstallationDialog] = useState(false);
 
   const selectedInstallation = useInstallationSwitcherStore(state => {
     return state.selectedInstallation;
@@ -83,7 +82,7 @@ export default function InstallationSwitcher({
     }
   };
 
-  React.useEffect(() => {
+  useEffect(() => {
     fetchAndSetInstallations();
   }, [
     fetchInstallations,
@@ -95,13 +94,13 @@ export default function InstallationSwitcher({
     installationId,
   ]);
 
-  React.useEffect(() => {
-    if (pathname == '/') {
+  useEffect(() => {
+    if (pathname == '/dashboard') {
       setSelectedInstallation(null);
     }
   }, [pathname]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     setGroups([
       {
         label: 'Installation',

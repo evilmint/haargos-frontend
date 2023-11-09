@@ -186,12 +186,19 @@ interface UserApiResponse {
 
 type Tier = 'Expired' | 'Explorer' | 'Navigator' | 'Pro' | 'Enterprise';
 
+interface Subscription {
+  activated_on: string;
+  expires_on: string;
+}
+
 interface User {
   userId: string;
   full_name: string;
   email: string;
   tier: Tier;
+  subscription: Subscription | null;
 }
+
 
 export {
   Automation,
@@ -214,5 +221,6 @@ export {
   User,
   UserApiResponse,
   Zigbee,
-  ZigbeeDevice,
+  ZigbeeDevice
 };
+

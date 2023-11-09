@@ -12,7 +12,6 @@ import {
   useReactTable,
 } from '@tanstack/react-table';
 import { ChevronDown } from 'lucide-react';
-import * as React from 'react';
 
 import { Button } from '@/components/ui/button';
 import {
@@ -31,7 +30,7 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { ColumnVisibilityManager } from '@/lib/column-visibility-manager';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 type GenericDataTableParams = {
   defaultColumnVisibility?: VisibilityState;
@@ -50,10 +49,10 @@ export function GenericDataTable({ ...params }: GenericDataTableParams) {
     columnVisibilityKey,
   );
 
-  const [sorting, setSorting] = React.useState<SortingState>([]);
-  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
-  const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({});
-  const [rowSelection, setRowSelection] = React.useState({});
+  const [sorting, setSorting] = useState<SortingState>([]);
+  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
+  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
+  const [rowSelection, setRowSelection] = useState({});
 
   useEffect(() => {
     setColumnVisibility(columnVisibilityManager.getVisibility());

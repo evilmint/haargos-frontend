@@ -24,6 +24,19 @@ import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { LoginButton } from './login-button';
 
+function daysUntil(dateString: string): number {
+  const now = new Date(); // Current date and time
+  const targetDate = new Date(dateString); // Date to check against
+
+  // Calculate the difference in milliseconds
+  const difference = targetDate.getTime() - now.getTime();
+
+  // Convert milliseconds to days (1000 ms / second, 60 seconds / minute, 60 minutes / hour, 24 hours / day)
+  const days = Math.ceil(difference / (1000 * 60 * 60 * 24));
+
+  return days;
+}
+
 export function UserNav() {
   const { fetchUser, user: apiUser } = useUserStore(state => state);
   const { getAccessTokenSilently, user, logout, isAuthenticated } = useAuth0();
@@ -50,15 +63,29 @@ export function UserNav() {
   const isLowTier = apiUser?.tier == 'Explorer' || apiUser?.tier == 'Expired';
   let tierBadgeColor = TierResolver.badgeColor(apiUser?.tier ?? 'Expired');
 
+  const daysLeftToSubscriptionEnd = apiUser?.subscription?.expires_on ? daysUntil(apiUser.subscription.expires_on) : -1;
+  const isSubscriptionEnding = apiUser?.subscription?.expires_on ? daysUntil(apiUser.subscription.expires_on) < 14 : false;
+
+  const isSubscriptionWarningVisible = isSubscriptionEnding || apiUser?.tier == 'Expired';
+
+  let subscriptionWarningText: string = '';
+
+  if (apiUser?.tier == 'Expired') {
+    subscriptionWarningText = 'Subscription expired';
+  } else if (isSubscriptionEnding) {
+    subscriptionWarningText = `Subscription ending in ${daysLeftToSubscriptionEnd} day${daysLeftToSubscriptionEnd == 1 ? '' : 's'}`
+  }
+
   return isLoading ? (
     <></>
   ) : isAuthenticated && apiUser ? (
     <>
-      <Link className={cn(apiUser.tier == 'Expired' ? 'hidden md:block' : '', 'cursor-pointer')} href="/#pricing">
+      <Link className={cn(isSubscriptionWarningVisible ? 'hidden md:block' : 'hidden', 'cursor-pointer')} href="/#pricing">
         <Badge className='cursor-pointer' color="red">
-          Subscription expired
+          {subscriptionWarningText}
         </Badge>
       </Link>
+      
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button variant="ghost" className="relative h-8 w-8 rounded-full">

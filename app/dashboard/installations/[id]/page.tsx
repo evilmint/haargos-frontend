@@ -142,7 +142,7 @@ export default function DashboardInstallationPage({
     await deleteInstallation(token, installationId);
     clearInstallation();
 
-    router.push('/');
+    router.push('/dashboard');
   };
 
   const installation = useInstallationStore(state => state.installations).find(

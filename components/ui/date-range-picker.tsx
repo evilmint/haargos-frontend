@@ -9,11 +9,12 @@ import { cn } from '@/lib/utils';
 import { Button } from '@/registry/new-york/ui/button';
 import { Calendar } from '@/registry/new-york/ui/calendar';
 import { Popover, PopoverContent, PopoverTrigger } from '@/registry/new-york/ui/popover';
+import { useState } from 'react';
 
 export function CalendarDateRangePicker({
   className,
 }: React.HTMLAttributes<HTMLDivElement>) {
-  const [date, setDate] = React.useState<DateRange | undefined>({
+  const [date, setDate] = useState<DateRange | undefined>({
     from: new Date(2023, 0, 20),
     to: addDays(new Date(2023, 0, 20), 20),
   });

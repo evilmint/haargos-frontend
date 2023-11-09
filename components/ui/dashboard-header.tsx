@@ -211,7 +211,7 @@ export function DashboardHeader() {
       <Card className="max-w-lg">
         <Title>Health</Title>
         <DonutChart
-          className="mt-6"
+          className="mt-6 h-32"
           data={installationChart}
           category="sales"
           index="name"
@@ -229,7 +229,7 @@ export function DashboardHeader() {
       <Card className="max-w-lg">
         <Title>Zigbee</Title>
         <DonutChart
-          className="mt-6"
+          className="mt-6 h-32"
           data={zigbee}
           category="sales"
           index="name"
@@ -247,7 +247,7 @@ export function DashboardHeader() {
       <Card className="max-w-lg">
         <Title>Host</Title>
         <DonutChart
-          className="mt-6"
+          className="mt-6 h-32"
           data={host}
           category="sales"
           index="name"

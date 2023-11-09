@@ -3,7 +3,7 @@
 import { useInstallationSwitcherStore } from '@/app/services/stores';
 import { Button } from '@/registry/new-york/ui/button';
 import { useRouter } from 'next/navigation';
-import React from 'react';
+import { useState } from 'react';
 import { Icons } from './icons';
 import { CreateInstallationForm } from './ui/create-installation-form';
 
@@ -11,7 +11,7 @@ export function InstallationsAbsentContent() {
   const setSelectedTeam = useInstallationSwitcherStore(
     state => state.setSelectedInstallation,
   );
-  const [showNewInstallationDialog, setShowNewInstallationDialog] = React.useState(false);
+  const [showNewInstallationDialog, setShowNewInstallationDialog] = useState(false);
   const router = useRouter();
 
   return (

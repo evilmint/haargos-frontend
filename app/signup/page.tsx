@@ -39,7 +39,7 @@ export default function SignupPage() {
       tierName = 'Pro';
       break;
     case 'enterprise':
-      createAccountText = 'Embrace Enterprise'; // Or your chosen cool alternative
+      createAccountText = 'Embrace Enterprise';
       tierName = 'Enterprise';
       break;
     default:

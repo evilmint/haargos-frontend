@@ -53,55 +53,62 @@ export function UserNav() {
   return isLoading ? (
     <></>
   ) : isAuthenticated && apiUser ? (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button variant="ghost" className="relative h-8 w-8 rounded-full">
-          <Avatar className="h-8 w-8">
-            <AvatarImage src={user?.picture} alt="@shadcn" />
-            <AvatarFallback>{fullNameInitials(apiUser?.full_name)}</AvatarFallback>
-          </Avatar>
-        </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent className="w-56" align="end" forceMount>
-        <DropdownMenuLabel className="font-normal">
-          <div className="flex flex-col space-y-1">
-            <p className="text-sm font-medium leading-none">{`${
-              apiUser.full_name.trim().length > 0 ? apiUser.full_name : apiUser.email
-            }`}</p>
-            {apiUser.full_name.trim().length == 0 ? (
-              <></>
-            ) : (
-              <p className="text-xs leading-none text-muted-foreground">
-                {apiUser.email}
-              </p>
-            )}
-          </div>
-        </DropdownMenuLabel>
-        <Badge color={tierBadgeColor} className="ml-2">
-          {apiUser.tier}
+    <>
+      <Link className={cn(apiUser.tier == 'Expired' ? 'hidden md:block' : '', 'cursor-pointer')} href="/#pricing">
+        <Badge className='cursor-pointer' color="red">
+          Subscription expired
         </Badge>
-        <DropdownMenuSeparator />
+      </Link>
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button variant="ghost" className="relative h-8 w-8 rounded-full">
+            <Avatar className="h-8 w-8">
+              <AvatarImage src={user?.picture} alt="@shadcn" />
+              <AvatarFallback>{fullNameInitials(apiUser?.full_name)}</AvatarFallback>
+            </Avatar>
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent className="w-56" align="end" forceMount>
+          <DropdownMenuLabel className="font-normal">
+            <div className="flex flex-col space-y-1">
+              <p className="text-sm font-medium leading-none">{`${
+                apiUser.full_name.trim().length > 0 ? apiUser.full_name : apiUser.email
+              }`}</p>
+              {apiUser.full_name.trim().length == 0 ? (
+                <></>
+              ) : (
+                <p className="text-xs leading-none text-muted-foreground">
+                  {apiUser.email}
+                </p>
+              )}
+            </div>
+          </DropdownMenuLabel>
+          <Badge color={tierBadgeColor} className="ml-2">
+            {apiUser.tier}
+          </Badge>
+          <DropdownMenuSeparator />
 
-        <DropdownMenuGroup>
-          <DropdownMenuItem onClick={() => router.push('/account/account')}>
-            Account
-          </DropdownMenuItem>
+          <DropdownMenuGroup>
+            <DropdownMenuItem onClick={() => router.push('/account/account')}>
+              Account
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              className={isLowTier ? 'font-semibold' : ''}
+              onClick={() => router.push('/#pricing')}
+            >
+              Upgrade
+            </DropdownMenuItem>
+          </DropdownMenuGroup>
+          <DropdownMenuSeparator />
+
           <DropdownMenuItem
-            className={isLowTier ? 'font-semibold' : ''}
-            onClick={() => router.push('/#pricing')}
+            onClick={() => logout({ logoutParams: { returnTo: window.location.origin } })}
           >
-            Upgrade
+            Log out
           </DropdownMenuItem>
-        </DropdownMenuGroup>
-        <DropdownMenuSeparator />
-
-        <DropdownMenuItem
-          onClick={() => logout({ logoutParams: { returnTo: window.location.origin } })}
-        >
-          Log out
-        </DropdownMenuItem>
-      </DropdownMenuContent>
-    </DropdownMenu>
+        </DropdownMenuContent>
+      </DropdownMenu>
+    </>
   ) : (
     <>
       <Link className={cn(buttonVariants({ variant: 'secondary' }), '')} href="/signup">

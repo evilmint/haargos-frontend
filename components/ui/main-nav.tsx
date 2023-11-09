@@ -30,11 +30,11 @@ export function MainNav({ ...props }, { className }: React.HTMLAttributes<HTMLEl
   return (
     <nav className={cn('flex items-center w-auto space-x-3', className)}>
       <Link href="/">
-      <h4 className="font-semibold text-lg">Haargos</h4></Link>
+        <h4 className="font-semibold text-lg">Haargos</h4>
+      </Link>
 
       {user && (
         <>
-          
           <Link
             href="/dashboard"
             onClick={() => dashboardClicked()}

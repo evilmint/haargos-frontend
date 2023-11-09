@@ -322,9 +322,10 @@ const useInstallationStore = create<InstallationStoreState>((set, get) => ({
                 }
 
                 z.has_low_battery = !hasGoodBattery;
-                z.has_low_lqi = z.lqi !== undefined
-                  ? z.lqi <= lqiThreshold && z.integration_type.toLowerCase() == 'zha'
-                  : false;
+                z.has_low_lqi =
+                  z.lqi !== undefined
+                    ? z.lqi <= lqiThreshold && z.integration_type.toLowerCase() == 'zha'
+                    : false;
                 return z;
               }) ?? [];
           }
@@ -494,6 +495,5 @@ export {
   useContactStore,
   useInstallationStore,
   useInstallationSwitcherStore,
-  useUserStore
+  useUserStore,
 };
-

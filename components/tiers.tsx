@@ -106,7 +106,7 @@ export default function PricingTiers() {
       </div>
       <div
         id="pricing"
-        className="flex overflow-auto no-scrollbar  md:space-x-10 md:mx-24 space-x-10 pt-0 mx-24 mb-16"
+        className="flex overflow-auto no-scrollbar  md:space-x-10 md:mx-24 space-x-10 pt-0 mb-16"
       >
         {tiers.map((tier, index) => (
           <div

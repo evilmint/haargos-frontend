@@ -73,7 +73,6 @@ export function CPU({ ...params }) {
                 <TableRow>
                   <TableHead className="">Model name</TableHead>
                   <TableHead>Architecture</TableHead>
-                  <TableHead>Load</TableHead>
                   <TableHead>Temperature</TableHead>
                   <TableHead>MHz</TableHead>
                 </TableRow>
@@ -86,9 +85,6 @@ export function CPU({ ...params }) {
                     </TableCell>
                     <TableCell className="text-xs">
                       {observations[0].environment.cpu.architecture}
-                    </TableCell>
-                    <TableCell className="text-xs">
-                      {observations[0].environment.cpu.load}
                     </TableCell>
                     <TableCell className="text-xs">
                       {observations[0].environment.cpu.temp}°C

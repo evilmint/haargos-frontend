@@ -84,7 +84,7 @@ export function Docker({ ...params }) {
                       )}
                     </TableCell>
                     <TableCell className="text-xs">
-                      {container.restarting ? <p className="text-red-600">Yes</p> : 'No'}
+                      {container.restarting == 'true' ? <p className="text-red-600">Yes</p> : 'No'}
                     </TableCell>
                     <TableCell className="text-xs">
                       {new Date(container.started_at).toLocaleString()}

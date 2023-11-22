@@ -56,7 +56,7 @@ interface Storage {
 interface DockerContainer {
   running: boolean;
   image: string;
-  restarting: boolean;
+  restarting: string;
   finished_at: string;
   name: string;
   started_at: string;

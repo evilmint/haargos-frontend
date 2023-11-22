@@ -17,7 +17,11 @@ import { useEffect } from 'react';
 
 export function Docker({ ...params }) {
   const { installationId } = params;
-  const observations = useInstallationStore(state => state.observations[installationId]);
+
+  const observations = useInstallationStore(
+    state => state.observations[installationId],
+  ).sort((o1, o2) => new Date(o2.timestamp).getTime() - new Date(o1.timestamp).getTime());
+
   const fetchInstallations = useInstallationStore(state => state.fetchInstallations);
   const fetchObservationsForInstallation = useInstallationStore(
     state => state.fetchObservationsForInstallation,

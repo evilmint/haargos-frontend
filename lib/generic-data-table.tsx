@@ -107,7 +107,7 @@ export function GenericDataTable({ ...params }: GenericDataTableParams) {
               (table.getColumn(params.filterColumnName)?.getFilterValue() as string) ?? ''
             }
             onChange={event =>
-              table.getColumn(params.filterColumnName)?.setFilterValue(event.target.value)
+              table.getColumn(params.filterColumnName ?? 'name')?.setFilterValue(event.target.value)
             }
             className="max-w-sm"
           />

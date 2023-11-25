@@ -52,6 +52,7 @@ export function ZigbeeDataTableProxy({ ...params }) {
         device: false,
         battery_type: false,
       }}
+      filterColumnName="name"
       columns={columns}
       pluralEntityName="zigbee"
       columnVisibilityKey="ZigbeeDataTable_columnVisibility"
@@ -71,9 +72,11 @@ function mapToTableView(
   const lqi_min = devices.reduce((a, d) => (a > (d.lqi ?? 0) ? d.lqi ?? 0 : a), 99999);
   const lqi_max = devices.reduce((a, d) => (a < (d.lqi ?? 0) ? d.lqi ?? 0 : a), -1);
   const mean = devices.reduce((a, d) => a + (d.lqi ?? 0), 0) / devices.length;
-  const median = devices.sort((a, b) => (a.lqi ?? 0) - (b.lqi ?? 0))[
-    Math.ceil(devices.length / 2)
-  ].lqi;
+
+  const sorted = devices.sort((a, b) => (a.lqi ?? 0) - (b.lqi ?? 0));
+
+  const idx = Math.ceil(devices.length / 2) - 1;
+  const median = (devices ?? []).length >= 1 ? sorted[idx].lqi : 0;
 
   return {
     id: device.ieee,

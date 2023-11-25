@@ -199,7 +199,6 @@ interface User {
   subscription: Subscription | null;
 }
 
-
 export {
   Automation,
   BatteryType,
@@ -221,6 +220,5 @@ export {
   User,
   UserApiResponse,
   Zigbee,
-  ZigbeeDevice
+  ZigbeeDevice,
 };
-

@@ -62,6 +62,7 @@ export function LogsDataTableProxy({ ...params }) {
         <GenericDataTable
           pluralEntityName="logs"
           columns={columns}
+          filterColumnName="log"
           columnVisibilityKey="LogsDataTable_columnVisibility"
           data={logViews}
         />

@@ -45,6 +45,7 @@ export function SceneDataTableProxy({ ...params }) {
     <GenericDataTable
       columns={columns}
       pluralEntityName="scenes"
+      filterColumnName="friendly_name"
       columnVisibilityKey="SceneDataTable_columnVisibility"
       data={scenes}
     />

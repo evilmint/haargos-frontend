@@ -36,6 +36,7 @@ type GenericDataTableParams = {
   defaultColumnVisibility?: VisibilityState;
   columnVisibilityKey: string;
   pluralEntityName?: string;
+  filterColumnName?: string;
   columnIdToNameTransformer?: (column: string) => string;
   columns: ColumnDef<any>[];
   data: any;
@@ -99,14 +100,18 @@ export function GenericDataTable({ ...params }: GenericDataTableParams) {
   return (
     <div className="w-full">
       <div className="flex items-center py-4">
-        <Input
-          placeholder={`Filter ${params.pluralEntityName ?? 'entities'}...`}
-          value={(table.getColumn('general')?.getFilterValue() as string) ?? ''}
-          onChange={event =>
-            table.getColumn('general')?.setFilterValue(event.target.value)
-          }
-          className="max-w-sm"
-        />
+        {params.filterColumnName && (
+          <Input
+            placeholder={`Filter ${params.pluralEntityName ?? 'entities'}...`}
+            value={
+              (table.getColumn(params.filterColumnName)?.getFilterValue() as string) ?? ''
+            }
+            onChange={event =>
+              table.getColumn(params.filterColumnName)?.setFilterValue(event.target.value)
+            }
+            className="max-w-sm"
+          />
+        )}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="outline" className="ml-auto">

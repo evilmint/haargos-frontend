@@ -46,7 +46,9 @@ export function Docker({ ...params }) {
     installationId,
   ]);
 
-  const observations = (unsortedObservations ?? []).sort((o1, o2) => new Date(o2.timestamp).getTime() - new Date(o1.timestamp).getTime());
+  const observations = (unsortedObservations ?? []).sort(
+    (o1, o2) => new Date(o2.timestamp).getTime() - new Date(o1.timestamp).getTime(),
+  );
 
   const dockerContainerCount =
     observations?.length > 0 ? observations[0]?.docker?.containers?.length || 0 : 0;

@@ -63,8 +63,12 @@ export function UserNav() {
   const isLowTier = apiUser?.tier == 'Explorer' || apiUser?.tier == 'Expired';
   let tierBadgeColor = TierResolver.badgeColor(apiUser?.tier ?? 'Expired');
 
-  const daysLeftToSubscriptionEnd = apiUser?.subscription?.expires_on ? daysUntil(apiUser.subscription.expires_on) : -1;
-  const isSubscriptionEnding = apiUser?.subscription?.expires_on ? daysUntil(apiUser.subscription.expires_on) < 14 : false;
+  const daysLeftToSubscriptionEnd = apiUser?.subscription?.expires_on
+    ? daysUntil(apiUser.subscription.expires_on)
+    : -1;
+  const isSubscriptionEnding = apiUser?.subscription?.expires_on
+    ? daysUntil(apiUser.subscription.expires_on) < 14
+    : false;
 
   const isSubscriptionWarningVisible = isSubscriptionEnding || apiUser?.tier == 'Expired';
 
@@ -73,19 +77,27 @@ export function UserNav() {
   if (apiUser?.tier == 'Expired') {
     subscriptionWarningText = 'Subscription expired';
   } else if (isSubscriptionEnding) {
-    subscriptionWarningText = `Subscription ending in ${daysLeftToSubscriptionEnd} day${daysLeftToSubscriptionEnd == 1 ? '' : 's'}`
+    subscriptionWarningText = `Subscription ending in ${daysLeftToSubscriptionEnd} day${
+      daysLeftToSubscriptionEnd == 1 ? '' : 's'
+    }`;
   }
 
   return isLoading ? (
     <></>
   ) : isAuthenticated && apiUser ? (
     <>
-      <Link className={cn(isSubscriptionWarningVisible ? 'hidden md:block' : 'hidden', 'cursor-pointer')} href="/#pricing">
-        <Badge className='cursor-pointer' color="red">
+      <Link
+        className={cn(
+          isSubscriptionWarningVisible ? 'hidden md:block' : 'hidden',
+          'cursor-pointer',
+        )}
+        href="/#pricing"
+      >
+        <Badge className="cursor-pointer" color="red">
           {subscriptionWarningText}
         </Badge>
       </Link>
-      
+
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button variant="ghost" className="relative h-8 w-8 rounded-full">

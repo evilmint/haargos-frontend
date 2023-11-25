@@ -105,6 +105,7 @@ export default function DashboardInstallationPage({
 }) {
   const [origin, setOrigin] = useState<string | null>(null);
   const [defaultTab, setDefaultTab] = useState<string>('overview');
+  const observations = useInstallationStore(state => state.observations[params.id]);
   const deleteInstallation = useInstallationStore(state => state.deleteInstallation);
   const router = useRouter();
 
@@ -226,6 +227,11 @@ export default function DashboardInstallationPage({
       };
       break;
   }
+
+  const dockerEnabled =
+    observations && observations.length > 0
+      ? observations[0].agent_type != 'addon'
+      : false;
 
   return (
     defaultTab != null &&
@@ -456,7 +462,7 @@ export default function DashboardInstallationPage({
                     <Tab>Memory</Tab>
                     <Tab>Network</Tab>
                     <Tab>Storage</Tab>
-                    <Tab>Docker</Tab>
+                    {dockerEnabled ? (<Tab>Docker</Tab>) : <></>}
                   </TabList>
                   <TabPanels>
                     <TabPanel>

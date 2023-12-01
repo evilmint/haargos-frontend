@@ -28,12 +28,14 @@ export default function ProviderSet({ children }: ProviderSetProps) {
 
   const redirectUri =
     (origin ?? '') + (pathname?.startsWith('/signup') ? '/signup' : '/dashboard');
+    const redirectUriKey = pathname?.startsWith('/signup') ? 'signup' : 'dashboard';
 
   return (
     origin &&
     process.env.NEXT_PUBLIC_WARNING_AUTH0_CLIENT_ID && (
       <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
         <Auth0Provider
+          key={redirectUriKey}
           domain={process.env.NEXT_PUBLIC_WARNING_AUTH0_DOMAIN ?? ''}
           clientId={process.env.NEXT_PUBLIC_WARNING_AUTH0_CLIENT_ID}
           authorizationParams={{

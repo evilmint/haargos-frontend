@@ -27,15 +27,15 @@ export default function SignupPage() {
 
   switch (tier) {
     case 'explorer':
-      createAccountText = 'Become an Explorer';
+      createAccountText = 'Embark on the Explorer journey';
       tierName = 'Explorer';
       break;
     case 'navigator':
-      createAccountText = 'Become a Navigator';
+      createAccountText = 'Sail like a Navigator';
       tierName = 'Navigator';
       break;
     case 'pro':
-      createAccountText = 'Become Pro';
+      createAccountText = 'Go Pro: Unlock advanced features';
       tierName = 'Pro';
       break;
     case 'enterprise':

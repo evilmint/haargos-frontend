@@ -2,6 +2,7 @@ import { Icons } from './icons';
 
 type Feature = {
   title: string;
+  comingSoon?: boolean;
   icon: JSX.Element | null;
   description: string;
 };
@@ -10,12 +11,14 @@ export default function Features() {
   const features: Feature[] = [
     {
       title: 'Real-time Alerts',
+      comingSoon: true,
       description:
         'Get instant notifications for any issues, ensuring prompt action when necessary.',
       icon: <Icons.bell />,
     },
     {
       title: 'Automated Reports',
+      comingSoon: true,
       description:
         'Automatically diagnose and receive reports on the health and performance of your smart home systems.',
       icon: <Icons.mail />,
@@ -53,7 +56,7 @@ export default function Features() {
                   {feature.icon}
                 </div>
                 <h5 className="text-xl font-semibold mb-4 text-gray-800 dark:text-white">
-                  {feature.title}
+                  {feature.title}{feature.comingSoon && <p className='m-0 p-0 -mt-[20px] text-base font-normal'><br />(Coming soon)</p>}
                 </h5>
                 <p className="text-base text-gray-600 dark:text-gray-400 flex-1 ">
                   {feature.description}

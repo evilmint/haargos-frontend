@@ -1,10 +1,10 @@
 export default function Hero() {
   return (
     <div
-      className="bg-cover bg-center h-screen"
-      style={{ backgroundImage: `url("/electric-car-6.jpg")` }}
+      className="bg-cover bg-center h-[700px]"
+      style={{ backgroundImage: `url("/bg.png")` }}
     >
-      <div className="flex items-center justify-center h-full w-full bg-gray-900 bg-opacity-50">
+      <div className="flex items-center justify-center h-full w-full bg-gray-900 bg-opacity-60">
         <div className="text-center">
           <h1 className="text-5xl text-white font-bold mb-4">
             Your Clients' Smart Homes,{' '}

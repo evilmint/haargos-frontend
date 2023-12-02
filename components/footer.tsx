@@ -29,6 +29,18 @@ export default function Footer() {
                 Contact
               </a>
             </li>
+
+            <li>
+              <a href="/about/terms" className="px-4">
+                Terms & Conditions
+              </a>
+            </li>
+
+            <li>
+              <a href="/about/privacy" className="px-4">
+                Privacy Policy
+              </a>
+            </li>
           </ul>
         </div>
         <div className="w-full text-center pt-6">

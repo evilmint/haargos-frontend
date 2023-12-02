@@ -9,9 +9,9 @@ type WhyUsItem = {
 export default function WhyUs() {
   const whyUsItems: WhyUsItem[] = [
     {
-      title: 'Real-time Analytics',
+      title: 'Analytics',
       icon: <Icons.trendingUp className="w-12 h-12 mb-4" />,
-      description: 'Instant access to performance data and analytics in real time.',
+      description: 'Instant access to performance data and analytics.',
     },
     {
       title: 'Maximized Uptime',
@@ -19,16 +19,16 @@ export default function WhyUs() {
       description: 'Ensure your installations are always up and running optimally.',
     },
     {
-      title: 'Uncompromised Security',
-      icon: <Icons.shieldCheck className="w-12 h-12 mb-4" />,
-      description: 'State-of-the-art security measures to protect your data.',
+      title: 'Home Assistant integration',
+      icon: <Icons.cog6tooth className="w-12 h-12 mb-4" />,
+      description: 'Integrations with Home Assistant to collect various data.',
     },
   ];
 
   return (
     <div className="container mx-auto px-6 py-16">
       <div className="text-center pb-12">
-        <h2 className="text-3xl font-semibold">Why Choose Us?</h2>
+        <h2 className="text-3xl font-semibold">Why Haargos?</h2>
         <p className="text-gray-600 mt-4">
           We provide a comprehensive monitoring solution tailored for professional smart
           home administrators.

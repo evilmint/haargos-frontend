@@ -41,6 +41,12 @@ export default function Footer() {
                 Privacy Policy
               </a>
             </li>
+
+            <li>
+              <a href="/about/faq" className="px-4">
+                FAQ
+              </a>
+            </li>
           </ul>
         </div>
         <div className="w-full text-center pt-6">

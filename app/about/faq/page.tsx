@@ -6,7 +6,7 @@ export default function FAQ() {
   return (
     <Card className="mx-6 my-6">
       <CardHeader className="space-y-1">
-        <CardTitle className="text-2xl">Frequently Asked Questions (FAQs)</CardTitle>
+        <CardTitle className="text-2xl">Frequently Asked Questions</CardTitle>
       </CardHeader>
       <CardContent className="grid gap-4">
         <dl className="list-decimal ml-6 leading-loose">
@@ -17,6 +17,13 @@ export default function FAQ() {
             Haargos is an advanced monitoring and analytics platform for Home Assistant,
             providing in-depth insights, alerts, and support for your smart home
             environment.
+          </dd>
+
+          <dt>
+            <strong>How can I install Haargos?</strong>
+          </dt>
+          <dd>
+            Haargos can be installed either as a Home Assistant addon or as a docker image if you are running Home Assistant in a docker environment.
           </dd>
 
           <dt>

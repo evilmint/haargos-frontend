@@ -1,4 +1,13 @@
 export default function Footer() {
+  const links = [
+    { name: 'Home', href: '#' },
+    { name: 'Features', href: '#features' },
+    { name: 'Pricing', href: '#pricing' },
+    { name: 'Contact', href: '#contact' },
+    { name: 'Terms & Conditions', href: '/about/terms' },
+    { name: 'Privacy Policy', href: '/about/privacy' },
+    { name: 'FAQ', href: '/about/faq' },
+  ];
   return (
     <footer className="bg-gray-800 text-white py-8">
       <div className="container mx-auto px-6 flex flex-wrap justify-between items-center">
@@ -7,51 +16,20 @@ export default function Footer() {
             Haargos
           </a>
         </div>
-        <div className="w-full md:w-2/3 text-center md:text-right">
-          <ul className="inline-flex items-center">
-            <li>
-              <a href="#" className="px-4">
-                Home
-              </a>
-            </li>
-            <li>
-              <a href="#features" className="px-4">
-                Features
-              </a>
-            </li>
-            <li>
-              <a href="#pricing" className="px-4">
-                Pricing
-              </a>
-            </li>
-            <li>
-              <a href="#contact" className="px-4">
-                Contact
-              </a>
-            </li>
-
-            <li>
-              <a href="/about/terms" className="px-4">
-                Terms & Conditions
-              </a>
-            </li>
-
-            <li>
-              <a href="/about/privacy" className="px-4">
-                Privacy Policy
-              </a>
-            </li>
-
-            <li>
-              <a href="/about/faq" className="px-4">
-                FAQ
-              </a>
-            </li>
-          </ul>
+        <div className="w-full md:w-2/3  align-right md:text-right">
+          <div className="flex-inline md:flex flex-wrap items-center">
+            {links.map(link => (
+              <div className="my-4">
+                <a href={link.href} className="px-4">
+                  {link.name}
+                </a>
+              </div>
+            ))}
+          </div>
         </div>
         <div className="w-full text-center pt-6">
           <p className="text-sm text-gray-400">
-            &copy; 2023 SmartVision. All rights reserved.
+            &copy; {new Date().getFullYear()} SmartVision. All rights reserved.
           </p>
         </div>
       </div>

@@ -2,6 +2,7 @@
 
 import { useInstallationStore } from '@/app/services/stores';
 import { Card, CardContent, CardHeader, CardTitle } from '@/registry/new-york/ui/card';
+import { Checkbox } from '@/registry/new-york/ui/checkbox';
 import { Input } from '@/registry/new-york/ui/input';
 import { useAuth0 } from '@auth0/auth0-react';
 import { Tab, TabGroup, TabList, TabPanel, TabPanels } from '@tremor/react';
@@ -41,30 +42,32 @@ export function AgentInstallation({ installationId }: { installationId: string }
   const commandi386 = process.env.NEXT_PUBLIC_INSTALL_AGENT_COMMAND_I386 ?? '';
 
   const [inputToken, setInput] = useState<string>('');
+  const [dockerAllowed, setDockerAllowed] = useState<boolean>(true);
 
   const onChange = (event: any) => {
     const token = event.target.value.trim();
     setInput(token);
   };
 
+  const onDockerChange = (event: any) => {
+    setDockerAllowed(event.target.getAttribute('data-state') != 'checked');
+  };
+
   const dockerCompose = `version: '3'
 services:
   haargos:
-    image: haargos/aarch64:latest
+    image: haargos/aarch64:latest-docker
     environment:
+      DEBUG: false # adjust to your needs
+      HAARGOS_AGENT_TOKEN: ${installation?.agent_token ?? 'Your agent token here'}
       LONG_LIVED_ACCESS_TOKEN: ${
         inputToken && inputToken.length > 0
           ? inputToken
           : 'Your long lived access token here'
       }
     volumes:
-      - ./config:/config # Mapping the local config directory to the container's /config
+      - ./config:/config # Mapping the local config directory to the container's /config${dockerAllowed ? '\n      - /var/run/docker.sock:/var/run/docker.sock # (optional) Map docker socket to gain more insights' : ''}
     restart: unless-stopped`;
-
-  const dataOptions = `{
-  "agent_token": "${installation?.agent_token ?? 'Your agent token here'}",
-  "debug_mode": false # or true, depending on your requirement
-}`;
 
   const addonRepo = encodeURIComponent('https://github.com/haargos/ha-addons/');
 
@@ -80,7 +83,7 @@ services:
 
           <TabGroup>
             <TabList className="mt-8">
-              <Tab>Add-on</Tab>
+              <Tab>Home Assistant Add-on</Tab>
               <Tab>Docker Compose</Tab>
               <Tab>Standalone</Tab>
             </TabList>
@@ -121,9 +124,10 @@ services:
                   </p>
                   <br />
                   <p>
-                    2. Create a docker-compose.yml file with example contents provided
-                    below. You can grab your own Long-Lived Access Token in your Home
-                    Assistant user's profile.
+                    2. Integrate the Haargos image into a docker-compose.yml or run
+                    directly via docker. You can use he example contents provided below.
+                    You can grab your own Long-Lived Access Token in your Home Assistant
+                    user's profile.
                     <br />
                     <br />
                     <a
@@ -133,9 +137,18 @@ services:
                       <img src="https://my.home-assistant.io/badges/profile.svg" />
                     </a>
                   </p>
-
+                  <br />
+                  <p>3. Include your custom data optionally</p>
                   <div className="mt-4 block">
-                    <span className="inline">Long lived access token (we don't store it): </span>
+                    <span className="inline">
+                      Include docker socket volume mapping to provide more docker insights:{' '}
+                    </span>
+                    <Checkbox checked={dockerAllowed} onClick={onDockerChange} />
+                  </div>
+                  <div className="mt-4 block">
+                    <span className="inline">
+                      Include long lived access token (we don't store it):{' '}
+                    </span>
                     <Input
                       type="search"
                       placeholder="Access token"
@@ -144,15 +157,10 @@ services:
                       className="inline md:w-[100px] lg:w-[300px]"
                     />
                   </div>
+                  <br />
+                  <p>4. Run Haargos</p>
                   <strong className="mt-6 block">docker-compose.yml</strong>
                   <Code>{dockerCompose}</Code>
-                  <br />
-                  <p>
-                    2. Create a options.json file mapped to the /data/ directory in the
-                    docker container{' '}
-                  </p>
-                  <strong className="mt-6 block">/data/options.json</strong>
-                  <Code>{dataOptions}</Code>
                 </div>
               </TabPanel>
               <TabPanel>

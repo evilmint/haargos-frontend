@@ -68,7 +68,7 @@ interface Observation {
   environment: Environment;
   logs: string;
   agent_version: string;
-  agent_type?: 'addon' | 'bin';
+  agent_type?: 'addon' | 'bin' | 'docker';
   docker: {
     containers: DockerContainer[];
   };

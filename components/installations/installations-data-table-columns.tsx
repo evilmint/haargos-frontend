@@ -28,6 +28,7 @@ export interface InstallationTableView {
     is_up: boolean;
     instance_url: string | null;
     installation_url: string;
+    agent_type: string;
   };
   agent_version: string;
   ha_version: string;
@@ -69,6 +70,7 @@ export function getColumnsByTier(tier: Tier): ColumnDef<InstallationTableView>[]
           goToInstallation: () => void;
           name: string;
           is_up: boolean;
+          agent_type: string;
           instance_url: string | null;
           installation_url: string;
         } = row.getValue('general');
@@ -113,6 +115,12 @@ export function getColumnsByTier(tier: Tier): ColumnDef<InstallationTableView>[]
             {general.instance_url && (
               <Badge color={general.is_up ? 'green' : 'red'} icon={Icons.signal}>
                 {general.is_up ? 'live' : 'down'}
+              </Badge>
+            )}
+
+            {general.agent_type != '' && (
+              <Badge color="gray" icon={Icons.docker}>
+                {general.agent_type == 'docker' ? 'docker' : 'addon'}
               </Badge>
             )}
           </div>

@@ -119,11 +119,7 @@ export default function TermsOfService() {
             <strong>Contact</strong>
             <p>
               For any questions or concerns regarding these Terms of Service, please
-              contact us at{' '}
-              <a href="mailto:support@haargos.com">
-              support@haargos.com
-              </a>
-              .
+              contact us at <a href="mailto:support@haargos.com">support@haargos.com</a>.
             </p>
           </li>
         </ol>

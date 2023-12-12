@@ -221,6 +221,5 @@ export {
   User,
   UserApiResponse,
   Zigbee,
-  ZigbeeDevice
+  ZigbeeDevice,
 };
-

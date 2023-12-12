@@ -6,7 +6,7 @@ type Tier = {
   title: string;
   price: number | null;
   icon: JSX.Element | null;
-  isAvailable?: boolean,
+  isAvailable?: boolean;
   description: string;
   features: string[];
   footer: string;
@@ -24,7 +24,7 @@ export default function PricingTiers() {
       features: [
         '1 installation',
         'Basic analytics',
-        //'Email alerts with daily rate limit',
+        'Limited e-mail alerts with daily rate limit',
         'Host machine information',
         'Basic e-mail support',
         'Data history for 1 day',
@@ -109,9 +109,9 @@ export default function PricingTiers() {
         <p className="dark:text-gray-300">
           Your Clients' Smart Homes, Flawlessly Managed
         </p>
-        <p className="mt-8 text-rose-700 font-medium text-xl dark:text-gray-300">
-          Try Haargos out for 2 weeks for free!
-        </p>  
+        <p className="mt-8 text-black-700 font-medium text-xl dark:text-gray-300">
+          Try out Haargos out for 2 weeks without making any payment
+        </p>
       </div>
       <div
         id="pricing"
@@ -120,9 +120,21 @@ export default function PricingTiers() {
         {tiers.map((tier, index) => (
           <div
             key={index}
-            className={cn("flex-1 pt-8 pb-10 overflow-x min-w-[80%] md:min-w-0", tier.isAvailable === undefined && tier.isAvailable !== true ? '' : 'opacity-50 disabled')}
+            className={cn(
+              'flex-1 pt-8 pb-10 overflow-x min-w-[80%] md:min-w-0',
+              tier.isAvailable === undefined && tier.isAvailable !== true
+                ? ''
+                : 'opacity-50 disabled',
+            )}
           >
-            <Link href={tier.isAvailable === undefined && tier.isAvailable !== true ? tier.href : ''} passHref>
+            <Link
+              href={
+                tier.isAvailable === undefined && tier.isAvailable !== true
+                  ? tier.href
+                  : ''
+              }
+              passHref
+            >
               <div className="flex flex-col h-full pt-4 rounded-xl space-y-6 overflow-hidden transition-all duration-500 transform hover:-translate-y-2 hover:scale-101 shadow-xl cursor-pointer dark:bg-gray-700 bg-slate-100">
                 <div className="px-8 flex justify-between items-center">
                   <h4 className="text-xl font-bold dark:text-white">{tier.title}</h4>
@@ -144,7 +156,9 @@ export default function PricingTiers() {
                 </ul>
                 <div className="text-center mt-auto dark:bg-indigo-sr-700 bg-sr-600">
                   <button className="inline-block my-6 font-semibold text-white">
-                    {tier.isAvailable === undefined && tier.isAvailable !== true ? tier.footer : 'Available soon!'}
+                    {tier.isAvailable === undefined && tier.isAvailable !== true
+                      ? tier.footer
+                      : 'Available soon!'}
                   </button>
                 </div>
               </div>

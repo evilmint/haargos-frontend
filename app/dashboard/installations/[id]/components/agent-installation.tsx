@@ -1,6 +1,7 @@
 'use client';
 
 import { useInstallationStore } from '@/app/services/stores';
+import { HALink } from '@/components/ha-link';
 import { Card, CardContent, CardHeader, CardTitle } from '@/registry/new-york/ui/card';
 import { Checkbox } from '@/registry/new-york/ui/checkbox';
 import { Input } from '@/registry/new-york/ui/input';
@@ -66,10 +67,14 @@ services:
           : 'Your long lived access token here'
       }
     volumes:
-      - ./config:/config # Mapping the local config directory to the container's /config${dockerAllowed ? '\n      - /var/run/docker.sock:/var/run/docker.sock # (optional) Map docker socket to gain more insights' : ''}
+      - ./config:/config # Mapping the local config directory to the container's /config${
+        dockerAllowed
+          ? '\n      - /var/run/docker.sock:/var/run/docker.sock # (optional) Map docker socket to gain more insights'
+          : ''
+      }
     restart: unless-stopped`;
 
-  const addonRepo = encodeURIComponent('https://github.com/haargos/ha-addons/');
+  const addonRepo = 'https://github.com/haargos/ha-addons/';
 
   return (
     installation && (
@@ -94,13 +99,13 @@ services:
                     <li>
                       Add custom Haargos repository to your Home Assistant
                       <br />
-                      <a
-                        className="mt-2 block"
-                        target="_blank"
-                        href={`https://my.home-assistant.io/redirect/supervisor_add_addon_repository/?repository_url=${addonRepo}`}
-                      >
-                        <img src="https://my.home-assistant.io/badges/supervisor_add_addon_repository.svg"></img>
-                      </a>
+                      <HALink
+                        installationName={installation?.name}
+                        actionName="Add addon repository"
+                        instanceHost={installation.urls.instance?.url}
+                        domain="supervisor_add_addon_repository"
+                        queryParams={{ repository_url: addonRepo }}
+                      />
                     </li>
 
                     <li>Refresh your addons list</li>
@@ -130,18 +135,14 @@ services:
                     user's profile.
                     <br />
                     <br />
-                    <a
-                      target="_blank"
-                      href="https://my.home-assistant.io/redirect/profile"
-                    >
-                      <img src="https://my.home-assistant.io/badges/profile.svg" />
-                    </a>
+                    <HALink domain="profile" />
                   </p>
                   <br />
                   <p>3. Include your custom data optionally</p>
                   <div className="mt-4 block">
                     <span className="inline">
-                      Include docker socket volume mapping to provide more docker insights:{' '}
+                      Include docker socket volume mapping to provide more docker
+                      insights:{' '}
                     </span>
                     <Checkbox checked={dockerAllowed} onClick={onDockerChange} />
                   </div>

@@ -35,7 +35,7 @@ import ipaddr from 'ipaddr.js';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { AgentInstallation } from './components/agent-installation';
-import { AutomationsDataTableProxy } from './components/automations/automations-data-table-proxy';
+import { AutomationsDataTableProxy } from './components/automations/AutomationsDataTableProxy';
 import { CPU } from './components/cpu';
 import { Docker } from './components/docker';
 import { InstallationOverviewChart } from './components/installation-overview-chart';
@@ -462,7 +462,7 @@ export default function DashboardInstallationPage({
                     <Tab>Memory</Tab>
                     <Tab>Network</Tab>
                     <Tab>Storage</Tab>
-                    {dockerEnabled ? (<Tab>Docker</Tab>) : <></>}
+                    {dockerEnabled ? <Tab>Docker</Tab> : <></>}
                   </TabList>
                   <TabPanels>
                     <TabPanel>

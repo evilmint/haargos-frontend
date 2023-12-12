@@ -2,6 +2,7 @@
 
 import { useInstallationStore } from '@/app/services/stores';
 import { Observation, Scene } from '@/app/types';
+import { HALink } from '@/components/ha-link';
 import { GenericDataTable } from '@/lib/generic-data-table';
 import { useAuth0 } from '@auth0/auth0-react';
 import { useEffect } from 'react';
@@ -10,6 +11,9 @@ import { SceneTableView, columns } from './scenes-data-table-columns';
 export function SceneDataTableProxy({ ...params }) {
   const { installationId } = params;
 
+  const installation = useInstallationStore(state => state.installations).find(
+    i => i.id == installationId,
+  );
   const observations = useInstallationStore(state => state.observations[installationId]);
   const fetchInstallations = useInstallationStore(state => state.fetchInstallations);
   const fetchObservationsForInstallation = useInstallationStore(
@@ -42,13 +46,21 @@ export function SceneDataTableProxy({ ...params }) {
       : [];
 
   return (
-    <GenericDataTable
-      columns={columns}
-      pluralEntityName="scenes"
-      filterColumnName="friendly_name"
-      columnVisibilityKey="SceneDataTable_columnVisibility"
-      data={scenes}
-    />
+    <>
+      <HALink
+        installationName={installation?.name}
+        actionName="Scenes"
+        instanceHost={installation?.urls.instance?.url}
+        domain="scenes"
+      />
+      <GenericDataTable
+        columns={columns}
+        pluralEntityName="scenes"
+        filterColumnName="friendly_name"
+        columnVisibilityKey="SceneDataTable_columnVisibility"
+        data={scenes}
+      />
+    </>
   );
 }
 

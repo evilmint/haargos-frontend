@@ -2,6 +2,7 @@
 
 import { useInstallationStore } from '@/app/services/stores';
 import { Log } from '@/app/types';
+import { HALink } from '@/components/ha-link';
 import { GenericDataTable } from '@/lib/generic-data-table';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/registry/new-york/ui/tabs';
 import { useAuth0 } from '@auth0/auth0-react';
@@ -50,46 +51,54 @@ export function LogsDataTableProxy({ ...params }) {
   const concatenatedLogs = (logs ?? []).map((l: Log) => l.raw).join('\n');
 
   return (
-    <Tabs defaultValue="logtable" className="space-y-4">
-      <h3 className="inline ml-4 font-semibold">Logs</h3>
-      <TabsList className="ml-4">
-        <TabsTrigger value="logtable">Table</TabsTrigger>
-        <TabsTrigger value="lograw" disabled={logs == null || logs.length == 0}>
-          Raw
-        </TabsTrigger>
-      </TabsList>
-      <TabsContent value="logtable" className="space-y-4">
-        <GenericDataTable
-          pluralEntityName="logs"
-          columns={columns}
-          filterColumnName="log"
-          columnVisibilityKey="LogsDataTable_columnVisibility"
-          data={logViews}
-        />
-      </TabsContent>
+    <>
+      <HALink
+        installationName={installation?.name}
+        actionName="Logs"
+        instanceHost={installation?.urls.instance?.url}
+        domain="logs"
+      />
+      <Tabs defaultValue="logtable" className="space-y-4">
+        <h3 className="inline ml-4 font-semibold">Logs</h3>
+        <TabsList className="ml-4">
+          <TabsTrigger value="logtable">Table</TabsTrigger>
+          <TabsTrigger value="lograw" disabled={logs == null || logs.length == 0}>
+            Raw
+          </TabsTrigger>
+        </TabsList>
+        <TabsContent value="logtable" className="space-y-4">
+          <GenericDataTable
+            pluralEntityName="logs"
+            columns={columns}
+            filterColumnName="log"
+            columnVisibilityKey="LogsDataTable_columnVisibility"
+            data={logViews}
+          />
+        </TabsContent>
 
-      <TabsContent value="lograw">
-        <div className="relative mx-auto mt-4">
-          {logs?.length > 0 && (
-            <>
-              <CopyButton textToCopy={concatenatedLogs} />
-              <DownloadButton fileName={logFilename} textToCopy={concatenatedLogs} />
-            </>
-          )}
-          <div className="bg-slate-700 text-white p-4 rounded-md">
-            <div className="flex justify-between items-center mb-2"></div>
-            <div className="overflow-x-auto ">
-              <pre
-                id="code"
-                className="text-gray-300 h-[400px] text-xs leading-4  overflow-y-scroll"
-              >
-                <code>{concatenatedLogs}</code>
-              </pre>
+        <TabsContent value="lograw">
+          <div className="relative mx-auto mt-4">
+            {logs?.length > 0 && (
+              <>
+                <CopyButton textToCopy={concatenatedLogs} />
+                <DownloadButton fileName={logFilename} textToCopy={concatenatedLogs} />
+              </>
+            )}
+            <div className="bg-slate-700 text-white p-4 rounded-md">
+              <div className="flex justify-between items-center mb-2"></div>
+              <div className="overflow-x-auto ">
+                <pre
+                  id="code"
+                  className="text-gray-300 h-[400px] text-xs leading-4  overflow-y-scroll"
+                >
+                  <code>{concatenatedLogs}</code>
+                </pre>
+              </div>
             </div>
           </div>
-        </div>
-      </TabsContent>
-    </Tabs>
+        </TabsContent>
+      </Tabs>
+    </>
   );
 }
 

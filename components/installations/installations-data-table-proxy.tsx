@@ -111,6 +111,7 @@ function mapToTableView(
         installation.health_statuses[installation.health_statuses.length - 1].is_up,
       installation_url: `/dashboard/installations/${installation.id}`,
       instance_url: installation.urls.instance?.url ?? null,
+      agent_type: observation?.agent_type ?? '',
     },
     agent_version: observation?.agent_version ?? '-',
     ha_version: observation?.ha_config?.version ?? '-',

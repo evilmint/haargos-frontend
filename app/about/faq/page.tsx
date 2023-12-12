@@ -23,7 +23,8 @@ export default function FAQ() {
             <strong>How can I install Haargos?</strong>
           </dt>
           <dd>
-            Haargos can be installed either as a Home Assistant addon or as a docker image if you are running Home Assistant in a docker environment.
+            Haargos can be installed either as a Home Assistant addon or as a docker image
+            if you are running Home Assistant in a docker environment.
           </dd>
 
           <dt>
@@ -49,7 +50,11 @@ export default function FAQ() {
           </dt>
           <dd>
             Yes! Take a look at our docker images{' '}
-            <a className="text-blue-600" href="https://hub.docker.com/repositories/haargos" target="_blank">
+            <a
+              className="text-blue-600"
+              href="https://hub.docker.com/repositories/haargos"
+              target="_blank"
+            >
               here
             </a>
             .
@@ -59,7 +64,8 @@ export default function FAQ() {
             <strong>How secure is Haargos?</strong>
           </dt>
           <dd>
-            Haargos prioritizes security and only reads data which it needs for presenting HomeAssistant related information.
+            Haargos prioritizes security and only reads data which it needs for presenting
+            HomeAssistant related information.
           </dd>
 
           <dt>
@@ -74,22 +80,21 @@ export default function FAQ() {
             <strong>Can I use Haargos for free?</strong>
           </dt>
           <dd>
-            Haargos offers a 2-week free Explorer tier trial, with various subscription plans available
-            afterward.
+            Haargos offers a 2-week free Explorer tier trial, with various subscription
+            plans available afterward.
           </dd>
 
           <dt>
             <strong>What kind of support does Haargos offer?</strong>
           </dt>
-          <dd>
-            We provide support including email support and contact forms.
-          </dd>
+          <dd>We provide support including email support and contact forms.</dd>
 
           <dt>
             <strong>Will Haargos work with all my Home Assistant hardware?</strong>
           </dt>
           <dd>
-            Haargos is designed for compatibility with aarch64, amd64, armhf, armv7 and i386.
+            Haargos is designed for compatibility with aarch64, amd64, armhf, armv7 and
+            i386.
           </dd>
 
           <dt>
@@ -101,7 +106,12 @@ export default function FAQ() {
             <strong>How can I provide feedback or suggest a feature for Haargos?</strong>
           </dt>
           <dd>
-            Feedback and suggestions can be shared through our official website's contact form and customer support email at <a className="text-blue-600" href="mailto: haargos@alorenc.me">haargos AT alorenc DOT me</a>.
+            Feedback and suggestions can be shared through our official website's contact
+            form and customer support email at{' '}
+            <a className="text-blue-600" href="mailto: haargos@alorenc.me">
+              haargos AT alorenc DOT me
+            </a>
+            .
           </dd>
         </dl>
       </CardContent>

@@ -1,6 +1,7 @@
 'use client';
 
 import { useInstallationStore } from '@/app/services/stores';
+import { HALink } from '@/components/ha-link';
 import { useAuth0 } from '@auth0/auth0-react';
 import { BarChart, Card, Title } from '@tremor/react';
 import { useEffect } from 'react';
@@ -10,6 +11,9 @@ export function InstallationOverviewChart({
 }: {
   installationId: string;
 }) {
+  const installation = useInstallationStore(state => state.installations).find(
+    i => i.id == installationId,
+  );
   const {
     observations,
     logsByInstallationId: logs,
@@ -58,6 +62,14 @@ export function InstallationOverviewChart({
   return (
     <Card>
       <Title>Entities inside HA installation</Title>
+
+      <HALink
+        installationName={installation?.name}
+        actionName="Entities"
+        instanceHost={installation?.urls.instance?.url}
+        domain="entities"
+      />
+
       <BarChart
         className="mt-6"
         data={chartdata}

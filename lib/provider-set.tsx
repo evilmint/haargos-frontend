@@ -28,7 +28,7 @@ export default function ProviderSet({ children }: ProviderSetProps) {
 
   const redirectUri =
     (origin ?? '') + (pathname?.startsWith('/signup') ? '/signup' : '/dashboard');
-    const redirectUriKey = pathname?.startsWith('/signup') ? 'signup' : 'dashboard';
+  const redirectUriKey = pathname?.startsWith('/signup') ? 'signup' : 'dashboard';
 
   return (
     origin &&

@@ -63,11 +63,7 @@ export default function PrivacyPolicy() {
             <strong>Contact</strong>
             <p>
               If you have any questions or concerns regarding this Privacy Policy, please
-              contact us at{' '}
-              <a href="mailto:support@haargos.com">
-              support@haargos.com
-              </a>
-              .
+              contact us at <a href="mailto:support@haargos.com">support@haargos.com</a>.
             </p>
           </li>
         </ol>

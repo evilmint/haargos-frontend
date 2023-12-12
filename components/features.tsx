@@ -56,7 +56,13 @@ export default function Features() {
                   {feature.icon}
                 </div>
                 <h5 className="text-xl font-semibold mb-4 text-gray-800 dark:text-white">
-                  {feature.title}{feature.comingSoon && <p className='m-0 p-0 -mt-[20px] text-base font-normal'><br />(Coming soon)</p>}
+                  {feature.title}
+                  {feature.comingSoon && (
+                    <p className="m-0 p-0 -mt-[20px] text-base font-normal">
+                      <br />
+                      (Coming soon)
+                    </p>
+                  )}
                 </h5>
                 <p className="text-base text-gray-600 dark:text-gray-400 flex-1 ">
                   {feature.description}

@@ -2,6 +2,7 @@
 
 import { useInstallationStore } from '@/app/services/stores';
 import { Script } from '@/app/types';
+import { HALink } from '@/components/ha-link';
 import { GenericDataTable } from '@/lib/generic-data-table';
 import { useAuth0 } from '@auth0/auth0-react';
 import { useEffect } from 'react';
@@ -10,6 +11,9 @@ import { ScriptTableView, columns } from './scripts-data-table-columns';
 export function ScriptsDataTableProxy({ ...params }) {
   const { installationId } = params;
 
+  const installation = useInstallationStore(state => state.installations).find(
+    i => i.id == installationId,
+  );
   const observations = useInstallationStore(state => state.observations[installationId]);
   const fetchInstallations = useInstallationStore(state => state.fetchInstallations);
   const fetchObservationsForInstallation = useInstallationStore(
@@ -43,13 +47,22 @@ export function ScriptsDataTableProxy({ ...params }) {
   }
 
   return (
-    <GenericDataTable
-      columns={columns}
-      pluralEntityName="scripts"
-      filterColumnName="alias"
-      columnVisibilityKey="ScriptsDataTableColumns"
-      data={scripts}
-    />
+    <>
+      <HALink
+        installationName={installation?.name}
+        actionName="Scripts"
+        instanceHost={installation?.urls.instance?.url}
+        domain="scripts"
+      />
+
+      <GenericDataTable
+        columns={columns}
+        pluralEntityName="scripts"
+        filterColumnName="alias"
+        columnVisibilityKey="ScriptsDataTableColumns"
+        data={scripts}
+      />
+    </>
   );
 }
 

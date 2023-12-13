@@ -88,7 +88,7 @@ export function ZigbeeDataTableProxy({ ...params }) {
             return null;
           }
           return (
-            installation?.urls?.instance?.url + '/config/devices/device/' + device.id
+            installation?.urls?.instance?.url + '/config/devices/device/' + device.device_id
           );
         }}
       />
@@ -118,6 +118,7 @@ function mapToTableView(
     ieee: device.ieee,
     last_updated: new Date(device.last_updated),
     entity_name: device.entity_name,
+    device_id: device.device_id,
     name: device.name_by_user,
     timeago: {
       last_updated: new Date(device.last_updated),

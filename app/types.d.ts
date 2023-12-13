@@ -105,6 +105,7 @@ interface Scene {
 interface Script {
   state: string | null;
   alias: string;
+  unique_id?: string;
   friendly_name: string | null;
   last_triggered: string | null;
 }
@@ -126,6 +127,7 @@ interface ZigbeeDevice {
   ieee: string;
   last_updated: string;
   entity_name: string;
+  device_id?: string;
   name_by_user: string | null;
   brand: string;
   battery?: BatteryType | null;

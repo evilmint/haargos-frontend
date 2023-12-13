@@ -9,6 +9,7 @@ export interface ZigbeeDeviceTableView {
   ieee: string;
   last_updated: Date;
   entity_name: string;
+  device_id?: string;
   timeago: { last_updated: Date; timestamp: Date };
   name: string | null;
   device: string;

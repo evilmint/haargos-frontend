@@ -14,6 +14,7 @@ import {
 
 export interface ScriptTableView {
   name: string;
+  unique_id?: string;
   state: string | null;
   alias: string | null;
   last_triggered: string | null;

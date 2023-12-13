@@ -64,7 +64,7 @@ export function ScriptsDataTableProxy({ ...params }) {
         linkColumnName="alias"
         link={(script: ScriptTableView) => {
           return (
-            installation?.urls?.instance?.url + '/config/script/edit/' + script.alias
+            installation?.urls?.instance?.url + '/config/script/edit/' + script.unique_id
           );
         }}
       />
@@ -75,6 +75,7 @@ export function ScriptsDataTableProxy({ ...params }) {
 function mapToTableView(script: Script): ScriptTableView {
   return {
     alias: script.alias,
+    unique_id: script.unique_id,
     name: script.friendly_name ?? '',
     state: script.state ?? 'n/a',
     last_triggered: script.last_triggered,

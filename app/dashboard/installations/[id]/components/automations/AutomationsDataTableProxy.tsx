@@ -70,6 +70,10 @@ export function AutomationsDataTableProxy({ ...params }) {
         data={automations}
         linkColumnName="name"
         link={(automation: AutomationTableView) => {
+          if (!installation?.urls?.instance?.url) {
+            return null;
+          }
+      
           return (
             installation?.urls?.instance?.url + '/config/automation/edit/' + automation.id
           );

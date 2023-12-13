@@ -63,6 +63,10 @@ export function ScriptsDataTableProxy({ ...params }) {
         data={scripts}
         linkColumnName="alias"
         link={(script: ScriptTableView) => {
+          if (!installation?.urls?.instance?.url) {
+            return null;
+          }
+  
           return (
             installation?.urls?.instance?.url + '/config/script/edit/' + script.unique_id
           );

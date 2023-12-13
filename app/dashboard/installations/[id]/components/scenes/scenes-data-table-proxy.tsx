@@ -61,6 +61,10 @@ export function SceneDataTableProxy({ ...params }) {
         data={scenes}
         linkColumnName="friendly_name"
         link={(scene: SceneTableView) => {
+          if (!installation?.urls?.instance?.url) {
+            return null;
+          }
+
           return installation?.urls?.instance?.url + '/config/scene/edit/' + scene.id;
         }}
       />

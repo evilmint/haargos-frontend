@@ -2,6 +2,7 @@
 
 import { useInstallationStore, useUserStore } from '@/app/services/stores';
 import { Observation, ZigbeeDevice } from '@/app/types';
+import { HACustomLink } from '@/components/ha-link';
 import { GenericDataTable } from '@/lib/generic-data-table';
 import { useAuth0 } from '@auth0/auth0-react';
 import { useEffect } from 'react';
@@ -10,6 +11,9 @@ import { ZigbeeDeviceTableView, getColumnsByTier } from './zigbee-data-table-col
 export function ZigbeeDataTableProxy({ ...params }) {
   const { installationId } = params;
 
+  const installation = useInstallationStore(state => state.installations).find(
+    i => i.id == installationId,
+  );
   const observations = useInstallationStore(state => state.observations[installationId]);
   const fetchInstallations = useInstallationStore(state => state.fetchInstallations);
   const fetchObservationsForInstallation = useInstallationStore(
@@ -43,21 +47,52 @@ export function ZigbeeDataTableProxy({ ...params }) {
     devices = observations[0].zigbee.devices.map(d => mapToTableView(d, observations));
   }
 
+  const containsZHADevices = devices.filter(d => d.integration_type === 'ZHA').length > 0;
+
   const columns = getColumnsByTier(apiUser?.tier ?? 'Expired');
   return (
-    <GenericDataTable
-      defaultColumnVisibility={{
-        ieee: false,
-        integration_type: false,
-        device: false,
-        battery_type: false,
-      }}
-      filterColumnName="name"
-      columns={columns}
-      pluralEntityName="zigbee"
-      columnVisibilityKey="ZigbeeDataTable_columnVisibility"
-      data={devices}
-    />
+    <>
+      <div className="flex">
+        {containsZHADevices && (
+          <HACustomLink
+            className="mr-2"
+            actionName="Go to ZHA"
+            instanceHost={installation?.urls.instance?.url}
+            path={'config/devices/dashboard?domain=zha'}
+          />
+        )}
+
+        {containsZHADevices && (
+          <HACustomLink
+            actionName="Go to Devices"
+            instanceHost={installation?.urls.instance?.url}
+            path={'config/devices/dashboard'}
+          />
+        )}
+      </div>
+      <GenericDataTable
+        defaultColumnVisibility={{
+          ieee: false,
+          integration_type: false,
+          device: false,
+          battery_type: false,
+        }}
+        filterColumnName="name"
+        columns={columns}
+        pluralEntityName="zigbee"
+        columnVisibilityKey="ZigbeeDataTable_columnVisibility"
+        data={devices}
+        linkColumnName="name"
+        link={(device: ZigbeeDeviceTableView) => {
+          if (device.integration_type !== 'ZHA') {
+            return null;
+          }
+          return (
+            installation?.urls?.instance?.url + '/config/devices/device/' + device.id
+          );
+        }}
+      />
+    </>
   );
 }
 

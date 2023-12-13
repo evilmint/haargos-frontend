@@ -53,10 +53,6 @@ export function Docker({ ...params }) {
   const dockerContainerCount =
     observations?.length > 0 ? observations[0]?.docker?.containers?.length || 0 : 0;
 
-  if (observations?.length > 0) {
-    console.log(observations[0]);
-  }
-
   return (
     <Card className="col-span-8">
       <CardHeader>

@@ -52,20 +52,23 @@ export function LogsDataTableProxy({ ...params }) {
 
   return (
     <>
-      <HALink
-        installationName={installation?.name}
-        actionName="Logs"
-        instanceHost={installation?.urls.instance?.url}
-        domain="logs"
-      />
       <Tabs defaultValue="logtable" className="space-y-4">
         <h3 className="inline ml-4 font-semibold">Logs</h3>
+
         <TabsList className="ml-4">
           <TabsTrigger value="logtable">Table</TabsTrigger>
           <TabsTrigger value="lograw" disabled={logs == null || logs.length == 0}>
             Raw
           </TabsTrigger>
         </TabsList>
+        <div className="block">
+          <HALink
+            installationName={installation?.name}
+            actionName="Logs"
+            instanceHost={installation?.urls.instance?.url}
+            domain="logs"
+          />
+        </div>
         <TabsContent value="logtable" className="space-y-4">
           <GenericDataTable
             pluralEntityName="logs"

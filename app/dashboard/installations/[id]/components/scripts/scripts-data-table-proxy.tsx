@@ -61,6 +61,12 @@ export function ScriptsDataTableProxy({ ...params }) {
         filterColumnName="alias"
         columnVisibilityKey="ScriptsDataTableColumns"
         data={scripts}
+        linkColumnName="alias"
+        link={(script: ScriptTableView) => {
+          return (
+            installation?.urls?.instance?.url + '/config/script/edit/' + script.alias
+          );
+        }}
       />
     </>
   );

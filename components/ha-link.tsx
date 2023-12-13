@@ -1,6 +1,6 @@
+import { cn } from '@/lib/utils';
 import { Button } from '@tremor/react';
 import { LucideExternalLink } from 'lucide-react';
-import { useRouter } from 'next/navigation';
 
 type HALinkProps = {
   domain:
@@ -11,12 +11,14 @@ type HALinkProps = {
     | 'logs'
     | 'scenes'
     | 'entities'
-    | 'scripts';
+    | 'scripts'
+    | null;
 
   actionName?: string;
   instanceHost?: string;
   queryParams?: object;
   installationName?: string;
+  className?: string;
 };
 
 function encodeQueryParams(params: Record<string, any>) {
@@ -28,10 +30,38 @@ function encodeQueryParams(params: Record<string, any>) {
   return query;
 }
 
+type HACustomLinkProps = {
+  installationName?: string;
+  instanceHost?: string;
+  path: string;
+  actionName?: string;
+  className?: string;
+};
+
+export function HACustomLink({ ...props }: HACustomLinkProps) {
+  const host = props.instanceHost;
+
+  const href = `${host}/${props.path}`;
+
+  return props.instanceHost ? (
+    <Button
+      className={cn(props?.className, 'mt-2')}
+      icon={LucideExternalLink}
+      variant="secondary"
+      onClick={_ => {
+        window.open(href, '_blank');
+      }}
+    >
+      {props.installationName} {props.actionName}
+    </Button>
+  ) : (
+    <></>
+  );
+}
+
 export function HALink({ ...props }: HALinkProps) {
   const myHomeAssistantHost = 'https://my.home-assistant.io';
   const host = props.instanceHost ?? myHomeAssistantHost;
-  const router = useRouter();
 
   const href = `${host}/${props.instanceHost ? '_my_' : ''}redirect/${props.domain}${
     props.queryParams ? `/?${encodeQueryParams(props.queryParams)}` : ``
@@ -39,7 +69,7 @@ export function HALink({ ...props }: HALinkProps) {
 
   return props.instanceHost ? (
     <Button
-      className="mt-2"
+      className={cn(props?.className, 'mt-2')}
       icon={LucideExternalLink}
       variant="secondary"
       onClick={_ => {

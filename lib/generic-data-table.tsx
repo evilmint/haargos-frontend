@@ -11,7 +11,7 @@ import {
   getSortedRowModel,
   useReactTable,
 } from '@tanstack/react-table';
-import { ChevronDown } from 'lucide-react';
+import { ChevronDown, LucideExternalLink } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 import {
@@ -30,6 +30,7 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { ColumnVisibilityManager } from '@/lib/column-visibility-manager';
+import Link from 'next/link';
 import { useEffect, useState } from 'react';
 
 type GenericDataTableParams = {
@@ -37,6 +38,8 @@ type GenericDataTableParams = {
   columnVisibilityKey: string;
   pluralEntityName?: string;
   filterColumnName?: string;
+  link?: (column: any) => string | null;
+  linkColumnName?: string;
   columnIdToNameTransformer?: (column: string) => string;
   columns: ColumnDef<any>[];
   data: any;
@@ -160,11 +163,33 @@ export function GenericDataTable({ ...params }: GenericDataTableParams) {
             {table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map(row => (
                 <TableRow key={row.id} data-state={row.getIsSelected() && 'selected'}>
-                  {row.getVisibleCells().map(cell => (
-                    <TableCell key={cell.id}>
-                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                    </TableCell>
-                  ))}
+                  {row.getVisibleCells().map(cell => {
+                    const entityHref = params.link?.(row.original);
+
+                    const RenderedElement = flexRender(
+                      cell.column.columnDef.cell,
+                      cell.getContext(),
+                    );
+
+                    return (
+                      <TableCell key={cell.id}>
+                        {params.linkColumnName == cell.column.id && entityHref ? (
+                          <Link
+                            className="text-blue-700 inline"
+                            target="_blank"
+                            href={entityHref}
+                          >
+                            <div className="flex">
+                              {RenderedElement}{' '}
+                              <LucideExternalLink className="ml-1 w-4 h-4" />
+                            </div>
+                          </Link>
+                        ) : (
+                          RenderedElement
+                        )}
+                      </TableCell>
+                    );
+                  })}
                 </TableRow>
               ))
             ) : (

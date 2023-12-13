@@ -68,6 +68,12 @@ export function AutomationsDataTableProxy({ ...params }) {
         columns={columns}
         columnVisibilityKey="AutomationDataTable_columnVisibility"
         data={automations}
+        linkColumnName="name"
+        link={(automation: AutomationTableView) => {
+          return (
+            installation?.urls?.instance?.url + '/config/automation/edit/' + automation.id
+          );
+        }}
       />
     </>
   );

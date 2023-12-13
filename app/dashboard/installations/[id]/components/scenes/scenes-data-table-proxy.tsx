@@ -59,6 +59,10 @@ export function SceneDataTableProxy({ ...params }) {
         filterColumnName="friendly_name"
         columnVisibilityKey="SceneDataTable_columnVisibility"
         data={scenes}
+        linkColumnName="friendly_name"
+        link={(scene: SceneTableView) => {
+          return installation?.urls?.instance?.url + '/config/scene/edit/' + scene.id;
+        }}
       />
     </>
   );

@@ -113,6 +113,11 @@ export function DashboardHeaderInstallation({ ...params }) {
         }
       : { is_healthy: false, last_updated: null, color: 'red' };
 
+  const isCollectingData =
+    installation &&
+    installation.health_statuses.length == 0 &&
+    installation.urls?.instance?.is_verified == true;
+
   return (
     <div>
       <div className="my-4 text-sm">
@@ -298,9 +303,15 @@ export function DashboardHeaderInstallation({ ...params }) {
               ) : observations.length > 0 ? (
                 <div>
                   {installation && installation.urls.instance?.is_verified ? (
-                    <Badge color={healthy.color} icon={Icons.signal}>
-                      <TimeAgo date={healthy.last_updated ?? ''} />
-                    </Badge>
+                    isCollectingData == false ? (
+                      <Badge color={healthy.color} icon={Icons.signal}>
+                        <TimeAgo date={healthy.last_updated ?? ''} />
+                      </Badge>
+                    ) : (
+                      <Badge color='orange' icon={Icons.cog6tooth}>
+                        Collecting status...
+                      </Badge>
+                    )
                   ) : installation && installation.urls.instance ? (
                     installation &&
                     installation.urls.instance.verification_status == 'FAILED' ? (

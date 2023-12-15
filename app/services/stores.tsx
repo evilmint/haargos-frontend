@@ -166,6 +166,10 @@ const useInstallationStore = create<InstallationStoreState>((set, get) => ({
             return h;
           });
 
+          if (i.urls?.instance?.verification_status === 'SUCCESS') {
+            i.urls.instance.success_url = i.urls.instance.url;
+          }
+
           return i;
         }),
         latestHaRelease: installations.latest_ha_release,

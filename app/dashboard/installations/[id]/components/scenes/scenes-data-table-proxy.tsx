@@ -47,12 +47,14 @@ export function SceneDataTableProxy({ ...params }) {
 
   return (
     <>
-      <HALink
-        installationName={installation?.name}
-        actionName="Scenes"
-        instanceHost={installation?.urls.instance?.url}
-        domain="scenes"
-      />
+      {installation?.urls.instance?.success_url && (
+        <HALink
+          installationName={installation?.name}
+          actionName="Scenes"
+          instanceHost={installation.urls.instance.success_url}
+          domain="scenes"
+        />
+      )}
       <GenericDataTable
         columns={columns}
         pluralEntityName="scenes"

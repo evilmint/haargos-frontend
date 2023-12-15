@@ -99,13 +99,15 @@ services:
                     <li>
                       Add custom Haargos repository to your Home Assistant
                       <br />
-                      <HALink
-                        installationName={installation?.name}
-                        actionName="Add addon repository"
-                        instanceHost={installation.urls.instance?.url}
-                        domain="supervisor_add_addon_repository"
-                        queryParams={{ repository_url: addonRepo }}
-                      />
+                      {installation?.urls.instance?.success_url && (
+                        <HALink
+                          installationName={installation?.name}
+                          actionName="Add addon repository"
+                          instanceHost={installation.urls.instance.success_url}
+                          domain="supervisor_add_addon_repository"
+                          queryParams={{ repository_url: addonRepo }}
+                        />
+                      )}
                     </li>
 
                     <li>Refresh your addons list</li>
@@ -135,7 +137,9 @@ services:
                     user's profile.
                     <br />
                     <br />
-                    <HALink domain="profile" />
+                    {installation?.urls.instance?.success_url && (
+                      <HALink domain="profile" />
+                    )}
                   </p>
                   <br />
                   <p>3. Include your custom data optionally</p>

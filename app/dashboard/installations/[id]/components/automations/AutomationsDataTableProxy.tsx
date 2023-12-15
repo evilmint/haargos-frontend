@@ -56,12 +56,14 @@ export function AutomationsDataTableProxy({ ...params }) {
 
   return (
     <>
-      <HALink
-        installationName={installation?.name}
-        actionName="Automations"
-        instanceHost={installation?.urls.instance?.url}
-        domain="automations"
-      />
+      {installation?.urls.instance?.success_url && (
+        <HALink
+          installationName={installation?.name}
+          actionName="Automations"
+          instanceHost={installation?.urls.instance?.url}
+          domain="automations"
+        />
+      )}
       <GenericDataTable
         pluralEntityName="automations"
         filterColumnName="name"
@@ -73,7 +75,7 @@ export function AutomationsDataTableProxy({ ...params }) {
           if (!installation?.urls?.instance?.url) {
             return null;
           }
-      
+
           return (
             installation?.urls?.instance?.url + '/config/automation/edit/' + automation.id
           );

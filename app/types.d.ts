@@ -150,9 +150,10 @@ interface InstallationUrls {
   instance?: {
     url: string;
     is_verified: boolean;
-    verification_status: 'PENDING' | 'FAILED' | 'SUCCESS';
+    verification_status: 'PENDING' | 'FAILED' | 'SUCCESS' | 'EMPTY';
     subdomain?: string;
     subdomain_value?: string;
+    success_url?: string;
   };
 }
 

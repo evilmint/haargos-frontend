@@ -300,7 +300,7 @@ export function DashboardHeaderInstallation({ ...params }) {
             <div className="">
               {observationsLoading || isLoading ? (
                 <Skeleton className="h-8" />
-              ) : observations.length > 0 ? (
+              ) : (
                 <div>
                   {installation && installation.urls.instance?.is_verified ? (
                     isCollectingData == false ? (
@@ -308,11 +308,13 @@ export function DashboardHeaderInstallation({ ...params }) {
                         <TimeAgo date={healthy.last_updated ?? ''} />
                       </Badge>
                     ) : (
-                      <Badge color='orange' icon={Icons.cog6tooth}>
+                      <Badge color="orange" icon={Icons.cog6tooth}>
                         Collecting status...
                       </Badge>
                     )
-                  ) : installation && installation.urls.instance ? (
+                  ) : installation &&
+                    installation.urls.instance &&
+                    installation.urls.instance.verification_status != 'EMPTY' ? (
                     installation &&
                     installation.urls.instance.verification_status == 'FAILED' ? (
                       <Badge color="red" icon={Icons.shieldExclamation}>
@@ -349,8 +351,6 @@ export function DashboardHeaderInstallation({ ...params }) {
                     installation.urls.instance?.is_verified &&
                     data.length > 0 && <Tracker data={data} className="mt-2" />}
                 </div>
-              ) : (
-                <div className="text-xl font-bold">n/a</div>
               )}
             </div>
           </CardContent>

@@ -63,12 +63,14 @@ export function InstallationOverviewChart({
     <Card>
       <Title>Entities inside HA installation</Title>
 
-      <HALink
-        installationName={installation?.name}
-        actionName="Entities"
-        instanceHost={installation?.urls.instance?.url}
-        domain="entities"
-      />
+      {installation?.urls.instance?.success_url && (
+        <HALink
+          installationName={installation?.name}
+          actionName="Entities"
+          instanceHost={installation?.urls.instance?.url}
+          domain="entities"
+        />
+      )}
 
       <BarChart
         className="mt-6"

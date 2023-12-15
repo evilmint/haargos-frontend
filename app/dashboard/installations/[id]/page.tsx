@@ -198,7 +198,7 @@ export default function DashboardInstallationPage({
   }
 
   let verification: {
-    raw_status: 'SUCCESS' | 'FAILED' | 'PENDING';
+    raw_status: 'SUCCESS' | 'FAILED' | 'PENDING' | 'EMPTY';
     status: string;
     subdomain?: string;
     verification_value?: string;
@@ -328,20 +328,22 @@ export default function DashboardInstallationPage({
                                 <FormMessage />
                                 <br />
 
-                                {verification && verification.raw_status != 'SUCCESS' && (
-                                  <h3 className="font-semibold text-large">
-                                    DNS verification{' '}
-                                    <Badge
-                                      color={
-                                        verification.raw_status == 'PENDING'
-                                          ? 'yellow'
-                                          : 'red'
-                                      }
-                                    >
-                                      {verification && verification.raw_status}
-                                    </Badge>
-                                  </h3>
-                                )}
+                                {verification &&
+                                  verification.raw_status != 'SUCCESS' &&
+                                  verification.raw_status != 'EMPTY' && (
+                                    <h3 className="font-semibold text-large">
+                                      DNS verification{' '}
+                                      <Badge
+                                        color={
+                                          verification.raw_status == 'PENDING'
+                                            ? 'yellow'
+                                            : 'red'
+                                        }
+                                      >
+                                        {verification && verification.raw_status}
+                                      </Badge>
+                                    </h3>
+                                  )}
                                 {verification?.raw_status == 'PENDING' && (
                                   <>
                                     <FormLabel>Subdomain</FormLabel>

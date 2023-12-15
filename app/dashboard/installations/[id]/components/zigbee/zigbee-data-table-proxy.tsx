@@ -84,12 +84,18 @@ export function ZigbeeDataTableProxy({ ...params }) {
         data={devices}
         linkColumnName="name"
         link={(device: ZigbeeDeviceTableView) => {
-          if (device.integration_type !== 'ZHA' || !installation?.urls?.instance?.url || !device.device_id) {
+          if (
+            device.integration_type !== 'ZHA' ||
+            !installation?.urls?.instance?.url ||
+            !device.device_id
+          ) {
             return null;
           }
 
           return (
-            installation?.urls?.instance?.url + '/config/devices/device/' + device.device_id
+            installation?.urls?.instance?.url +
+            '/config/devices/device/' +
+            device.device_id
           );
         }}
       />

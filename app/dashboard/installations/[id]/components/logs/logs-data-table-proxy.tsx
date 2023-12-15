@@ -62,12 +62,14 @@ export function LogsDataTableProxy({ ...params }) {
           </TabsTrigger>
         </TabsList>
         <div className="block">
-          <HALink
-            installationName={installation?.name}
-            actionName="Logs"
-            instanceHost={installation?.urls.instance?.url}
-            domain="logs"
-          />
+          {installation?.urls.instance?.success_url && (
+            <HALink
+              installationName={installation?.name}
+              actionName="Logs"
+              instanceHost={installation?.urls.instance?.success_url}
+              domain="logs"
+            />
+          )}
         </div>
         <TabsContent value="logtable" className="space-y-4">
           <GenericDataTable

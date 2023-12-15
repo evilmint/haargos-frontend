@@ -48,12 +48,14 @@ export function ScriptsDataTableProxy({ ...params }) {
 
   return (
     <>
-      <HALink
-        installationName={installation?.name}
-        actionName="Scripts"
-        instanceHost={installation?.urls.instance?.url}
-        domain="scripts"
-      />
+      {installation?.urls.instance?.success_url && (
+        <HALink
+          installationName={installation?.name}
+          actionName="Scripts"
+          instanceHost={installation.urls.instance.success_url}
+          domain="scripts"
+        />
+      )}
 
       <GenericDataTable
         columns={columns}
@@ -66,7 +68,7 @@ export function ScriptsDataTableProxy({ ...params }) {
           if (!installation?.urls?.instance?.url) {
             return null;
           }
-  
+
           return (
             installation?.urls?.instance?.url + '/config/script/edit/' + script.unique_id
           );

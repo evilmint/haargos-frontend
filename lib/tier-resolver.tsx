@@ -11,7 +11,7 @@ class TierResolver {
         break;
 
       case 'Pro':
-        tierBadgeColor = 'red';
+        tierBadgeColor = 'violet';
         break;
 
       case 'Enterprise':

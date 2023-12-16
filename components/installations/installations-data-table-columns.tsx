@@ -70,10 +70,30 @@ export function getColumnsByTier(tier: Tier): ColumnDef<InstallationTableView>[]
           goToInstallation: () => void;
           name: string;
           is_up: boolean;
-          agent_type: string;
+          agent_type: 'docker' | 'bin' | 'addon' | null;
           instance_url: string | null;
           installation_url: string;
         } = row.getValue('general');
+
+        let agentTypeDisplay: { name: string; icon?: React.ElementType; } | null;
+
+        switch (general.agent_type) {
+          case 'addon':
+            agentTypeDisplay = { name: 'Addon', icon: Icons.box };
+            break;
+
+          case 'bin':
+            agentTypeDisplay = { name: 'Standalone', icon: Icons.hexagon };
+            break;
+
+          case 'docker':
+            agentTypeDisplay = { name: 'Docker', icon: Icons.docker };
+            break;
+
+          case null:
+            agentTypeDisplay = null;
+            break;
+        }
         return (
           <div className="text-xs text-center">
             <div className="mb-1">
@@ -114,13 +134,13 @@ export function getColumnsByTier(tier: Tier): ColumnDef<InstallationTableView>[]
 
             {general.instance_url && (
               <Badge color={general.is_up ? 'green' : 'red'} icon={Icons.signal}>
-                {general.is_up ? 'live' : 'down'}
+                {general.is_up ? 'Live' : 'Down'}
               </Badge>
             )}
 
-            {general.agent_type != '' && (
-              <Badge color="gray" icon={Icons.docker}>
-                {general.agent_type == 'docker' ? 'docker' : 'addon'}
+            {agentTypeDisplay && (
+              <Badge color="gray" icon={agentTypeDisplay.icon}>
+                {agentTypeDisplay.name}
               </Badge>
             )}
           </div>

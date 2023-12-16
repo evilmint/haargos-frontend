@@ -19,8 +19,10 @@ export default function PrivacyPolicy() {
             <strong>Information We Collect</strong>
             <p>
               We collect information from your Home Assistant instance, which may include
-              automation names, device names, and other related data. We do not collect
-              personal or sensitive information unless explicitly provided by the user.
+              automations, scripts, scenes, logs, host information (volumes, memory, network, last boot, CPU, architecture), device and entity names, and other Home Assistant related data. Make sure your
+              entities don't contain personal information you do not wish to share. If you
+              have shared data you wish to remove, contact us at{' '}
+              <a href="mailto:gdpr@haargos.com">gdpr@haargos.com</a>.
             </p>
           </li>
 
@@ -39,6 +41,16 @@ export default function PrivacyPolicy() {
               All data transmitted to our servers is encrypted and stored securely. We
               employ a variety of security measures to ensure the protection of your data
               against unauthorized access, alteration, or destruction.
+            </p>
+          </li>
+
+          <li>
+            <strong>GDPR Compliance and Personal Data</strong>
+            <p>
+              We comply with the General Data Protection Regulation (GDPR). Users have the
+              right to access, rectify, or delete their personal data. We provide an
+              option to delete your Haargos account, thereby removing all associated
+              personal data from our systems.
             </p>
           </li>
 
@@ -64,6 +76,25 @@ export default function PrivacyPolicy() {
             <p>
               If you have any questions or concerns regarding this Privacy Policy, please
               contact us at <a href="mailto:support@haargos.com">support@haargos.com</a>.
+            </p>
+          </li>
+
+          <li>
+            <strong>International Data Transfer</strong>
+            <p>
+              To provide our services, we transfer, store, and process your information in
+              data centers located in the United States. This means that your information
+              may be subject to U.S. laws and regulations, which may differ from those in
+              your country. We take appropriate measures, including standard contractual
+              clauses, to ensure that your data receives an adequate level of protection
+              in the jurisdictions in which we process it.
+            </p>
+          </li>
+
+          <li>
+            <strong>Use of Cookies</strong>
+            <p>
+              We use cookies to maintain the functionality of our website.
             </p>
           </li>
         </ol>

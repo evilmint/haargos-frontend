@@ -4,6 +4,7 @@ import { ThemeProvider } from '@/components/theme-provider';
 import { Auth0Provider } from '@auth0/auth0-react';
 import { usePathname } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
+import { HaargosCookieConsent } from './haargos-cookie-constent';
 import { RedirectProvider } from './redirect-provider';
 import { RefreshDataProvider } from './refresh-data-provider';
 
@@ -51,6 +52,8 @@ export default function ProviderSet({ children }: ProviderSetProps) {
             <RefreshDataProvider>{children}</RefreshDataProvider>
           </RedirectProvider>
         </Auth0Provider>
+
+        <HaargosCookieConsent />
       </ThemeProvider>
     )
   );

@@ -49,7 +49,7 @@ export default function SignupPage() {
 
   return (
     <>
-      <div className="container relative h-[800px] flex-col items-center justify-center md:grid lg:max-w-none lg:grid-cols-2 lg:px-0">
+      <div className="container relative h-screen flex-col items-center justify-center md:grid lg:max-w-none lg:grid-cols-2 lg:px-0">
         <div className="relative mb-12 md:mb-0 md:h-full h-[200px] flex-col bg-muted p-10 text-white dark:border-r lg:flex">
           <div className="absolute inset-0 bg-sr-600" />
           <div className="relative z-20 flex items-center text-lg font-medium">
@@ -96,9 +96,10 @@ export default function SignupPage() {
                 </div>
                 <UserAuthForm />
                 <p className="px-8 text-center text-sm text-muted-foreground">
-                  By clicking continue, you agree to our{' '}
+                  By signing up, you agree to our{' '}
                   <Link
                     href="/about/terms"
+                    target="_blank"
                     className="underline underline-offset-4 hover:text-primary"
                   >
                     Terms of Service
@@ -106,6 +107,7 @@ export default function SignupPage() {
                   and{' '}
                   <Link
                     href="/about/privacy"
+                    target="_blank"
                     className="underline underline-offset-4 hover:text-primary"
                   >
                     Privacy Policy
@@ -119,7 +121,7 @@ export default function SignupPage() {
               <>
                 <div className="flex flex-col space-y-2 text-center">
                   <h1 className="text-2xl font-semibold tracking-tight">Register</h1>
-                  <p className="text-sm text-muted-foreground">Fill out forms</p>
+                  <p className="text-sm text-muted-foreground">You are one step away</p>
                 </div>
                 <RegisterForm
                   onRegister={() => {
@@ -127,15 +129,17 @@ export default function SignupPage() {
                   }}
                 />
                 <p className="px-8 text-center text-sm text-muted-foreground">
-                  By clicking register, you agree to our{' '}
+                  By registering, you agree to our{' '}
                   <Link
                     href="/about/terms"
+                    target="_blank"
                     className="underline underline-offset-4 hover:text-primary"
                   >
                     Terms of Service
                   </Link>{' '}
                   and{' '}
                   <Link
+                    target="_blank"
                     href="/about/privacy"
                     className="underline underline-offset-4 hover:text-primary"
                   >

@@ -8,7 +8,7 @@ node_modules
 **/*.backup.*
 **/*.back.*
 .env.local
-
+.env.*
 node_modules
 bower_components
 

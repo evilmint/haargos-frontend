@@ -18,7 +18,7 @@ export default function Hero() {
             href="#pricing"
             className="bg-sr-600 text-white font-bold py-3 px-8 rounded-full hover:bg-sr-700 transition duration-300 ease-in-out"
           >
-            Start Your Free Trial
+            Start Free Trial
           </a>
         </div>
       </div>

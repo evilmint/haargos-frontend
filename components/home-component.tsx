@@ -7,7 +7,7 @@ import Features from './features';
 import Footer from './footer';
 import Hero from './hero';
 import PricingTiers from './tiers';
-import WhyUs from './why-us';
+import WhatIsHaargos from './what-is-haargos';
 
 export default function HomeComponent() {
   return (
@@ -22,7 +22,7 @@ export default function HomeComponent() {
       </div>
 
       <Hero />
-      <WhyUs />
+      <WhatIsHaargos />
       <Features />
       <PricingTiers />
       <Contact />

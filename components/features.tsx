@@ -10,23 +10,23 @@ type Feature = {
 export default function Features() {
   const features: Feature[] = [
     {
-      title: 'Real-time Alerts',
+      title: 'Alerts',
       comingSoon: true,
       description:
-        'Get instant notifications for any issues, ensuring prompt action when necessary.',
+        'Get feedback about any issues, ensuring prompt action when necessary.',
       icon: <Icons.bell />,
     },
     {
       title: 'Automated Reports',
       comingSoon: true,
       description:
-        'Automatically diagnose and receive reports on the health and performance of your smart home systems.',
+        'Receive reports on the health and performance of your Home Assistant systems.',
       icon: <Icons.mail />,
     },
     {
       title: 'Comprehensive Dashboards',
       description:
-        'Visualize your smart home data with customizable dashboards that provide insightful analytics.',
+        'Visualize your smart home data with dashboards that provide insightful analytics.',
       icon: <Icons.monitor />,
     },
     {
@@ -42,7 +42,7 @@ export default function Features() {
       <div className="container mx-auto px-4">
         <div className="text-center pb-12">
           <h2 className="text-4xl font-semibold text-gray-800 dark:text-white">
-            Powerful Features
+            Features
           </h2>
           <p className="text-lg leading-relaxed m-4 text-gray-600 dark:text-gray-300">
             Designed to deliver the ultimate monitoring experience.

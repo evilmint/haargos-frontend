@@ -30,7 +30,9 @@ export function MainNav({ ...props }, { className }: React.HTMLAttributes<HTMLEl
   return (
     <nav className={cn('flex items-center w-auto space-x-3', className)}>
       <Link href="/">
-        <h4 className="font-semibold text-lg">Haargos</h4>
+        <h4 className="font-semibold text-lg">
+          <Icons.home className="w-5 h-5" />
+        </h4>
       </Link>
 
       {user && (
@@ -40,7 +42,7 @@ export function MainNav({ ...props }, { className }: React.HTMLAttributes<HTMLEl
             onClick={() => dashboardClicked()}
             className="text-sm font-medium transition-colors hover:text-primary"
           >
-            <Icons.home className="w-5 h-5" />
+            <Icons.list className="w-5 h-5" />
           </Link>
 
           <InstallationSwitcher installationId={installationId} />

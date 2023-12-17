@@ -122,6 +122,7 @@ export function UserNav() {
               )}
             </div>
           </DropdownMenuLabel>
+      
           <Badge color={tierBadgeColor} className="ml-2">
             {apiUser.tier}
           </Badge>

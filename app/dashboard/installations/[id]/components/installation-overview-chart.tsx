@@ -51,7 +51,7 @@ export function InstallationOverviewChart({
         { name: 'Automations', Amount: observations[0]?.automations?.length ?? 0 },
         { name: 'Scripts', Amount: observations[0]?.scripts?.length ?? 0 },
         { name: 'Scenes', Amount: observations[0]?.scenes?.length ?? 0 },
-        { name: 'Error & warning logs', Amount: filteredLogsLength },
+        //{ name: 'Error & warning logs', Amount: filteredLogsLength },
         {
           name: 'Docker containers',
           Amount: observations[0]?.docker?.containers?.length ?? 0,

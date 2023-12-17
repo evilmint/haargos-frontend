@@ -89,14 +89,14 @@ export function LogsDataTableProxy({ ...params }) {
                 <DownloadButton fileName={logFilename} textToCopy={concatenatedLogs} />
               </>
             )}
-            <div className="bg-slate-700 text-white p-4 rounded-md">
+            <div className="bg-slate-700 text-white p-4 w-[100%] rounded-md">
               <div className="flex justify-between items-center mb-2"></div>
-              <div className="overflow-x-auto ">
+              <div className="">
                 <pre
                   id="code"
-                  className="text-gray-300 h-[400px] text-xs leading-4  overflow-y-scroll"
+                  className="text-gray-300 break-words w-[97%] h-[750px] text-xs leading-4 overflow-y-scroll"
                 >
-                  <code>{concatenatedLogs}</code>
+                  <code className=''>{concatenatedLogs}</code>
                 </pre>
               </div>
             </div>

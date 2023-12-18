@@ -66,7 +66,7 @@ interface DockerContainer {
 
 interface Observation {
   environment: Environment;
-  logs: string;
+  logs?: string;
   agent_version: string;
   agent_type?: 'addon' | 'bin' | 'docker';
   docker: {
@@ -224,5 +224,6 @@ export {
   User,
   UserApiResponse,
   Zigbee,
-  ZigbeeDevice,
+  ZigbeeDevice
 };
+

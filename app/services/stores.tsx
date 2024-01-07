@@ -7,6 +7,7 @@ import {
   deleteInstallation,
   getInstallations,
 } from './installations';
+import { fetchLogs } from './logs';
 import { getObservations } from './observations';
 import { getUserMe } from './users';
 
@@ -73,6 +74,31 @@ const useAccountStore = create<AccountState>(() => ({
     return await createAccount(token, userFullName);
   },
 }));
+
+interface LogsState {
+  logsByInstallationId: Record<string, Log[]>;
+  fetchLogs: (installationId: string, type: string, token: string) => Promise<void>;
+}
+
+const useLogsStore = create<LogsState>((set, get) => ({
+  logsByInstallationId: {},
+  async fetchLogs(installationId, type, token) {
+    if (get().logsByInstallationId[installationId]) {
+      return;
+    }
+
+    const logs = await fetchLogs(installationId, type, token);
+    const parsedLogs = parseLog(logs.body.content);
+
+    set(state => ({
+      logsByInstallationId: {
+        ...state.logsByInstallationId,
+        [installationId]: parsedLogs,
+      },
+    }));
+  },
+  
+}))
 
 interface InstallationState {
   selectedInstallation: Installation | null;
@@ -498,6 +524,6 @@ export {
   useAccountStore,
   useContactStore,
   useInstallationStore,
-  useInstallationSwitcherStore,
-  useUserStore,
+  useInstallationSwitcherStore, useLogsStore, useUserStore
 };
+

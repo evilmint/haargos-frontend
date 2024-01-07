@@ -1,6 +1,6 @@
 'use client';
 
-import { useInstallationStore } from '@/app/services/stores';
+import { useInstallationStore, useLogsStore } from '@/app/services/stores';
 import { Log } from '@/app/types';
 import { HALink } from '@/components/ha-link';
 import { GenericDataTable } from '@/lib/generic-data-table';
@@ -15,7 +15,8 @@ export function LogsDataTableProxy({ ...params }) {
   const { installationId } = params;
 
   const installations = useInstallationStore(state => state.installations);
-  const logs = useInstallationStore(state => state.logsByInstallationId[installationId]);
+  const fetchLogs = useLogsStore(state => state.fetchLogs);
+  const logs = useLogsStore(state => state.logsByInstallationId[installationId]);
   const fetchInstallations = useInstallationStore(state => state.fetchInstallations);
   const fetchObservationsForInstallation = useInstallationStore(
     state => state.fetchObservationsForInstallation,
@@ -25,7 +26,8 @@ export function LogsDataTableProxy({ ...params }) {
   const asyncFetch = async () => {
     try {
       const token = await getAccessTokenSilently();
-      await fetchObservationsForInstallation(installationId, token, false);
+      //await fetchObservationsForInstallation(installationId, token, false);
+      await fetchLogs(installationId, "core", token);
     } catch (error) {
       console.log(error);
     }

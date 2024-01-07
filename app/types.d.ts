@@ -146,6 +146,12 @@ interface ObservationApiResponse {
   };
 }
 
+interface LogsApiResponse {
+  body: {
+    content: string;
+  };
+}
+
 interface InstallationUrls {
   instance?: {
     url: string;
@@ -212,6 +218,7 @@ export {
   InstallationApiResponse,
   InstallationBody,
   Log,
+  LogsApiResponse,
   Network,
   NetworkInterface,
   NetworkInterfaceData,

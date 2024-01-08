@@ -59,6 +59,7 @@ import { Input } from '@/registry/new-york/ui/input';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Badge, Tab, TabGroup, TabList, TabPanel, TabPanels } from '@tremor/react';
 import { useForm } from 'react-hook-form';
+import { toast } from 'sonner';
 import * as z from 'zod';
 import { Memory } from './components/memory';
 import { Network } from './components/network';
@@ -143,6 +144,7 @@ export default function DashboardInstallationPage({
     await deleteInstallation(token, installationId);
     clearInstallation();
 
+    toast.success('Installation has been deleted.')
     router.push('/dashboard');
   };
 
@@ -193,6 +195,7 @@ export default function DashboardInstallationPage({
       setAlertOpen(true);
     } finally {
       setUpdating(false);
+      toast.success('Installation has been updated.')
       //setSheetOpen(false);
     }
   }

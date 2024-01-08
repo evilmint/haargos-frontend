@@ -20,6 +20,7 @@ import {
 import { Input } from '@/registry/new-york/ui/input';
 import { useAuth0 } from '@auth0/auth0-react';
 import { useEffect, useState } from 'react';
+import { toast } from 'sonner';
 
 const profileFormSchema = z.object({
   email: z
@@ -67,6 +68,7 @@ export function AccountForm() {
         newUser.full_name = data.full_name;
         setUser(newUser);
       }
+      toast.success("Account data has been updated.")
     } catch {
       setAlertOpen(true);
     } finally {

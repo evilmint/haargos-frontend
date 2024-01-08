@@ -27,6 +27,7 @@ import { useAuth0 } from '@auth0/auth0-react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { toast } from "sonner";
 import { FailureAlert } from './failure-alert';
 
 interface CreateInstallationFormProps {
@@ -83,6 +84,7 @@ export function CreateInstallationForm({
 
       asyncFetch();
       params.onOpenChange?.(false);
+      toast.success("Installation has been created.")
     } catch (error) {
       if (error instanceof UpgradeTierError) {
         setAlertDescription(

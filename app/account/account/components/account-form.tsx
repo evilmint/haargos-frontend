@@ -68,7 +68,7 @@ export function AccountForm() {
         newUser.full_name = data.full_name;
         setUser(newUser);
       }
-      toast.success("Account data has been updated.")
+      toast.success('Account data has been updated.');
     } catch {
       setAlertOpen(true);
     } finally {

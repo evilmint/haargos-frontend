@@ -75,7 +75,7 @@ export function getColumnsByTier(tier: Tier): ColumnDef<InstallationTableView>[]
           installation_url: string;
         } = row.getValue('general');
 
-        let agentTypeDisplay: { name: string; icon?: React.ElementType; } | null;
+        let agentTypeDisplay: { name: string; icon?: React.ElementType } | null;
 
         switch (general.agent_type) {
           case 'addon':

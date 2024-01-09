@@ -20,67 +20,76 @@ export default function PrivacyPolicy() {
             <p>
               We collect information from your Home Assistant instance, including
               automations, device and entity names, and other related data. Ensure your
-              entities do not contain personal information you do not wish to share. For data removal requests,
-              contact us at <a href="mailto:gdpr@haargos.com">gdpr@haargos.com</a>.
+              entities do not contain personal information you do not wish to share. For
+              data removal requests, contact us at{' '}
+              <a href="mailto:gdpr@haargos.com">gdpr@haargos.com</a>.
             </p>
           </li>
 
           <li>
             <strong>How We Use Your Information</strong>
             <p>
-              The information we collect is used solely for providing and
-              improving our monitoring service. We do not sell, share, or distribute your
-              data to third parties without explicit consent. Data is aggregated and anonymized for data-driven decisions and statistical analysis.
+              The information we collect is used solely for providing and improving our
+              monitoring service. We do not sell, share, or distribute your data to third
+              parties without explicit consent. Data is aggregated and anonymized for
+              data-driven decisions and statistical analysis.
             </p>
           </li>
 
           <li>
             <strong>Data Storage and Security</strong>
             <p>
-              Data transmitted to our servers is encrypted and stored securely. We
-              employ various security measures for data protection.
+              Data transmitted to our servers is encrypted and stored securely. We employ
+              various security measures for data protection.
             </p>
           </li>
 
           <li>
             <strong>GDPR Compliance and Personal Data</strong>
             <p>
-              We comply with GDPR. Users have the right to access, rectify, or delete personal data. An option to delete your Haargos account and associated personal data is available.
+              We comply with GDPR. Users have the right to access, rectify, or delete
+              personal data. An option to delete your Haargos account and associated
+              personal data is available.
             </p>
           </li>
 
           <li>
             <strong>Third-party Services</strong>
             <p>
-              We do not share your data with third-party services unless necessary for our service or required by law.
+              We do not share your data with third-party services unless necessary for our
+              service or required by law.
             </p>
           </li>
 
           <li>
             <strong>International Data Transfer</strong>
             <p>
-              We transfer, store, and process your information in data centers located in the United States. We ensure adequate data protection in all jurisdictions.
+              We transfer, store, and process your information in data centers located in
+              the United States. We ensure adequate data protection in all jurisdictions.
             </p>
           </li>
 
           <li>
             <strong>Use of Cookies</strong>
             <p>
-              Cookies are used to maintain the functionality of our website and for authentication purposes.
+              Cookies are used to maintain the functionality of our website and for
+              authentication purposes.
             </p>
           </li>
 
           <li>
             <strong>Changes to this Privacy Policy</strong>
             <p>
-              We may update our Privacy Policy periodically. The latest version is always available on our website.
+              We may update our Privacy Policy periodically. The latest version is always
+              available on our website.
             </p>
           </li>
 
           <li>
             <strong>Contact</strong>
             <p>
-              For questions or concerns regarding this Privacy Policy, please contact us at <a href="mailto:support@haargos.com">support@haargos.com</a>.
+              For questions or concerns regarding this Privacy Policy, please contact us
+              at <a href="mailto:support@haargos.com">support@haargos.com</a>.
             </p>
           </li>
         </ol>

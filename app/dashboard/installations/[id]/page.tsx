@@ -3,6 +3,7 @@ import { DashboardHeaderInstallation } from '@/app/dashboard/installations/[id]/
 import {
   useInstallationStore,
   useInstallationSwitcherStore,
+  useNotificationsStore,
 } from '@/app/services/stores';
 import { Icons } from '@/components/icons';
 import { Button } from '@/components/ui/button';
@@ -63,6 +64,7 @@ import { toast } from 'sonner';
 import * as z from 'zod';
 import { Memory } from './components/memory';
 import { Network } from './components/network';
+import { Notifications } from './components/notifications';
 
 const updateInstallationFormSchema = z.object({
   name: z
@@ -104,6 +106,11 @@ export default function DashboardInstallationPage({
 }: {
   params: { id: string };
 }) {
+  const fetchNotifications = useNotificationsStore(state => state.fetchNotifiactions);
+  const notifications = useNotificationsStore(
+    state => state.notificationsByInstallationId[params.id],
+  );
+
   const [origin, setOrigin] = useState<string | null>(null);
   const [defaultTab, setDefaultTab] = useState<string>('overview');
   const observations = useInstallationStore(state => state.observations[params.id]);
@@ -144,7 +151,7 @@ export default function DashboardInstallationPage({
     await deleteInstallation(token, installationId);
     clearInstallation();
 
-    toast.success('Installation has been deleted.')
+    toast.success('Installation has been deleted.');
     router.push('/dashboard');
   };
 
@@ -161,6 +168,7 @@ export default function DashboardInstallationPage({
     try {
       const token = await getAccessTokenSilently();
       await fetchInstallations(token, true);
+      await fetchNotifications(params.id, token);
     } catch (error) {
       console.log(error);
     }
@@ -195,7 +203,7 @@ export default function DashboardInstallationPage({
       setAlertOpen(true);
     } finally {
       setUpdating(false);
-      toast.success('Installation has been updated.')
+      toast.success('Installation has been updated.');
       //setSheetOpen(false);
     }
   }
@@ -235,6 +243,12 @@ export default function DashboardInstallationPage({
     observations && observations.length > 0
       ? observations[0].agent_type != 'addon'
       : false;
+
+  const notificationsEnabled = true;
+  // const notificationsEnabled =
+  //   observations && observations.length > 0
+  //     ? observations[0].agent_type == 'addon'
+  //     : false;
 
   return (
     defaultTab != null &&
@@ -428,6 +442,20 @@ export default function DashboardInstallationPage({
                 <TabGroup>
                   <TabList className="mt-8">
                     <Tab>Zigbee</Tab>
+                    {notificationsEnabled ? (
+                      <Tab>
+                        Notifications{' '}
+                        {notifications.length > 0 ? (
+                          <Badge size="xs" className="text-xl w-5 h-5">
+                            {notifications.length}
+                          </Badge>
+                        ) : (
+                          <></>
+                        )}
+                      </Tab>
+                    ) : (
+                      <></>
+                    )}
                     <Tab>Automations</Tab>
                     <Tab>Scene</Tab>
                     <Tab>Scripts</Tab>
@@ -438,6 +466,16 @@ export default function DashboardInstallationPage({
                         <ZigbeeDataTableProxy installationId={params.id} />
                       </div>
                     </TabPanel>
+
+                    {notificationsEnabled ? (
+                      <TabPanel>
+                        <div className="mt-10">
+                          <Notifications installationId={params.id} />
+                        </div>
+                      </TabPanel>
+                    ) : (
+                      <></>
+                    )}
 
                     <TabPanel>
                       <div className="mt-10">

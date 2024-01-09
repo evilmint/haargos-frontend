@@ -1,4 +1,12 @@
-import { BatteryType, Installation, Log, Observation, Storage, User } from '@/app/types';
+import {
+  BatteryType,
+  Installation,
+  Log,
+  NotificationsApiResponseNotification,
+  Observation,
+  Storage,
+  User,
+} from '@/app/types';
 import { create } from 'zustand';
 import { createAccount, deleteAccount, updateAccount } from './account';
 import { contact } from './contact';
@@ -8,6 +16,7 @@ import {
   getInstallations,
 } from './installations';
 import { fetchLogs } from './logs';
+import { fetchNotifications } from './notifications';
 import { getObservations } from './observations';
 import { getUserMe } from './users';
 
@@ -75,6 +84,29 @@ const useAccountStore = create<AccountState>(() => ({
   },
 }));
 
+interface NotificationsState {
+  notificationsByInstallationId: Record<string, NotificationsApiResponseNotification[]>;
+  fetchNotifiactions: (installationId: string, token: string) => Promise<void>;
+}
+
+const useNotificationsStore = create<NotificationsState>((set, get) => ({
+  notificationsByInstallationId: {},
+  async fetchNotifiactions(installationId, token) {
+    if (get().notificationsByInstallationId[installationId]) {
+      return;
+    }
+
+    const response = await fetchNotifications(installationId, token);
+
+    set(state => ({
+      notificationsByInstallationId: {
+        ...state.notificationsByInstallationId,
+        [installationId]: response.body.notifications,
+      },
+    }));
+  },
+}));
+
 interface LogsState {
   logsByInstallationId: Record<string, Log[]>;
   fetchLogs: (installationId: string, type: string, token: string) => Promise<void>;
@@ -97,8 +129,7 @@ const useLogsStore = create<LogsState>((set, get) => ({
       },
     }));
   },
-  
-}))
+}));
 
 interface InstallationState {
   selectedInstallation: Installation | null;
@@ -524,6 +555,8 @@ export {
   useAccountStore,
   useContactStore,
   useInstallationStore,
-  useInstallationSwitcherStore, useLogsStore, useUserStore
+  useInstallationSwitcherStore,
+  useLogsStore,
+  useNotificationsStore,
+  useUserStore,
 };
-

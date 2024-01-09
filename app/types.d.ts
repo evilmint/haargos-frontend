@@ -152,6 +152,20 @@ interface LogsApiResponse {
   };
 }
 
+interface NotificationsApiResponse {
+  body: {
+    notifications: NotificationsApiResponseNotification[];
+  };
+}
+
+interface NotificationsApiResponseNotification {
+  message: string;
+  created_at: string;
+  installation_id: string;
+  title: string;
+  notification_id: string;
+}
+
 interface InstallationUrls {
   instance?: {
     url: string;
@@ -222,6 +236,8 @@ export {
   Network,
   NetworkInterface,
   NetworkInterfaceData,
+  NotificationsApiResponse,
+  NotificationsApiResponseNotification,
   Observation,
   ObservationApiResponse,
   Scene,
@@ -231,6 +247,5 @@ export {
   User,
   UserApiResponse,
   Zigbee,
-  ZigbeeDevice
+  ZigbeeDevice,
 };
-

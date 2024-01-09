@@ -27,7 +27,7 @@ export function LogsDataTableProxy({ ...params }) {
     try {
       const token = await getAccessTokenSilently();
       //await fetchObservationsForInstallation(installationId, token, false);
-      await fetchLogs(installationId, "core", token);
+      await fetchLogs(installationId, 'core', token);
     } catch (error) {
       console.log(error);
     }
@@ -98,7 +98,7 @@ export function LogsDataTableProxy({ ...params }) {
                   id="code"
                   className="text-gray-300 break-words w-[97%] h-[750px] text-xs leading-4 overflow-y-scroll"
                 >
-                  <code className=''>{concatenatedLogs}</code>
+                  <code className="">{concatenatedLogs}</code>
                 </pre>
               </div>
             </div>

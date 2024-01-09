@@ -11,12 +11,14 @@ export default function WhatIsHaargos() {
     {
       title: 'Easy Installation',
       icon: <Icons.cog6tooth className="w-12 h-12 mb-4" />,
-      description: 'Haargos can be installed as a Home Assistant Addon, a docker container, or as a standalone binary application.',
+      description:
+        'Haargos can be installed as a Home Assistant Addon, a docker container, or as a standalone binary application.',
     },
     {
       title: 'Real-Time Monitoring',
       icon: <Icons.trendingUp className="w-12 h-12 mb-4" />,
-      description: 'Real-time insights into your Home Assistant, including Zigbee devices, entities, host information and more.',
+      description:
+        'Real-time insights into your Home Assistant, including Zigbee devices, entities, host information and more.',
     },
     // {
     //   title: 'Enhanced Device Analysis',
@@ -31,7 +33,8 @@ export default function WhatIsHaargos() {
     {
       title: 'Comprehensive Dashboard',
       icon: <Icons.list className="w-12 h-12 mb-4" />,
-      description: 'Access all essential metrics through a user-friendly dashboard, tailored for quick insights.',
+      description:
+        'Access all essential metrics through a user-friendly dashboard, tailored for quick insights.',
     },
   ];
 
@@ -40,7 +43,8 @@ export default function WhatIsHaargos() {
       <div className="text-center pb-12">
         <h2 className="text-3xl font-semibold">What is Haargos?</h2>
         <p className="text-gray-600 mt-4">
-          Haargos is the tool for comprehensive administering of your Home Assistant instances.
+          Haargos is the tool for comprehensive administering of your Home Assistant
+          instances.
         </p>
       </div>
       <div className="flex flex-wrap items-center justify-center space-x-0 sm:space-x-6 space-y-6 sm:space-y-0">

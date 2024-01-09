@@ -1,11 +1,11 @@
 import { useInstallationStore, useNotificationsStore } from '@/app/services/stores';
 import { Icons } from '@/components/icons';
 import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
+    Card,
+    CardContent,
+    CardDescription,
+    CardHeader,
+    CardTitle,
 } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
 import { useAuth0 } from '@auth0/auth0-react';
@@ -48,8 +48,10 @@ export function Notifications(params: NotificationParams) {
         <CardTitle>Notifications</CardTitle>
         <CardDescription>
           <p>
-            You have <strong>{notifications && notifications.length}</strong> active
+            You have <strong>{notifications?.length ?? 0}</strong> active
             notifications.
+
+            {notifications && notifications.length == 0 ? <Icons.shieldCheck className='w-24 h-24 m-auto mt-12 text-gray-200' /> : <></>}
           </p>
 
           {instanceUrl == null ? (

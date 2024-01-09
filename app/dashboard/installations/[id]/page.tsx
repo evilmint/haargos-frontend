@@ -445,7 +445,7 @@ export default function DashboardInstallationPage({
                     {notificationsEnabled ? (
                       <Tab>
                         Notifications{' '}
-                        {notifications.length > 0 ? (
+                        {notifications?.length > 0 ? (
                           <Badge size="xs" className="text-xl w-5 h-5">
                             {notifications.length}
                           </Badge>

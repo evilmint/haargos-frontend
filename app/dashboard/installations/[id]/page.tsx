@@ -40,7 +40,6 @@ import { AutomationsDataTableProxy } from './components/automations/AutomationsD
 import { CPU } from './components/cpu';
 import { Docker } from './components/docker';
 import { InstallationOverviewChart } from './components/installation-overview-chart';
-import { LogsDataTableProxy } from './components/logs/logs-data-table-proxy';
 import { SceneDataTableProxy } from './components/scenes/scenes-data-table-proxy';
 import { ScriptsDataTableProxy } from './components/scripts/scripts-data-table-proxy';
 import { Storage } from './components/storage';
@@ -62,6 +61,7 @@ import { Badge, Tab, TabGroup, TabList, TabPanel, TabPanels } from '@tremor/reac
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import * as z from 'zod';
+import { LogSwitcher } from './components/logs/log-switcher';
 import { Memory } from './components/memory';
 import { Network } from './components/network';
 import { Notifications } from './components/notifications';
@@ -435,7 +435,7 @@ export default function DashboardInstallationPage({
               <TabsContent value="overview" className="space-y-4">
                 <DashboardHeaderInstallation installationId={params.id} />
                 <InstallationOverviewChart installationId={params.id} />
-                <LogsDataTableProxy installationId={params.id} />
+                <LogSwitcher installationId={params.id} />
               </TabsContent>
 
               <TabsContent value="homeassistant" className="space-y-4">

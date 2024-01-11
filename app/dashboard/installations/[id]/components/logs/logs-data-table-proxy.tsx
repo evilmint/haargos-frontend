@@ -1,22 +1,26 @@
 'use client';
 
 import { useInstallationStore, useLogsStore } from '@/app/services/stores';
-import { Log } from '@/app/types';
+import { Log, LogSource } from '@/app/types';
 import { HALink } from '@/components/ha-link';
 import { GenericDataTable } from '@/lib/generic-data-table';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/registry/new-york/ui/tabs';
 import { useAuth0 } from '@auth0/auth0-react';
+import { strip } from 'ansicolor';
 import { useEffect } from 'react';
 import CopyButton from '../copy-button';
 import DownloadButton from '../download-button';
 import { LogTableView, columns } from './logs-data-table-columns';
 
-export function LogsDataTableProxy({ ...params }) {
-  const { installationId } = params;
+interface LogsDataTableProxyParams {
+  installationId: string;
+  logSource: LogSource;
+}
 
+export function LogsDataTableProxy(params: LogsDataTableProxyParams) {
   const installations = useInstallationStore(state => state.installations);
   const fetchLogs = useLogsStore(state => state.fetchLogs);
-  const logs = useLogsStore(state => state.logsByInstallationId[installationId]);
+  const logs = useLogsStore(state => state.logsByInstallationId[params.installationId]);
   const fetchInstallations = useInstallationStore(state => state.fetchInstallations);
   const fetchObservationsForInstallation = useInstallationStore(
     state => state.fetchObservationsForInstallation,
@@ -27,7 +31,7 @@ export function LogsDataTableProxy({ ...params }) {
     try {
       const token = await getAccessTokenSilently();
       //await fetchObservationsForInstallation(installationId, token, false);
-      await fetchLogs(installationId, 'core', token);
+      await fetchLogs(params.installationId, params.logSource, token);
     } catch (error) {
       console.log(error);
     }
@@ -39,27 +43,32 @@ export function LogsDataTableProxy({ ...params }) {
     fetchInstallations,
     getAccessTokenSilently,
     fetchObservationsForInstallation,
-    installationId,
+    params.installationId,
     user,
   ]);
 
-  const logViews = (logs ?? []).map(mapToTableView);
+  const logViews =
+    logs && logs[params.logSource] ? logs[params.logSource].map(mapToTableView) : [];
 
-  const installation = installations.find(i => i.id == installationId);
+  const installation = installations.find(i => i.id == params.installationId);
   const logFilename = `logs-${(installation?.name ?? 'default').replace(
     /[^a-zA-Z0-9\u00C0-\u017F]/g,
     '_',
-  )}-${new Date().getTime()}.txt`;
-  const concatenatedLogs = (logs ?? []).map((l: Log) => l.raw).join('\n');
+  )}-${params.logSource}-${new Date().getTime()}.txt`;
+  const concatenatedLogs =
+    logs && logs[params.logSource]
+      ? logs[params.logSource].map(l => l.raw).join('\n')
+      : '';
 
   return (
     <>
       <Tabs defaultValue="logtable" className="space-y-4">
-        <h3 className="inline ml-4 font-semibold">Logs</h3>
-
         <TabsList className="ml-4">
           <TabsTrigger value="logtable">Table</TabsTrigger>
-          <TabsTrigger value="lograw" disabled={logs == null || logs.length == 0}>
+          <TabsTrigger
+            value="lograw"
+            disabled={logs == null || logs[params.logSource]?.length == 0}
+          >
             Raw
           </TabsTrigger>
         </TabsList>
@@ -85,7 +94,7 @@ export function LogsDataTableProxy({ ...params }) {
 
         <TabsContent value="lograw">
           <div className="relative mx-auto mt-4">
-            {logs?.length > 0 && (
+            {logs && logs[params.logSource]?.length > 0 && (
               <>
                 <CopyButton textToCopy={concatenatedLogs} />
                 <DownloadButton fileName={logFilename} textToCopy={concatenatedLogs} />
@@ -98,7 +107,7 @@ export function LogsDataTableProxy({ ...params }) {
                   id="code"
                   className="text-gray-300 break-words w-[97%] h-[750px] text-xs leading-4 overflow-y-scroll"
                 >
-                  <code className="">{concatenatedLogs}</code>
+                  <code className="">{strip(concatenatedLogs)}</code>
                 </pre>
               </div>
             </div>
@@ -113,8 +122,9 @@ function mapToTableView(log: Log): LogTableView {
   return {
     id: log.time.toString() + log.log,
     type: log.type,
-    log: log.log,
+    log: { content: log.log, color: log.color ?? null },
     time: log.time,
     thread: log.thread,
+    color: log.color ?? null,
   };
 }

@@ -14,15 +14,12 @@ export function InstallationOverviewChart({
   const installation = useInstallationStore(state => state.installations).find(
     i => i.id == installationId,
   );
-  const {
-    observations,
-    logsByInstallationId: logs,
-    fetchObservationsForInstallation,
-  } = useInstallationStore(state => ({
-    observations: state.observations[installationId],
-    logsByInstallationId: state.logsByInstallationId[installationId],
-    fetchObservationsForInstallation: state.fetchObservationsForInstallation,
-  }));
+  const { observations, fetchObservationsForInstallation } = useInstallationStore(
+    state => ({
+      observations: state.observations[installationId],
+      fetchObservationsForInstallation: state.fetchObservationsForInstallation,
+    }),
+  );
 
   const { getAccessTokenSilently, user } = useAuth0();
 
@@ -41,17 +38,12 @@ export function InstallationOverviewChart({
   const dataFormatter = (number: any) =>
     Intl.NumberFormat('us').format(number).toString();
 
-  const filteredLogsLength = (logs ?? []).filter(l =>
-    ['w', 'e'].includes(l.type.toLowerCase()),
-  ).length;
-
   const chartdata = observations?.length
     ? [
         { name: 'Zigbee devices', Amount: observations[0]?.zigbee?.devices?.length ?? 0 },
         { name: 'Automations', Amount: observations[0]?.automations?.length ?? 0 },
         { name: 'Scripts', Amount: observations[0]?.scripts?.length ?? 0 },
         { name: 'Scenes', Amount: observations[0]?.scenes?.length ?? 0 },
-        //{ name: 'Error & warning logs', Amount: filteredLogsLength },
         {
           name: 'Docker containers',
           Amount: observations[0]?.docker?.containers?.length ?? 0,

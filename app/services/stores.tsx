@@ -2,11 +2,13 @@ import {
   BatteryType,
   Installation,
   Log,
+  LogSource,
   NotificationsApiResponseNotification,
   Observation,
   Storage,
   User,
 } from '@/app/types';
+import moment from 'moment';
 import { create } from 'zustand';
 import { createAccount, deleteAccount, updateAccount } from './account';
 import { contact } from './contact';
@@ -19,6 +21,7 @@ import { fetchLogs } from './logs';
 import { fetchNotifications } from './notifications';
 import { getObservations } from './observations';
 import { getUserMe } from './users';
+const { parse, strip } = require('ansicolor');
 
 interface UserState {
   user: User | null;
@@ -108,24 +111,30 @@ const useNotificationsStore = create<NotificationsState>((set, get) => ({
 }));
 
 interface LogsState {
-  logsByInstallationId: Record<string, Log[]>;
-  fetchLogs: (installationId: string, type: string, token: string) => Promise<void>;
+  logsByInstallationId: Record<string, Record<string, Log[]>>;
+  fetchLogs: (installationId: string, type: LogSource, token: string) => Promise<void>;
 }
 
 const useLogsStore = create<LogsState>((set, get) => ({
   logsByInstallationId: {},
   async fetchLogs(installationId, type, token) {
-    if (get().logsByInstallationId[installationId]) {
+    if (
+      get().logsByInstallationId[installationId] &&
+      get().logsByInstallationId[installationId][type]
+    ) {
       return;
     }
 
     const logs = await fetchLogs(installationId, type, token);
-    const parsedLogs = parseLog(logs.body.content);
+    const parsedLogs = parseLog(logs.body.content, type);
 
     set(state => ({
       logsByInstallationId: {
         ...state.logsByInstallationId,
-        [installationId]: parsedLogs,
+        [installationId]: {
+          ...state.logsByInstallationId[installationId],
+          [type]: parsedLogs,
+        },
       },
     }));
   },
@@ -149,7 +158,6 @@ const useInstallationSwitcherStore = create<InstallationState>(set => ({
 interface InstallationStoreState {
   installations: Installation[];
   observations: Record<string, Observation[]>;
-  logsByInstallationId: Record<string, Log[]>;
   latestHaRelease: string | null;
   fetchedInstallations: boolean;
   highestStorageByInstallationId: Record<string, Storage | null>;
@@ -174,7 +182,6 @@ interface InstallationStoreState {
 const useInstallationStore = create<InstallationStoreState>((set, get) => ({
   installations: [],
   observations: {},
-  logsByInstallationId: {},
   latestHaRelease: null,
   fetchedInstallations: false,
   highestStorageByInstallationId: {},
@@ -184,7 +191,6 @@ const useInstallationStore = create<InstallationStoreState>((set, get) => ({
     set(_ => ({
       installations: [],
       observations: {},
-      logsByInstallationId: {},
       highestStorageByInstallationId: {},
       isFetchingObservations: {},
     }));
@@ -408,20 +414,6 @@ const useInstallationStore = create<InstallationStoreState>((set, get) => ({
         },
       }));
 
-      let logString = updatedObservations.reduce(
-        (acc: string, item: Observation) => acc + item.logs,
-        '',
-      );
-
-      const logs = parseLog(logString);
-
-      set(state => ({
-        logsByInstallationId: {
-          ...state.logsByInstallationId,
-          [installationId]: logs,
-        },
-      }));
-
       let overallHighestUseStorage: Storage | null = null;
       let overallHighestUsePercentage = -1;
 
@@ -505,14 +497,14 @@ function parseISOLocal(s: any) {
   return new Date(b[0], b[1] - 1, b[2], b[3], b[4], b[5]);
 }
 
-const parseLog = (logString: string): Log[] => {
+const parseLog = (logString: string, source: LogSource): Log[] => {
   let logs = logString.split('\n');
 
   const seenTimes = new Set<number>();
 
   let reduced = logs.reduce((acc: Log[], log: string) => {
     const parts = log.split(/\s+/);
-    if (parts.length >= 5) {
+    if (parts.length >= 5 && source == 'core') {
       const time = parseISOLocal(parts[0] + 'T' + parts[1]);
 
       if (seenTimes.has(time.getTime())) {
@@ -530,7 +522,47 @@ const parseLog = (logString: string): Log[] => {
         time: time,
         type: logType,
         thread: thread,
-        log: wrapSquareBracketsWithEm(restOfLog), // Ensure wrapSquareBracketsWithEm is correctly typed
+        log: wrapSquareBracketsWithEm(restOfLog),
+      });
+    } else if (source == 'host') {
+      const parsed = moment(`${parts[0]} ${parts[1]} ${parts[2]}`, 'MMM D HH:mm:ss');
+
+      acc.push({
+        raw: log,
+        time: parsed.toDate(),
+        type: '',
+        thread: '',
+        log: parts.slice(3).join(' '),
+      });
+    } else if (source == 'supervisor') {
+      // TODO: Slice 5 because of terminal colors. Maybe a way to parse them and display?
+      const dateString = `${parts[0].slice(5)} ${parts[1]}`;
+      const parsed = moment(dateString, 'YY-mm-dd HH:mm:ss');
+      const ansi = parse(log);
+
+      const ansiColor = ansi.spans[0]?.color.name;
+
+      let color: string;
+
+      switch (ansiColor) {
+        case 'green':
+          color = 'text-green-600';
+          break;
+        case 'yellow':
+          color = 'text-orange-600';
+          break;
+        default:
+          color = 'text-inherit';
+          break;
+      }
+
+      acc.push({
+        raw: log,
+        time: parsed.toDate(),
+        type: '',
+        thread: '',
+        log: strip(log),
+        color: color,
       });
     }
     return acc;

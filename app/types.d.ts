@@ -4,7 +4,10 @@ interface Log {
   type: string;
   thread: string;
   log: string;
+  color?: string;
 }
+
+type LogSource = 'host' | 'supervisor' | 'core';
 
 interface NetworkInterfaceData {
   bytes: number;
@@ -232,6 +235,7 @@ export {
   InstallationApiResponse,
   InstallationBody,
   Log,
+  LogSource,
   LogsApiResponse,
   Network,
   NetworkInterface,

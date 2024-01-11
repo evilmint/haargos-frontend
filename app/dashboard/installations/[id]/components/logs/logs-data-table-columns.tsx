@@ -7,15 +7,17 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip';
+import { cn } from '@/lib/utils';
 import { ColumnDef } from '@tanstack/react-table';
 import { ArrowUpDown } from 'lucide-react';
 
 export interface LogTableView {
   id: string;
-  log: string;
+  log: { content: string; color: string | null };
   type: string;
   time: Date;
   thread: string;
+  color: string | null;
 }
 
 export const columns: ColumnDef<LogTableView>[] = [
@@ -91,12 +93,16 @@ export const columns: ColumnDef<LogTableView>[] = [
         </Button>
       );
     },
-    cell: ({ row }) => (
-      <div
-        className="text-xs w-"
-        dangerouslySetInnerHTML={{ __html: row.getValue('log') }}
-      ></div>
-    ),
+    cell: ({ row }) => {
+      const log: { content: string; color: string | null } = row.getValue('log');
+
+      return (
+        <div
+          className={cn('text-xs font-semibold', log.color)}
+          dangerouslySetInnerHTML={{ __html: log.content }}
+        ></div>
+      );
+    },
   },
   {
     accessorKey: 'thread',

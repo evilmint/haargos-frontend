@@ -87,6 +87,7 @@ export function LogsDataTableProxy(params: LogsDataTableProxyParams) {
             pluralEntityName="logs"
             columns={columns}
             filterColumnName="log"
+            defaultColumnVisibility={{'type': false}}
             columnVisibilityKey="LogsDataTable_columnVisibility"
             data={logViews}
           />
@@ -120,7 +121,7 @@ export function LogsDataTableProxy(params: LogsDataTableProxyParams) {
 
 function mapToTableView(log: Log): LogTableView {
   return {
-    id: log.time.toString() + log.log,
+    id: (log.time?.toString() ?? '') + log.log,
     type: log.type,
     log: { content: log.log, color: log.color ?? null },
     time: log.time,

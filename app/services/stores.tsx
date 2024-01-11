@@ -534,9 +534,16 @@ const parseLog = (logString: string, source: LogSource): Log[] => {
         thread: '',
         log: parts.slice(3).join(' '),
       });
+    } else if (source == 'multicast' || source == 'audio' || source == 'dns') {
+      acc.push({
+        raw: log,
+        time: null,
+        type: '',
+        thread: '',
+        log: log,
+      });
     } else if (source == 'supervisor') {
-      // TODO: Slice 5 because of terminal colors. Maybe a way to parse them and display?
-      const dateString = `${parts[0].slice(5)} ${parts[1]}`;
+      const dateString = `${strip(parts[0]).slice(4)} ${parts[1]}`;
       const parsed = moment(dateString, 'YY-mm-dd HH:mm:ss');
       const ansi = parse(log);
 
@@ -568,7 +575,7 @@ const parseLog = (logString: string, source: LogSource): Log[] => {
     return acc;
   }, []);
 
-  return reduced.sort((a, b) => b.time.getTime() - a.time.getTime());
+  return reduced.sort((a, b) => (b.time?.getTime() ?? 0) - (a.time?.getTime() ?? 0));
 };
 
 const extractUniqueVolumes = (volumesUnsorted: Storage[]): Storage[] => {
@@ -590,5 +597,6 @@ export {
   useInstallationSwitcherStore,
   useLogsStore,
   useNotificationsStore,
-  useUserStore,
+  useUserStore
 };
+

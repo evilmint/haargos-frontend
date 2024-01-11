@@ -1,13 +1,13 @@
 interface Log {
   raw: string;
-  time: Date;
+  time: Date | null;
   type: string;
   thread: string;
   log: string;
   color?: string;
 }
 
-type LogSource = 'host' | 'supervisor' | 'core';
+type LogSource = 'host' | 'supervisor' | 'core' | 'dns' | 'audio' | 'multicast';
 
 interface NetworkInterfaceData {
   bytes: number;
@@ -251,5 +251,6 @@ export {
   User,
   UserApiResponse,
   Zigbee,
-  ZigbeeDevice,
+  ZigbeeDevice
 };
+

@@ -21,19 +21,16 @@ export function LogSwitcher(params: LogSwitcherParams) {
     logTypesAvailable.push(
       { source: 'supervisor', name: 'Supervisor' },
       { source: 'host', name: 'Host' },
+      { source: 'multicast', name: 'Multicast' },
+      { source: 'dns', name: 'DNS' },
+      { source: 'audio', name: 'Audio' },
     );
   }
 
   return (
     <div>
       <h3 className="ml-4 font-semibold mb-4 block">Logs</h3>
-      <Tabs
-        onValueChange={() => {
-          console.log('tab changed');
-        }}
-        defaultValue="core"
-        className="space-y-4"
-      >
+      <Tabs defaultValue="core" className="space-y-4">
         <TabsList className="ml-4">
           {logTypesAvailable.map(t => (
             <TabsTrigger value={t.source}>{t.name}</TabsTrigger>

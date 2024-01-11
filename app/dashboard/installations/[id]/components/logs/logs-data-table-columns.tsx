@@ -15,7 +15,7 @@ export interface LogTableView {
   id: string;
   log: { content: string; color: string | null };
   type: string;
-  time: Date;
+  time: Date | null;
   thread: string;
   color: string | null;
 }
@@ -45,41 +45,43 @@ export const columns: ColumnDef<LogTableView>[] = [
     ),
     sortingFn: 'datetime',
     cell: ({ row }) => {
-      const date: Date = row.getValue('time');
-      return (
+      const date: Date | null = row.getValue('time');
+      return date ? (
         <div className="text-xs">{`${
           date.toLocaleDateString() + ', ' + date.toLocaleTimeString()
         }`}</div>
+      ) : (
+        <div className="text-xs">-</div>
       );
     },
   },
-  {
-    accessorKey: 'type',
-    header: ({ column }) => (
-      <div className="text-center">
-        <TooltipProvider>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Button
-                variant="ghost"
-                onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-              >
-                Type
-                <ArrowUpDown className="ml-2 h-4 w-4" />
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent>
-              <p>
-                The type represents the severity of the log. 'W' means a Warning, whereas
-                'E' indicates an Error.
-              </p>
-            </TooltipContent>
-          </Tooltip>
-        </TooltipProvider>
-      </div>
-    ),
-    cell: ({ row }) => <div className="text-xs text-center">{row.getValue('type')}</div>,
-  },
+  // {
+  //   accessorKey: 'type',
+  //   header: ({ column }) => (
+  //     <div className="text-center">
+  //       <TooltipProvider>
+  //         <Tooltip>
+  //           <TooltipTrigger asChild>
+  //             <Button
+  //               variant="ghost"
+  //               onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+  //             >
+  //               Type
+  //               <ArrowUpDown className="ml-2 h-4 w-4" />
+  //             </Button>
+  //           </TooltipTrigger>
+  //           <TooltipContent>
+  //             <p>
+  //               The type represents the severity of the log. 'W' means a Warning, whereas
+  //               'E' indicates an Error.
+  //             </p>
+  //           </TooltipContent>
+  //         </Tooltip>
+  //       </TooltipProvider>
+  //     </div>
+  //   ),
+  //   cell: ({ row }) => <div className="text-xs text-center">{row.getValue('type')}</div>,
+  // },
   {
     accessorKey: 'log',
     header: ({ column }) => {

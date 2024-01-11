@@ -37,8 +37,8 @@ export interface InstallationTableView {
   cpu: boolean;
   memory: boolean;
   ha_version_tick: boolean;
-  log_errors: number;
-  log_warnings: number;
+  // log_errors: number;
+  // log_warnings: number;
   low_lqi_zigbee_devices: number;
   low_battery_devices: number;
   unhealthy_docker_containers: number;
@@ -159,7 +159,7 @@ export function getColumnsByTier(tier: Tier): ColumnDef<InstallationTableView>[]
   columns.push(makeBooleanCell('Volume', 'volume'));
   columns.push(makeBooleanCell('CPU', 'cpu'));
   columns.push(makeSimpleCell('HA Version', 'ha_version'));
-  columns.push(makeSimpleCell('Log Errors', 'log_errors'));
+  //columns.push(makeSimpleCell('Log Errors', 'log_errors'));
 
   return columns;
 }

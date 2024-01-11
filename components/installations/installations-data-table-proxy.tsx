@@ -1,7 +1,7 @@
 'use client';
 
 import { useInstallationStore, useUserStore } from '@/app/services/stores';
-import { Installation, Log, Observation } from '@/app/types';
+import { Installation, Observation } from '@/app/types';
 import { GenericDataTable } from '@/lib/generic-data-table';
 import { useAuth0 } from '@auth0/auth0-react';
 import { useRouter } from 'next/navigation';
@@ -14,7 +14,6 @@ import {
 export function InstallationsDataTableProxy() {
   const observations = useInstallationStore(state => state.observations);
   const installations = useInstallationStore(state => state.installations);
-  const logsByInstallationId = useInstallationStore(state => state.logsByInstallationId);
   const fetchInstallations = useInstallationStore(state => state.fetchInstallations);
   const fetchObservationsForInstallation = useInstallationStore(
     state => state.fetchObservationsForInstallation,
@@ -56,7 +55,6 @@ export function InstallationsDataTableProxy() {
       ? installations.map(i =>
           mapToTableView(
             i,
-            logsByInstallationId[i.id] ?? [],
             observations[i.id]?.length > 0 ? observations[i.id][0] : undefined,
             latestHaRelease,
             id => {
@@ -81,15 +79,11 @@ export function InstallationsDataTableProxy() {
 
 function mapToTableView(
   installation: Installation,
-  logs: Log[],
   observation: Observation | undefined,
   latestHARelease: string | null,
   goToInstallation: (id: string) => void,
   goToHomeAssistant: (url: string) => void,
 ): InstallationTableView {
-  const logErrors = logs.filter(log => log.type == 'E').length;
-  const logWarnings = logs.filter(log => log.type == 'W').length;
-
   const lowLqiZigbeeDevices =
     observation?.zigbee?.devices?.filter(device => device.has_low_lqi).length ?? 0;
   const lowBatteryDevices =
@@ -123,8 +117,8 @@ function mapToTableView(
     memory: observation?.has_low_memory != null ? !observation.has_low_memory : false,
     ha_version_tick:
       latestHARelease == null || latestHARelease == observation?.ha_config?.version,
-    log_errors: logErrors,
-    log_warnings: logWarnings,
+    // log_errors: logErrors,
+    // log_warnings: logWarnings,
     low_lqi_zigbee_devices: lowLqiZigbeeDevices,
     low_battery_devices: lowBatteryDevices,
     unhealthy_docker_containers: unhealthyDockerContainers,

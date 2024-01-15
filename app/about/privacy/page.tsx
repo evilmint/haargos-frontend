@@ -19,10 +19,14 @@ export default function PrivacyPolicy() {
             <strong>Information We Collect</strong>
             <p>
               We collect information from your Home Assistant instance, including
-              automations, device and entity names, and other related data. Ensure your
-              entities do not contain personal information you do not wish to share. For
-              data removal requests, contact us at{' '}
-              <a href="mailto:gdpr@haargos.com">gdpr@haargos.com</a>.
+              automations, logs (core, supervisor-related) notifications, add-ons, device
+              and entity names, and other related data. Ensure your entities do not
+              contain personal information you do not wish to share. We do not send or
+              store your configuration.yml or secrets.yml data. Configuration analysis
+              might be performed only by the agent and only at your explicit constent that
+              can be withdrawn at any time and only for the purpose of providing you tips
+              or information to improve your instance. For data removal requests, contact
+              us at <a href="mailto:gdpr@haargos.com">gdpr@haargos.com</a>.
             </p>
           </li>
 

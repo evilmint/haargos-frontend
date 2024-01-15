@@ -73,6 +73,7 @@ export function GenericDataTable({ ...params }: GenericDataTableParams) {
       .toLocaleLowerCase()
       .replaceAll('_', ' ')
       .replaceAll('ha', 'HA')
+      .replaceAll('ieee', 'IEEE')
       .replaceAll('lqi', 'LQI')
       .replaceAll('cpu', 'CPU')
       .replaceAll('zigbee', 'Zigbee');

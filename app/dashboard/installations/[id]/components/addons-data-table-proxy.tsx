@@ -45,6 +45,7 @@ export function AddonDataTableProxy({ ...params }) {
         available: false,
         stage: false,
         build: false,
+        slug: false,
       }}
       columnVisibilityKey="AddonDataTable_columnVisibility"
       data={addonViews}

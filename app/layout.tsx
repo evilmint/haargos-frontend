@@ -1,3 +1,4 @@
+import Footer from '@/components/footer';
 import ProviderSet from '@/lib/provider-set';
 import { Analytics } from '@vercel/analytics/react';
 import type { Metadata } from 'next';
@@ -27,6 +28,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <ProviderSet>{children}</ProviderSet>
         <Analytics />
         <Toaster richColors />
+        <Footer />
       </body>
     </html>
   );

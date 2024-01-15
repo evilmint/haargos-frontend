@@ -50,19 +50,29 @@ export const columns: ColumnDef<AddonTableView>[] = [
   },
   {
     accessorKey: 'version',
-    header: () => <span>Version</span>,
-    cell: ({ row }) => <div className="text-xs">{row.getValue('version')}</div>,
+    header: () => (
+      <div className="text-center">
+        <span>Version</span>
+      </div>
+    ),
+    cell: ({ row }) => (
+      <div className="text-xs text-center">{row.getValue('version')}</div>
+    ),
   },
   {
     accessorKey: 'version_latest',
-    header: () => <span>Latest Version</span>,
+    header: () => (
+      <div className="text-center">
+        <span>Latest Version</span>
+      </div>
+    ),
     cell: ({ row }) => {
       const latestVersion: { version: string; isLatest: boolean } =
         row.getValue('version_latest');
       return (
         <div
           className={cn(
-            'text-xs',
+            'text-xs text-center',
             !latestVersion.isLatest ? 'font-semibold text-yellow-600' : '',
           )}
         >
@@ -75,23 +85,30 @@ export const columns: ColumnDef<AddonTableView>[] = [
     accessorKey: 'update_available',
     header: ({ column }) => {
       return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-        >
-          Update available
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
+        <div className="text-center">
+          <Button
+            variant="ghost"
+            className="text-center"
+            onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+          >
+            Update available
+            <ArrowUpDown className="ml-2 h-4 w-4" />
+          </Button>
+        </div>
       );
     },
     cell: ({ row }) => (
       <div
         className={cn(
-          'text-xs',
+          'text-xs text-center relative-flex flex justify-center',
           row.getValue('update_available') ? 'font-semibold text-green-600' : '',
         )}
       >
-        {boolToYesNo(row.getValue('update_available'))}
+        {row.getValue('update_available') ? (
+          <Icons.checkCircle className="w-6 h-6 text-green-600" />
+        ) : (
+          <Icons.xCircle className="w-6 h-6 text-red-600" />
+        )}
       </div>
     ),
   },
@@ -104,9 +121,9 @@ export const columns: ColumnDef<AddonTableView>[] = [
   },
   {
     accessorKey: 'detached',
-    header: () => <span>Detached</span>,
+    header: () => <div className="text-center">Detached</div>,
     cell: ({ row }) => (
-      <div className="text-xs">{boolToYesNo(row.getValue('detached'))}</div>
+      <div className="text-xs text-center">{boolToYesNo(row.getValue('detached'))}</div>
     ),
   },
   {
@@ -120,13 +137,15 @@ export const columns: ColumnDef<AddonTableView>[] = [
     accessorKey: 'state',
     header: ({ column }) => {
       return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-        >
-          State
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
+        <div className="text-center">
+          <Button
+            variant="ghost"
+            onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+          >
+            State
+            <ArrowUpDown className="ml-2 h-4 w-4" />
+          </Button>
+        </div>
       );
     },
     cell: ({ row }) => {
@@ -145,10 +164,10 @@ export const columns: ColumnDef<AddonTableView>[] = [
   },
   {
     accessorKey: 'build',
-    header: () => <span>Build</span>,
+    header: () => <div className="text-center">Build</div>,
     cell: ({ row }) => {
       const build: boolean = row.getValue('build');
-      return <div className="text-xs">{boolToYesNo(build)}</div>;
+      return <div className="text-xs text-center">{boolToYesNo(build)}</div>;
     },
   },
   {
@@ -158,16 +177,16 @@ export const columns: ColumnDef<AddonTableView>[] = [
   },
   {
     accessorKey: 'advanced',
-    header: () => <span>Advanced</span>,
+    header: () => <div className="text-center">Advanced</div>,
     cell: ({ row }) => {
       const isAdvanced: boolean = row.getValue('advanced');
-      return <div className="text-xs">{boolToYesNo(isAdvanced)}</div>;
+      return <div className="text-xs text-center">{boolToYesNo(isAdvanced)}</div>;
     },
   },
   {
     accessorKey: 'stage',
-    header: () => <span>Stage</span>,
-    cell: ({ row }) => <div className="text-xs">{row.getValue('stage')}</div>,
+    header: () => <div className="text-center">Stage</div>,
+    cell: ({ row }) => <div className="text-xs text-center">{row.getValue('stage')}</div>,
   },
   {
     accessorKey: 'repo_url',

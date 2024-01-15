@@ -33,11 +33,13 @@ export default function TermsOfService() {
             <ol type="a">
               <li>
                 Our agent collects certain information from your Home Assistant instance,
-                which may include automation names, device names, and other related data.
+                which may include automation, device, logs (core, supervisor-related),
+                addon, notifiaction, integration and other Home Assistant related data.
               </li>
               <li>
-                We do not collect personal or sensitive information unless explicitly
-                provided by the user.
+                We <strong>do not</strong> collect configuration data:{' '}
+                <i>configuration.yml</i>, <i>secrets.yml</i>, personal or sensitive
+                information unless explicitly provided or allowed by the user.
               </li>
               <li>
                 All data is collected solely for the purpose of providing and improving

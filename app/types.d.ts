@@ -155,6 +155,32 @@ interface LogsApiResponse {
   };
 }
 
+interface AddonsApiResponse {
+  body: {
+    addons: AddonsApiResponseAddon[];
+  };
+}
+
+interface AddonsApiResponseAddon {
+  name: string;
+  slug: string;
+  description: string;
+  advanced: boolean;
+  stage: string;
+  version: string;
+  version_latest: string;
+  update_available: boolean;
+  available: boolean;
+  detached: boolean;
+  homeassistant: string | null;
+  state: string;
+  repository: string;
+  build: boolean;
+  url: string;
+  icon: boolean;
+  logo: boolean;
+}
+
 interface NotificationsApiResponse {
   body: {
     notifications: NotificationsApiResponseNotification[];
@@ -227,6 +253,8 @@ interface User {
 }
 
 export {
+  AddonsApiResponse,
+  AddonsApiResponseAddon,
   Automation,
   BatteryType,
   DockerContainer,
@@ -251,6 +279,5 @@ export {
   User,
   UserApiResponse,
   Zigbee,
-  ZigbeeDevice
+  ZigbeeDevice,
 };
-

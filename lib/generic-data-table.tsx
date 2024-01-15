@@ -60,10 +60,12 @@ export function GenericDataTable({ ...params }: GenericDataTableParams) {
 
   useEffect(() => {
     setColumnVisibility(columnVisibilityManager.getVisibility());
-  }, []);
+  }, [setColumnVisibility]);
 
   useEffect(() => {
-    columnVisibilityManager.setVisibility(columnVisibility);
+    if (Object.keys(columnVisibility).length != 0) {
+      columnVisibilityManager.setVisibility(columnVisibility);
+    }
   }, [columnVisibility]);
 
   function defaultColumnIdTransform(id: string): string {

@@ -3,9 +3,6 @@ import Footer from '@/components/footer';
 import { MainNav } from '@/components/ui/main-nav';
 import { UserNav } from '@/components/ui/user-nav';
 import type { Metadata } from 'next';
-import { Inter } from 'next/font/google';
-
-const inter = Inter({ subsets: ['latin'] });
 
 const error = console.error;
 console.error = (...args: any) => {

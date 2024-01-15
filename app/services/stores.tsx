@@ -1,4 +1,5 @@
 import {
+  AddonsApiResponseAddon,
   BatteryType,
   Installation,
   Log,
@@ -11,6 +12,7 @@ import {
 import moment from 'moment';
 import { create } from 'zustand';
 import { createAccount, deleteAccount, updateAccount } from './account';
+import { fetchAddons } from './addons';
 import { contact } from './contact';
 import {
   createInstallation,
@@ -105,6 +107,29 @@ const useNotificationsStore = create<NotificationsState>((set, get) => ({
       notificationsByInstallationId: {
         ...state.notificationsByInstallationId,
         [installationId]: response.body.notifications,
+      },
+    }));
+  },
+}));
+
+interface AddonsState {
+  addonsByInstallationId: Record<string, AddonsApiResponseAddon[]>;
+  fetchAddons: (installationId: string, token: string) => Promise<void>;
+}
+
+const useAddonsStore = create<AddonsState>((set, get) => ({
+  addonsByInstallationId: {},
+  async fetchAddons(installationId, token) {
+    if (get().addonsByInstallationId[installationId]) {
+      return;
+    }
+
+    const response = await fetchAddons(installationId, token);
+
+    set(state => ({
+      addonsByInstallationId: {
+        ...state.addonsByInstallationId,
+        [installationId]: response.body.addons,
       },
     }));
   },
@@ -592,11 +617,11 @@ const extractUniqueVolumes = (volumesUnsorted: Storage[]): Storage[] => {
 export {
   UserDoesNotExistError,
   useAccountStore,
+  useAddonsStore,
   useContactStore,
   useInstallationStore,
   useInstallationSwitcherStore,
   useLogsStore,
   useNotificationsStore,
-  useUserStore
+  useUserStore,
 };
-

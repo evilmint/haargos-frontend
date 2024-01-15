@@ -11,6 +11,7 @@ type HALinkProps = {
     | 'logs'
     | 'scenes'
     | 'entities'
+    | 'addons'
     | 'scripts'
     | null;
 

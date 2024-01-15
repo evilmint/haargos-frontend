@@ -1,6 +1,7 @@
 'use client';
 import { DashboardHeaderInstallation } from '@/app/dashboard/installations/[id]/components/dashboard-header';
 import {
+  useAddonsStore,
   useInstallationStore,
   useInstallationSwitcherStore,
   useNotificationsStore,
@@ -61,6 +62,7 @@ import { Badge, Tab, TabGroup, TabList, TabPanel, TabPanels } from '@tremor/reac
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import * as z from 'zod';
+import { AddonDataTableProxy } from './components/addons-data-table-proxy';
 import { LogSwitcher } from './components/logs/log-switcher';
 import { Memory } from './components/memory';
 import { Network } from './components/network';
@@ -110,6 +112,8 @@ export default function DashboardInstallationPage({
   const notifications = useNotificationsStore(
     state => state.notificationsByInstallationId[params.id],
   );
+  const fetchAddons = useAddonsStore(state => state.fetchAddons);
+  const addons = useAddonsStore(state => state.addonsByInstallationId[params.id]);
 
   const [origin, setOrigin] = useState<string | null>(null);
   const [defaultTab, setDefaultTab] = useState<string>('overview');
@@ -169,6 +173,7 @@ export default function DashboardInstallationPage({
       const token = await getAccessTokenSilently();
       await fetchInstallations(token, true);
       await fetchNotifications(params.id, token);
+      await fetchAddons(params.id, token);
     } catch (error) {
       console.log(error);
     }
@@ -245,10 +250,10 @@ export default function DashboardInstallationPage({
       : false;
 
   const notificationsEnabled = true;
-  // const notificationsEnabled =
-  //   observations && observations.length > 0
-  //     ? observations[0].agent_type == 'addon'
-  //     : false;
+  const addonsEnabled =
+    observations && observations.length > 0
+      ? observations[0].agent_type == 'addon'
+      : false;
 
   return (
     defaultTab != null &&
@@ -442,12 +447,24 @@ export default function DashboardInstallationPage({
                 <TabGroup>
                   <TabList className="mt-8">
                     <Tab>Zigbee</Tab>
-                    {notificationsEnabled ? (
+
+                    <Tab>
+                      Notifications{' '}
+                      {notifications?.length > 0 ? (
+                        <Badge size="xs" className="text-xl w-5 h-5">
+                          {notifications.length}
+                        </Badge>
+                      ) : (
+                        <></>
+                      )}
+                    </Tab>
+
+                    {addonsEnabled ? (
                       <Tab>
-                        Notifications{' '}
-                        {notifications?.length > 0 ? (
+                        Addons{' '}
+                        {addons?.filter(a => a.update_available).length > 0 ? (
                           <Badge size="xs" className="text-xl w-5 h-5">
-                            {notifications.length}
+                            {addons.filter(a => a.update_available).length}
                           </Badge>
                         ) : (
                           <></>
@@ -471,6 +488,16 @@ export default function DashboardInstallationPage({
                       <TabPanel>
                         <div className="mt-10">
                           <Notifications installationId={params.id} />
+                        </div>
+                      </TabPanel>
+                    ) : (
+                      <></>
+                    )}
+
+                    {addonsEnabled ? (
+                      <TabPanel>
+                        <div className="mt-10">
+                          <AddonDataTableProxy installationId={params.id} />
                         </div>
                       </TabPanel>
                     ) : (

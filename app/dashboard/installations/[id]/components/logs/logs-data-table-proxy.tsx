@@ -87,7 +87,7 @@ export function LogsDataTableProxy(params: LogsDataTableProxyParams) {
             pluralEntityName="logs"
             columns={columns}
             filterColumnName="log"
-            defaultColumnVisibility={{'type': false}}
+            defaultColumnVisibility={{ type: false }}
             columnVisibilityKey="LogsDataTable_columnVisibility"
             data={logViews}
           />

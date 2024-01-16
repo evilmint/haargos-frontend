@@ -75,6 +75,7 @@ export function GenericDataTable({ ...params }: GenericDataTableParams) {
       .replaceAll('ha', 'HA')
       .replaceAll('ieee', 'IEEE')
       .replaceAll('lqi', 'LQI')
+      .replaceAll('url', 'URL')
       .replaceAll('cpu', 'CPU')
       .replaceAll('zigbee', 'Zigbee');
 

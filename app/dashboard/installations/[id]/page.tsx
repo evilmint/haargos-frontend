@@ -47,6 +47,7 @@ import { Storage } from './components/storage';
 import { ZigbeeDataTableProxy } from './components/zigbee/zigbee-data-table-proxy';
 
 import { updateInstallation } from '@/app/services/installations';
+import { HaargosTips } from '@/components/tips';
 import {
   Form,
   FormControl,
@@ -438,6 +439,7 @@ export default function DashboardInstallationPage({
               </TabsContent>
 
               <TabsContent value="overview" className="space-y-4">
+                <HaargosTips />
                 <DashboardHeaderInstallation installationId={params.id} />
                 <InstallationOverviewChart installationId={params.id} />
                 <LogSwitcher installationId={params.id} />

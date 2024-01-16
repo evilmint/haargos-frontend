@@ -22,89 +22,62 @@ export default function TermsOfService() {
           <li>
             <strong>Description of Service</strong>
             <p>
-              Haargos provides an online monitoring service for Home Assistant instances.
-              Admins must download an agent and run it on their servers to enable
-              monitoring.
+              Haargos offers a monitoring service for Home Assistant instances. This
+              includes the collection of various types of information, such as logs,
+              add-ons, and notifications, to provide insights and improve system
+              performance. Users need to download and run an agent on their servers to
+              enable this functionality.
             </p>
           </li>
 
           <li>
-            <strong>Data Collection</strong>
-            <ol type="a">
-              <li>
-                Our agent collects certain information from your Home Assistant instance,
-                which may include automation, device, logs (core, supervisor-related),
-                addon, notifiaction, integration and other Home Assistant related data.
-              </li>
-              <li>
-                We <strong>do not</strong> collect configuration data:{' '}
-                <i>configuration.yml</i>, <i>secrets.yml</i>, personal or sensitive
-                information unless explicitly provided or allowed by the user.
-              </li>
-              <li>
-                All data is collected solely for the purpose of providing and improving
-                our monitoring service.
-              </li>
-            </ol>
+            <strong>Data Collection and Usage</strong>
+            <p>
+              We collect data essential for providing and enhancing our service, including
+              but not limited to automations, device and entity names, logs,
+              notifications, and add-on information. We do not collect personal or
+              sensitive information unless explicitly authorized by you.
+            </p>
           </li>
-
           <li>
             <strong>Data Protection and Privacy</strong>
-            <ol type="a">
-              <li>
-                We prioritize the privacy and protection of your data. Data transmitted to
-                our servers is encrypted and stored securely.
-              </li>
-              <li>
-                We will not sell, share, or distribute your data to third parties without
-                your explicit consent.
-              </li>
-              <li>
-                Please refer to our Privacy Policy for more detailed information on how we
-                handle and protect your data.
-              </li>
-            </ol>
+            <p>
+              Your data's privacy and security are paramount. All data is encrypted during
+              transit and storage. For detailed information on our data handling
+              practices, please refer to our Privacy Policy.
+            </p>
           </li>
 
           <li>
             <strong>User Responsibilities</strong>
-            <ol type="a">
-              <li>
-                Users are responsible for ensuring the accuracy and integrity of the data
-                they provide.
-              </li>
-              <li>
-                Users are responsible for maintaining the security of their own Home
-                Assistant instances and any data associated with them.
-              </li>
-            </ol>
-          </li>
-
-          <li>
-            <strong>Limitation of Liability</strong>
             <p>
-              Haargos shall not be liable for any indirect, incidental, special,
-              consequential, or punitive damages, or any loss of profits or revenues,
-              whether incurred directly or indirectly, or any loss of data, use, goodwill,
-              or other intangible losses resulting from your use of our service.
+              You are responsible for the accuracy of the data provided and maintaining
+              the security of your Home Assistant instances.
             </p>
           </li>
 
           <li>
-            <strong>Termination</strong>
+            <strong>Service Use and Limitations</strong>
             <p>
-              We reserve the right to terminate or suspend your access to our service
-              without prior notice if you breach any of the terms outlined in this
-              agreement.
+              Haargos is not liable for any damages arising from your use of our service,
+              including indirect or incidental damages or data loss. Users must comply
+              with all applicable laws and regulations while using our service.
             </p>
           </li>
 
           <li>
-            <strong>Changes to the Terms of Service</strong>
+            <strong>Termination of Service</strong>
             <p>
-              We may update our Terms of Service from time to time. We will notify users
-              of any changes and always have the most recent version available on our
-              website.
+              We reserve the right to terminate or restrict your access to our service for
+              violations of these terms or other misuse.
+            </p>
+          </li>
+
+          <li>
+            <strong>Modifications to Terms</strong>
+            <p>
+              These Terms of Service may be updated periodically. We will provide notice
+              of significant changes through our website.
             </p>
           </li>
 

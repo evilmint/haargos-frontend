@@ -19,14 +19,13 @@ export default function PrivacyPolicy() {
             <strong>Information We Collect</strong>
             <p>
               We collect information from your Home Assistant instance, including
-              automations, logs (core, supervisor-related) notifications, add-ons, device
-              and entity names, and other related data. Ensure your entities do not
-              contain personal information you do not wish to share. We do not send or
-              store your configuration.yml or secrets.yml data. Configuration analysis
-              might be performed only by the agent and only at your explicit constent that
-              can be withdrawn at any time and only for the purpose of providing you tips
-              or information to improve your instance. For data removal requests, contact
-              us at <a href="mailto:gdpr@haargos.com">gdpr@haargos.com</a>.
+              automations, scripts, logs (core, supervisor-related), notifications,
+              add-ons, device and entity names, and other related data. We ensure your
+              entities do not contain personal information you do not wish to share.
+              Configuration analysis is performed only locally by the agent and only with
+              your explicit consent. We do not send or store your configuration.yml or
+              secrets.yml data. For data removal requests, contact us at{' '}
+              <a href="mailto:gdpr@haargos.com">gdpr@haargos.com</a>.
             </p>
           </li>
 
@@ -34,9 +33,9 @@ export default function PrivacyPolicy() {
             <strong>How We Use Your Information</strong>
             <p>
               The information we collect is used solely for providing and improving our
-              monitoring service. We do not sell, share, or distribute your data to third
-              parties without explicit consent. Data is aggregated and anonymized for
-              data-driven decisions and statistical analysis.
+              monitoring service and for data-driven decisions and statistical analysis.
+              Data is aggregated and anonymized to ensure privacy. We do not sell, share,
+              or distribute your data to third parties without explicit consent.
             </p>
           </li>
 

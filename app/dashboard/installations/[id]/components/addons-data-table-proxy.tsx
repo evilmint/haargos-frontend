@@ -13,7 +13,19 @@ export function AddonDataTableProxy({ ...params }) {
   const installation = useInstallationStore(state => state.installations).find(
     i => i.id == installationId,
   );
-  const addons = useAddonsStore(state => state.addonsByInstallationId[installationId]);
+  const addons = useAddonsStore(
+    state => state.addonsByInstallationId[installationId],
+  )?.sort((a: AddonsApiResponseAddon, b: AddonsApiResponseAddon) => {
+    if (a.update_available) {
+      return -1;
+    }
+    if (b.update_available) {
+      return 1;
+    }
+
+    return 0;
+  });
+
   const fetchAddonsForInstallation = useAddonsStore(state => state.fetchAddons);
   const { getAccessTokenSilently, user } = useAuth0();
 

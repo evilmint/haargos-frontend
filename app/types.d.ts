@@ -198,6 +198,7 @@ interface NotificationsApiResponseNotification {
 interface InstallationUrls {
   instance?: {
     url: string;
+    url_type?: 'PUBLIC' | 'PRIVATE';
     is_verified: boolean;
     verification_status: 'PENDING' | 'FAILED' | 'SUCCESS' | 'EMPTY';
     subdomain?: string;
@@ -279,5 +280,6 @@ export {
   User,
   UserApiResponse,
   Zigbee,
-  ZigbeeDevice,
+  ZigbeeDevice
 };
+

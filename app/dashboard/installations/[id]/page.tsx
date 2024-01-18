@@ -1,5 +1,4 @@
 'use client';
-import { DashboardHeaderInstallation } from '@/app/dashboard/installations/[id]/components/dashboard-header';
 import {
   useAddonsStore,
   useInstallationStore,
@@ -33,9 +32,9 @@ import {
 } from '@/registry/default/ui/sheet';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/registry/new-york/ui/tabs';
 import { useAuth0 } from '@auth0/auth0-react';
-import ipaddr from 'ipaddr.js';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
+import { DashboardHeaderInstallation } from './components/DashboardHeaderInstallation';
 import { AgentInstallation } from './components/agent-installation';
 import { AutomationsDataTableProxy } from './components/automations/AutomationsDataTableProxy';
 import { CPU } from './components/cpu';
@@ -48,6 +47,7 @@ import { ZigbeeDataTableProxy } from './components/zigbee/zigbee-data-table-prox
 
 import { updateInstallation } from '@/app/services/installations';
 import { HaargosTips } from '@/components/tips';
+import { isLocalDomain } from '@/lib/local-domain';
 import {
   Form,
   FormControl,
@@ -85,20 +85,17 @@ const updateInstallationFormSchema = z.object({
       .trim()
       .url()
       .refine(i => {
-        try {
-          return new URL(i).protocol.toLowerCase() == 'https:';
-        } catch {
-          return false;
-        }
-      }, 'Only HTTPS URLs are allowed.')
-      .refine(i => {
-        try {
-          const _ = ipaddr.parse(new URL(i).host);
-          return false;
-        } catch {
+        const url = new URL(i);
+        if (isLocalDomain(url)) {
           return true;
         }
-      }, 'IP addresses are not allowed.'),
+
+        try {
+          return url.protocol.toLowerCase() == 'https:';
+        } catch {
+          return false;
+        }
+      }, 'Only HTTPS URLs are allowed.'),
   ]),
 });
 
@@ -215,7 +212,7 @@ export default function DashboardInstallationPage({
   }
 
   let verification: {
-    raw_status: 'SUCCESS' | 'FAILED' | 'PENDING' | 'EMPTY';
+    raw_status: 'SUCCESS' | 'FAILED' | 'PENDING' | 'EMPTY' | 'PRIVATE';
     status: string;
     subdomain?: string;
     verification_value?: string;
@@ -243,6 +240,13 @@ export default function DashboardInstallationPage({
         verification_value: installation.urls.instance?.subdomain_value,
       };
       break;
+  }
+
+  if (installation?.urls.instance?.url_type == 'PRIVATE') {
+    verification = {
+      raw_status: 'PRIVATE',
+      status: 'Private URL',
+    };
   }
 
   const dockerEnabled =
@@ -337,6 +341,11 @@ export default function DashboardInstallationPage({
                                     Verified
                                   </Badge>
                                 )}
+                                {verification?.raw_status == 'PRIVATE' && (
+                                  <Badge className="ml-2" color="gray">
+                                    Private address
+                                  </Badge>
+                                )}
                                 <FormControl>
                                   <Input
                                     placeholder="https://my.homeassistant.url"
@@ -353,7 +362,8 @@ export default function DashboardInstallationPage({
 
                                 {verification &&
                                   verification.raw_status != 'SUCCESS' &&
-                                  verification.raw_status != 'EMPTY' && (
+                                  verification.raw_status != 'EMPTY' &&
+                                  verification.raw_status != 'PRIVATE' && (
                                     <h3 className="font-semibold text-large">
                                       DNS verification{' '}
                                       <Badge

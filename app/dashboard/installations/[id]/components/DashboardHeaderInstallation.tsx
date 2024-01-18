@@ -114,7 +114,11 @@ export function DashboardHeaderInstallation({ ...params }) {
         }
       : { is_healthy: false, last_updated: null, color: 'red' };
 
-  const localDomain = installation?.urls?.instance?.url ? isLocalDomain(new URL(installation.urls.instance.url)) : false;
+  const localDomain =
+    installation?.urls?.instance?.url_type == 'PRIVATE' ||
+    installation?.urls?.instance?.url
+      ? isLocalDomain(new URL(installation.urls.instance.url))
+      : false;
   const isCollectingData =
     installation &&
     installation.health_statuses.length == 0 &&
@@ -307,9 +311,15 @@ export function DashboardHeaderInstallation({ ...params }) {
                 <div>
                   {installation && installation.urls.instance?.is_verified ? (
                     isCollectingData == false ? (
-                      <Badge color={healthy.color} icon={Icons.signal}>
-                        <TimeAgo date={healthy.last_updated ?? ''} />
-                      </Badge>
+                      localDomain ? (
+                        <Badge color="gray" icon={Icons.signal}>
+                          Local address
+                        </Badge>
+                      ) : (
+                        <Badge color={healthy.color} icon={Icons.signal}>
+                          <TimeAgo date={healthy.last_updated ?? ''} />
+                        </Badge>
+                      )
                     ) : (
                       <Badge color="orange" icon={Icons.cog6tooth}>
                         Collecting status...

@@ -449,7 +449,7 @@ export default function DashboardInstallationPage({
               </TabsContent>
 
               <TabsContent value="overview" className="space-y-4">
-                <HaargosTips />
+                <HaargosTips installationId={params.id} />
                 <DashboardHeaderInstallation installationId={params.id} />
                 <InstallationOverviewChart installationId={params.id} />
                 <LogSwitcher installationId={params.id} />

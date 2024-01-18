@@ -31,7 +31,6 @@ export function DashboardHeaderInstallation({ ...params }) {
   const fetchObservationsForInstallation = useInstallationStore(
     state => state.fetchObservationsForInstallation,
   );
-  const latestHaRelease = useInstallationStore(state => state.latestHaRelease);
   const { getAccessTokenSilently, user } = useAuth0();
   const [isLoading, setLoading] = useState<boolean>(true);
 
@@ -44,6 +43,7 @@ export function DashboardHeaderInstallation({ ...params }) {
 
   const observationsLoading = observations == null || observations == undefined;
 
+  const latestHaRelease = useInstallationStore(state => state.latestHaRelease);
   const haVersion = observations?.length > 0 && observations[0].ha_config?.version;
   const isHAUpdateAvailable =
     latestHaRelease != null && haVersion != null && haVersion != latestHaRelease;

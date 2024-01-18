@@ -1,18 +1,22 @@
-import { useAddonsStore } from '@/app/services/stores';
+import {
+  useAddonsStore,
+  useInstallationStore,
+  useNotificationsStore,
+} from '@/app/services/stores';
 import { useAuth0 } from '@auth0/auth0-react';
 import { Callout, Card, Title } from '@tremor/react';
 import Cookies from 'js-cookie';
 import { useEffect, useState } from 'react';
 import { Icons } from './icons';
 
-type Tip = { title: string; description: string };
+type Insight = { title: string; description: string };
 
-type TipsParams = {
+type InsightParams = {
   installationId: string;
 };
 
-export function HaargosTips(params: TipsParams) {
-  let tips: Tip[] = [
+export function HaargosInsights(params: InsightParams) {
+  let insights: Insight[] = [
     // {
     //   title: 'Maximize Haargos Insights',
     //   description:
@@ -70,6 +74,17 @@ export function HaargosTips(params: TipsParams) {
     // },
   ];
 
+  const observations = useInstallationStore(
+    state => state.observations[params.installationId],
+  );
+  const latestHaRelease = useInstallationStore(state => state.latestHaRelease);
+  const fetchNotifications = useNotificationsStore(state => state.fetchNotifiactions);
+  const notifications = useNotificationsStore(
+    state => state.notificationsByInstallationId[params.installationId],
+  );
+  const haVersion = observations?.length > 0 && observations[0].ha_config?.version;
+  const isHAUpdateAvailable =
+    latestHaRelease != null && haVersion != null && haVersion != latestHaRelease;
   const fetchAddons = useAddonsStore(state => state.fetchAddons);
   const addons = useAddonsStore(
     state => state.addonsByInstallationId[params.installationId],
@@ -78,10 +93,30 @@ export function HaargosTips(params: TipsParams) {
   const addonsToUpdate = addons?.filter(a => a.update_available) ?? [];
 
   if (addonsToUpdate.length > 0) {
-    const nameList = addonsToUpdate.map(a => `${a.name} (${a.version} -> ${a.version_latest})`).join("\r\n");
-    tips.push({
-      title: `Update addons`,
+    const nameList = addonsToUpdate
+      .map(a => `${a.name} (${a.version} -> ${a.version_latest})`)
+      .join('\r\n');
+    insights.push({
+      title: `Update ${addonsToUpdate.length} addon${
+        addonsToUpdate.length == 1 ? '' : 's'
+      }`,
       description: nameList,
+    });
+  }
+
+  if (isHAUpdateAvailable) {
+    insights.push({
+      title: `Update Home Assistant`,
+      description: `An upgrade to Home Assistant ${latestHaRelease} is available`,
+    });
+  }
+
+  if (notifications?.length ?? 0 > 0) {
+    insights.push({
+      title: `Notifications available`,
+      description: `Resolve ${notifications.length} notification${
+        notifications.length == 1 ? '' : 's'
+      }`,
     });
   }
 
@@ -93,6 +128,7 @@ export function HaargosTips(params: TipsParams) {
   const update = async () => {
     const token = await getAccessTokenSilently();
     await fetchAddons(params.installationId, token);
+    await fetchNotifications(params.installationId, token);
   };
 
   useEffect(() => {
@@ -110,14 +146,14 @@ export function HaargosTips(params: TipsParams) {
   };
 
   const nextTip = () => {
-    setCurrentTipIndex(prevIndex => (prevIndex + 1) % tips.length);
+    setCurrentTipIndex(prevIndex => (prevIndex + 1) % insights.length);
   };
 
   const previousTip = () => {
-    setCurrentTipIndex(prevIndex => (prevIndex - 1 + tips.length) % tips.length);
+    setCurrentTipIndex(prevIndex => (prevIndex - 1 + insights.length) % insights.length);
   };
 
-  return tips.length == 0 ? (
+  return insights.length == 0 ? (
     <></>
   ) : (
     <Card className="2xl:max-w-[30%]">
@@ -129,16 +165,9 @@ export function HaargosTips(params: TipsParams) {
           </button>
         </div> */}
       </div>
-      {tips.map(t => {
+      {insights.map(t => {
         return (
-          <Callout
-            className="mt-4"
-            title={`${addonsToUpdate.length} addon update${
-              addonsToUpdate.length == 1 ? '' : 's'
-            } available`}
-            icon={Icons.helpCircle}
-            color="blue"
-          >
+          <Callout className="mt-4" title={t.title} icon={Icons.helpCircle} color="blue">
             {t.description}
           </Callout>
         );

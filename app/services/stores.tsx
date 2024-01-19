@@ -568,8 +568,8 @@ const parseLog = (logString: string, source: LogSource): Log[] => {
         log: log,
       });
     } else if (source == 'supervisor') {
-      const dateString = `${strip(parts[0]).slice(4)} ${parts[1]}`;
-      const parsed = moment(dateString, 'YY-mm-dd HH:mm:ss');
+      const dateString = `${strip(parts[0])} ${parts[1]}`;
+      const parsed = moment(dateString, 'YY-MM-DD HH:mm:ss');
       const ansi = parse(log);
 
       const ansiColor = ansi.spans[0]?.color.name;
@@ -623,5 +623,6 @@ export {
   useInstallationSwitcherStore,
   useLogsStore,
   useNotificationsStore,
-  useUserStore,
+  useUserStore
 };
+

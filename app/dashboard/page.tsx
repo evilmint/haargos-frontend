@@ -1,10 +1,11 @@
 'use client';
 
+import { useInstallationStore } from '@/app/services/stores/installation';
+import { useUserStore } from '@/app/services/stores/user';
 import { InstallationsAbsentContent } from '@/components/installations-absent-content';
 import { InstallationsPresentContent } from '@/components/installations-present-content';
 import { MainNav } from '@/components/ui/main-nav';
 import { UserNav } from '@/components/ui/user-nav';
-import { useInstallationStore, useUserStore } from '../services/stores';
 
 export default function DashboardPage() {
   const user = useUserStore(state => state.user);

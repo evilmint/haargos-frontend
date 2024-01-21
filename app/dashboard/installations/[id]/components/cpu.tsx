@@ -10,7 +10,7 @@ import {
 } from '@/components/ui/table';
 import { LineChart } from '@tremor/react';
 
-import { useInstallationStore } from '@/app/services/stores';
+import { useInstallationStore } from '@/app/services/stores/installation';
 import { Card, CardContent, CardHeader, CardTitle } from '@/registry/new-york/ui/card';
 import { useAuth0 } from '@auth0/auth0-react';
 import moment from 'moment';

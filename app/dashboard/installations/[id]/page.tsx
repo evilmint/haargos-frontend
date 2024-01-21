@@ -1,10 +1,8 @@
 'use client';
-import {
-  useAddonsStore,
-  useInstallationStore,
-  useInstallationSwitcherStore,
-  useNotificationsStore,
-} from '@/app/services/stores';
+import { useAddonsStore } from '@/app/services/stores/addons';
+import { useInstallationStore } from '@/app/services/stores/installation';
+import { useInstallationSwitcherStore } from '@/app/services/stores/installation-switcher';
+import { useNotificationsStore } from '@/app/services/stores/notifications';
 import { Icons } from '@/components/icons';
 import { Button } from '@/components/ui/button';
 import { MainNav } from '@/components/ui/main-nav';
@@ -46,6 +44,8 @@ import { Storage } from './components/storage';
 import { ZigbeeDataTableProxy } from './components/zigbee/zigbee-data-table-proxy';
 
 import { updateInstallation } from '@/app/services/installations';
+import { useOSStore } from '@/app/services/stores/os';
+import { useSupervisorStore } from '@/app/services/stores/supervisor';
 import { HaargosInsights } from '@/components/insights';
 import { isLocalDomain } from '@/lib/local-domain';
 import {
@@ -68,6 +68,7 @@ import { LogSwitcher } from './components/logs/log-switcher';
 import { Memory } from './components/memory';
 import { Network } from './components/network';
 import { Notifications } from './components/notifications';
+import { Supervisor } from './components/supervisor';
 
 const updateInstallationFormSchema = z.object({
   name: z
@@ -112,6 +113,12 @@ export default function DashboardInstallationPage({
   );
   const fetchAddons = useAddonsStore(state => state.fetchAddons);
   const addons = useAddonsStore(state => state.addonsByInstallationId[params.id]);
+  const fetchSupervisor = useSupervisorStore(state => state.fetchSupervisor);
+  const supervisor = useSupervisorStore(
+    state => state.supervisorByInstallationId[params.id],
+  );
+  const fetchOS = useOSStore(state => state.fetchOS);
+  const os = useOSStore(state => state.osByInstallationId[params.id]);
 
   const [origin, setOrigin] = useState<string | null>(null);
   const [defaultTab, setDefaultTab] = useState<string>('overview');
@@ -170,8 +177,6 @@ export default function DashboardInstallationPage({
     try {
       const token = await getAccessTokenSilently();
       await fetchInstallations(token, true);
-      await fetchNotifications(params.id, token);
-      await fetchAddons(params.id, token);
     } catch (error) {
       console.log(error);
     }
@@ -249,13 +254,16 @@ export default function DashboardInstallationPage({
     };
   }
 
+  const supervisorUpdateCount =
+    (supervisor?.update_available ? 1 : 0) + (os?.update_available ? 1 : 0);
+
   const dockerEnabled =
     observations && observations.length > 0
       ? observations[0].agent_type != 'addon'
       : false;
 
   const notificationsEnabled = true;
-  const addonsEnabled =
+  const hasSupervisor =
     observations && observations.length > 0
       ? observations[0].agent_type == 'addon'
       : false;
@@ -471,7 +479,21 @@ export default function DashboardInstallationPage({
                       )}
                     </Tab>
 
-                    {addonsEnabled ? (
+                    {hasSupervisor ? (
+                      <Tab>
+                        Supervisor{' '}
+                        {supervisorUpdateCount > 0 ? (
+                          <Badge size="xs" className="text-xl w-5 h-5">
+                            {supervisorUpdateCount}
+                          </Badge>
+                        ) : (
+                          <></>
+                        )}
+                      </Tab>
+                    ) : (
+                      <></>
+                    )}
+                    {hasSupervisor ? (
                       <Tab>
                         Addons{' '}
                         {addons?.filter(a => a.update_available).length > 0 ? (
@@ -506,7 +528,17 @@ export default function DashboardInstallationPage({
                       <></>
                     )}
 
-                    {addonsEnabled ? (
+                    {hasSupervisor ? (
+                      <TabPanel>
+                        <div className="mt-10">
+                          <Supervisor installationId={params.id} />
+                        </div>
+                      </TabPanel>
+                    ) : (
+                      <></>
+                    )}
+
+                    {hasSupervisor ? (
                       <TabPanel>
                         <div className="mt-10">
                           <AddonDataTableProxy installationId={params.id} />

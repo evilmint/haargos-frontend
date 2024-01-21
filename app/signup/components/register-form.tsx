@@ -2,11 +2,10 @@
 
 import * as React from 'react';
 
-import {
-  useAccountStore,
-  useInstallationStore,
-  useUserStore,
-} from '@/app/services/stores';
+import { useAccountStore } from '@/app/services/stores/account';
+import { useInstallationStore } from '@/app/services/stores/installation';
+
+import { useUserStore } from '@/app/services/stores/user';
 import { User } from '@/app/types';
 import { FailureAlert } from '@/components/ui/failure-alert';
 import { RegisterFormValues, registerFormSchema } from '@/lib/zod';

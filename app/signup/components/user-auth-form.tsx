@@ -2,7 +2,7 @@
 
 import * as React from 'react';
 
-import { useUserStore } from '@/app/services/stores';
+import { useUserStore } from '@/app/services/stores/user';
 import { SignUpButton } from '@/components/ui/login-button';
 import { cn } from '@/lib/utils';
 import { buttonVariants } from '@/registry/new-york/ui/button';

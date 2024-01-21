@@ -2,7 +2,7 @@
 
 import { BarList } from '@tremor/react';
 
-import { useInstallationStore } from '@/app/services/stores';
+import { useInstallationStore } from '@/app/services/stores/installation';
 import { formatUnit } from '@/lib/format-unit';
 import { Card, CardContent, CardHeader, CardTitle } from '@/registry/new-york/ui/card';
 import { useAuth0 } from '@auth0/auth0-react';

@@ -1,6 +1,7 @@
 'use client';
 
-import { useAddonsStore, useInstallationStore } from '@/app/services/stores';
+import { useAddonsStore } from '@/app/services/stores/addons';
+import { useInstallationStore } from '@/app/services/stores/installation';
 import { AddonsApiResponseAddon } from '@/app/types';
 import { GenericDataTable } from '@/lib/generic-data-table';
 import { useAuth0 } from '@auth0/auth0-react';

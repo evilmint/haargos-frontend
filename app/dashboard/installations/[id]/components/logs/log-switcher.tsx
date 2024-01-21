@@ -1,4 +1,4 @@
-import { useInstallationStore } from '@/app/services/stores';
+import { useInstallationStore } from '@/app/services/stores/installation';
 import { LogSource } from '@/app/types';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/registry/new-york/ui/tabs';
 import { LogsDataTableProxy } from './logs-data-table-proxy';
@@ -33,11 +33,13 @@ export function LogSwitcher(params: LogSwitcherParams) {
       <Tabs defaultValue="core" className="space-y-4">
         <TabsList className="ml-4">
           {logTypesAvailable.map(t => (
-            <TabsTrigger value={t.source}>{t.name}</TabsTrigger>
+            <TabsTrigger key={t.source} value={t.source + 'trigger'}>
+              {t.name}
+            </TabsTrigger>
           ))}
         </TabsList>
         {logTypesAvailable.map(t => (
-          <TabsContent value={t.source} className="space-y-4">
+          <TabsContent value={t.source} key={t.source + 'content'} className="space-y-4">
             <LogsDataTableProxy
               logSource={t.source}
               installationId={params.installationId}

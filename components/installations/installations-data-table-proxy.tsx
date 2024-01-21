@@ -1,6 +1,7 @@
 'use client';
 
-import { useInstallationStore, useUserStore } from '@/app/services/stores';
+import { useInstallationStore } from '@/app/services/stores/installation';
+import { useUserStore } from '@/app/services/stores/user';
 import { Installation, Observation } from '@/app/types';
 import { GenericDataTable } from '@/lib/generic-data-table';
 import { useAuth0 } from '@auth0/auth0-react';

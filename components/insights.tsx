@@ -1,14 +1,12 @@
-import {
-  useAddonsStore,
-  useInstallationStore,
-  useNotificationsStore,
-} from '@/app/services/stores';
+import { useAddonsStore } from '@/app/services/stores/addons';
+import { useInstallationStore } from '@/app/services/stores/installation';
+import { useNotificationsStore } from '@/app/services/stores/notifications';
 import { useAuth0 } from '@auth0/auth0-react';
 import { Callout, Card, Title } from '@tremor/react';
-import { useEffect, useMemo } from 'react';
+import { ReactNode, useEffect, useMemo } from 'react';
 import { Icons } from './icons';
 
-type Insight = { title: string; description: string };
+type Insight = { title: string; description: ReactNode };
 
 type InsightParams = {
   installationId: string;
@@ -75,7 +73,13 @@ export function HaargosInsights(params: InsightParams) {
       </div>
       {insights.map(t => {
         return (
-          <Callout className="mt-4" title={t.title} icon={Icons.helpCircle} color="blue">
+          <Callout
+            className="mt-4"
+            key={t.title}
+            title={t.title}
+            icon={Icons.helpCircle}
+            color="blue"
+          >
             {t.description}
           </Callout>
         );
@@ -105,7 +109,9 @@ const createHAUpdateInsight = (
 
   return {
     title: 'Update Home Assistant',
-    description: `An upgrade to Home Assistant ${latestHaRelease} is available`,
+    description: (
+      <a href="www.wp.pl">{`An upgrade to Home Assistant ${latestHaRelease} is available`}</a>
+    ),
   };
 };
 

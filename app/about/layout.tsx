@@ -3,7 +3,6 @@ import { MainNav } from '@/components/ui/main-nav';
 import { UserNav } from '@/components/ui/user-nav';
 import type { Metadata } from 'next';
 
-
 const error = console.error;
 console.error = (...args: any) => {
   if (/defaultProps/.test(args[0])) return;
@@ -30,7 +29,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       </div>
 
       {children}
-
     </div>
   );
 }

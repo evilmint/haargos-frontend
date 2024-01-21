@@ -5,7 +5,9 @@ import Link from 'next/link';
 import { useForm } from 'react-hook-form';
 import * as z from 'zod';
 
-import { useAccountStore, useUserStore } from '@/app/services/stores';
+import { useAccountStore } from '@/app/services/stores/account';
+
+import { useUserStore } from '@/app/services/stores/user';
 import { FailureAlert } from '@/components/ui/failure-alert';
 import { Button } from '@/registry/new-york/ui/button';
 import {

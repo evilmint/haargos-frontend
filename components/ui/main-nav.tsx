@@ -2,11 +2,10 @@
 
 import Link from 'next/link';
 
-import {
-  useInstallationStore,
-  useInstallationSwitcherStore,
-  useUserStore,
-} from '@/app/services/stores';
+import { useInstallationStore } from '@/app/services/stores/installation';
+import { useInstallationSwitcherStore } from '@/app/services/stores/installation-switcher';
+
+import { useUserStore } from '@/app/services/stores/user';
 import { cn } from '@/lib/utils';
 import { Button } from '@/registry/new-york/ui/button';
 import { LucideExternalLink } from 'lucide-react';

@@ -3,7 +3,7 @@
 import { useAuth0 } from '@auth0/auth0-react';
 import { useEffect } from 'react';
 
-import { useInstallationStore } from '@/app/services/stores';
+import { useInstallationStore } from '@/app/services/stores/installation';
 import { Installation } from '@/app/types';
 import {
   BarList,

@@ -1,7 +1,7 @@
 'use client';
 
 import { updateInstallation } from '@/app/services/installations';
-import { useInstallationStore } from '@/app/services/stores';
+import { useInstallationStore } from '@/app/services/stores/installation';
 import { Installation } from '@/app/types';
 import { NotesFormValues, notesFormSchema } from '@/lib/zod';
 import {

@@ -2,10 +2,8 @@
 
 import { CaretSortIcon, CheckIcon, PlusCircledIcon } from '@radix-ui/react-icons';
 
-import {
-  useInstallationStore,
-  useInstallationSwitcherStore,
-} from '@/app/services/stores';
+import { useInstallationStore } from '@/app/services/stores/installation';
+import { useInstallationSwitcherStore } from '@/app/services/stores/installation-switcher';
 import { Installation } from '@/app/types';
 import { cn } from '@/lib/utils';
 import { Button } from '@/registry/new-york/ui/button';

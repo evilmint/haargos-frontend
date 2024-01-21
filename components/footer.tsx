@@ -16,10 +16,10 @@ export default function Footer() {
             Haargos
           </a>
         </div>
-        <div className="w-full md:w-2/3  align-right md:text-right">
+        <div className="w-full md:w-2/3 align-right md:text-right">
           <div className="flex-inline md:flex flex-wrap items-center">
             {links.map(link => (
-              <div className="my-4">
+              <div className="my-4" key={link.name}>
                 <a href={link.href} className="px-4">
                   {link.name}
                 </a>

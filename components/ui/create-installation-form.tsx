@@ -1,7 +1,7 @@
 'use client';
 
 import { createInstallation } from '@/app/services/installations';
-import { useInstallationStore } from '@/app/services/stores';
+import { useInstallationStore } from '@/app/services/stores/installation';
 import { Installation } from '@/app/types';
 import { UpgradeTierError } from '@/lib/errors';
 import { CreateInstallationFormValues, createInstallationFormSchema } from '@/lib/zod';

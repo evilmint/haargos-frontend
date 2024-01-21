@@ -1,184 +1,12 @@
-import {
-  AddonsApiResponseAddon,
-  BatteryType,
-  Installation,
-  Log,
-  LogSource,
-  NotificationsApiResponseNotification,
-  Observation,
-  Storage,
-  User,
-} from '@/app/types';
-import moment from 'moment';
+import { BatteryType, Installation, Observation, Storage } from '@/app/types';
 import { create } from 'zustand';
-import { createAccount, deleteAccount, updateAccount } from './account';
-import { fetchAddons } from './addons';
-import { contact } from './contact';
 import {
   createInstallation,
   deleteInstallation,
   getInstallations,
-} from './installations';
-import { fetchLogs } from './logs';
-import { fetchNotifications } from './notifications';
-import { getObservations } from './observations';
-import { getUserMe } from './users';
+} from '../installations';
+import { getObservations } from '../observations';
 const { parse, strip } = require('ansicolor');
-
-interface UserState {
-  user: User | null;
-  setUser: (user: User | null) => void;
-  clear: () => void;
-  isFetchingUser: boolean;
-  fetchUser: (token: string) => Promise<void>;
-}
-
-class UserDoesNotExistError extends Error {}
-
-const useUserStore = create<UserState>((set, get) => ({
-  user: null,
-  isFetchingUser: false,
-  setUser: user => set(() => ({ user })),
-  clear: () => set(() => ({ user: null, isFetchingUser: false })),
-  fetchUser: async token => {
-    const { user } = get();
-    if (user) return;
-
-    if (get().isFetchingUser) return;
-    set({ isFetchingUser: true });
-
-    try {
-      const user = await getUserMe(token);
-      if (!user) {
-        throw new UserDoesNotExistError();
-      }
-      set({ user });
-    } catch (error) {
-      return Promise.reject(error);
-    } finally {
-      set({ isFetchingUser: false });
-    }
-  },
-}));
-
-interface ContactState {
-  contact: (name: string, email: string, message: string) => Promise<void>;
-}
-
-const useContactStore = create<ContactState>(() => ({
-  contact: async (name, email, message) => {
-    await contact(name, email, message);
-  },
-}));
-
-interface AccountState {
-  deleteAccount: (token: string) => Promise<void>;
-  updateAccount: (token: string, data: any) => Promise<void>;
-  createAccount: (token: string, userFullName: string) => Promise<User>;
-}
-
-const useAccountStore = create<AccountState>(() => ({
-  deleteAccount: async token => {
-    await deleteAccount(token);
-  },
-  updateAccount: async (token, data) => {
-    await updateAccount(token, data);
-  },
-  createAccount: async (token, userFullName) => {
-    return await createAccount(token, userFullName);
-  },
-}));
-
-interface NotificationsState {
-  notificationsByInstallationId: Record<string, NotificationsApiResponseNotification[]>;
-  fetchNotifiactions: (installationId: string, token: string) => Promise<void>;
-}
-
-const useNotificationsStore = create<NotificationsState>((set, get) => ({
-  notificationsByInstallationId: {},
-  async fetchNotifiactions(installationId, token) {
-    if (get().notificationsByInstallationId[installationId]) {
-      return;
-    }
-
-    const response = await fetchNotifications(installationId, token);
-
-    set(state => ({
-      notificationsByInstallationId: {
-        ...state.notificationsByInstallationId,
-        [installationId]: response.body.notifications,
-      },
-    }));
-  },
-}));
-
-interface AddonsState {
-  addonsByInstallationId: Record<string, AddonsApiResponseAddon[]>;
-  fetchAddons: (installationId: string, token: string) => Promise<void>;
-}
-
-const useAddonsStore = create<AddonsState>((set, get) => ({
-  addonsByInstallationId: {},
-  async fetchAddons(installationId, token) {
-    if (get().addonsByInstallationId[installationId]) {
-      return;
-    }
-
-    const response = await fetchAddons(installationId, token);
-
-    set(state => ({
-      addonsByInstallationId: {
-        ...state.addonsByInstallationId,
-        [installationId]: response.body.addons,
-      },
-    }));
-  },
-}));
-
-interface LogsState {
-  logsByInstallationId: Record<string, Record<string, Log[]>>;
-  fetchLogs: (installationId: string, type: LogSource, token: string) => Promise<void>;
-}
-
-const useLogsStore = create<LogsState>((set, get) => ({
-  logsByInstallationId: {},
-  async fetchLogs(installationId, type, token) {
-    if (
-      get().logsByInstallationId[installationId] &&
-      get().logsByInstallationId[installationId][type]
-    ) {
-      return;
-    }
-
-    const logs = await fetchLogs(installationId, type, token);
-    const parsedLogs = parseLog(logs.body.content, type);
-
-    set(state => ({
-      logsByInstallationId: {
-        ...state.logsByInstallationId,
-        [installationId]: {
-          ...state.logsByInstallationId[installationId],
-          [type]: parsedLogs,
-        },
-      },
-    }));
-  },
-}));
-
-interface InstallationState {
-  selectedInstallation: Installation | null;
-  clearInstallation: () => void;
-  clear: () => void;
-  setSelectedInstallation: (installation: any | null) => void;
-}
-
-const useInstallationSwitcherStore = create<InstallationState>(set => ({
-  selectedInstallation: null,
-  clearInstallation: () => set(() => ({ selectedInstallation: null })),
-  clear: () => set(() => ({ selectedInstallation: null })),
-  setSelectedInstallation: selectedInstallation =>
-    set(() => ({ selectedInstallation: selectedInstallation })),
-}));
 
 interface InstallationStoreState {
   installations: Installation[];
@@ -500,10 +328,6 @@ const useInstallationStore = create<InstallationStoreState>((set, get) => ({
   },
 }));
 
-function wrapSquareBracketsWithEm(inputString: string) {
-  const regex = /\[([^\]]+)\]/g;
-  return inputString.replace(regex, '<p class="text-xs">[$1]</p>');
-}
 const findHighestUseStorage = (storageArray: Storage[]): Storage | null => {
   return storageArray.reduce((highest: Storage | null, storage: Storage) => {
     if (highest === null) {
@@ -517,92 +341,6 @@ const findHighestUseStorage = (storageArray: Storage[]): Storage | null => {
   }, null);
 };
 
-function parseISOLocal(s: any) {
-  var b = s.split(/\D/);
-  return new Date(b[0], b[1] - 1, b[2], b[3], b[4], b[5]);
-}
-
-const parseLog = (logString: string, source: LogSource): Log[] => {
-  let logs = logString.split('\n');
-
-  const seenTimes = new Set<number>();
-
-  let reduced = logs.reduce((acc: Log[], log: string) => {
-    const parts = log.split(/\s+/);
-    if (parts.length >= 5 && source == 'core') {
-      const time = parseISOLocal(parts[0] + 'T' + parts[1]);
-
-      if (seenTimes.has(time.getTime())) {
-        return acc; // skip if this time has already been seen
-      }
-
-      seenTimes.add(time.getTime());
-
-      const logType = parts[2][0];
-      const thread = parts[3].replace('(', '').replace(')', '');
-      const restOfLog = parts.slice(4).join(' ');
-
-      acc.push({
-        raw: log,
-        time: time,
-        type: logType,
-        thread: thread,
-        log: wrapSquareBracketsWithEm(restOfLog),
-      });
-    } else if (source == 'host') {
-      const parsed = moment(`${parts[0]} ${parts[1]} ${parts[2]}`, 'MMM D HH:mm:ss');
-
-      acc.push({
-        raw: log,
-        time: parsed.toDate(),
-        type: '',
-        thread: '',
-        log: parts.slice(3).join(' '),
-      });
-    } else if (source == 'multicast' || source == 'audio' || source == 'dns') {
-      acc.push({
-        raw: log,
-        time: null,
-        type: '',
-        thread: '',
-        log: log,
-      });
-    } else if (source == 'supervisor') {
-      const dateString = `${strip(parts[0])} ${parts[1]}`;
-      const parsed = moment(dateString, 'YY-MM-DD HH:mm:ss');
-      const ansi = parse(log);
-
-      const ansiColor = ansi.spans[0]?.color.name;
-
-      let color: string;
-
-      switch (ansiColor) {
-        case 'green':
-          color = 'text-green-600';
-          break;
-        case 'yellow':
-          color = 'text-orange-600';
-          break;
-        default:
-          color = 'text-inherit';
-          break;
-      }
-
-      acc.push({
-        raw: log,
-        time: parsed.toDate(),
-        type: '',
-        thread: '',
-        log: strip(log),
-        color: color,
-      });
-    }
-    return acc;
-  }, []);
-
-  return reduced.sort((a, b) => (b.time?.getTime() ?? 0) - (a.time?.getTime() ?? 0));
-};
-
 const extractUniqueVolumes = (volumesUnsorted: Storage[]): Storage[] => {
   const map = new Map();
   return volumesUnsorted.reduce((uniqueVolumes: Storage[], volume: Storage) => {
@@ -614,15 +352,4 @@ const extractUniqueVolumes = (volumesUnsorted: Storage[]): Storage[] => {
   }, []);
 };
 
-export {
-  UserDoesNotExistError,
-  useAccountStore,
-  useAddonsStore,
-  useContactStore,
-  useInstallationStore,
-  useInstallationSwitcherStore,
-  useLogsStore,
-  useNotificationsStore,
-  useUserStore
-};
-
+export { useInstallationStore };

@@ -12,7 +12,7 @@ import {
   DropdownMenuTrigger,
 } from '@/registry/new-york/ui/dropdown-menu';
 
-import { UserDoesNotExistError, useUserStore } from '@/app/services/stores';
+import { UserDoesNotExistError, useUserStore } from '@/app/services/stores/user';
 import { fullNameInitials } from '@/app/tools';
 import { TierResolver } from '@/lib/tier-resolver';
 import { cn } from '@/lib/utils';

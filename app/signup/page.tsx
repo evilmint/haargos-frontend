@@ -3,11 +3,11 @@
 import Link from 'next/link';
 import { UserAuthForm } from './components/user-auth-form';
 
+import { useUserStore } from '@/app/services/stores/user';
 import { cn } from '@/lib/utils';
 import { buttonVariants } from '@/registry/new-york/ui/button';
 import { useAuth0 } from '@auth0/auth0-react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { useUserStore } from '../services/stores';
 import { RegisterForm } from './components/register-form';
 
 export default function SignupPage() {

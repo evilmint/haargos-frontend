@@ -1,9 +1,7 @@
 'use effect';
 
-import {
-  useInstallationStore,
-  useInstallationSwitcherStore,
-} from '@/app/services/stores';
+import { useInstallationStore } from '@/app/services/stores/installation';
+import { useInstallationSwitcherStore } from '@/app/services/stores/installation-switcher';
 import { useAuth0 } from '@auth0/auth0-react';
 import { ReactNode, useEffect } from 'react';
 

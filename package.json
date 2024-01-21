@@ -33,6 +33,7 @@
     "eslint": "8.45.0",
     "eslint-config-next": "13.4.10",
     "highlight.js": "^11.8.0",
+    "immer": "^10.0.3",
     "ip": "^1.1.8",
     "ipaddr": "^0.1.0",
     "ipaddr.js": "^2.1.0",

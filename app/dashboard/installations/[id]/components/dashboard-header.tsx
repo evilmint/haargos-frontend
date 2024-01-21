@@ -1,5 +1,5 @@
 'use client';
-import { useInstallationStore } from '@/app/services/stores';
+import { useInstallationStore } from '@/app/services/stores/installation';
 import { Icons } from '@/components/icons';
 import {
   Tooltip,
@@ -114,7 +114,9 @@ export function DashboardHeaderInstallation({ ...params }) {
         }
       : { is_healthy: false, last_updated: null, color: 'red' };
 
-  const localDomain = installation?.urls?.instance?.url ? isLocalDomain(new URL(installation.urls.instance.url)) : false;
+  const localDomain = installation?.urls?.instance?.url
+    ? isLocalDomain(new URL(installation.urls.instance.url))
+    : false;
   const isCollectingData =
     installation &&
     installation.health_statuses.length == 0 &&

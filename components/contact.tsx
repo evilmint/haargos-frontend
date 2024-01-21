@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import * as z from 'zod';
 
-import { useContactStore } from '@/app/services/stores';
+import { useContactStore } from '@/app/services/stores/contact';
 import { FailureAlert } from '@/components/ui/failure-alert';
 import {
   Form,

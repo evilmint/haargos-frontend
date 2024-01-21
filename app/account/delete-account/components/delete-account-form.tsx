@@ -4,12 +4,11 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import * as z from 'zod';
 
-import {
-  useAccountStore,
-  useInstallationStore,
-  useInstallationSwitcherStore,
-  useUserStore,
-} from '@/app/services/stores';
+import { useAccountStore } from '@/app/services/stores/account';
+import { useInstallationStore } from '@/app/services/stores/installation';
+import { useInstallationSwitcherStore } from '@/app/services/stores/installation-switcher';
+
+import { useUserStore } from '@/app/services/stores/user';
 import { FailureAlert } from '@/components/ui/failure-alert';
 import {
   AlertDialog,

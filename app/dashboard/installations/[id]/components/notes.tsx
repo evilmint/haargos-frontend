@@ -1,4 +1,4 @@
-import { useInstallationStore } from '@/app/services/stores';
+import { useInstallationStore } from '@/app/services/stores/installation';
 import { NotesForm } from '@/components/ui/notes-form';
 import { useState } from 'react';
 

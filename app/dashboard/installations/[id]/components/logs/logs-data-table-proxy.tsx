@@ -1,6 +1,6 @@
 'use client';
-
-import { useInstallationStore, useLogsStore } from '@/app/services/stores';
+import { useInstallationStore } from '@/app/services/stores/installation';
+import { useLogsStore } from '@/app/services/stores/logs';
 import { Log, LogSource } from '@/app/types';
 import { HALink } from '@/components/ha-link';
 import { GenericDataTable } from '@/lib/generic-data-table';

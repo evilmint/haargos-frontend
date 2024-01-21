@@ -1,6 +1,6 @@
 'use client';
 
-import { useInstallationStore } from '@/app/services/stores';
+import { useInstallationStore } from '@/app/services/stores/installation';
 import { HALink } from '@/components/ha-link';
 import { useAuth0 } from '@auth0/auth0-react';
 import { BarChart, Card, Title } from '@tremor/react';

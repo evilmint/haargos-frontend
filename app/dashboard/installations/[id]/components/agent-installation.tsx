@@ -1,6 +1,6 @@
 'use client';
 
-import { useInstallationStore } from '@/app/services/stores';
+import { useInstallationStore } from '@/app/services/stores/installation';
 import { HALink } from '@/components/ha-link';
 import { Card, CardContent, CardHeader, CardTitle } from '@/registry/new-york/ui/card';
 import { Checkbox } from '@/registry/new-york/ui/checkbox';

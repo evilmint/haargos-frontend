@@ -1,6 +1,6 @@
 'use client';
 
-import { useInstallationSwitcherStore } from '@/app/services/stores';
+import { useInstallationSwitcherStore } from '@/app/services/stores/installation-switcher';
 import { Button } from '@/registry/new-york/ui/button';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';

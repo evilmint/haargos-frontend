@@ -181,6 +181,42 @@ interface AddonsApiResponseAddon {
   logo: boolean;
 }
 
+interface OSInfoResponse {
+  body: OSInfo;
+}
+
+interface OSInfo {
+  version: string;
+  version_latest: string;
+  update_available: boolean;
+  board: string;
+  boot: string;
+  data_disk: string;
+}
+
+interface SupervisorInfo {
+  version: string;
+  version_latest: string;
+  update_available: boolean;
+  arch: string;
+  channel: string;
+  timezone: string;
+  healthy: boolean;
+  supported: boolean;
+  logging: string;
+  ip_address: string;
+  wait_boot: number;
+  debug: boolean;
+  debug_block: boolean;
+  diagnostics: null | any; // Replace 'any' with a more specific type if possible
+  addons_repositories: string[];
+  auto_update: boolean;
+}
+
+interface SupervisorInfoResponse {
+  body: SupervisorInfo | null;
+}
+
 interface NotificationsApiResponse {
   body: {
     notifications: NotificationsApiResponseNotification[];
@@ -271,15 +307,18 @@ export {
   NetworkInterfaceData,
   NotificationsApiResponse,
   NotificationsApiResponseNotification,
+  OSInfo,
+  OSInfoResponse,
   Observation,
   ObservationApiResponse,
   Scene,
   Script,
   Storage,
+  SupervisorInfo,
+  SupervisorInfoResponse,
   Tier,
   User,
   UserApiResponse,
   Zigbee,
-  ZigbeeDevice
+  ZigbeeDevice,
 };
-

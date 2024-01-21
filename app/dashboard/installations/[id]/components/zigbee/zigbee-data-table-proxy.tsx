@@ -1,6 +1,7 @@
 'use client';
 
-import { useInstallationStore, useUserStore } from '@/app/services/stores';
+import { useInstallationStore } from '@/app/services/stores/installation';
+import { useUserStore } from '@/app/services/stores/user';
 import { Observation, ZigbeeDevice } from '@/app/types';
 import { HACustomLink } from '@/components/ha-link';
 import { GenericDataTable } from '@/lib/generic-data-table';

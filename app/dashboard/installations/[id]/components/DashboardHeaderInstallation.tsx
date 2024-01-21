@@ -1,5 +1,5 @@
 'use client';
-import { useInstallationStore } from '@/app/services/stores';
+import { useInstallationStore } from '@/app/services/stores/installation';
 import { Icons } from '@/components/icons';
 import {
   Tooltip,

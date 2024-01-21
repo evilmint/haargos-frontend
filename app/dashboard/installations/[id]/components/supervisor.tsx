@@ -60,7 +60,9 @@ function SupervisorSection({ installationId }: { installationId: string }) {
     {
       name: 'Supervisor update',
       value: supervisorInfo.update_available ? (
-        <InstallationLink installationId={installationId} path="/config/updates" />
+        <InstallationLink installationId={installationId} path="/config/updates">
+          Available
+        </InstallationLink>
       ) : (
         'Up to date'
       ),

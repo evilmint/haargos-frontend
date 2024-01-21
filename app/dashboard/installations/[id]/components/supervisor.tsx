@@ -1,13 +1,17 @@
+import { useInstallationStore } from '@/app/services/stores/installation';
 import { useOSStore } from '@/app/services/stores/os';
 import { useSupervisorStore } from '@/app/services/stores/supervisor';
+import { InstallationLink } from '@/components/installation-link';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableRow } from '@/components/ui/table';
 import { useAuth0 } from '@auth0/auth0-react';
-import { useEffect } from 'react';
+import { ReactElement, useEffect } from 'react';
 
 type SupervisorParams = {
   installationId: string;
 };
+
+type Field = { name: string; value: string | boolean | ReactElement };
 
 export function Supervisor({ installationId }: SupervisorParams) {
   return (
@@ -52,16 +56,20 @@ function SupervisorSection({ installationId }: { installationId: string }) {
     return null;
   }
 
-  const fields = [
+  const fields: Field[] = [
     {
       name: 'Supervisor update',
-      value: supervisorInfo.update_available ? 'Available' : 'Up to date',
+      value: supervisorInfo.update_available ? (
+        <InstallationLink installationId={installationId} path="/config/updates" />
+      ) : (
+        'Up to date'
+      ),
     },
     { name: 'Supervisor Version', value: supervisorInfo.version },
     { name: 'Supervisor Latest', value: supervisorInfo.version_latest },
     { name: 'Arch', value: supervisorInfo.arch },
     { name: 'Channel', value: supervisorInfo.channel },
-    { name: 'Wait boot', value: supervisorInfo.wait_boot },
+    { name: 'Wait boot', value: supervisorInfo.wait_boot.toString() },
     { name: 'Healthy', value: supervisorInfo.healthy ? 'Yes' : 'No' },
     { name: 'Debug', value: supervisorInfo.debug ? 'Available' : 'Up to date' },
     { name: 'Auto update', value: supervisorInfo.auto_update ? 'Enabled' : 'Disabled' },
@@ -81,6 +89,10 @@ function OSSection({ installationId }: { installationId: string }) {
   const osInfo = useOSStore(state => state.osByInstallationId[installationId]);
   const { getAccessTokenSilently } = useAuth0();
 
+  const installation = useInstallationStore(state =>
+    state.installations.find(i => i.id === installationId),
+  );
+
   const asyncFetch = async () => {
     try {
       const token = await getAccessTokenSilently();
@@ -98,10 +110,14 @@ function OSSection({ installationId }: { installationId: string }) {
     return null;
   }
 
-  const fields = [
+  const fields: Field[] = [
     {
       name: 'OS update',
-      value: osInfo.update_available ? 'Available' : 'Up to date',
+      value: osInfo.update_available ? (
+        <InstallationLink installationId={installationId} path="/config/updates" />
+      ) : (
+        'Up to date'
+      ),
     },
     { name: 'OS Version', value: osInfo.version },
     { name: 'OS Latest', value: osInfo.version_latest },

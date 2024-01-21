@@ -3,10 +3,11 @@ import { useInstallationStore } from '@/app/services/stores/installation';
 import { useNotificationsStore } from '@/app/services/stores/notifications';
 import { useAuth0 } from '@auth0/auth0-react';
 import { Callout, Card, Title } from '@tremor/react';
-import { ReactNode, useEffect, useMemo } from 'react';
+import { ReactElement, useEffect, useMemo } from 'react';
 import { Icons } from './icons';
+import { InstallationLink } from './installation-link';
 
-type Insight = { title: string; description: ReactNode };
+type Insight = { title: string; description: ReactElement };
 
 type InsightParams = {
   installationId: string;
@@ -37,8 +38,8 @@ export function HaargosInsights(params: InsightParams) {
       latestHaRelease != null && haVersion != null && haVersion != latestHaRelease;
 
     return [
-      createAddonUpdateInsight(addonsToUpdate),
-      createHAUpdateInsight(isHAUpdateAvailable, latestHaRelease),
+      createAddonUpdateInsight(addonsToUpdate, params.installationId),
+      createHAUpdateInsight(isHAUpdateAvailable, latestHaRelease, params.installationId),
       createNotificationsInsight(notifications),
     ].filter(Boolean) as Insight[];
   }, [addons, latestHaRelease, notifications, observations]);
@@ -88,29 +89,42 @@ export function HaargosInsights(params: InsightParams) {
   );
 }
 
-const createAddonUpdateInsight = (addonsToUpdate: any[]): Insight | null => {
+const createAddonUpdateInsight = (
+  addonsToUpdate: any[],
+  installationId: string,
+): Insight | null => {
   if (addonsToUpdate.length === 0) return null;
 
   const title = `Update ${addonsToUpdate.length} addon${
     addonsToUpdate.length === 1 ? '' : 's'
   }`;
-  const description = addonsToUpdate
-    .map(addon => `${addon.name} (${addon.version} -> ${addon.version_latest})`)
-    .join('\r\n');
+  const description = addonsToUpdate.map(addon => (
+    <div>
+      <InstallationLink
+        installationId={installationId}
+        path={`/hassio/addon/${addon.slug}/info`}
+      >
+        {`${addon.name} (${addon.version} -> ${addon.version_latest})`}
+      </InstallationLink>
+    </div>
+  ));
 
-  return { title, description };
+  return { title, description: <div>{description}</div> };
 };
 
 const createHAUpdateInsight = (
   isHAUpdateAvailable: boolean,
   latestHaRelease: string | null,
+  installationId: string,
 ): Insight | null => {
   if (!isHAUpdateAvailable || !latestHaRelease) return null;
 
   return {
     title: 'Update Home Assistant',
     description: (
-      <a href="www.wp.pl">{`An upgrade to Home Assistant ${latestHaRelease} is available`}</a>
+      <InstallationLink installationId={installationId} path="/config/updates">
+        {`An upgrade to Home Assistant ${latestHaRelease} is available`}
+      </InstallationLink>
     ),
   };
 };

@@ -114,7 +114,9 @@ function OSSection({ installationId }: { installationId: string }) {
     {
       name: 'OS update',
       value: osInfo.update_available ? (
-        <InstallationLink installationId={installationId} path="/config/updates" />
+        <InstallationLink installationId={installationId} path="/config/updates">
+          Available
+        </InstallationLink>
       ) : (
         'Up to date'
       ),

@@ -7,7 +7,7 @@ import { ReactElement, useEffect, useMemo } from 'react';
 import { Icons } from './icons';
 import { InstallationLink } from './installation-link';
 
-type Insight = { title: string; description: ReactElement };
+type Insight = { title: string; description: string | ReactElement };
 
 type InsightParams = {
   installationId: string;

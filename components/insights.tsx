@@ -3,6 +3,7 @@ import { useInstallationStore } from '@/app/services/stores/installation';
 import { useNotificationsStore } from '@/app/services/stores/notifications';
 import { useAuth0 } from '@auth0/auth0-react';
 import { Callout, Card, Title } from '@tremor/react';
+import Link from 'next/link';
 import { ReactElement, useEffect, useMemo } from 'react';
 import { Icons } from './icons';
 import { InstallationLink } from './installation-link';
@@ -36,10 +37,16 @@ export function HaargosInsights(params: InsightParams) {
     const haVersion = observations?.length > 0 && observations[0].ha_config?.version;
     const isHAUpdateAvailable =
       latestHaRelease != null && haVersion != null && haVersion != latestHaRelease;
+    const isAddonInstallation = observations?.[0]?.agent_type == 'addon';
 
     return [
       createAddonUpdateInsight(addonsToUpdate, params.installationId),
-      createHAUpdateInsight(isHAUpdateAvailable, latestHaRelease, params.installationId),
+      createHAUpdateInsight(
+        isHAUpdateAvailable,
+        latestHaRelease,
+        params.installationId,
+        isAddonInstallation,
+      ),
       createNotificationsInsight(notifications),
     ].filter(Boolean) as Insight[];
   }, [addons, latestHaRelease, notifications, observations]);
@@ -116,16 +123,24 @@ const createHAUpdateInsight = (
   isHAUpdateAvailable: boolean,
   latestHaRelease: string | null,
   installationId: string,
+  isAddonInstallation: boolean,
 ): Insight | null => {
   if (!isHAUpdateAvailable || !latestHaRelease) return null;
 
+  const dockerDescription = (
+    <Link href="https://github.com/home-assistant/core/releases" target="_blank">
+      {`An upgrade to Home Assistant ${latestHaRelease} is available`}
+    </Link>
+  );
+  const addonDescription = (
+    <InstallationLink installationId={installationId} path="/config/updates">
+      {`An upgrade to Home Assistant ${latestHaRelease} is available`}
+    </InstallationLink>
+  );
+
   return {
     title: 'Update Home Assistant',
-    description: (
-      <InstallationLink installationId={installationId} path="/config/updates">
-        {`An upgrade to Home Assistant ${latestHaRelease} is available`}
-      </InstallationLink>
-    ),
+    description: isAddonInstallation ? addonDescription : dockerDescription,
   };
 };
 

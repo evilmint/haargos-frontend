@@ -4,7 +4,6 @@ import { MainNav } from '@/components/ui/main-nav';
 import { UserNav } from '@/components/ui/user-nav';
 import { Contact } from './contact';
 import Features from './features';
-import Footer from './footer';
 import Hero from './hero';
 import PricingTiers from './tiers';
 import WhatIsHaargos from './what-is-haargos';
@@ -26,7 +25,6 @@ export default function HomeComponent() {
       <Features />
       <PricingTiers />
       <Contact />
-      <Footer />
     </div>
   );
 }

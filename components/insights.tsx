@@ -108,6 +108,7 @@ const createAddonUpdateInsight = (
   const description = addonsToUpdate.map(addon => (
     <div>
       <InstallationLink
+        key={addon.slug}
         installationId={installationId}
         path={`/hassio/addon/${addon.slug}/info`}
       >

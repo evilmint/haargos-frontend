@@ -33,7 +33,7 @@ export function LogSwitcher(params: LogSwitcherParams) {
       <Tabs defaultValue="core" className="space-y-4">
         <TabsList className="ml-4">
           {logTypesAvailable.map(t => (
-            <TabsTrigger key={t.source} value={t.source + 'trigger'}>
+            <TabsTrigger key={t.source + 'trigger'} value={t.source}>
               {t.name}
             </TabsTrigger>
           ))}

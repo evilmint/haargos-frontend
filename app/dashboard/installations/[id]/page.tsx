@@ -46,7 +46,6 @@ import { ZigbeeDataTableProxy } from './components/zigbee/zigbee-data-table-prox
 import { updateInstallation } from '@/app/services/installations';
 import { useOSStore } from '@/app/services/stores/os';
 import { useSupervisorStore } from '@/app/services/stores/supervisor';
-import { useTabStore } from '@/app/services/stores/tab';
 import { HaargosInsights } from '@/components/insights';
 import { isLocalDomain } from '@/lib/local-domain';
 import {
@@ -65,7 +64,6 @@ import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import * as z from 'zod';
 import { AddonDataTableProxy } from './components/addons-data-table-proxy';
-import { JobsDataTableProxy } from './components/jobs/job-data-table-proxy';
 import { LogSwitcher } from './components/logs/log-switcher';
 import { Memory } from './components/memory';
 import { Network } from './components/network';
@@ -109,18 +107,21 @@ export default function DashboardInstallationPage({
 }: {
   params: { id: string };
 }) {
+  const fetchNotifications = useNotificationsStore(state => state.fetchNotifiactions);
   const notifications = useNotificationsStore(
     state => state.notificationsByInstallationId[params.id],
   );
+  const fetchAddons = useAddonsStore(state => state.fetchAddons);
   const addons = useAddonsStore(state => state.addonsByInstallationId[params.id]);
+  const fetchSupervisor = useSupervisorStore(state => state.fetchSupervisor);
   const supervisor = useSupervisorStore(
     state => state.supervisorByInstallationId[params.id],
   );
+  const fetchOS = useOSStore(state => state.fetchOS);
   const os = useOSStore(state => state.osByInstallationId[params.id]);
 
   const [origin, setOrigin] = useState<string | null>(null);
-  const defaultTab = useTabStore(state => state.currentTab);
-  const setDefaultTab = useTabStore(state => state.setCurrentTab);
+  const [defaultTab, setDefaultTab] = useState<string>('overview');
   const observations = useInstallationStore(state => state.observations[params.id]);
   const deleteInstallation = useInstallationStore(state => state.deleteInstallation);
   const router = useRouter();
@@ -296,13 +297,15 @@ export default function DashboardInstallationPage({
                   <TabsTrigger value="overview">Overview</TabsTrigger>
                   <TabsTrigger value="homeassistant">Home Assistant</TabsTrigger>
                   <TabsTrigger value="host">Host</TabsTrigger>
-                  <TabsTrigger value="jobs">Jobs</TabsTrigger>
                 </TabsList>
 
                 <AlertDialog>
                   <Sheet onOpenChange={setSheetOpen} open={sheetOpen}>
                     <SheetTrigger asChild>
-                      <Button variant="ghost" className="float-right">
+                      <Button
+                        variant="ghost"
+                        className="lg:float-right mt-4 lg:mt-0 mb-0"
+                      >
                         <Icons.cog6tooth />
                       </Button>
                     </SheetTrigger>
@@ -464,11 +467,11 @@ export default function DashboardInstallationPage({
               </TabsContent>
 
               <TabsContent value="homeassistant" className="space-y-4">
-                <TabGroup>
-                  <TabList className="mt-8">
-                    <Tab>Zigbee</Tab>
+                <TabGroup className="sm:max-md:block">
+                  <TabList className="md:mt-8 sm:max-md:block">
+                    <Tab className="sm:max-md:w-[100%] sm:max-md:ml-4">Zigbee</Tab>
 
-                    <Tab>
+                    <Tab className="sm:max-md:w-[100%]">
                       Notifications{' '}
                       {notifications?.length > 0 ? (
                         <Badge size="xs" className="text-xl w-5 h-5">
@@ -480,7 +483,7 @@ export default function DashboardInstallationPage({
                     </Tab>
 
                     {hasSupervisor ? (
-                      <Tab>
+                      <Tab className="sm:max-md:w-[100%]">
                         Supervisor{' '}
                         {supervisorUpdateCount > 0 ? (
                           <Badge size="xs" className="text-xl w-5 h-5">
@@ -494,7 +497,7 @@ export default function DashboardInstallationPage({
                       <></>
                     )}
                     {hasSupervisor ? (
-                      <Tab>
+                      <Tab className="sm:max-md:w-[100%]">
                         Addons{' '}
                         {addons?.filter(a => a.update_available).length > 0 ? (
                           <Badge size="xs" className="text-xl w-5 h-5">
@@ -507,9 +510,9 @@ export default function DashboardInstallationPage({
                     ) : (
                       <></>
                     )}
-                    <Tab>Automations</Tab>
-                    <Tab>Scenes</Tab>
-                    <Tab>Scripts</Tab>
+                    <Tab className="sm:max-md:w-[100%]">Automations</Tab>
+                    <Tab className="sm:max-md:w-[100%]">Scene</Tab>
+                    <Tab className="sm:max-md:w-[100%]">Scripts</Tab>
                   </TabList>
                   <TabPanels>
                     <TabPanel>
@@ -610,10 +613,6 @@ export default function DashboardInstallationPage({
                     </TabPanel>
                   </TabPanels>
                 </TabGroup>
-              </TabsContent>
-
-              <TabsContent value="jobs" className="space-y-4">
-                <JobsDataTableProxy installationId={params.id} />
               </TabsContent>
             </Tabs>
           </div>

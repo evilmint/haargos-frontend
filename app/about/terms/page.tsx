@@ -31,6 +31,49 @@ export default function TermsOfService() {
           </li>
 
           <li>
+            <strong>Supervisor and Operating System Data Collection</strong>
+            <p>
+              In addition to the previously mentioned data types, Haargos also collects
+              information pertaining to the Home Assistant supervisor and operating system
+              to provide a comprehensive monitoring experience. This may include system
+              health, version details, and other relevant metrics.
+            </p>
+          </li>
+
+          <li>
+            <strong>Remote Action Execution</strong>
+            <p>
+              Haargos provides the functionality to execute certain actions remotely on
+              your Home Assistant installation. These actions are intended to facilitate
+              system management and enhance user experience but require you to understand
+              and accept the associated risks. It is your responsibility to use these
+              features judiciously and to ensure that any actions taken do not compromise
+              the security and integrity of your system.
+            </p>
+          </li>
+
+          <li>
+            <strong>Consent for Remote Actions</strong>
+            <p>
+              By using Haargos, you grant explicit consent for the execution of remote
+              actions initiated through our platform. You acknowledge that while Haargos
+              takes precautions to ensure the safety and security of these operations, the
+              ultimate responsibility for any changes made to your system lies with you,
+              the user.
+            </p>
+          </li>
+
+          <li>
+            <strong>Limitation of Liability for Remote Actions</strong>
+            <p>
+              Haargos shall not be held liable for any direct or indirect consequences
+              that may arise from the execution of remote actions on your Home Assistant
+              installation. This includes, but is not limited to, system downtime, data
+              loss, or any other form of disruption.
+            </p>
+          </li>
+
+          <li>
             <strong>Data Collection and Usage</strong>
             <p>
               We collect data essential for providing and enhancing our service, including

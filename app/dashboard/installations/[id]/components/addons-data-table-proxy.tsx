@@ -43,7 +43,7 @@ export function AddonDataTableProxy({ ...params }) {
     asyncFetch();
   }, [getAccessTokenSilently, fetchAddonsForInstallation, installationId, user]);
 
-  const addonViews = addons?.map(addon => mapToTableView(addon)) ?? [];
+  const addonViews = addons?.map(addon => mapToTableView(addon, installationId)) ?? [];
 
   return (
     <GenericDataTable
@@ -74,13 +74,28 @@ export function AddonDataTableProxy({ ...params }) {
   );
 }
 
-function mapToTableView(addon: AddonsApiResponseAddon): AddonTableView {
+function mapToTableView(
+  addon: AddonsApiResponseAddon,
+  installationId: string,
+): AddonTableView {
   return {
     slug: addon.slug,
     name: addon.name,
+    action: {
+      addonSlug: addon.slug,
+      installationId: installationId,
+      actionsAvailable: !addon.isHaargos,
+      isStopped: addon.state != 'started',
+      isRunning: addon.state == 'started',
+      isUpdateAvailable: addon.update_available,
+    },
     version: addon.version,
     state: addon.state,
-    update_available: addon.update_available,
+    update_available: {
+      updateAvailable: addon.update_available,
+      addonSlug: addon.slug,
+      installationId: installationId,
+    },
     advanced: addon.advanced,
     available: addon.available,
     build: addon.build,

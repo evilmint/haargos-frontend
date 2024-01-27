@@ -25,5 +25,10 @@ export async function fetchAddons(
   );
 
   const data: AddonsApiResponse = await response.json();
+
+  data.body.addons.forEach(addon => {
+    addon.isHaargos = addon.slug.indexOf('haargos') !== -1;
+  });
+
   return data;
 }

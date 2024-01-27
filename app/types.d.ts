@@ -167,6 +167,7 @@ interface AddonsApiResponseAddon {
   description: string;
   advanced: boolean;
   stage: string;
+  isHaargos: boolean;
   version: string;
   version_latest: string;
   update_available: boolean;
@@ -274,6 +275,22 @@ interface UserApiResponse {
   body: User;
 }
 
+interface ApiResponse<T> {
+  body: T;
+}
+
+interface JobsApiResponse {
+  jobs: Job[];
+}
+
+interface Job {
+  created_at: string;
+  installation_id: string;
+  status_installation_id: string;
+  id: string;
+  type: string;
+}
+
 type Tier = 'Expired' | 'Explorer' | 'Navigator' | 'Pro' | 'Enterprise';
 
 interface Subscription {
@@ -292,6 +309,7 @@ interface User {
 export {
   AddonsApiResponse,
   AddonsApiResponseAddon,
+  ApiResponse,
   Automation,
   BatteryType,
   DockerContainer,
@@ -299,6 +317,8 @@ export {
   Installation,
   InstallationApiResponse,
   InstallationBody,
+  Job,
+  JobsApiResponse,
   Log,
   LogSource,
   LogsApiResponse,

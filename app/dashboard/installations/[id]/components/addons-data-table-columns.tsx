@@ -1,8 +1,18 @@
 'use client';
 
 import { Icons } from '@/components/icons';
+import { RemoteAction } from '@/components/remote-action';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/registry/new-york/ui/dropdown-menu';
 import { ColumnDef } from '@tanstack/react-table';
 import { ArrowUpDown } from 'lucide-react';
 import Link from 'next/link';
@@ -11,11 +21,23 @@ export interface AddonTableView {
   name: string;
   slug: string;
   description: string;
+  action: {
+    addonSlug: string;
+    installationId: string;
+    actionsAvailable: boolean;
+    isStopped: boolean;
+    isRunning: boolean;
+    isUpdateAvailable: boolean;
+  };
   advanced: boolean;
   stage: string;
   version: string;
   version_latest: { version: string; isLatest: boolean };
-  update_available: boolean;
+  update_available: {
+    updateAvailable: boolean;
+    addonSlug: string;
+    installationId: string;
+  };
   available: boolean;
   detached: boolean;
   homeassistant: string | null;
@@ -42,6 +64,107 @@ export const columns: ColumnDef<AddonTableView>[] = [
       );
     },
     cell: ({ row }) => <div className="text-xs">{row.getValue('name')}</div>,
+  },
+  {
+    accessorKey: 'action',
+    header: ({ column }) => {
+      return <>Remote Action</>;
+    },
+    cell: ({ row }) => {
+      const {
+        addonSlug,
+        isStopped,
+        isRunning,
+        actionsAvailable,
+        isUpdateAvailable,
+        installationId,
+      }: {
+        addonSlug: string;
+        installationId: string;
+        actionsAvailable: boolean;
+        isStopped: boolean;
+        isRunning: boolean;
+        isUpdateAvailable: boolean;
+      } = row.getValue('action');
+
+      return (
+        <div className="text-xs">
+          {!actionsAvailable ? (
+            'Not available for Haargos'
+          ) : (
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button
+                  variant="default"
+                  className="whitespace-nowra bg-sr-600 hover:bg-sr-700"
+                >
+                  <Icons.signal className="w-4 h-4 mr-1" /> Remote
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className="w-56">
+                <DropdownMenuLabel>Remote Actions</DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuGroup>
+                  {isStopped && (
+                    <DropdownMenuItem>
+                      <RemoteAction
+                        installationId={installationId}
+                        visual="link"
+                        type="addon_start"
+                        text="Start"
+                        context={{ addon_id: addonSlug }}
+                      />
+                    </DropdownMenuItem>
+                  )}
+                  {isRunning && (
+                    <DropdownMenuItem>
+                      <RemoteAction
+                        installationId={installationId}
+                        visual="link"
+                        type="addon_stop"
+                        text="Stop"
+                        context={{ addon_id: addonSlug }}
+                      />
+                    </DropdownMenuItem>
+                  )}
+                  {isRunning && (
+                    <DropdownMenuItem>
+                      <RemoteAction
+                        installationId={installationId}
+                        visual="link"
+                        type="addon_restart"
+                        text="Restart"
+                        context={{ addon_id: addonSlug }}
+                      />
+                    </DropdownMenuItem>
+                  )}
+                  <DropdownMenuItem>
+                    <RemoteAction
+                      installationId={installationId}
+                      visual="link"
+                      type="addon_uninstall"
+                      text="Uninstall"
+                      context={{ addon_id: addonSlug }}
+                    />
+                  </DropdownMenuItem>
+                  {isUpdateAvailable && (
+                    <DropdownMenuItem>
+                      <RemoteAction
+                        installationId={installationId}
+                        visual="link"
+                        type="addon_update"
+                        text="Update"
+                        context={{ addon_id: addonSlug }}
+                      />
+                    </DropdownMenuItem>
+                  )}
+                </DropdownMenuGroup>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          )}
+        </div>
+      );
+    },
   },
   {
     accessorKey: 'slug',
@@ -97,20 +220,40 @@ export const columns: ColumnDef<AddonTableView>[] = [
         </div>
       );
     },
-    cell: ({ row }) => (
-      <div
-        className={cn(
-          'text-xs text-center relative-flex flex justify-center',
-          row.getValue('update_available') ? 'font-semibold text-green-600' : '',
-        )}
-      >
-        {row.getValue('update_available') ? (
-          <Icons.checkCircle className="w-6 h-6 text-green-600" />
+    cell: ({ row }) => {
+      const {
+        updateAvailable,
+        installationId,
+        addonSlug,
+      }: { updateAvailable: boolean; installationId: string; addonSlug: string } =
+        row.getValue('update_available');
+
+      const SuccessElement =
+        addonSlug.indexOf('haargos') === -1 ? (
+          <RemoteAction
+            installationId={installationId}
+            type="update_addon"
+            context={{ addon_id: addonSlug }}
+          />
         ) : (
-          <Icons.xCircle className="w-6 h-6 text-red-600" />
-        )}
-      </div>
-    ),
+          <Icons.checkCircle className="w-6 h-6 text-green-600" />
+        );
+
+      return (
+        <div
+          className={cn(
+            'text-xs text-center relative-flex flex justify-center',
+            updateAvailable ? 'font-semibold text-green-600' : '',
+          )}
+        >
+          {updateAvailable ? (
+            SuccessElement
+          ) : (
+            <Icons.xCircle className="w-6 h-6 text-red-600" />
+          )}
+        </div>
+      );
+    },
   },
   {
     accessorKey: 'available',

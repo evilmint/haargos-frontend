@@ -18,7 +18,7 @@ export default function WhatIsHaargos() {
       title: 'Real-Time Monitoring',
       icon: <Icons.trendingUp className="w-12 h-12 mb-4" />,
       description:
-        'Real-time insights into your Home Assistant, including Zigbee devices, entities, host information and more.',
+        'Real-time insights of your Addons, Zigbee devices, entities, host information and more.',
     },
     // {
     //   title: 'Enhanced Device Analysis',

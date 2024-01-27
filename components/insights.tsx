@@ -7,6 +7,7 @@ import Link from 'next/link';
 import { ReactElement, useEffect, useMemo } from 'react';
 import { Icons } from './icons';
 import { InstallationLink } from './installation-link';
+import { RemoteAction } from './remote-action';
 
 type Insight = { title: string; description: string | ReactElement };
 
@@ -134,9 +135,13 @@ const createHAUpdateInsight = (
     </Link>
   );
   const addonDescription = (
-    <InstallationLink installationId={installationId} path="/config/updates">
-      {`An upgrade to Home Assistant ${latestHaRelease} is available`}
-    </InstallationLink>
+    <div>
+      <InstallationLink installationId={installationId} path="/config/updates">
+        {`An upgrade to Home Assistant ${latestHaRelease} is available`}
+      </InstallationLink>
+
+      <RemoteAction installationId={installationId} type="update_core" />
+    </div>
   );
 
   return {

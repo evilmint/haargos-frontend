@@ -96,7 +96,7 @@ const NotificationItem = ({
             components={{
               a: ({ href, children }) =>
                 instanceUrl ? (
-                  <a href={`${instanceUrl}${href}`} className="font-bold">
+                  <a target="_blank" href={`${instanceUrl}${href}`} className="font-bold">
                     {children}
                   </a>
                 ) : (

@@ -13,6 +13,7 @@ import {
 } from '@tanstack/react-table';
 import { ChevronDown, LucideExternalLink } from 'lucide-react';
 
+import { Icons } from '@/components/icons';
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
@@ -43,6 +44,7 @@ type GenericDataTableParams = {
   columnIdToNameTransformer?: (column: string) => string;
   columns: ColumnDef<any>[];
   data: any;
+  reload?: () => void;
 };
 
 export function GenericDataTable({ ...params }: GenericDataTableParams) {
@@ -121,6 +123,16 @@ export function GenericDataTable({ ...params }: GenericDataTableParams) {
             className="max-w-sm"
           />
         )}
+
+        {params.reload && (
+          <div className="inline ml-4">
+            <Icons.reload
+              onClick={() => params.reload?.()}
+              className="cursor-pointer w-4 h-4"
+            />
+          </div>
+        )}
+
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="outline" className="ml-auto">

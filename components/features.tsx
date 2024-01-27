@@ -10,18 +10,18 @@ type Feature = {
 export default function Features() {
   const features: Feature[] = [
     {
+      title: 'Remote Execution',
+      comingSoon: false,
+      description:
+        'Manage your Supervised installation remotely - schedule updates, start & stop your addons, supervisor and OS and more.',
+      icon: <Icons.mail />,
+    },
+    {
       title: 'Alerts',
       comingSoon: true,
       description:
         'Get feedback about any issues, ensuring prompt action when necessary.',
       icon: <Icons.bell />,
-    },
-    {
-      title: 'Automated Reports',
-      comingSoon: true,
-      description:
-        'Receive reports on the health and performance of your Home Assistant systems.',
-      icon: <Icons.mail />,
     },
     {
       title: 'Comprehensive Dashboards',

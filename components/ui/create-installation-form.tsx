@@ -143,7 +143,7 @@ export function CreateInstallationForm({
                   </FormItem>
                 )}
               />
-              <Button type="submit" disabled={isUpdating}>
+              <Button className='bg-sr-600 hover:bg-sr-700' type="submit" disabled={isUpdating}>
                 Create
               </Button>
             </form>

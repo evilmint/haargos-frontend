@@ -69,7 +69,6 @@ export function InstallationOverviewChart({
         data={chartdata}
         index="name"
         categories={['Amount']}
-        colors={['blue']}
         valueFormatter={dataFormatter}
         yAxisWidth={48}
       />

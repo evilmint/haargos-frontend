@@ -100,7 +100,7 @@ export function getColumnsByTier(tier: Tier): ColumnDef<InstallationTableView>[]
               {' '}
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="default" className="whitespace-nowrap">
+                  <Button variant="default" className="bg-sr-600 hover:bg-sr-700 whitespace-nowrap">
                     {general.name}
                   </Button>
                 </DropdownMenuTrigger>

@@ -412,7 +412,7 @@ export default function DashboardInstallationPage({
                               </FormItem>
                             )}
                           />
-                          <Button type="submit" disabled={isUpdating}>
+                          <Button className='bg-sr-600 hover:bg-sr-700' type="submit" disabled={isUpdating}>
                             Save
                           </Button>
                         </form>
@@ -422,7 +422,7 @@ export default function DashboardInstallationPage({
                         <SheetClose asChild>
                           <div className="grid grid-cols-1 py-4">
                             <AlertDialogTrigger asChild>
-                              <Button type="reset" disabled={isUpdating}>
+                              <Button className='bg-sr-600 hover:bg-sr-700' type="reset" disabled={isUpdating}>
                                 Delete installation
                               </Button>
                             </AlertDialogTrigger>

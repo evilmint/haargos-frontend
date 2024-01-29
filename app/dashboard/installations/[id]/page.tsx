@@ -46,6 +46,7 @@ import { ZigbeeDataTableProxy } from './components/zigbee/zigbee-data-table-prox
 import { updateInstallation } from '@/app/services/installations';
 import { useOSStore } from '@/app/services/stores/os';
 import { useSupervisorStore } from '@/app/services/stores/supervisor';
+import { useTabStore } from '@/app/services/stores/tab';
 import { HaargosInsights } from '@/components/insights';
 import { isLocalDomain } from '@/lib/local-domain';
 import {
@@ -64,6 +65,7 @@ import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import * as z from 'zod';
 import { AddonDataTableProxy } from './components/addons-data-table-proxy';
+import { JobsDataTableProxy } from './components/jobs/job-data-table-proxy';
 import { LogSwitcher } from './components/logs/log-switcher';
 import { Memory } from './components/memory';
 import { Network } from './components/network';
@@ -107,21 +109,18 @@ export default function DashboardInstallationPage({
 }: {
   params: { id: string };
 }) {
-  const fetchNotifications = useNotificationsStore(state => state.fetchNotifiactions);
   const notifications = useNotificationsStore(
     state => state.notificationsByInstallationId[params.id],
   );
-  const fetchAddons = useAddonsStore(state => state.fetchAddons);
   const addons = useAddonsStore(state => state.addonsByInstallationId[params.id]);
-  const fetchSupervisor = useSupervisorStore(state => state.fetchSupervisor);
   const supervisor = useSupervisorStore(
     state => state.supervisorByInstallationId[params.id],
   );
-  const fetchOS = useOSStore(state => state.fetchOS);
   const os = useOSStore(state => state.osByInstallationId[params.id]);
 
   const [origin, setOrigin] = useState<string | null>(null);
-  const [defaultTab, setDefaultTab] = useState<string>('overview');
+  const defaultTab = useTabStore(state => state.currentTab);
+  const setDefaultTab = useTabStore(state => state.setCurrentTab);
   const observations = useInstallationStore(state => state.observations[params.id]);
   const deleteInstallation = useInstallationStore(state => state.deleteInstallation);
   const router = useRouter();
@@ -137,8 +136,6 @@ export default function DashboardInstallationPage({
 
     if (window.location.hash != null && window.location.hash.length > 0) {
       setDefaultTab(window.location.hash.slice(1));
-    } else {
-      setDefaultTab('overview');
     }
   }, [setDefaultTab, setOrigin]);
 
@@ -268,6 +265,8 @@ export default function DashboardInstallationPage({
       ? observations[0].agent_type == 'addon'
       : false;
 
+  console.log('Default is ' + defaultTab);
+
   return (
     defaultTab != null &&
     origin != null && (
@@ -283,6 +282,7 @@ export default function DashboardInstallationPage({
           </div>
           <div className="flex-1 space-y-4 p-8 pt-6">
             <Tabs
+              defaultValue={defaultTab}
               value={defaultTab}
               onValueChange={value => {
                 window.location.hash = `#${value}`;
@@ -297,6 +297,7 @@ export default function DashboardInstallationPage({
                   <TabsTrigger value="overview">Overview</TabsTrigger>
                   <TabsTrigger value="homeassistant">Home Assistant</TabsTrigger>
                   <TabsTrigger value="host">Host</TabsTrigger>
+                  <TabsTrigger value="jobs">Jobs</TabsTrigger>
                 </TabsList>
 
                 <AlertDialog>
@@ -412,7 +413,11 @@ export default function DashboardInstallationPage({
                               </FormItem>
                             )}
                           />
-                          <Button className='bg-sr-600 hover:bg-sr-700' type="submit" disabled={isUpdating}>
+                          <Button
+                            className="bg-sr-600 hover:bg-sr-700"
+                            type="submit"
+                            disabled={isUpdating}
+                          >
                             Save
                           </Button>
                         </form>
@@ -422,7 +427,11 @@ export default function DashboardInstallationPage({
                         <SheetClose asChild>
                           <div className="grid grid-cols-1 py-4">
                             <AlertDialogTrigger asChild>
-                              <Button className='bg-sr-600 hover:bg-sr-700' type="reset" disabled={isUpdating}>
+                              <Button
+                                className="bg-sr-600 hover:bg-sr-700"
+                                type="reset"
+                                disabled={isUpdating}
+                              >
                                 Delete installation
                               </Button>
                             </AlertDialogTrigger>
@@ -511,7 +520,7 @@ export default function DashboardInstallationPage({
                       <></>
                     )}
                     <Tab className="sm:max-md:w-[100%]">Automations</Tab>
-                    <Tab className="sm:max-md:w-[100%]">Scene</Tab>
+                    <Tab className="sm:max-md:w-[100%]">Scenes</Tab>
                     <Tab className="sm:max-md:w-[100%]">Scripts</Tab>
                   </TabList>
                   <TabPanels>
@@ -613,6 +622,10 @@ export default function DashboardInstallationPage({
                     </TabPanel>
                   </TabPanels>
                 </TabGroup>
+              </TabsContent>
+
+              <TabsContent value="jobs" className="space-y-4">
+                <JobsDataTableProxy installationId={params.id} />
               </TabsContent>
             </Tabs>
           </div>

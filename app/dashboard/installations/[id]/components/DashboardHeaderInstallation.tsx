@@ -313,7 +313,7 @@ export function DashboardHeaderInstallation({ ...params }) {
                     isCollectingData == false ? (
                       localDomain ? (
                         <Badge color="gray" icon={Icons.signal}>
-                          Local address
+                          Private address
                         </Badge>
                       ) : (
                         <Badge color={healthy.color} icon={Icons.signal}>

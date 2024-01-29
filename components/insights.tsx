@@ -1,6 +1,8 @@
 import { useAddonsStore } from '@/app/services/stores/addons';
 import { useInstallationStore } from '@/app/services/stores/installation';
 import { useNotificationsStore } from '@/app/services/stores/notifications';
+import { useTabStore } from '@/app/services/stores/tab';
+import { NotificationsApiResponseNotification } from '@/app/types';
 import { useAuth0 } from '@auth0/auth0-react';
 import { Callout, Card, Title } from '@tremor/react';
 import Link from 'next/link';
@@ -18,6 +20,7 @@ type InsightParams = {
 export function HaargosInsights(params: InsightParams) {
   const { getAccessTokenSilently } = useAuth0();
 
+  const setTab = useTabStore(state => state.setCurrentTab);
   const { latestHaRelease, observations } = useInstallationStore(state => ({
     latestHaRelease: state.latestHaRelease,
     observations: state.observations[params.installationId],
@@ -41,7 +44,7 @@ export function HaargosInsights(params: InsightParams) {
     const isAddonInstallation = observations?.[0]?.agent_type == 'addon';
 
     return [
-      createAddonUpdateInsight(addonsToUpdate, params.installationId),
+      createAddonUpdateInsight(addonsToUpdate, params.installationId, setTab),
       createHAUpdateInsight(
         isHAUpdateAvailable,
         latestHaRelease,
@@ -100,14 +103,16 @@ export function HaargosInsights(params: InsightParams) {
 const createAddonUpdateInsight = (
   addonsToUpdate: any[],
   installationId: string,
+  setTab: (value: string) => void,
 ): Insight | null => {
   if (addonsToUpdate.length === 0) return null;
 
   const title = `Update ${addonsToUpdate.length} addon${
     addonsToUpdate.length === 1 ? '' : 's'
   }`;
+
   const description = addonsToUpdate.map(addon => (
-    <div>
+    <div className="[&:not(:last-child)]:mb-2">
       <InstallationLink
         key={addon.slug}
         installationId={installationId}
@@ -115,6 +120,12 @@ const createAddonUpdateInsight = (
       >
         {`${addon.name} (${addon.version} -> ${addon.version_latest})`}
       </InstallationLink>
+
+      <RemoteAction
+        type="addon_update"
+        context={{ addon_id: addon.slug }}
+        installationId={installationId}
+      />
     </div>
   ));
 
@@ -150,13 +161,19 @@ const createHAUpdateInsight = (
   };
 };
 
-const createNotificationsInsight = (notifications: any[]): Insight | null => {
+const createNotificationsInsight = (
+  notifications: NotificationsApiResponseNotification[],
+): Insight | null => {
   if (!notifications?.length) return null;
 
   return {
     title: `Notifications available`,
-    description: `Resolve ${notifications.length} notification${
-      notifications.length === 1 ? '' : 's'
-    }`,
+    description: (
+      <ul className="pl-4 list-disc">
+        {notifications.map(n => {
+          return <li>{n.title}</li>;
+        })}
+      </ul>
+    ),
   };
 };

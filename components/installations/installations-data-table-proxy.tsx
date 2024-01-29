@@ -107,6 +107,7 @@ function mapToTableView(
       installation_url: `/dashboard/installations/${installation.id}`,
       instance_url: installation.urls.instance?.success_url ?? null,
       agent_type: observation?.agent_type ?? '',
+      url_type: installation?.urls.instance?.url_type,
     },
     agent_version: observation?.agent_version ?? '-',
     ha_version: observation?.ha_config?.version ?? '-',

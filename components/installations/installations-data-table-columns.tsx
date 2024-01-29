@@ -8,6 +8,7 @@ import { Tier } from '@/app/types';
 import { makeBooleanCell, makeSimpleCell } from '@/lib/table-cells-helper';
 import { TierResolver } from '@/lib/tier-resolver';
 import { Badge } from '@tremor/react';
+import { ElementType } from 'react';
 import { Icons } from '../icons';
 import {
   DropdownMenu,
@@ -29,6 +30,7 @@ export interface InstallationTableView {
     instance_url: string | null;
     installation_url: string;
     agent_type: string;
+    url_type?: 'PUBLIC' | 'PRIVATE';
   };
   agent_version: string;
   ha_version: string;
@@ -72,6 +74,7 @@ export function getColumnsByTier(tier: Tier): ColumnDef<InstallationTableView>[]
           is_up: boolean;
           agent_type: 'docker' | 'bin' | 'addon' | null;
           instance_url: string | null;
+          url_type: string;
           installation_url: string;
         } = row.getValue('general');
 
@@ -94,13 +97,39 @@ export function getColumnsByTier(tier: Tier): ColumnDef<InstallationTableView>[]
             agentTypeDisplay = null;
             break;
         }
+
+        let badgeProperties: { color: any; icon: ElementType<any>; text: string } | null;
+
+        if (general.url_type == 'PRIVATE') {
+          badgeProperties = {
+            color: 'gray',
+            icon: Icons.signal,
+            text: 'Private',
+          };
+        } else if (general.is_up) {
+          badgeProperties = {
+            color: 'green',
+            icon: Icons.signal,
+            text: 'Live',
+          };
+        } else {
+          badgeProperties = {
+            color: 'red',
+            icon: Icons.signal,
+            text: 'Down',
+          };
+        }
+
         return (
           <div className="text-xs text-center">
             <div className="mb-1">
               {' '}
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="default" className="bg-sr-600 hover:bg-sr-700 whitespace-nowrap">
+                  <Button
+                    variant="default"
+                    className="bg-sr-600 hover:bg-sr-700 whitespace-nowrap"
+                  >
                     {general.name}
                   </Button>
                 </DropdownMenuTrigger>
@@ -132,9 +161,9 @@ export function getColumnsByTier(tier: Tier): ColumnDef<InstallationTableView>[]
               </DropdownMenu>
             </div>
 
-            {general.instance_url && (
-              <Badge color={general.is_up ? 'green' : 'red'} icon={Icons.signal}>
-                {general.is_up ? 'Live' : 'Down'}
+            {badgeProperties && (
+              <Badge color={badgeProperties.color} icon={badgeProperties.icon}>
+                {badgeProperties.text}
               </Badge>
             )}
 

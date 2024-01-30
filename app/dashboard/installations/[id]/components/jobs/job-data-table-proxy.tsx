@@ -63,5 +63,6 @@ function mapToTableView(job: Job): JobTableView {
     type: job.type,
     status: job.status_installation_id.split('_')[0],
     created_at: job.created_at,
+    updated_at: job.updated_at ?? job.created_at,
   };
 }

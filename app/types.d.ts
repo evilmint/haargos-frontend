@@ -285,6 +285,7 @@ interface JobsApiResponse {
 
 interface Job {
   created_at: string;
+  updated_at?: string;
   installation_id: string;
   status_installation_id: string;
   id: string;

@@ -27,7 +27,7 @@ export const columns: ColumnDef<JobTableView>[] = [
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
         >
-          Type
+          Action
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       );

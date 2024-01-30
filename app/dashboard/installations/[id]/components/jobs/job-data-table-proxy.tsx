@@ -38,11 +38,7 @@ export function JobsDataTableProxy({ ...params }) {
     user,
   ]);
 
-  if (!jobs) {
-    return null;
-  }
-
-  const jobViews = jobs.map(j => mapToTableView(j));
+  const jobViews = (jobs ?? []).map(j => mapToTableView(j));
 
   return (
     <>

@@ -2,7 +2,10 @@ import { useAddonsStore } from '@/app/services/stores/addons';
 import { useInstallationStore } from '@/app/services/stores/installation';
 import { useNotificationsStore } from '@/app/services/stores/notifications';
 import { useTabStore } from '@/app/services/stores/tab';
-import { NotificationsApiResponseNotification } from '@/app/types';
+import {
+  AddonsApiResponseAddon,
+  NotificationsApiResponseNotification,
+} from '@/app/types';
 import { useAuth0 } from '@auth0/auth0-react';
 import { Callout, Card, Title } from '@tremor/react';
 import Link from 'next/link';
@@ -101,7 +104,7 @@ export function HaargosInsights(params: InsightParams) {
 }
 
 const createAddonUpdateInsight = (
-  addonsToUpdate: any[],
+  addonsToUpdate: AddonsApiResponseAddon[],
   installationId: string,
   setTab: (value: string) => void,
 ): Insight | null => {
@@ -111,23 +114,29 @@ const createAddonUpdateInsight = (
     addonsToUpdate.length === 1 ? '' : 's'
   }`;
 
-  const description = addonsToUpdate.map(addon => (
-    <div className="[&:not(:last-child)]:mb-2">
-      <InstallationLink
-        key={addon.slug}
-        installationId={installationId}
-        path={`/hassio/addon/${addon.slug}/info`}
-      >
-        {`${addon.name} (${addon.version} -> ${addon.version_latest})`}
-      </InstallationLink>
+  const description = addonsToUpdate.map(addon => {
+    const isRemoteUpdateAvailable = addon.slug.indexOf('haargos') === -1;
 
-      <RemoteAction
-        type="addon_update"
-        context={{ addon_id: addon.slug }}
-        installationId={installationId}
-      />
-    </div>
-  ));
+    return (
+      <div className="[&:not(:last-child)]:mb-2">
+        <InstallationLink
+          key={addon.slug}
+          installationId={installationId}
+          path={`/hassio/addon/${addon.slug}/info`}
+        >
+          {`${addon.name} (${addon.version} -> ${addon.version_latest})`}
+        </InstallationLink>
+
+        {isRemoteUpdateAvailable && (
+          <RemoteAction
+            type="addon_update"
+            context={{ addon_id: addon.slug }}
+            installationId={installationId}
+          />
+        )}
+      </div>
+    );
+  });
 
   return { title, description: <div>{description}</div> };
 };

@@ -8,8 +8,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/registry/new-york/ui
 import { useAuth0 } from '@auth0/auth0-react';
 import { strip } from 'ansicolor';
 import { useEffect } from 'react';
-import CopyButton from '../copy-button';
-import DownloadButton from '../download-button';
+import CopyButton from '../../copy-button';
+import DownloadButton from '../../download-button';
 import { LogTableView, columns } from './logs-data-table-columns';
 
 interface LogsDataTableProxyParams {

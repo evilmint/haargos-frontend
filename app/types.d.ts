@@ -161,6 +161,18 @@ interface AddonsApiResponse {
   };
 }
 
+interface AlarmConfigurationResponse {
+  body: {
+    configurations: AlarmConfiguration[];
+  };
+}
+
+interface UserAlarmConfigurationResponse {
+  body: {
+    configurations: UserAlarmConfiguration[];
+  };
+}
+
 interface AddonsApiResponseAddon {
   name: string;
   slug: string;
@@ -307,9 +319,39 @@ interface User {
   subscription: Subscription | null;
 }
 
+interface AlarmType {
+  name: string;
+  type: string;
+  category: 'ADDON' | 'CORE' | 'NETWORK' | 'DEVICE';
+  datapoints: 'NONE' | 'MISSING' | 'PRESENT';
+  disabled: boolean;
+}
+
+interface AlarmConfiguration {
+  name: string;
+  alarmTypes: AlarmType[];
+}
+
+type AlarmCategory = 'ADDON' | 'CORE' | 'NETWORK' | 'DEVICE';
+
+interface UserAlarmConfiguration {
+  id: string;
+  type: string;
+  category: AlarmCategory;
+  created_at: string;
+  configuration: {
+    datapointCount?: number;
+    addons?: { slug: string }[];
+  };
+}
+
 export {
   AddonsApiResponse,
   AddonsApiResponseAddon,
+  AlarmCategory,
+  AlarmConfiguration,
+  AlarmConfigurationResponse,
+  AlarmType,
   ApiResponse,
   Automation,
   BatteryType,
@@ -339,6 +381,8 @@ export {
   SupervisorInfoResponse,
   Tier,
   User,
+  UserAlarmConfiguration,
+  UserAlarmConfigurationResponse,
   UserApiResponse,
   Zigbee,
   ZigbeeDevice,

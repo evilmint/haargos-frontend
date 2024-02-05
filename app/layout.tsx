@@ -24,7 +24,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en" className="scroll-smooth">
       <link rel="preconnect" href={process.env.NEXT_PUBLIC_PRELOAD_URL}></link>
       <body className={inter.className}>
-        {' '}
         <ProviderSet>{children}</ProviderSet>
         <Analytics />
         <Toaster richColors />

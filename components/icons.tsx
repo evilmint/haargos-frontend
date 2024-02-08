@@ -20,6 +20,25 @@ export const Icons = {
       <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
     </svg>
   ),
+  arrowLeftCircle: (props: IconProps) => (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className="h-4 w-4 text-muted-foreground"
+      {...props}
+    >
+      <circle cx="12" cy="12" r="10"></circle>
+      <polyline points="12 8 8 12 12 16"></polyline>
+      <line x1="16" y1="12" x2="8" y2="12"></line>
+    </svg>
+  ),
   git: (props: IconProps) => (
     <svg
       xmlns="http://www.w3.org/2000/svg"

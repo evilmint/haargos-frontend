@@ -334,15 +334,24 @@ interface AlarmConfiguration {
 
 type AlarmCategory = 'ADDON' | 'CORE' | 'NETWORK' | 'DEVICE';
 
+interface UserAlarmConfigurationConfiguration {
+  datapointCount?: number;
+  addons?: { slug: string }[];
+  notificationMethod: 'E-mail';
+}
+
+interface UserAlarmConfigurationRequest {
+  type: string;
+  category: AlarmCategory;
+  configuration: UserAlarmConfigurationConfiguration;
+}
+
 interface UserAlarmConfiguration {
   id: string;
   type: string;
   category: AlarmCategory;
   created_at: string;
-  configuration: {
-    datapointCount?: number;
-    addons?: { slug: string }[];
-  };
+  configuration: UserAlarmConfigurationConfiguration;
 }
 
 export {
@@ -382,8 +391,11 @@ export {
   Tier,
   User,
   UserAlarmConfiguration,
+  UserAlarmConfigurationConfiguration,
+  UserAlarmConfigurationRequest,
   UserAlarmConfigurationResponse,
   UserApiResponse,
   Zigbee,
-  ZigbeeDevice,
+  ZigbeeDevice
 };
+

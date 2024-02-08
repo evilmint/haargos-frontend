@@ -89,7 +89,7 @@ export function HaargosInsights(params: InsightParams) {
       {insights.map(t => {
         return (
           <Callout
-            className="mt-4"
+            className="mt-4 dark:bg-slate-900"
             key={t.title}
             title={t.title}
             icon={Icons.helpCircle}

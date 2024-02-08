@@ -1,4 +1,8 @@
-import { AlarmConfigurationResponse, UserAlarmConfigurationResponse } from '../types'; // Adjust the import to match your project structure
+import {
+  AlarmConfigurationResponse,
+  UserAlarmConfigurationRequest,
+  UserAlarmConfigurationResponse
+} from '../types'; // Adjust the import to match your project structure
 import { apiSettings, baseHeaders } from './api-settings';
 
 export async function fetchAlarmConfigurations(
@@ -50,4 +54,28 @@ export async function fetchUserAlarmConfigurations(
   const data: UserAlarmConfigurationResponse = await response.json();
 
   return data;
+}
+
+export async function createUserAlarmConfiguration(
+  token: string,
+  alarmConfiguration: UserAlarmConfigurationRequest,
+): Promise<void> {
+  const additionalHeaders = new Headers({
+    Authorization: `Bearer ${token}`,
+    'Content-Type': 'application/json',
+  });
+  const mergedHeaders = new Headers({
+    ...Object.fromEntries(baseHeaders),
+    ...Object.fromEntries(additionalHeaders),
+  });
+
+  const requestBody = JSON.stringify(alarmConfiguration);
+  const requestOptions: RequestInit = {
+    method: 'POST',
+    headers: mergedHeaders,
+    redirect: 'follow',
+    body: requestBody,
+  };
+
+  await fetch(`${apiSettings.baseUrl}/alarms`, requestOptions);
 }

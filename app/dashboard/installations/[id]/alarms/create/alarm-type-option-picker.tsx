@@ -1,26 +1,63 @@
 'use client';
 import { useAddonsStore } from '@/app/services/stores/addons';
-import { AddonsApiResponseAddon, AlarmType } from '@/app/types';
+import { AddonsApiResponseAddon, AlarmType, UserAlarmConfigurationConfiguration } from '@/app/types';
 import { Input } from '@/components/ui/input';
 import { useAuth0 } from '@auth0/auth0-react';
 import { Listbox, Transition } from '@headlessui/react';
 import { CheckIcon, ChevronUpDownIcon } from '@heroicons/react/20/solid';
-import { Fragment, useEffect, useState } from 'react';
+import { ChangeEventHandler, Fragment, useEffect, useState } from 'react';
 
 export interface AlarmTypeOptionPickerProps {
   alarm: AlarmType;
   installationId: string;
+  onAlarmOptionsChanged: (options: any) => void;
 }
 
 export function AlarmTypeOptionPicker(params: AlarmTypeOptionPickerProps) {
   const isAddonOptionPickerAvailable = params.alarm.category == 'ADDON';
+
+  const [selectedOptions, setSelectedOptions] = useState<UserAlarmConfigurationConfiguration>({
+    addons: [],
+    datapointCount: 1,
+    notificationMethod: 'E-mail', // Default value, adjust if needed
+  });
+
+  useEffect(() => {
+    params.onAlarmOptionsChanged(selectedOptions);
+  }, [selectedOptions, params]);
+
+  // Handlers to update the state
+  const handleAddonsSelected = (addons: AddonsApiResponseAddon[]) => {
+    const mappedAddons = addons.map(a => {
+      return {
+        slug: a.slug,
+      };
+    });
+
+    setSelectedOptions(prevOptions => ({ ...prevOptions, addons: mappedAddons }));
+  };
+
+  const handleDataPointsChange: ChangeEventHandler<HTMLInputElement> = h => {
+    console.log(h.target.value);
+    setSelectedOptions(prevOptions => ({
+      ...prevOptions,
+      datapoints: parseInt(h.target.value),
+    }));
+  };
+
+  const handleNotificationMethodChange = (method: 'E-mail') => {
+    setSelectedOptions(prevOptions => ({ ...prevOptions, notificationMethod: method }));
+  };
 
   return (
     <div className="mb-8 w-full">
       <h2 className="mb-4 text-2xl font-semibold">Options</h2>
 
       {isAddonOptionPickerAvailable && (
-        <AddonPicker installationId={params.installationId} />
+        <AddonPicker
+          onAddonsSelected={handleAddonsSelected}
+          installationId={params.installationId}
+        />
       )}
 
       {params.alarm.datapoints != 'NONE' && (
@@ -30,18 +67,27 @@ export function AlarmTypeOptionPicker(params: AlarmTypeOptionPickerProps) {
               {params.alarm.datapoints == 'MISSING' ? 'Missing datapoints' : 'Datapoints'}
             </p>
 
-            <Input type="number" defaultValue={1} max={5} min={1} />
+            <Input
+              type="number"
+              defaultValue={1}
+              max={5}
+              min={1}
+              onChange={handleDataPointsChange}
+            />
           </div>
         </div>
       )}
 
-      <NotificationMethodPicker />
+      <NotificationMethodPicker
+        onNotificationMethodChange={handleNotificationMethodChange}
+      />
     </div>
   );
 }
 
 export interface AddonOptionPickerProps {
   installationId: string;
+  onAddonsSelected: (addons: AddonsApiResponseAddon[]) => void;
 }
 
 function AddonPicker(props: AddonOptionPickerProps) {
@@ -65,10 +111,15 @@ function AddonPicker(props: AddonOptionPickerProps) {
 
   const [selected, setSelected] = useState<AddonsApiResponseAddon[]>([]);
 
+  const setSelectedAddons = (addons: AddonsApiResponseAddon[]) => {
+    setSelected(addons);
+    props.onAddonsSelected(addons);
+  };
+
   return (
     <div className="flex">
       <p className="mr-3 mt-3 font-medium">Addons</p>
-      <Listbox multiple={true} value={selected} onChange={setSelected}>
+      <Listbox multiple={true} value={selected} onChange={setSelectedAddons}>
         <div className="w-[400px] relative mt-1">
           <Listbox.Button className="relative w-full cursor-default rounded-lg bg-white dark:bg-gray-800 py-2 pl-3 pr-10 text-left shadow-md focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white/75 focus-visible:ring-offset-2 focus-visible:ring-offset-sr-600 sm:text-sm">
             <span className="block truncate">
@@ -123,11 +174,17 @@ function AddonPicker(props: AddonOptionPickerProps) {
   );
 }
 
-function NotificationMethodPicker() {
-  const notificationMethods: { name: string }[] = [{ name: 'E-mail' }];
-  const [selectedNotificationMethod, setSelectedNotificationMethod] = useState(
+function NotificationMethodPicker(props: {
+  onNotificationMethodChange: (method: 'E-mail') => void;
+}) {
+  const notificationMethods: { name: 'E-mail' }[] = [{ name: 'E-mail' }];
+  const [selectedNotificationMethod, setSelectedNotificationMethod] = useState<{ name: 'E-mail' }>(
     notificationMethods[0],
   );
+
+  useEffect(() => {
+    props.onNotificationMethodChange(selectedNotificationMethod.name);
+  }, [selectedNotificationMethod, props]);
 
   return (
     <div className="mt-2">

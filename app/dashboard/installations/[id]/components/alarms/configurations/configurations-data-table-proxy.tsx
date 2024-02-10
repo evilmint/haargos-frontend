@@ -5,6 +5,7 @@ import { UserAlarmConfiguration } from '@/app/types';
 import { GenericDataTable } from '@/lib/generic-data-table';
 import { useAuth0 } from '@auth0/auth0-react';
 import { useEffect } from 'react';
+import { toast } from 'sonner';
 import {
   AlarmConfigurationTableView,
   columns,
@@ -15,6 +16,7 @@ export function ConfigurationsDataTableProxy({ ...params }) {
   const reloadUserAlarmConfigurations = useAlarmsStore(
     state => state.reloadUserAlarmConfigurations,
   );
+  const deleteAlarm = useAlarmsStore(state => state.deleteUserAlarm);
   const alarmConfigurations = useAlarmsStore(state => state.userAlarmConfigurations);
 
   const { getAccessTokenSilently, user } = useAuth0();
@@ -32,12 +34,23 @@ export function ConfigurationsDataTableProxy({ ...params }) {
     asyncFetch();
   }, [fetchUserAlarmConfigurations, getAccessTokenSilently, user]);
 
-  const alarmConfigurationViews = (alarmConfigurations ?? []).map(c => mapToTableView(c));
+  const alarmConfigurationViews = (alarmConfigurations ?? []).map(c => {
+    return mapToTableView(c, async (alarmId: string) => {
+      const token = await getAccessTokenSilently();
+
+      try {
+        await deleteAlarm(token, alarmId);
+        toast.success('Alarm deleted successfully.');
+      } catch {
+        toast.error('Failed to delete alarm.');
+      }
+    });
+  });
 
   return (
     <GenericDataTable
       pluralEntityName="alarm configurations"
-      filterColumnName="type"
+      filterColumnName="name"
       columns={columns}
       columnVisibilityKey="UserAlarmConfigurationDataTable_columnVisibility"
       data={alarmConfigurationViews}
@@ -51,11 +64,17 @@ export function ConfigurationsDataTableProxy({ ...params }) {
 
 function mapToTableView(
   alarmConfiguration: UserAlarmConfiguration,
+  deleteAlarm: (alarmId: string) => void,
 ): AlarmConfigurationTableView {
   return {
     id: alarmConfiguration.id,
+    name: alarmConfiguration.name,
     type: alarmConfiguration.type,
     category: alarmConfiguration.category,
     created_at: alarmConfiguration.created_at,
+    actions: {
+      alarmId: alarmConfiguration.id,
+      deleteAlarm: deleteAlarm,
+    },
   };
 }

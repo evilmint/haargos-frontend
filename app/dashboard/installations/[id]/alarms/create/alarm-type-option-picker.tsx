@@ -1,7 +1,11 @@
 'use client';
 import { useAddonsStore } from '@/app/services/stores/addons';
-import { AddonsApiResponseAddon, AlarmType, UserAlarmConfigurationConfiguration } from '@/app/types';
-import { Input } from '@/components/ui/input';
+import {
+  AddonsApiResponseAddon,
+  AlarmType,
+  UserAlarmConfigurationConfiguration,
+} from '@/app/types';
+import { Input } from '@/registry/new-york/ui/input';
 import { useAuth0 } from '@auth0/auth0-react';
 import { Listbox, Transition } from '@headlessui/react';
 import { CheckIcon, ChevronUpDownIcon } from '@heroicons/react/20/solid';
@@ -16,15 +20,16 @@ export interface AlarmTypeOptionPickerProps {
 export function AlarmTypeOptionPicker(params: AlarmTypeOptionPickerProps) {
   const isAddonOptionPickerAvailable = params.alarm.category == 'ADDON';
 
-  const [selectedOptions, setSelectedOptions] = useState<UserAlarmConfigurationConfiguration>({
-    addons: [],
-    datapointCount: 1,
-    notificationMethod: 'E-mail', // Default value, adjust if needed
-  });
+  const [selectedOptions, setSelectedOptions] =
+    useState<UserAlarmConfigurationConfiguration>({
+      addons: [],
+      datapointCount: 1,
+      notificationMethod: 'E-mail', // Default value, adjust if needed
+    });
 
   useEffect(() => {
     params.onAlarmOptionsChanged(selectedOptions);
-  }, [selectedOptions, params]);
+  }, [selectedOptions]);
 
   // Handlers to update the state
   const handleAddonsSelected = (addons: AddonsApiResponseAddon[]) => {
@@ -178,13 +183,13 @@ function NotificationMethodPicker(props: {
   onNotificationMethodChange: (method: 'E-mail') => void;
 }) {
   const notificationMethods: { name: 'E-mail' }[] = [{ name: 'E-mail' }];
-  const [selectedNotificationMethod, setSelectedNotificationMethod] = useState<{ name: 'E-mail' }>(
-    notificationMethods[0],
-  );
+  const [selectedNotificationMethod, setSelectedNotificationMethod] = useState<{
+    name: 'E-mail';
+  }>(notificationMethods[0]);
 
   useEffect(() => {
     props.onNotificationMethodChange(selectedNotificationMethod.name);
-  }, [selectedNotificationMethod, props]);
+  }, [selectedNotificationMethod]);
 
   return (
     <div className="mt-2">

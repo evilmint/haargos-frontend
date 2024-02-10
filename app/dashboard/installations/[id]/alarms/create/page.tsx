@@ -9,12 +9,15 @@ import { AlarmTypePicker } from './alarm-type-picker';
 import { createUserAlarmConfiguration } from '@/app/services/alarms';
 import { useAlarmsStore } from '@/app/services/stores/alarms';
 import {
+  AlarmCategory,
   AlarmType,
   UserAlarmConfigurationConfiguration,
   UserAlarmConfigurationRequest,
 } from '@/app/types';
 import { PrimaryButton } from '@/components/primary-button';
 import { useAuth0 } from '@auth0/auth0-react';
+import { useRouter } from 'next/navigation';
+import { toast } from 'sonner';
 import { BackButton } from '../../components/back-button';
 import { AlarmTypeOptionPicker } from './alarm-type-option-picker';
 
@@ -30,8 +33,15 @@ export default function AlarmCreatePage({ params }: AlarmCreatePageProps) {
     null,
   );
 
+  const [alarmCreationDisabled, setAlarmCreationDisabled] = useState<boolean>(true);
+
+  const router = useRouter();
+
   const alarmTypeSelected = (alarm: AlarmType | null) => {
     setAlarmType(alarm);
+    setAlarmCreationDisabled(
+      !isAlarmCreationPossible(alarm?.category, alarmOptions?.configuration),
+    );
   };
 
   const { getAccessTokenSilently } = useAuth0();
@@ -54,34 +64,41 @@ export default function AlarmCreatePage({ params }: AlarmCreatePageProps) {
       return;
     }
 
+    setAlarmCreationDisabled(!isAlarmCreationPossible(alarmType.category, options));
     setAlarmOptions({
       category: alarmType.category,
       type: alarmType.type,
       configuration: {
         datapointCount: options.datapointCount,
         notificationMethod: options.notificationMethod,
-        addons: options.addons,
+        ...(alarmType.category === 'ADDON' ? { addons: options.addons } : {}),
       },
     });
   };
 
-  function onCreateAlarmClicked(): void {
+  function onCreateAlarmClicked() {
     if (alarmOptions == null) {
       return;
     }
 
     const asyncCreate = async function () {
       const token = await getAccessTokenSilently();
-      await createUserAlarmConfiguration(token, alarmOptions);
-    };
+      try {
+        await createUserAlarmConfiguration(token, alarmOptions);
 
+        toast.success('Alarm has been created.');
+        router.push(`/dashboard/installations/${params.id}`);
+      } catch {
+        toast.error('Failed to create an alarm. Try again.');
+      }
+    };
     asyncCreate();
   }
 
   return (
     <PageWrapper installationId={params.id}>
       <div>
-        <BackButton />
+        <BackButton href={`/dashboard/installations/${params.id}`} />
       </div>
       <Card>
         <CardHeader>
@@ -102,6 +119,7 @@ export default function AlarmCreatePage({ params }: AlarmCreatePageProps) {
                 onAlarmOptionsChanged={onAlarmOptionsChanged}
               />
               <PrimaryButton
+                disabled={alarmCreationDisabled}
                 className="h-[45px] w-[150px]"
                 onClick={onCreateAlarmClicked}
               >
@@ -113,4 +131,19 @@ export default function AlarmCreatePage({ params }: AlarmCreatePageProps) {
       </Card>
     </PageWrapper>
   );
+}
+
+function isAlarmCreationPossible(
+  category: AlarmCategory | undefined | null,
+  configuration: UserAlarmConfigurationConfiguration | undefined | null,
+): boolean {
+  if (!category || !configuration) {
+    return false;
+  }
+
+  if (category !== 'ADDON') {
+    return true;
+  }
+
+  return (configuration.addons ?? []).length > 0;
 }

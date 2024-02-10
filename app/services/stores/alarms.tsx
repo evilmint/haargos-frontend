@@ -1,11 +1,17 @@
 import { AlarmConfiguration, UserAlarmConfiguration } from '@/app/types';
+import { produce } from 'immer';
 import { create } from 'zustand';
-import { fetchAlarmConfigurations, fetchUserAlarmConfigurations } from '../alarms';
+import {
+  deleteAlarmConfiguration,
+  fetchAlarmConfigurations,
+  fetchUserAlarmConfigurations,
+} from '../alarms';
 
 interface AlarmsState {
   alarmConfigurations: AlarmConfiguration[];
   userAlarmConfigurations: UserAlarmConfiguration[];
   reloadUserAlarmConfigurations: (token: string) => Promise<void>;
+  deleteUserAlarm: (token: string, alarmId: string) => Promise<void>;
   fetchAlarms: (token: string) => Promise<void>;
   fetchUserAlarms: (token: string) => Promise<void>;
 }
@@ -25,6 +31,20 @@ const useAlarmsStore = create<AlarmsState>((set, get) => ({
       ...state,
       alarmConfigurations,
     }));
+  },
+  async deleteUserAlarm(token: string, alarmId: string) {
+    try {
+      await deleteAlarmConfiguration(token, alarmId);
+      set(
+        produce((draft: AlarmsState) => {
+          draft.userAlarmConfigurations = draft.userAlarmConfigurations.filter(
+            c => c.id !== alarmId,
+          );
+        }),
+      );
+    } catch (e) {
+      throw e;
+    }
   },
   async fetchUserAlarms(token: string) {
     if (get().userAlarmConfigurations.length > 0) {

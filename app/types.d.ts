@@ -322,7 +322,7 @@ interface User {
 interface AlarmType {
   name: string;
   type: string;
-  category: 'ADDON' | 'CORE' | 'NETWORK' | 'DEVICE';
+  category: AlarmCategory;
   datapoints: 'NONE' | 'MISSING' | 'PRESENT';
   disabled: boolean;
 }
@@ -348,6 +348,7 @@ interface UserAlarmConfigurationRequest {
 
 interface UserAlarmConfiguration {
   id: string;
+  name: string;
   type: string;
   category: AlarmCategory;
   created_at: string;
@@ -396,6 +397,5 @@ export {
   UserAlarmConfigurationResponse,
   UserApiResponse,
   Zigbee,
-  ZigbeeDevice
+  ZigbeeDevice,
 };
-

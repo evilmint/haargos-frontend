@@ -15,8 +15,6 @@ import {
   DropdownMenuContent,
   DropdownMenuGroup,
   DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '../ui/dropdown-menu';
 
@@ -134,8 +132,6 @@ export function getColumnsByTier(tier: Tier): ColumnDef<InstallationTableView>[]
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent className="w-56">
-                  <DropdownMenuLabel>{general.name}</DropdownMenuLabel>
-                  <DropdownMenuSeparator />
                   <DropdownMenuGroup>
                     <DropdownMenuItem
                       onSelect={() => {

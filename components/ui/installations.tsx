@@ -1,6 +1,7 @@
 'use client';
 
 import { useInstallationStore } from '@/app/services/stores/installation';
+import { useHaargosRouter } from '@/lib/haargos-router';
 import { Button } from '@/registry/new-york/ui/button';
 import { useAuth0 } from '@auth0/auth0-react';
 import { useRouter } from 'next/navigation';
@@ -25,7 +26,7 @@ export function Installations() {
     asyncFetch();
   }, [fetchInstallations, getAccessTokenSilently]);
 
-  const router = useRouter();
+  const router = useHaargosRouter(useRouter());
 
   return installations.map((installation: any) => {
     return (
@@ -39,7 +40,7 @@ export function Installations() {
         <div className="ml-auto space-x-2 font-medium">
           <Button
             onClick={() => {
-              router.push('/dashboard/installations/' + installation.id);
+              router.navigateToInstallation(installation.id);
             }}
           >
             Open

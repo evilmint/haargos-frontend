@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { UserAuthForm } from './components/user-auth-form';
 
 import { useUserStore } from '@/app/services/stores/user';
+import { useHaargosRouter } from '@/lib/haargos-router';
 import { cn } from '@/lib/utils';
 import { buttonVariants } from '@/registry/new-york/ui/button';
 import { useAuth0 } from '@auth0/auth0-react';
@@ -15,7 +16,7 @@ export default function SignupPage() {
 
   const searchParams = useSearchParams();
 
-  const router = useRouter();
+  const router = useHaargosRouter(useRouter());
   const user = useUserStore(store => store.user);
   const signup = !auth0User;
   const register = auth0User && !user;
@@ -125,7 +126,7 @@ export default function SignupPage() {
                 </div>
                 <RegisterForm
                   onRegister={() => {
-                    router.push('/dashboard');
+                    router.navigateToDashboard();
                   }}
                 />
                 <p className="px-8 text-center text-sm text-muted-foreground">

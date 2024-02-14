@@ -3,6 +3,7 @@
 import { useAlarmsStore } from '@/app/services/stores/alarms';
 import { UserAlarmConfiguration } from '@/app/types';
 import { GenericDataTable } from '@/lib/generic-data-table';
+import { useHaargosRouter } from '@/lib/haargos-router';
 import { useAuth0 } from '@auth0/auth0-react';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
@@ -21,7 +22,7 @@ export function ConfigurationsDataTableProxy({ ...params }) {
   const alarmConfigurations = useAlarmsStore(state => state.userAlarmConfigurations);
 
   const { getAccessTokenSilently, user } = useAuth0();
-  const router = useRouter();
+  const router = useHaargosRouter(useRouter());
 
   const asyncFetch = async () => {
     try {
@@ -49,9 +50,7 @@ export function ConfigurationsDataTableProxy({ ...params }) {
     };
 
     const editAlarm = async (alarmId: string) => {
-      router.push(
-        `/dashboard/installations/${params.installationId}/alarms/${alarmId}/edit`,
-      );
+      router.navigateToInstallationAlarmEdit(params.installationId, alarmId);
     };
 
     return mapToTableView(c, delAlarm, editAlarm);

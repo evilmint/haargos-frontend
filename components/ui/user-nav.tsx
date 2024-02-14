@@ -14,6 +14,7 @@ import {
 
 import { UserDoesNotExistError, useUserStore } from '@/app/services/stores/user';
 import { fullNameInitials } from '@/app/tools';
+import { useHaargosRouter } from '@/lib/haargos-router';
 import { TierResolver } from '@/lib/tier-resolver';
 import { cn } from '@/lib/utils';
 import { buttonVariants } from '@/registry/new-york/ui/button';
@@ -41,7 +42,7 @@ export function UserNav() {
   const { fetchUser, user: apiUser } = useUserStore(state => state);
   const { getAccessTokenSilently, user, logout, isAuthenticated } = useAuth0();
   const [isLoading, setLoading] = useState<boolean>(true);
-  const router = useRouter();
+  const router = useHaargosRouter(useRouter());
 
   const asyncFetch = async () => {
     try {
@@ -129,12 +130,12 @@ export function UserNav() {
           <DropdownMenuSeparator />
 
           <DropdownMenuGroup>
-            <DropdownMenuItem onClick={() => router.push('/account/account')}>
+            <DropdownMenuItem onClick={() => router.navigateToAccount()}>
               Account
             </DropdownMenuItem>
             <DropdownMenuItem
               className={isLowTier ? 'font-semibold' : ''}
-              onClick={() => router.push('/#pricing')}
+              onClick={() => router.navigateToHomePageSection('pricing')}
             >
               Upgrade
             </DropdownMenuItem>

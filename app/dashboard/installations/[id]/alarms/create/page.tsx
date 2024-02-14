@@ -15,6 +15,7 @@ import {
   UserAlarmConfigurationRequest,
 } from '@/app/types';
 import { PrimaryButton } from '@/components/primary-button';
+import { useHaargosRouter } from '@/lib/haargos-router';
 import { useAuth0 } from '@auth0/auth0-react';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
@@ -38,7 +39,7 @@ export default function AlarmCreatePage({ params }: AlarmCreatePageProps) {
 
   const [alarmCreationDisabled, setAlarmCreationDisabled] = useState<boolean>(true);
 
-  const router = useRouter();
+  const router = useHaargosRouter(useRouter());
 
   const alarmTypeSelected = (alarm: AlarmType | null) => {
     setAlarmType(alarm);
@@ -91,7 +92,7 @@ export default function AlarmCreatePage({ params }: AlarmCreatePageProps) {
 
         toast.success('Alarm has been created.');
         setCurrentTab('alarms');
-        router.push(`/dashboard/installations/${params.id}`);
+        router.navigateToInstallation(params.id);
       } catch {
         toast.error('Failed to create an alarm. Try again.');
       }
@@ -136,3 +137,4 @@ export default function AlarmCreatePage({ params }: AlarmCreatePageProps) {
     </PageWrapper>
   );
 }
+

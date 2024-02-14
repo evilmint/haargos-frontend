@@ -1,6 +1,7 @@
 'use client';
 
 import { useInstallationSwitcherStore } from '@/app/services/stores/installation-switcher';
+import { useHaargosRouter } from '@/lib/haargos-router';
 import { Button } from '@/registry/new-york/ui/button';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
@@ -12,7 +13,7 @@ export function InstallationsAbsentContent() {
     state => state.setSelectedInstallation,
   );
   const [showNewInstallationDialog, setShowNewInstallationDialog] = useState(false);
-  const router = useRouter();
+  const router = useHaargosRouter(useRouter());
 
   return (
     <div className="m-5">
@@ -27,7 +28,7 @@ export function InstallationsAbsentContent() {
           <CreateInstallationForm
             onCreateInstallation={installation => {
               setSelectedTeam(installation);
-              router.push('/dashboard/installations/' + installation.id + '#install');
+              router.navigateToInstallationWithHash(installation.id, 'install');
             }}
             open={showNewInstallationDialog}
             onOpenChange={setShowNewInstallationDialog}

@@ -3,6 +3,7 @@
 import { useAuth0 } from '@auth0/auth0-react';
 import { useRouter } from 'next/navigation';
 import { ReactNode, useEffect } from 'react';
+import { useHaargosRouter } from './haargos-router';
 
 type RedirectProps = {
   children: ReactNode;
@@ -10,7 +11,7 @@ type RedirectProps = {
 
 export function RedirectProvider(props: RedirectProps) {
   const { getAccessTokenSilently, user, isAuthenticated, isLoading } = useAuth0();
-  const router = useRouter();
+  const router = useHaargosRouter(useRouter());
 
   useEffect(() => {
     const check = async () => {
@@ -26,7 +27,7 @@ export function RedirectProvider(props: RedirectProps) {
       try {
         await getAccessTokenSilently();
       } catch {
-        router.push('/');
+        router.navigateToRoot();
       }
     };
     check();

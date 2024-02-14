@@ -5,6 +5,7 @@ import { CaretSortIcon, CheckIcon, PlusCircledIcon } from '@radix-ui/react-icons
 import { useInstallationStore } from '@/app/services/stores/installation';
 import { useInstallationSwitcherStore } from '@/app/services/stores/installation-switcher';
 import { Installation } from '@/app/types';
+import { useHaargosRouter } from '@/lib/haargos-router';
 import { cn } from '@/lib/utils';
 import { Button } from '@/registry/new-york/ui/button';
 import {
@@ -49,7 +50,7 @@ export default function InstallationSwitcher({
   );
   const { getAccessTokenSilently, user } = useAuth0();
 
-  const router = useRouter();
+  const router = useHaargosRouter(useRouter());
   const [isLoading, setLoading] = useState<boolean>(true);
   const pathname = usePathname();
 
@@ -136,7 +137,7 @@ export default function InstallationSwitcher({
       onCreateInstallation={installation => {
         setSelectedInstallation(installation);
         setOpen(false);
-        router.push('/dashboard/installations/' + installation.id + '#install');
+        router.navigateToInstallationWithHash(installation.id, 'install');
       }}
       open={showNewInstallationDialog}
       onOpenChange={setShowNewInstallationDialog}
@@ -176,7 +177,7 @@ export default function InstallationSwitcher({
                         setSelectedInstallation(installation);
                         setOpen(false);
 
-                        router.push('/dashboard/installations/' + installation.id);
+                        router.navigateToInstallation(installation.id);
                       }}
                       className="text-sm"
                     >

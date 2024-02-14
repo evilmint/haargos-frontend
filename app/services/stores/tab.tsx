@@ -1,8 +1,10 @@
 import { create } from 'zustand';
 
+type TabType = 'alarms' | 'overview' | 'homeassistant' | 'host' | 'jobs' | 'install';
+
 interface TabState {
-  currentTab: string;
-  setCurrentTab: (value: string) => void;
+  currentTab: TabType;
+  setCurrentTab: (value: TabType) => void;
 }
 
 const useTabStore = create<TabState>((set, get) => ({
@@ -14,4 +16,5 @@ const useTabStore = create<TabState>((set, get) => ({
   },
 }));
 
-export { useTabStore };
+export { TabType, useTabStore };
+

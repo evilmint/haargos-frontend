@@ -1,4 +1,5 @@
 import { PrimaryButton } from '@/components/primary-button';
+import { useHaargosRouter } from '@/lib/haargos-router';
 import { PlusCircledIcon } from '@radix-ui/react-icons';
 import { Tab, TabGroup, TabList, TabPanel, TabPanels } from '@tremor/react';
 import { useRouter } from 'next/navigation';
@@ -10,13 +11,13 @@ interface AlarmProps {
 }
 
 export function Alarms(props: AlarmProps) {
-  const router = useRouter();
+  const router = useHaargosRouter(useRouter());
 
   return (
     <div>
       <PrimaryButton
         onClick={() => {
-          router.push(`/dashboard/installations/${props.installationId}/alarms/create`);
+          router.navigateToInstallationCreateAlarm(props.installationId);
         }}
       >
         <PlusCircledIcon className="w-5 h-5 mr-2" /> New Alarm

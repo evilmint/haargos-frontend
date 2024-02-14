@@ -10,6 +10,7 @@ import {
 } from '@/app/types';
 import { PrimaryButton } from '@/components/primary-button';
 import { CardContent, CardHeader } from '@/components/ui/card';
+import { useHaargosRouter } from '@/lib/haargos-router';
 import { Card } from '@/registry/new-york/ui/card';
 import { useAuth0 } from '@auth0/auth0-react';
 import { useRouter } from 'next/navigation';
@@ -41,7 +42,7 @@ export default function EditAlarmPage({
 
   const [alarmSavingDisabled, setAlarmSavingDisabled] = useState<boolean>(true);
 
-  const router = useRouter();
+  const router = useHaargosRouter(useRouter());
 
   const { getAccessTokenSilently } = useAuth0();
 
@@ -101,7 +102,7 @@ export default function EditAlarmPage({
         toast.success('Alarm has been created.');
 
         setCurrentTab('alarms');
-        router.push(`/dashboard/installations/${params.id}`);
+        router.navigateToInstallation(params.id);
       } catch {
         toast.error('Failed to update alarm. Try again.');
       }

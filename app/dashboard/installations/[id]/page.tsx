@@ -41,8 +41,9 @@ import { InstallationOverviewChart } from './components/installation-overview-ch
 import { updateInstallation } from '@/app/services/installations';
 import { useOSStore } from '@/app/services/stores/os';
 import { useSupervisorStore } from '@/app/services/stores/supervisor';
-import { useTabStore } from '@/app/services/stores/tab';
+import { TabType, useTabStore } from '@/app/services/stores/tab';
 import { HaargosInsights } from '@/components/insights';
+import { useHaargosRouter } from '@/lib/haargos-router';
 import { isLocalDomain } from '@/lib/local-domain';
 import {
   Form,
@@ -123,7 +124,7 @@ export default function DashboardInstallationPage({
   const setDefaultTab = useTabStore(state => state.setCurrentTab);
   const observations = useInstallationStore(state => state.observations[params.id]);
   const deleteInstallation = useInstallationStore(state => state.deleteInstallation);
-  const router = useRouter();
+  const router = useHaargosRouter(useRouter());
 
   const clearInstallation = useInstallationSwitcherStore(
     state => state.clearInstallation,
@@ -135,14 +136,14 @@ export default function DashboardInstallationPage({
     setOrigin(window.location.origin);
 
     if (window.location.hash != null && window.location.hash.length > 0) {
-      setDefaultTab(window.location.hash.slice(1));
+      setDefaultTab(window.location.hash.slice(1) as TabType);
     }
   }, [setDefaultTab, setOrigin]);
 
   useEffect(() => {
     const onHashChanged = () => {
       const newHash = window.location.hash.slice(1);
-      setDefaultTab(newHash?.length > 0 ? newHash : 'overview');
+      setDefaultTab((newHash?.length > 0 ? newHash : 'overview') as TabType);
     };
 
     window.addEventListener('hashchange', onHashChanged);
@@ -158,7 +159,7 @@ export default function DashboardInstallationPage({
     clearInstallation();
 
     toast.success('Installation has been deleted.');
-    router.push('/dashboard');
+    router.navigateToDashboard();
   };
 
   const installation = useInstallationStore(state => state.installations).find(

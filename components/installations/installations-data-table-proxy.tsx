@@ -4,6 +4,7 @@ import { useInstallationStore } from '@/app/services/stores/installation';
 import { useUserStore } from '@/app/services/stores/user';
 import { Installation, Observation } from '@/app/types';
 import { GenericDataTable } from '@/lib/generic-data-table';
+import { useHaargosRouter } from '@/lib/haargos-router';
 import { useAuth0 } from '@auth0/auth0-react';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
@@ -22,7 +23,7 @@ export function InstallationsDataTableProxy() {
   const { user: apiUser } = useUserStore(state => state);
   const { getAccessTokenSilently } = useAuth0();
   const latestHaRelease = useInstallationStore(state => state.latestHaRelease);
-  const router = useRouter();
+  const router = useHaargosRouter(useRouter());
 
   useEffect(() => {
     getAccessTokenSilently().then(token => {
@@ -59,7 +60,7 @@ export function InstallationsDataTableProxy() {
             observations[i.id]?.length > 0 ? observations[i.id][0] : undefined,
             latestHaRelease,
             id => {
-              router.push('/dashboard/installations/' + id);
+              router.navigateToInstallation(id);
             },
             url => {
               window.open(url, '_blank', 'noopener,noreferrer');

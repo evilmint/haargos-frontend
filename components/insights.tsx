@@ -1,7 +1,7 @@
 import { useAddonsStore } from '@/app/services/stores/addons';
 import { useInstallationStore } from '@/app/services/stores/installation';
 import { useNotificationsStore } from '@/app/services/stores/notifications';
-import { useTabStore } from '@/app/services/stores/tab';
+import { TabType, useTabStore } from '@/app/services/stores/tab';
 import {
   AddonsApiResponseAddon,
   NotificationsApiResponseNotification,
@@ -106,7 +106,7 @@ export function HaargosInsights(params: InsightParams) {
 const createAddonUpdateInsight = (
   addonsToUpdate: AddonsApiResponseAddon[],
   installationId: string,
-  setTab: (value: string) => void,
+  setTab: (value: TabType) => void,
 ): Insight | null => {
   if (addonsToUpdate.length === 0) return null;
 

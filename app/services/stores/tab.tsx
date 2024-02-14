@@ -16,5 +16,6 @@ const useTabStore = create<TabState>((set, get) => ({
   },
 }));
 
-export { TabType, useTabStore };
+export { useTabStore };
+export type { TabType };
 

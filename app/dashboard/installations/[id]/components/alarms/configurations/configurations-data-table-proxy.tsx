@@ -20,6 +20,13 @@ export function ConfigurationsDataTableProxy({ ...params }) {
   );
   const deleteAlarm = useAlarmsStore(state => state.deleteUserAlarm);
   const alarmConfigurations = useAlarmsStore(state => state.userAlarmConfigurations);
+  let alarmConfigurationsSorted = [...alarmConfigurations];
+
+  if (alarmConfigurationsSorted.length > 0) {
+    alarmConfigurationsSorted.sort((a, b) => {
+      return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
+    });
+  }
 
   const { getAccessTokenSilently, user } = useAuth0();
   const router = useHaargosRouter(useRouter());
@@ -37,7 +44,7 @@ export function ConfigurationsDataTableProxy({ ...params }) {
     asyncFetch();
   }, [fetchUserAlarmConfigurations, getAccessTokenSilently, user]);
 
-  const alarmConfigurationViews = (alarmConfigurations ?? []).map(c => {
+  const alarmConfigurationViews = (alarmConfigurationsSorted ?? []).map(c => {
     const delAlarm = async (alarmId: string) => {
       const token = await getAccessTokenSilently();
 

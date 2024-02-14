@@ -18,4 +18,3 @@ const useTabStore = create<TabState>((set, get) => ({
 
 export { useTabStore };
 export type { TabType };
-

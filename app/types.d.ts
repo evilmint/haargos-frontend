@@ -167,10 +167,14 @@ interface AlarmConfigurationResponse {
   };
 }
 
-interface UserAlarmConfigurationResponse {
+interface UserAlarmConfigurationsResponse {
   body: {
     configurations: UserAlarmConfiguration[];
   };
+}
+
+interface UserAlarmConfigurationResponse {
+  body: UserAlarmConfiguration;
 }
 
 interface AddonsApiResponseAddon {
@@ -395,6 +399,7 @@ export {
   UserAlarmConfigurationConfiguration,
   UserAlarmConfigurationRequest,
   UserAlarmConfigurationResponse,
+  UserAlarmConfigurationsResponse,
   UserApiResponse,
   Zigbee,
   ZigbeeDevice,

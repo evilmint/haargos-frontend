@@ -1,7 +1,9 @@
 import {
   AlarmConfigurationResponse,
+  UserAlarmConfiguration,
   UserAlarmConfigurationRequest,
   UserAlarmConfigurationResponse,
+  UserAlarmConfigurationsResponse,
 } from '../types'; // Adjust the import to match your project structure
 import { apiSettings, baseHeaders } from './api-settings';
 
@@ -63,7 +65,7 @@ export async function deleteAlarmConfiguration(
 
 export async function fetchUserAlarmConfigurations(
   token: string,
-): Promise<UserAlarmConfigurationResponse> {
+): Promise<UserAlarmConfigurationsResponse> {
   const additionalHeaders = new Headers({
     Authorization: `Bearer ${token}`,
   });
@@ -80,7 +82,7 @@ export async function fetchUserAlarmConfigurations(
 
   const response = await fetch(`${apiSettings.baseUrl}/alarms`, requestOptions);
 
-  const data: UserAlarmConfigurationResponse = await response.json();
+  const data: UserAlarmConfigurationsResponse = await response.json();
 
   return data;
 }
@@ -88,7 +90,7 @@ export async function fetchUserAlarmConfigurations(
 export async function createUserAlarmConfiguration(
   token: string,
   alarmConfiguration: UserAlarmConfigurationRequest,
-): Promise<void> {
+): Promise<UserAlarmConfiguration> {
   const additionalHeaders = new Headers({
     Authorization: `Bearer ${token}`,
     'Content-Type': 'application/json',
@@ -110,13 +112,15 @@ export async function createUserAlarmConfiguration(
   if (!response.ok) {
     throw new Error('Failed to delete account');
   }
+
+  return ((await response.json()) as UserAlarmConfigurationResponse).body;
 }
 
 export async function updateUserAlarmConfiguration(
   token: string,
   alarmId: string,
   alarmConfiguration: UserAlarmConfigurationRequest,
-): Promise<void> {
+): Promise<UserAlarmConfiguration> {
   const additionalHeaders = new Headers({
     Authorization: `Bearer ${token}`,
     'Content-Type': 'application/json',
@@ -138,4 +142,6 @@ export async function updateUserAlarmConfiguration(
   if (!response.ok) {
     throw new Error('Failed to delete account');
   }
+
+  return ((await response.json()) as UserAlarmConfigurationResponse).body;
 }

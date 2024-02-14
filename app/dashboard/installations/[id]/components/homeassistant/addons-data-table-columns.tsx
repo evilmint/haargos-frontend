@@ -336,7 +336,7 @@ export const columns: ColumnDef<AddonTableView>[] = [
     header: () => <span>Repo URL</span>,
     cell: ({ row }) => (
       <Link href={row.getValue('repo_url')} target="_blank" rel="noopener noreferrer">
-        <Button>Visit</Button>
+        <Button className="bg-sr-600">Visit</Button>
       </Link>
     ),
   },

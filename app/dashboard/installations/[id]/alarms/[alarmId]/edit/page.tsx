@@ -1,6 +1,5 @@
 'use client';
 
-import { updateUserAlarmConfiguration } from '@/app/services/alarms';
 import { useAlarmsStore } from '@/app/services/stores/alarms';
 import { useTabStore } from '@/app/services/stores/tab';
 import {
@@ -32,6 +31,7 @@ export default function EditAlarmPage({
   ).find(a => a.id == params.alarmId);
   const fetchAlarmConfigurations = useAlarmsStore(state => state.fetchAlarms);
   const fetchUserAlarmConfigurations = useAlarmsStore(state => state.fetchUserAlarms);
+  const updateUserAlarmConfiguration = useAlarmsStore(state => state.updateUserAlarm);
   const [alarmType, setAlarmType] = useState<AlarmType | null>(null);
   const [alarmOptions, setAlarmOptions] = useState<UserAlarmConfigurationRequest | null>(
     null,
@@ -96,7 +96,6 @@ export default function EditAlarmPage({
     const asyncCreate = async function () {
       const token = await getAccessTokenSilently();
       try {
-        console.log(`Sending ${alarmOptions.configuration.datapointCount ?? -1}`);
         await updateUserAlarmConfiguration(token, params.alarmId, alarmOptions);
 
         toast.success('Alarm has been created.');

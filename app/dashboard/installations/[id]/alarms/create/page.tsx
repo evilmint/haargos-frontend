@@ -1,12 +1,5 @@
 'use client';
 
-import { Card } from '@/components/ui/card';
-import { CardContent, CardHeader } from '@/registry/new-york/ui/card';
-import { useEffect, useState } from 'react';
-import { PageWrapper } from '../../components/page-wrapper';
-import { AlarmTypePicker } from './alarm-type-picker';
-
-import { createUserAlarmConfiguration } from '@/app/services/alarms';
 import { useAlarmsStore } from '@/app/services/stores/alarms';
 import { useTabStore } from '@/app/services/stores/tab';
 import {
@@ -15,13 +8,18 @@ import {
   UserAlarmConfigurationRequest,
 } from '@/app/types';
 import { PrimaryButton } from '@/components/primary-button';
+import { Card } from '@/components/ui/card';
 import { useHaargosRouter } from '@/lib/haargos-router';
+import { CardContent, CardHeader } from '@/registry/new-york/ui/card';
 import { useAuth0 } from '@auth0/auth0-react';
 import { useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 import { BackButton } from '../../components/back-button';
+import { PageWrapper } from '../../components/page-wrapper';
 import { isAlarmCreationPossible } from '../alarm-creation';
 import { AlarmTypeOptionPicker } from './alarm-type-option-picker';
+import { AlarmTypePicker } from './alarm-type-picker';
 
 interface AlarmCreatePageProps {
   params: { id: string };
@@ -30,6 +28,7 @@ interface AlarmCreatePageProps {
 export default function AlarmCreatePage({ params }: AlarmCreatePageProps) {
   const alarmConfigurations = useAlarmsStore(state => state.alarmConfigurations);
   const fetchAlarmConfigurations = useAlarmsStore(state => state.fetchAlarms);
+  const createUserAlarmConfiguration = useAlarmsStore(state => state.createUserAlarm);
   const setCurrentTab = useTabStore(state => state.setCurrentTab);
 
   const [alarmType, setAlarmType] = useState<AlarmType | null>(null);
@@ -137,4 +136,3 @@ export default function AlarmCreatePage({ params }: AlarmCreatePageProps) {
     </PageWrapper>
   );
 }
-

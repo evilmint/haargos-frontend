@@ -1,10 +1,16 @@
-import { AlarmConfiguration, UserAlarmConfiguration } from '@/app/types';
+import {
+  AlarmConfiguration,
+  UserAlarmConfiguration,
+  UserAlarmConfigurationRequest,
+} from '@/app/types';
 import { produce } from 'immer';
 import { create } from 'zustand';
 import {
+  createUserAlarmConfiguration,
   deleteAlarmConfiguration,
   fetchAlarmConfigurations,
   fetchUserAlarmConfigurations,
+  updateUserAlarmConfiguration,
 } from '../alarms';
 
 interface AlarmsState {
@@ -12,6 +18,15 @@ interface AlarmsState {
   userAlarmConfigurations: UserAlarmConfiguration[];
   reloadUserAlarmConfigurations: (token: string) => Promise<void>;
   deleteUserAlarm: (token: string, alarmId: string) => Promise<void>;
+  updateUserAlarm: (
+    token: string,
+    alarmId: string,
+    alarmConfigurationRequest: UserAlarmConfigurationRequest,
+  ) => Promise<void>;
+  createUserAlarm: (
+    token: string,
+    alarmConfiguration: UserAlarmConfigurationRequest,
+  ) => Promise<void>;
   fetchAlarms: (token: string) => Promise<void>;
   fetchUserAlarms: (token: string) => Promise<void>;
 }
@@ -31,6 +46,38 @@ const useAlarmsStore = create<AlarmsState>((set, get) => ({
       ...state,
       alarmConfigurations,
     }));
+  },
+  async createUserAlarm(
+    token: string,
+    alarmConfigurationRequest: UserAlarmConfigurationRequest,
+  ) {
+    let alarmConfiguration = await createUserAlarmConfiguration(
+      token,
+      alarmConfigurationRequest,
+    );
+    set(
+      produce((draft: AlarmsState) => {
+        draft.userAlarmConfigurations.push(alarmConfiguration);
+      }),
+    );
+  },
+  async updateUserAlarm(
+    token: string,
+    alarmId: string,
+    alarmConfigurationRequest: UserAlarmConfigurationRequest,
+  ) {
+    let alarmConfiguration = await updateUserAlarmConfiguration(
+      token,
+      alarmId,
+      alarmConfigurationRequest,
+    );
+    set(
+      produce((draft: AlarmsState) => {
+        draft.userAlarmConfigurations = [alarmConfiguration].concat(
+          draft.userAlarmConfigurations.filter(a => a.id != alarmId),
+        );
+      }),
+    );
   },
   async deleteUserAlarm(token: string, alarmId: string) {
     try {

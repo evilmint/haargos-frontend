@@ -10,7 +10,6 @@ import { useState } from 'react';
 
 export interface AlarmTypePickerProps {
   configurations: AlarmConfiguration[];
-  // currentConfigurations: AlertType[];
   onAlarmSelected?: (item: AlarmType | null) => void;
 }
 

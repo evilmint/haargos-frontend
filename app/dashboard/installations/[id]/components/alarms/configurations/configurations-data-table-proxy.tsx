@@ -4,6 +4,7 @@ import { useAlarmsStore } from '@/app/services/stores/alarms';
 import { UserAlarmConfiguration } from '@/app/types';
 import { GenericDataTable } from '@/lib/generic-data-table';
 import { useAuth0 } from '@auth0/auth0-react';
+import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 import { toast } from 'sonner';
 import {
@@ -20,6 +21,7 @@ export function ConfigurationsDataTableProxy({ ...params }) {
   const alarmConfigurations = useAlarmsStore(state => state.userAlarmConfigurations);
 
   const { getAccessTokenSilently, user } = useAuth0();
+  const router = useRouter();
 
   const asyncFetch = async () => {
     try {
@@ -35,7 +37,7 @@ export function ConfigurationsDataTableProxy({ ...params }) {
   }, [fetchUserAlarmConfigurations, getAccessTokenSilently, user]);
 
   const alarmConfigurationViews = (alarmConfigurations ?? []).map(c => {
-    return mapToTableView(c, async (alarmId: string) => {
+    const delAlarm = async (alarmId: string) => {
       const token = await getAccessTokenSilently();
 
       try {
@@ -44,7 +46,15 @@ export function ConfigurationsDataTableProxy({ ...params }) {
       } catch {
         toast.error('Failed to delete alarm.');
       }
-    });
+    };
+
+    const editAlarm = async (alarmId: string) => {
+      router.push(
+        `/dashboard/installations/${params.installationId}/alarms/${alarmId}/edit`,
+      );
+    };
+
+    return mapToTableView(c, delAlarm, editAlarm);
   });
 
   return (
@@ -65,16 +75,18 @@ export function ConfigurationsDataTableProxy({ ...params }) {
 function mapToTableView(
   alarmConfiguration: UserAlarmConfiguration,
   deleteAlarm: (alarmId: string) => void,
+  editAlarm: (alarmId: string) => void,
 ): AlarmConfigurationTableView {
   return {
     id: alarmConfiguration.id,
-    name: alarmConfiguration.name,
+    name: `${alarmConfiguration.category} - ${alarmConfiguration.name}`,
     type: alarmConfiguration.type,
     category: alarmConfiguration.category,
     created_at: alarmConfiguration.created_at,
     actions: {
       alarmId: alarmConfiguration.id,
       deleteAlarm: deleteAlarm,
+      editAlarm: editAlarm,
     },
   };
 }

@@ -111,3 +111,31 @@ export async function createUserAlarmConfiguration(
     throw new Error('Failed to delete account');
   }
 }
+
+export async function updateUserAlarmConfiguration(
+  token: string,
+  alarmId: string,
+  alarmConfiguration: UserAlarmConfigurationRequest,
+): Promise<void> {
+  const additionalHeaders = new Headers({
+    Authorization: `Bearer ${token}`,
+    'Content-Type': 'application/json',
+  });
+  const mergedHeaders = new Headers({
+    ...Object.fromEntries(baseHeaders),
+    ...Object.fromEntries(additionalHeaders),
+  });
+
+  const requestBody = JSON.stringify(alarmConfiguration);
+  const requestOptions: RequestInit = {
+    method: 'PUT',
+    headers: mergedHeaders,
+    redirect: 'follow',
+    body: requestBody,
+  };
+  let response = await fetch(`${apiSettings.baseUrl}/alarms/${alarmId}`, requestOptions);
+
+  if (!response.ok) {
+    throw new Error('Failed to delete account');
+  }
+}

@@ -29,13 +29,10 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/registry/new-york/ui/tabs';
 import { useAuth0 } from '@auth0/auth0-react';
 import { useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { ReactElement, useEffect, useState } from 'react';
 import { AgentInstallation } from './components/agent-installation';
 import { DashboardHeaderInstallation } from './components/dashboard-header-installation';
 import { Docker } from './components/docker';
-import { AutomationsDataTableProxy } from './components/homeassistant/automations/AutomationsDataTableProxy';
-import { SceneDataTableProxy } from './components/homeassistant/scenes/scenes-data-table-proxy';
-import { ScriptsDataTableProxy } from './components/homeassistant/scripts/scripts-data-table-proxy';
 import { ZigbeeDataTableProxy } from './components/homeassistant/zigbee/zigbee-data-table-proxy';
 import { CPU } from './components/host/cpu';
 import { Storage } from './components/host/storage';
@@ -64,7 +61,10 @@ import { toast } from 'sonner';
 import * as z from 'zod';
 import { Alarms } from './components/alarms/alarms';
 import { AddonDataTableProxy } from './components/homeassistant/addons-data-table-proxy';
+import { AutomationsDataTableProxy } from './components/homeassistant/automations/AutomationsDataTableProxy';
 import { LogSwitcher } from './components/homeassistant/logs/log-switcher';
+import { SceneDataTableProxy } from './components/homeassistant/scenes/scenes-data-table-proxy';
+import { ScriptsDataTableProxy } from './components/homeassistant/scripts/scripts-data-table-proxy';
 import { Memory } from './components/host/memory';
 import { Network } from './components/host/network';
 import { JobsDataTableProxy } from './components/jobs/job-data-table-proxy';
@@ -265,6 +265,115 @@ export default function DashboardInstallationPage({
       ? observations[0].agent_type == 'addon'
       : false;
 
+  let tabs = [
+    <Tab className="sm:max-md:w-[100%] sm:max-md:ml-4" key="tab-zigbee">
+      Zigbee
+    </Tab>,
+
+    <Tab className="sm:max-md:w-[100%]" key="tab-notifications">
+      Notifications{' '}
+      {notifications?.length > 0 && (
+        <Badge size="xs" className="text-xl w-5 h-5">
+          {notifications.length}
+        </Badge>
+      )}
+    </Tab>,
+  ];
+
+  if (hasSupervisor) {
+    tabs.push(
+      <Tab className="sm:max-md:w-[100%]" key="tab-supervisor">
+        Supervisor{' '}
+        {supervisorUpdateCount > 0 && (
+          <Badge size="xs" className="text-xl w-5 h-5">
+            {supervisorUpdateCount}
+          </Badge>
+        )}
+      </Tab>,
+    );
+    tabs.push(
+      <Tab className="sm:max-md:w-[100%]" key="tab-addons">
+        Addons{' '}
+        {addons?.filter(a => a.update_available).length > 0 && (
+          <Badge size="xs" className="text-xl w-5 h-5">
+            {addons.filter(a => a.update_available).length}
+          </Badge>
+        )}
+      </Tab>,
+    );
+  }
+
+  tabs.push(
+    <Tab className="sm:max-md:w-[100%]" key="tab-automations">
+      Automations
+    </Tab>,
+  );
+  tabs.push(
+    <Tab className="sm:max-md:w-[100%]" key="tab-scenes">
+      Scenes
+    </Tab>,
+  );
+  tabs.push(
+    <Tab className="sm:max-md:w-[100%]" key="tab-scripts">
+      Scripts
+    </Tab>,
+  );
+
+  let tabPanels = [
+    <TabPanel key="tabpanel-zigbee">
+      <div className="mt-10">
+        <ZigbeeDataTableProxy installationId={params.id} />
+      </div>
+    </TabPanel>,
+
+    <TabPanel key="tabpanel-notifications">
+      <div className="mt-10">
+        <Notifications installationId={params.id} />
+      </div>
+    </TabPanel>,
+  ];
+
+  if (hasSupervisor) {
+    tabPanels.push(
+      <TabPanel key="tabpanel-supervisor">
+        <div className="mt-10">
+          <Supervisor installationId={params.id} />
+        </div>
+      </TabPanel>,
+    );
+    tabPanels.push(
+      <TabPanel key="tabpanel-addons">
+        <div className="mt-10">
+          <AddonDataTableProxy installationId={params.id} />
+        </div>
+      </TabPanel>,
+    );
+  }
+
+  tabPanels.push(
+    <TabPanel key="tabpanel-automations">
+      <div className="mt-10">
+        <AutomationsDataTableProxy installationId={params.id} />
+      </div>
+    </TabPanel>,
+  );
+
+  tabPanels.push(
+    <TabPanel key="tabpanel-scenes">
+      <div className="mt-10">
+        <SceneDataTableProxy installationId={params.id} />
+      </div>
+    </TabPanel>,
+  );
+
+  tabPanels.push(
+    <TabPanel key="tabpanel-scripts">
+      <div className="mt-10">
+        <ScriptsDataTableProxy installationId={params.id} />
+      </div>
+    </TabPanel>,
+  );
+
   return (
     defaultTab != null &&
     origin != null && (
@@ -461,107 +570,8 @@ export default function DashboardInstallationPage({
 
             <TabsContent value="homeassistant" className="space-y-4">
               <TabGroup className="sm:max-md:block">
-                <TabList className="md:mt-8 sm:max-md:block">
-                  <Tab className="sm:max-md:w-[100%] sm:max-md:ml-4">Zigbee</Tab>
-
-                  <Tab className="sm:max-md:w-[100%]">
-                    Notifications{' '}
-                    {notifications?.length > 0 ? (
-                      <Badge size="xs" className="text-xl w-5 h-5">
-                        {notifications.length}
-                      </Badge>
-                    ) : (
-                      <></>
-                    )}
-                  </Tab>
-
-                  {hasSupervisor ? (
-                    <Tab className="sm:max-md:w-[100%]">
-                      Supervisor{' '}
-                      {supervisorUpdateCount > 0 ? (
-                        <Badge size="xs" className="text-xl w-5 h-5">
-                          {supervisorUpdateCount}
-                        </Badge>
-                      ) : (
-                        <></>
-                      )}
-                    </Tab>
-                  ) : (
-                    <></>
-                  )}
-                  {hasSupervisor ? (
-                    <Tab className="sm:max-md:w-[100%]">
-                      Addons{' '}
-                      {addons?.filter(a => a.update_available).length > 0 ? (
-                        <Badge size="xs" className="text-xl w-5 h-5">
-                          {addons.filter(a => a.update_available).length}
-                        </Badge>
-                      ) : (
-                        <></>
-                      )}
-                    </Tab>
-                  ) : (
-                    <></>
-                  )}
-                  <Tab className="sm:max-md:w-[100%]">Automations</Tab>
-                  <Tab className="sm:max-md:w-[100%]">Scenes</Tab>
-                  <Tab className="sm:max-md:w-[100%]">Scripts</Tab>
-                </TabList>
-                <TabPanels>
-                  <TabPanel>
-                    <div className="mt-10">
-                      <ZigbeeDataTableProxy installationId={params.id} />
-                    </div>
-                  </TabPanel>
-
-                  {notificationsEnabled ? (
-                    <TabPanel>
-                      <div className="mt-10">
-                        <Notifications installationId={params.id} />
-                      </div>
-                    </TabPanel>
-                  ) : (
-                    <></>
-                  )}
-
-                  {hasSupervisor ? (
-                    <TabPanel>
-                      <div className="mt-10">
-                        <Supervisor installationId={params.id} />
-                      </div>
-                    </TabPanel>
-                  ) : (
-                    <></>
-                  )}
-
-                  {hasSupervisor ? (
-                    <TabPanel>
-                      <div className="mt-10">
-                        <AddonDataTableProxy installationId={params.id} />
-                      </div>
-                    </TabPanel>
-                  ) : (
-                    <></>
-                  )}
-
-                  <TabPanel>
-                    <div className="mt-10">
-                      <AutomationsDataTableProxy installationId={params.id} />
-                    </div>
-                  </TabPanel>
-
-                  <TabPanel>
-                    <div className="mt-10">
-                      <SceneDataTableProxy installationId={params.id} />
-                    </div>
-                  </TabPanel>
-
-                  <TabPanel>
-                    <div className="mt-10">
-                      <ScriptsDataTableProxy installationId={params.id} />
-                    </div>
-                  </TabPanel>
-                </TabPanels>
+                <TabList className="md:mt-8 sm:max-md:block">{tabs}</TabList>
+                <TabPanels>{tabPanels}</TabPanels>
               </TabGroup>
             </TabsContent>
 
@@ -620,4 +630,15 @@ export default function DashboardInstallationPage({
       </>
     )
   );
+}
+
+function renderIfSupervisorEnabled(
+  enabled: boolean,
+  element: ReactElement,
+): ReactElement | null {
+  if (!enabled) {
+    return null;
+  }
+
+  return element;
 }

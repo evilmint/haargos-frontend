@@ -14,6 +14,7 @@ import { ChangeEventHandler, Fragment, useEffect, useState } from 'react';
 export interface AlarmTypeOptionPickerProps {
   alarm: AlarmType;
   installationId: string;
+  initialAlarmOptions?: UserAlarmConfigurationConfiguration;
   onAlarmOptionsChanged: (options: any) => void;
 }
 
@@ -22,9 +23,9 @@ export function AlarmTypeOptionPicker(params: AlarmTypeOptionPickerProps) {
 
   const [selectedOptions, setSelectedOptions] =
     useState<UserAlarmConfigurationConfiguration>({
-      addons: [],
-      datapointCount: 1,
-      notificationMethod: 'E-mail', // Default value, adjust if needed
+      addons: params.initialAlarmOptions?.addons ?? [],
+      datapointCount: params.initialAlarmOptions?.datapointCount ?? 1,
+      notificationMethod: params.initialAlarmOptions?.notificationMethod ?? 'E-mail', // Default value, adjust if needed
     });
 
   useEffect(() => {
@@ -46,7 +47,7 @@ export function AlarmTypeOptionPicker(params: AlarmTypeOptionPickerProps) {
     console.log(h.target.value);
     setSelectedOptions(prevOptions => ({
       ...prevOptions,
-      datapoints: parseInt(h.target.value),
+      datapointCount: parseInt(h.target.value),
     }));
   };
 
@@ -60,6 +61,7 @@ export function AlarmTypeOptionPicker(params: AlarmTypeOptionPickerProps) {
 
       {isAddonOptionPickerAvailable && (
         <AddonPicker
+          initialAddons={params.initialAlarmOptions?.addons}
           onAddonsSelected={handleAddonsSelected}
           installationId={params.installationId}
         />
@@ -74,7 +76,7 @@ export function AlarmTypeOptionPicker(params: AlarmTypeOptionPickerProps) {
 
             <Input
               type="number"
-              defaultValue={1}
+              defaultValue={params.initialAlarmOptions?.datapointCount ?? 1}
               max={5}
               min={1}
               onChange={handleDataPointsChange}
@@ -92,6 +94,7 @@ export function AlarmTypeOptionPicker(params: AlarmTypeOptionPickerProps) {
 
 export interface AddonOptionPickerProps {
   installationId: string;
+  initialAddons?: { slug: string }[] | undefined;
   onAddonsSelected: (addons: AddonsApiResponseAddon[]) => void;
 }
 
@@ -110,11 +113,26 @@ function AddonPicker(props: AddonOptionPickerProps) {
     }
   };
 
+  const initialAddonSlugs = (props.initialAddons ?? []).map(a => a.slug);
+  const [initialAddonsSet, setInitialAddons] = useState<boolean>(false);
+  const [selected, setSelected] = useState<AddonsApiResponseAddon[]>(
+    addons.filter(a => initialAddonSlugs.includes(a.slug)),
+  );
+
   useEffect(() => {
     asyncFetch();
   }, [getAccessTokenSilently, fetchAddonsForInstallation, props.installationId, user]);
 
-  const [selected, setSelected] = useState<AddonsApiResponseAddon[]>([]);
+  useEffect(() => {
+    if (initialAddonsSet) {
+      return;
+    }
+
+    if (addons.length > 0) {
+      setSelected(addons.filter(a => initialAddonSlugs.includes(a.slug)));
+      setInitialAddons(true);
+    }
+  }, [addons]);
 
   const setSelectedAddons = (addons: AddonsApiResponseAddon[]) => {
     setSelected(addons);

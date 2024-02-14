@@ -8,8 +8,8 @@ import { AlarmTypePicker } from './alarm-type-picker';
 
 import { createUserAlarmConfiguration } from '@/app/services/alarms';
 import { useAlarmsStore } from '@/app/services/stores/alarms';
+import { useTabStore } from '@/app/services/stores/tab';
 import {
-  AlarmCategory,
   AlarmType,
   UserAlarmConfigurationConfiguration,
   UserAlarmConfigurationRequest,
@@ -19,6 +19,7 @@ import { useAuth0 } from '@auth0/auth0-react';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 import { BackButton } from '../../components/back-button';
+import { isAlarmCreationPossible } from '../alarm-creation';
 import { AlarmTypeOptionPicker } from './alarm-type-option-picker';
 
 interface AlarmCreatePageProps {
@@ -28,6 +29,8 @@ interface AlarmCreatePageProps {
 export default function AlarmCreatePage({ params }: AlarmCreatePageProps) {
   const alarmConfigurations = useAlarmsStore(state => state.alarmConfigurations);
   const fetchAlarmConfigurations = useAlarmsStore(state => state.fetchAlarms);
+  const setCurrentTab = useTabStore(state => state.setCurrentTab);
+
   const [alarmType, setAlarmType] = useState<AlarmType | null>(null);
   const [alarmOptions, setAlarmOptions] = useState<UserAlarmConfigurationRequest | null>(
     null,
@@ -87,6 +90,7 @@ export default function AlarmCreatePage({ params }: AlarmCreatePageProps) {
         await createUserAlarmConfiguration(token, alarmOptions);
 
         toast.success('Alarm has been created.');
+        setCurrentTab('alarms');
         router.push(`/dashboard/installations/${params.id}`);
       } catch {
         toast.error('Failed to create an alarm. Try again.');
@@ -131,19 +135,4 @@ export default function AlarmCreatePage({ params }: AlarmCreatePageProps) {
       </Card>
     </PageWrapper>
   );
-}
-
-function isAlarmCreationPossible(
-  category: AlarmCategory | undefined | null,
-  configuration: UserAlarmConfigurationConfiguration | undefined | null,
-): boolean {
-  if (!category || !configuration) {
-    return false;
-  }
-
-  if (category !== 'ADDON') {
-    return true;
-  }
-
-  return (configuration.addons ?? []).length > 0;
 }

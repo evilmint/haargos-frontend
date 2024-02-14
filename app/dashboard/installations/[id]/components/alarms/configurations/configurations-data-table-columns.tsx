@@ -21,6 +21,7 @@ export interface AlarmConfigurationTableView {
   actions: {
     alarmId: string;
     deleteAlarm: (alarmId: string) => void;
+    editAlarm: (alarmId: string) => void;
   };
 }
 
@@ -77,9 +78,13 @@ export const columns: ColumnDef<AlarmConfigurationTableView>[] = [
     cell: ({ row }) => {
       const {
         deleteAlarm,
+        editAlarm,
         alarmId,
-      }: { deleteAlarm: (alarmId: string) => void; alarmId: string } =
-        row.getValue('actions');
+      }: {
+        deleteAlarm: (alarmId: string) => void;
+        editAlarm: (alarmId: string) => void;
+        alarmId: string;
+      } = row.getValue('actions');
       return (
         <div className="text-xs text-right">
           <DropdownMenu>
@@ -93,7 +98,11 @@ export const columns: ColumnDef<AlarmConfigurationTableView>[] = [
             </DropdownMenuTrigger>
             <DropdownMenuContent className="w-56">
               <DropdownMenuGroup>
-                <DropdownMenuItem onSelect={() => {}}>
+                <DropdownMenuItem
+                  onSelect={() => {
+                    editAlarm(alarmId);
+                  }}
+                >
                   <span>Edit</span>
                 </DropdownMenuItem>
 

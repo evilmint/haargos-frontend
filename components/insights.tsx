@@ -180,7 +180,7 @@ const createNotificationsInsight = (
     description: (
       <ul className="pl-4 list-disc">
         {notifications.map(n => {
-          return <li>{n.title}</li>;
+          return <li key={`notification-${n.notification_id}`}>{n.title}</li>;
         })}
       </ul>
     ),

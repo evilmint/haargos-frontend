@@ -62,7 +62,7 @@ import { toast } from 'sonner';
 import * as z from 'zod';
 import { Alarms } from './components/alarms/alarms';
 import { AddonDataTableProxy } from './components/homeassistant/addons-data-table-proxy';
-import { AutomationsDataTableProxy } from './components/homeassistant/automations/AutomationsDataTableProxy';
+import { AutomationsDataTableProxy } from './components/homeassistant/automations/automations-data-table-proxy';
 import { LogSwitcher } from './components/homeassistant/logs/log-switcher';
 import { SceneDataTableProxy } from './components/homeassistant/scenes/scenes-data-table-proxy';
 import { ScriptsDataTableProxy } from './components/homeassistant/scripts/scripts-data-table-proxy';

@@ -128,7 +128,7 @@ export function GenericDataTable({ ...params }: GenericDataTableParams) {
           <div className="inline ml-4">
             <Icons.reload
               onClick={() => params.reload?.()}
-              className="cursor-pointer w-4 h-4"
+              className="cursor-pointer text-slate-500 w-4 h-4"
             />
           </div>
         )}

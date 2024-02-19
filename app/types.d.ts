@@ -333,10 +333,20 @@ interface AlarmType {
 
 interface AlarmConfiguration {
   name: string;
+  requires_supervisor: boolean;
   alarmTypes: AlarmType[];
 }
 
-type AlarmCategory = 'ADDON' | 'CORE' | 'NETWORK' | 'DEVICE';
+type AlarmCategory =
+  | 'ADDON'
+  | 'CORE'
+  | 'NETWORK'
+  | 'DEVICE'
+  | 'ZIGBEE'
+  | 'LOGS'
+  | 'AUTOMATIONS'
+  | 'SCRIPTS'
+  | 'SCENES';
 
 interface UserAlarmConfigurationConfiguration {
   datapointCount?: number;

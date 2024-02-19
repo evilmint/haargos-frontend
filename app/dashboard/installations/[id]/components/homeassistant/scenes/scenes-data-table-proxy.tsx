@@ -14,6 +14,10 @@ export function SceneDataTableProxy({ ...params }) {
   const installation = useInstallationStore(state => state.installations).find(
     i => i.id == installationId,
   );
+
+  const clearAndReloadObservationsForInstallation = useInstallationStore(
+    state => state.clearAndReloadObservationsForInstallation,
+  );
   const observations = useInstallationStore(state => state.observations[installationId]);
   const fetchInstallations = useInstallationStore(state => state.fetchInstallations);
   const fetchObservationsForInstallation = useInstallationStore(
@@ -68,6 +72,10 @@ export function SceneDataTableProxy({ ...params }) {
           }
 
           return installation?.urls?.instance?.url + '/config/scene/edit/' + scene.id;
+        }}
+        reload={async () => {
+          const token = await getAccessTokenSilently();
+          clearAndReloadObservationsForInstallation(installationId, token);
         }}
       />
     </>

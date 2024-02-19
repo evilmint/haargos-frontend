@@ -1,6 +1,7 @@
 'use client';
 
 import { useAlarmsStore } from '@/app/services/stores/alarms';
+import { useInstallationStore } from '@/app/services/stores/installation';
 import { useTabStore } from '@/app/services/stores/tab';
 import {
   AlarmType,
@@ -16,6 +17,7 @@ import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 import { BackButton } from '../../components/back-button';
+import { FullWidthConditionalLoading } from '../../components/full-width-conditional-loading';
 import { PageWrapper } from '../../components/page-wrapper';
 import { isAlarmCreationPossible } from '../alarm-creation';
 import { AlarmTypeOptionPicker } from './alarm-type-option-picker';
@@ -26,7 +28,18 @@ interface AlarmCreatePageProps {
 }
 
 export default function AlarmCreatePage({ params }: AlarmCreatePageProps) {
-  const alarmConfigurations = useAlarmsStore(state => state.alarmConfigurations);
+  const observations = useInstallationStore(state => state.observations[params.id]);
+
+  const alarmConfigurations = useAlarmsStore(state => state.alarmConfigurations).filter(
+    a => {
+      if (!a.requires_supervisor || !observations || observations.length == 0) {
+        return true;
+      }
+
+      return observations[0].agent_type == 'addon';
+    },
+  );
+
   const fetchAlarmConfigurations = useAlarmsStore(state => state.fetchAlarms);
   const createUserAlarmConfiguration = useAlarmsStore(state => state.createUserAlarm);
   const setCurrentTab = useTabStore(state => state.setCurrentTab);
@@ -61,6 +74,29 @@ export default function AlarmCreatePage({ params }: AlarmCreatePageProps) {
   useEffect(() => {
     asyncFetch();
   }, [getAccessTokenSilently]);
+
+  const fetchInstallations = useInstallationStore(state => state.fetchInstallations);
+  const fetchObservationsForInstallation = useInstallationStore(
+    state => state.fetchObservationsForInstallation,
+  );
+
+  const asyncFetchObservations = async () => {
+    try {
+      const token = await getAccessTokenSilently();
+      await fetchObservationsForInstallation(params.id, token, false);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    asyncFetchObservations();
+  }, [
+    fetchInstallations,
+    getAccessTokenSilently,
+    fetchObservationsForInstallation,
+    params.id,
+  ]);
 
   const onAlarmOptionsChanged = (options: UserAlarmConfigurationConfiguration) => {
     if (alarmType == null) {
@@ -109,28 +145,32 @@ export default function AlarmCreatePage({ params }: AlarmCreatePageProps) {
           <h1 className="font-semibold text-2xl">Alarm type</h1>
         </CardHeader>
         <CardContent>
-          <div className="flex flex-col pb-4">
-            <AlarmTypePicker
-              onAlarmSelected={alarmTypeSelected}
-              configurations={alarmConfigurations}
-            />
-          </div>
-          {alarmType && (
+          <FullWidthConditionalLoading isLoaded={observations != null}>
             <div>
-              <AlarmTypeOptionPicker
-                installationId={params.id}
-                alarm={alarmType}
-                onAlarmOptionsChanged={onAlarmOptionsChanged}
-              />
-              <PrimaryButton
-                disabled={alarmCreationDisabled}
-                className="h-[45px] w-[150px]"
-                onClick={onCreateAlarmClicked}
-              >
-                Create Alarm
-              </PrimaryButton>
+              <div className="flex flex-col pb-4">
+                <AlarmTypePicker
+                  onAlarmSelected={alarmTypeSelected}
+                  configurations={alarmConfigurations}
+                />
+              </div>
+              {alarmType && (
+                <div>
+                  <AlarmTypeOptionPicker
+                    installationId={params.id}
+                    alarm={alarmType}
+                    onAlarmOptionsChanged={onAlarmOptionsChanged}
+                  />
+                  <PrimaryButton
+                    disabled={alarmCreationDisabled}
+                    className="h-[45px] w-[150px]"
+                    onClick={onCreateAlarmClicked}
+                  >
+                    Create Alarm
+                  </PrimaryButton>
+                </div>
+              )}
             </div>
-          )}
+          </FullWidthConditionalLoading>
         </CardContent>
       </Card>
     </PageWrapper>

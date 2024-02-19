@@ -30,8 +30,7 @@ export function LogsDataTableProxy(params: LogsDataTableProxyParams) {
   const asyncFetch = async () => {
     try {
       const token = await getAccessTokenSilently();
-      //await fetchObservationsForInstallation(installationId, token, false);
-      await fetchLogs(params.installationId, params.logSource, token);
+      await fetchLogs(params.installationId, params.logSource, token, false);
     } catch (error) {
       console.log(error);
     }
@@ -90,6 +89,10 @@ export function LogsDataTableProxy(params: LogsDataTableProxyParams) {
             defaultColumnVisibility={{ type: false }}
             columnVisibilityKey="LogsDataTable_columnVisibility"
             data={logViews}
+            reload={async () => {
+              const token = await getAccessTokenSilently();
+              await fetchLogs(params.installationId, params.logSource, token, true);
+            }}
           />
         </TabsContent>
 

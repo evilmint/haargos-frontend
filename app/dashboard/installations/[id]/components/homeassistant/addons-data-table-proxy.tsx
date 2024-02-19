@@ -29,7 +29,9 @@ export function AddonDataTableProxy({ ...params }) {
 
   const fetchAddonsForInstallation = useAddonsStore(state => state.fetchAddons);
   const { getAccessTokenSilently, user } = useAuth0();
-
+  const clearAndReloadObservationsForInstallation = useInstallationStore(
+    state => state.clearAndReloadObservationsForInstallation,
+  );
   const asyncFetch = async () => {
     try {
       const token = await getAccessTokenSilently();
@@ -69,6 +71,10 @@ export function AddonDataTableProxy({ ...params }) {
         }
 
         return installation?.urls?.instance?.url + `/hassio/addon/${addon.slug}/info`;
+      }}
+      reload={async () => {
+        const token = await getAccessTokenSilently();
+        clearAndReloadObservationsForInstallation(installationId, token);
       }}
     />
   );

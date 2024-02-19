@@ -7,18 +7,34 @@ import { fetchLogs } from '../logs';
 
 interface LogsState {
   logsByInstallationId: Record<string, Record<string, Log[]>>;
-  fetchLogs: (installationId: string, type: LogSource, token: string) => Promise<void>;
+  fetchLogs: (
+    installationId: string,
+    type: LogSource,
+    token: string,
+    force: boolean,
+  ) => Promise<void>;
 }
 
 const useLogsStore = create<LogsState>((set, get) => ({
   logsByInstallationId: {},
-  async fetchLogs(installationId, type, token) {
+  async fetchLogs(installationId, type, token, force) {
     if (
+      force == false &&
       get().logsByInstallationId[installationId] &&
       get().logsByInstallationId[installationId][type]
     ) {
       return;
     }
+
+    set(state => ({
+      logsByInstallationId: {
+        ...state.logsByInstallationId,
+        [installationId]: {
+          ...state.logsByInstallationId[installationId],
+          [type]: [],
+        },
+      },
+    }));
 
     const logs = await fetchLogs(installationId, type, token);
     const parsedLogs = parseLog(logs.body.content, type);

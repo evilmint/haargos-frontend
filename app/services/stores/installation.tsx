@@ -6,7 +6,6 @@ import {
   getInstallations,
 } from '../installations';
 import { getObservations } from '../observations';
-const { parse, strip } = require('ansicolor');
 
 interface InstallationStoreState {
   installations: Installation[];
@@ -16,6 +15,7 @@ interface InstallationStoreState {
   highestStorageByInstallationId: Record<string, Storage | null>;
   isFetchingInstallations: boolean;
   isFetchingObservations: Record<string, boolean>;
+  reloadInstallations: (token: string) => void;
   clear: () => void;
   createInstallation: (
     token: string,
@@ -23,6 +23,10 @@ interface InstallationStoreState {
     name: string,
   ) => Promise<Installation | null>;
   fetchInstallations: (token: string, force: boolean) => Promise<Installation[]>;
+  clearAndReloadObservationsForInstallation: (
+    installationId: string,
+    token: string,
+  ) => Promise<void>;
   fetchObservationsForInstallation: (
     installationId: string,
     token: string,
@@ -47,6 +51,10 @@ const useInstallationStore = create<InstallationStoreState>((set, get) => ({
       highestStorageByInstallationId: {},
       isFetchingObservations: {},
     }));
+  },
+  reloadInstallations: async (token: string) => {
+    set({ installations: [] });
+    await get().fetchInstallations(token, true);
   },
   createInstallation: async (token: string, instance: string, name: string) => {
     try {
@@ -100,6 +108,18 @@ const useInstallationStore = create<InstallationStoreState>((set, get) => ({
     }
 
     return installations;
+  },
+  clearAndReloadObservationsForInstallation: async (
+    installationId: string,
+    token: string,
+  ) => {
+    set(state => ({
+      observations: {
+        ...state.observations,
+        [installationId]: [],
+      },
+    }));
+    await get().fetchObservationsForInstallation(installationId, token, true);
   },
   fetchObservationsForInstallation: async (
     installationId: string,

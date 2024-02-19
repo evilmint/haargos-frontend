@@ -19,6 +19,9 @@ export function ScriptsDataTableProxy({ ...params }) {
   const fetchObservationsForInstallation = useInstallationStore(
     state => state.fetchObservationsForInstallation,
   );
+  const clearAndReloadObservationsForInstallation = useInstallationStore(
+    state => state.clearAndReloadObservationsForInstallation,
+  );
   const { getAccessTokenSilently, user } = useAuth0();
 
   const asyncFetch = async () => {
@@ -72,6 +75,10 @@ export function ScriptsDataTableProxy({ ...params }) {
           return (
             installation?.urls?.instance?.url + '/config/script/edit/' + script.unique_id
           );
+        }}
+        reload={async () => {
+          const token = await getAccessTokenSilently();
+          clearAndReloadObservationsForInstallation(installationId, token);
         }}
       />
     </>

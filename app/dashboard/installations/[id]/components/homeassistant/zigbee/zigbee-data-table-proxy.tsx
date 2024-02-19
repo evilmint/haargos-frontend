@@ -20,6 +20,9 @@ export function ZigbeeDataTableProxy({ ...params }) {
   const fetchObservationsForInstallation = useInstallationStore(
     state => state.fetchObservationsForInstallation,
   );
+  const clearAndReloadObservationsForInstallation = useInstallationStore(
+    state => state.clearAndReloadObservationsForInstallation,
+  );
   const { getAccessTokenSilently, user } = useAuth0();
   const { user: apiUser } = useUserStore(state => state);
 
@@ -84,6 +87,10 @@ export function ZigbeeDataTableProxy({ ...params }) {
         columnVisibilityKey="ZigbeeDataTable_columnVisibility"
         data={devices}
         linkColumnName="name"
+        reload={async () => {
+          const token = await getAccessTokenSilently();
+          clearAndReloadObservationsForInstallation(installationId, token);
+        }}
         link={(device: ZigbeeDeviceTableView) => {
           if (
             device.integration_type !== 'ZHA' ||

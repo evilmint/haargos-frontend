@@ -27,6 +27,26 @@ export interface AlarmConfigurationTableView {
 
 export const columns: ColumnDef<AlarmConfigurationTableView>[] = [
   {
+    accessorKey: 'category',
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+        >
+          Category
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      );
+    },
+    cell: ({ row }) => (
+      <div
+        className="text-xs"
+        dangerouslySetInnerHTML={{ __html: row.getValue('category') }}
+      />
+    ),
+  },
+  {
     accessorKey: 'name',
     header: ({ column }) => {
       return (
@@ -39,7 +59,12 @@ export const columns: ColumnDef<AlarmConfigurationTableView>[] = [
         </Button>
       );
     },
-    cell: ({ row }) => <div className="text-xs">{row.getValue('name')}</div>,
+    cell: ({ row }) => (
+      <div
+        className="text-xs"
+        dangerouslySetInnerHTML={{ __html: row.getValue('name') }}
+      />
+    ),
   },
   {
     accessorKey: 'created_at',

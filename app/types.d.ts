@@ -329,6 +329,14 @@ interface AlarmType {
   category: AlarmCategory;
   datapoints: 'NONE' | 'MISSING' | 'PRESENT';
   disabled: boolean;
+  components: { type: 'older_than_picker' }[];
+}
+
+type TimeComponent = 'Months' | 'Days' | 'Hours' | 'Minutes';
+
+interface OlderThanOption {
+  timeComponent: TimeComponent;
+  componentValue: number;
 }
 
 interface AlarmConfiguration {
@@ -348,9 +356,14 @@ type AlarmCategory =
   | 'SCRIPTS'
   | 'SCENES';
 
+interface AddonIdentifier {
+  slug: string;
+}
+
 interface UserAlarmConfigurationConfiguration {
   datapointCount?: number;
-  addons?: { slug: string }[];
+  addons?: AddonIdentifier[];
+  olderThan?: OlderThanOption;
   notificationMethod: 'E-mail';
 }
 
@@ -370,6 +383,7 @@ interface UserAlarmConfiguration {
 }
 
 export {
+  AddonIdentifier,
   AddonsApiResponse,
   AddonsApiResponseAddon,
   AlarmCategory,
@@ -398,12 +412,14 @@ export {
   OSInfoResponse,
   Observation,
   ObservationApiResponse,
+  OlderThanOption,
   Scene,
   Script,
   Storage,
   SupervisorInfo,
   SupervisorInfoResponse,
   Tier,
+  TimeComponent,
   User,
   UserAlarmConfiguration,
   UserAlarmConfigurationConfiguration,

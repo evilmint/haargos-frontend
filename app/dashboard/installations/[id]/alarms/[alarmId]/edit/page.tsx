@@ -1,5 +1,6 @@
 'use client';
 
+import { useAddonsStore } from '@/app/services/stores/addons';
 import { useAlarmsStore } from '@/app/services/stores/alarms';
 import { useTabStore } from '@/app/services/stores/tab';
 import {
@@ -15,16 +16,18 @@ import { useAuth0 } from '@auth0/auth0-react';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
+import { createAlarmConfigurationName } from '../../../components/alarms/alarm-configuration-name';
 import { BackButton } from '../../../components/back-button';
 import { PageWrapper } from '../../../components/page-wrapper';
 import { isAlarmCreationPossible } from '../../alarm-creation';
-import { AlarmTypeOptionPicker } from '../../create/alarm-type-option-picker';
+import { AlarmTypeOptionPicker } from '../../option-picker/alarm-type-option-picker';
 
 export default function EditAlarmPage({
   params,
 }: {
   params: { id: string; alarmId: string };
 }) {
+  const addons = useAddonsStore(state => state.addonsByInstallationId[params.id]) ?? [];
   const alarmConfigurations = useAlarmsStore(state => state.alarmConfigurations);
   const userAlarmConfiguration = useAlarmsStore(
     state => state.userAlarmConfigurations,
@@ -66,7 +69,14 @@ export default function EditAlarmPage({
         alarmConfigurationTypes.find(a => a.type == userAlarmConfiguration.type)
           ?.datapoints ?? 'MISSING';
 
-      setAlarmType({ ...userAlarmConfiguration, datapoints: datapoint, disabled: false });
+      setAlarmType({
+        ...userAlarmConfiguration,
+        components:
+          alarmConfigurationTypes.find(a => a.type == userAlarmConfiguration.type)
+            ?.components ?? [],
+        datapoints: datapoint,
+        disabled: false,
+      });
     }
   }, [alarmConfigurations]);
 
@@ -82,6 +92,7 @@ export default function EditAlarmPage({
       type: alarmType.type,
       configuration: {
         datapointCount: options.datapointCount,
+        olderThan: options.olderThan,
         notificationMethod: options.notificationMethod,
         ...(alarmType.category === 'ADDON' ? { addons: options.addons } : {}),
       },
@@ -119,10 +130,15 @@ export default function EditAlarmPage({
         <Card>
           <CardHeader>
             <h1 className="font-semibold text-2xl">
-              {`${
-                (alarmType?.category[0] ?? '') +
-                (alarmType?.category.substring(1).toLocaleLowerCase() ?? '')
-              } - ${alarmType?.name}`}
+              {createAlarmConfigurationName(
+                {
+                  ...alarmOptions!!,
+                  created_at: '',
+                  name: userAlarmConfiguration.name,
+                  id: '',
+                },
+                addons,
+              )}
             </h1>
           </CardHeader>
           <CardContent>

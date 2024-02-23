@@ -20,7 +20,7 @@ import { BackButton } from '../../components/back-button';
 import { FullWidthConditionalLoading } from '../../components/full-width-conditional-loading';
 import { PageWrapper } from '../../components/page-wrapper';
 import { isAlarmCreationPossible } from '../alarm-creation';
-import { AlarmTypeOptionPicker } from './alarm-type-option-picker';
+import { AlarmTypeOptionPicker } from '../option-picker/alarm-type-option-picker';
 import { AlarmTypePicker } from './alarm-type-picker';
 
 interface AlarmCreatePageProps {
@@ -110,6 +110,7 @@ export default function AlarmCreatePage({ params }: AlarmCreatePageProps) {
       configuration: {
         datapointCount: options.datapointCount,
         notificationMethod: options.notificationMethod,
+        olderThan: options.olderThan,
         ...(alarmType.category === 'ADDON' ? { addons: options.addons } : {}),
       },
     });

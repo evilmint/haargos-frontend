@@ -8,17 +8,17 @@ interface AutomationOption extends EntityOption {
   name: string;
 }
 
-export interface ScriptPickerProps {
+export interface AutomationPickerProps {
   installationId: string;
-  initialScripts?: AutomationOption[] | undefined;
-  onScriptsSelected: (scripts: Automation[]) => void;
+  initialAutomations?: AutomationOption[] | undefined;
+  onAutomationsSelected: (scripts: Automation[]) => void;
 }
 
 export function AutomationPicker({
   installationId,
-  initialScripts: initialAddons,
-  onScriptsSelected,
-}: ScriptPickerProps) {
+  initialAutomations,
+  onAutomationsSelected,
+}: AutomationPickerProps) {
   const observations =
     useInstallationStore(state => state.observations[installationId]) ?? [];
 
@@ -34,7 +34,7 @@ export function AutomationPicker({
   }));
 
   const [selectedScripts, setSelectedScripts] = useState<AutomationOption[]>(
-    initialAddons ?? [],
+    initialAutomations ?? [],
   );
 
   const { getAccessTokenSilently } = useAuth0();
@@ -49,7 +49,7 @@ export function AutomationPicker({
   });
 
   useEffect(() => {
-    onScriptsSelected(
+    onAutomationsSelected(
       scripts.filter(script => selectedScripts.map(a => a.name).includes(script.alias)),
     );
   }, [selectedScripts]);

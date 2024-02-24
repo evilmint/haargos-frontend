@@ -2,6 +2,7 @@
 
 import { useAddonsStore } from '@/app/services/stores/addons';
 import { useAlarmsStore } from '@/app/services/stores/alarms';
+import { useInstallationStore } from '@/app/services/stores/installation';
 import { useTabStore } from '@/app/services/stores/tab';
 import {
   AlarmType,
@@ -28,6 +29,10 @@ export default function EditAlarmPage({
   params: { id: string; alarmId: string };
 }) {
   const addons = useAddonsStore(state => state.addonsByInstallationId[params.id]) ?? [];
+  const scripts = useInstallationStore(state => state.observations[params.id])[0]?.scripts ?? [];
+  const scenes = useInstallationStore(state => state.observations[params.id])[0]?.scenes ?? [];
+  const automations = useInstallationStore(state => state.observations[params.id])[0]?.automations ?? [];
+  const zigbeeDevices = useInstallationStore(state => state.observations[params.id])[0]?.zigbee?.devices ?? [];
   const alarmConfigurations = useAlarmsStore(state => state.alarmConfigurations);
   const userAlarmConfiguration = useAlarmsStore(
     state => state.userAlarmConfigurations,
@@ -95,6 +100,13 @@ export default function EditAlarmPage({
         olderThan: options.olderThan,
         notificationMethod: options.notificationMethod,
         ...(alarmType.category === 'ADDON' ? { addons: options.addons } : {}),
+        ...(alarmType.category === 'ADDON' ? { addons: options.addons } : {}),
+        ...(alarmType.category === 'SCRIPTS' ? { scripts: options.scripts } : {}),
+        ...(alarmType.category === 'SCENES' ? { scenes: options.scenes } : {}),
+        ...(alarmType.category === 'AUTOMATIONS'
+          ? { automations: options.automations }
+          : {}),
+        ...(alarmType.category === 'ZIGBEE' ? { zigbee: options.zigbee } : {}),
       },
     });
   };
@@ -138,6 +150,10 @@ export default function EditAlarmPage({
                   id: '',
                 },
                 addons,
+                scripts,
+                scenes,
+                automations,
+                zigbeeDevices
               )}
             </h1>
           </CardHeader>

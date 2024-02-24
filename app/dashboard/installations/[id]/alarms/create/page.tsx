@@ -112,6 +112,12 @@ export default function AlarmCreatePage({ params }: AlarmCreatePageProps) {
         notificationMethod: options.notificationMethod,
         olderThan: options.olderThan,
         ...(alarmType.category === 'ADDON' ? { addons: options.addons } : {}),
+        ...(alarmType.category === 'SCRIPTS' ? { scripts: options.scripts } : {}),
+        ...(alarmType.category === 'SCENES' ? { scenes: options.scenes } : {}),
+        ...(alarmType.category === 'AUTOMATIONS'
+          ? { automations: options.automations }
+          : {}),
+        ...(alarmType.category === 'ZIGBEE' ? { zigbee: options.zigbee } : {}),
       },
     });
   };

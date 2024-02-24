@@ -360,9 +360,30 @@ interface AddonIdentifier {
   slug: string;
 }
 
+interface SceneIdentifier {
+  id: string;
+}
+
+interface AutomationIdentifier {
+  id: string;
+  name: string;
+}
+
+interface ScriptIdentifier {
+  alias: string;
+}
+
+interface ZigbeeIdentifier {
+  ieee: string;
+}
+
 interface UserAlarmConfigurationConfiguration {
   datapointCount?: number;
   addons?: AddonIdentifier[];
+  scenes?: SceneIdentifier[];
+  scripts?: ScriptIdentifier[];
+  automations?: AutomationIdentifier[];
+  zigbee?: ZigbeeIdentifier[];
   olderThan?: OlderThanOption;
   notificationMethod: 'E-mail';
 }
@@ -392,6 +413,7 @@ export {
   AlarmType,
   ApiResponse,
   Automation,
+  AutomationIdentifier,
   BatteryType,
   DockerContainer,
   Environment,
@@ -414,7 +436,9 @@ export {
   ObservationApiResponse,
   OlderThanOption,
   Scene,
+  SceneIdentifier,
   Script,
+  ScriptIdentifier,
   Storage,
   SupervisorInfo,
   SupervisorInfoResponse,
@@ -429,4 +453,6 @@ export {
   UserApiResponse,
   Zigbee,
   ZigbeeDevice,
+  ZigbeeIdentifier
 };
+

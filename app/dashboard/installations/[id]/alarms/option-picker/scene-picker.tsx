@@ -5,19 +5,19 @@ import { useEffect, useState } from 'react';
 import { EntityOption, EntityPicker } from './entity-picker';
 
 interface SceneOption extends EntityOption {
-  alias: string;
+  id: string;
 }
 
 export interface ScenePickerProps {
   installationId: string;
-  initialScripts?: SceneOption[] | undefined;
-  onScriptsSelected: (scripts: Scene[]) => void;
+  initialScenes?: SceneOption[] | undefined;
+  onScenesSelected: (scripts: Scene[]) => void;
 }
 
 export function ScenePicker({
   installationId,
-  initialScripts: initialAddons,
-  onScriptsSelected,
+  initialScenes,
+  onScenesSelected,
 }: ScenePickerProps) {
   const observations =
     useInstallationStore(state => state.observations[installationId]) ?? [];
@@ -33,8 +33,8 @@ export function ScenePicker({
     alias: script.id,
   }));
 
-  const [selectedScripts, setSelectedScripts] = useState<SceneOption[]>(
-    initialAddons ?? [],
+  const [selectedScenes, setSelectedScenes] = useState<SceneOption[]>(
+    initialScenes ?? [],
   );
 
   const { getAccessTokenSilently } = useAuth0();
@@ -49,17 +49,17 @@ export function ScenePicker({
   });
 
   useEffect(() => {
-    onScriptsSelected(
-      scenes.filter(script => selectedScripts.map(a => a.alias).includes(script.id)),
+    onScenesSelected(
+      scenes.filter(scene => selectedScenes.map(a => a.id).includes(scene.id)),
     );
-  }, [selectedScripts]);
+  }, [selectedScenes]);
 
   return (
     <EntityPicker
       label="Scene"
       entities={scriptOptions}
-      selectedEntities={selectedScripts}
-      onSelect={setSelectedScripts}
+      selectedEntities={selectedScenes}
+      onSelect={setSelectedScenes}
     />
   );
 }

@@ -2,7 +2,15 @@
 
 import { useAddonsStore } from '@/app/services/stores/addons';
 import { useAlarmsStore } from '@/app/services/stores/alarms';
-import { AddonsApiResponseAddon, UserAlarmConfiguration } from '@/app/types';
+import { useInstallationStore } from '@/app/services/stores/installation';
+import {
+  AddonsApiResponseAddon,
+  Automation,
+  Scene,
+  Script,
+  UserAlarmConfiguration,
+  ZigbeeDevice,
+} from '@/app/types';
 import { GenericDataTable } from '@/lib/generic-data-table';
 import { useHaargosRouter } from '@/lib/haargos-router';
 import { useAuth0 } from '@auth0/auth0-react';
@@ -20,8 +28,22 @@ export function ConfigurationsDataTableProxy(params: { installationId: string })
   const reloadUserAlarmConfigurations = useAlarmsStore(
     state => state.reloadUserAlarmConfigurations,
   );
+
+  const installationObservation = useInstallationStore(
+    state => state.observations[params.installationId],
+  )?.[0];
+
+  const fetchObservations = useInstallationStore(
+    state => state.fetchObservationsForInstallation,
+  );
+
   const addons =
     useAddonsStore(state => state.addonsByInstallationId[params.installationId]) ?? [];
+  const scripts = installationObservation?.scripts ?? [];
+  const scenes = installationObservation?.scenes ?? [];
+  const automations = installationObservation?.automations ?? [];
+  const zigbeeDevices = installationObservation?.zigbee?.devices ?? [];
+
   const deleteAlarm = useAlarmsStore(state => state.deleteUserAlarm);
   const alarmConfigurations = useAlarmsStore(state => state.userAlarmConfigurations);
   const fetchAddonsForInstallation = useAddonsStore(state => state.fetchAddons);
@@ -41,6 +63,7 @@ export function ConfigurationsDataTableProxy(params: { installationId: string })
       const token = await getAccessTokenSilently();
       await fetchUserAlarmConfigurations(token);
       await fetchAddonsForInstallation(params.installationId, token);
+      await fetchObservations(params.installationId, token, false);
     } catch (error) {
       console.log(error);
     }
@@ -50,24 +73,35 @@ export function ConfigurationsDataTableProxy(params: { installationId: string })
     asyncFetch();
   }, [fetchUserAlarmConfigurations, getAccessTokenSilently, user]);
 
-  const alarmConfigurationViews = (alarmConfigurationsSorted ?? []).map(c => {
-    const delAlarm = async (alarmId: string) => {
-      const token = await getAccessTokenSilently();
+  const alarmConfigurationViews = (alarmConfigurationsSorted ?? []).map(
+    alarmConfiguration => {
+      const delAlarm = async (alarmId: string) => {
+        const token = await getAccessTokenSilently();
 
-      try {
-        await deleteAlarm(token, alarmId);
-        toast.success('Alarm deleted successfully.');
-      } catch {
-        toast.error('Failed to delete alarm.');
-      }
-    };
+        try {
+          await deleteAlarm(token, alarmId);
+          toast.success('Alarm deleted successfully.');
+        } catch {
+          toast.error('Failed to delete alarm.');
+        }
+      };
 
-    const editAlarm = async (alarmId: string) => {
-      router.navigateToInstallationAlarmEdit(params.installationId, alarmId);
-    };
+      const editAlarm = async (alarmId: string) => {
+        router.navigateToInstallationAlarmEdit(params.installationId, alarmId);
+      };
 
-    return mapToTableView(addons, c, delAlarm, editAlarm);
-  });
+      return mapToTableView(
+        addons,
+        scripts,
+        scenes,
+        automations,
+        zigbeeDevices,
+        alarmConfiguration,
+        delAlarm,
+        editAlarm,
+      );
+    },
+  );
 
   return (
     <GenericDataTable
@@ -76,6 +110,10 @@ export function ConfigurationsDataTableProxy(params: { installationId: string })
       columns={columns}
       columnVisibilityKey="UserAlarmConfigurationDataTable_columnVisibility"
       data={alarmConfigurationViews}
+      // linkColumnName="name"
+      // link={col => {
+      //   return 'http://www.wp.pl';
+      // }}
       reload={async () => {
         const token = await getAccessTokenSilently();
         await reloadUserAlarmConfigurations(token);
@@ -86,13 +124,24 @@ export function ConfigurationsDataTableProxy(params: { installationId: string })
 
 function mapToTableView(
   addons: AddonsApiResponseAddon[],
+  scripts: Script[],
+  scenes: Scene[],
+  automations: Automation[],
+  zigbeeDevices: ZigbeeDevice[],
   alarmConfiguration: UserAlarmConfiguration,
   deleteAlarm: (alarmId: string) => void,
   editAlarm: (alarmId: string) => void,
 ): AlarmConfigurationTableView {
   return {
     id: alarmConfiguration.id,
-    name: createAlarmConfigurationName(alarmConfiguration, addons),
+    name: createAlarmConfigurationName(
+      alarmConfiguration,
+      addons,
+      scripts,
+      scenes,
+      automations,
+      zigbeeDevices,
+    ),
     type: alarmConfiguration.type,
     category:
       alarmConfiguration.category.substring(0, 1).toLocaleUpperCase() +

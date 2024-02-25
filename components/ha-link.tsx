@@ -70,14 +70,14 @@ export function HALink({ ...props }: HALinkProps) {
 
   return props.instanceHost ? (
     <Button
-      className={cn(props?.className, 'mt-2')}
+      className={cn(props?.className, 'mt-2 -whitespace-nowrap')}
       icon={LucideExternalLink}
       variant="secondary"
       onClick={_ => {
         window.open(href, '_blank');
       }}
     >
-      {props.installationName} {props.actionName ?? props.domain}
+      {props.actionName ?? props.domain}
     </Button>
   ) : (
     <a className="mt-2 block" target="_blank" href={href}>

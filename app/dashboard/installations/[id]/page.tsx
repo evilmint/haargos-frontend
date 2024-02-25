@@ -267,11 +267,11 @@ export default function DashboardInstallationPage({
       : false;
 
   let tabs = [
-    <Tab className="block" key="tab-zigbee">
+    <Tab className="block -truncate" key="tab-zigbee">
       Zigbee
     </Tab>,
 
-    <Tab className="sm:max-md:w-[100%]" key="tab-notifications">
+    <Tab className="block -truncate" key="tab-notifications">
       Notifications{' '}
       {notifications?.length > 0 && (
         <Badge size="xs" className="text-xl w-5 h-5">
@@ -283,7 +283,7 @@ export default function DashboardInstallationPage({
 
   if (hasSupervisor) {
     tabs.push(
-      <Tab className="sm:max-md:w-[100%]" key="tab-supervisor">
+      <Tab className="block -truncate" key="tab-supervisor">
         Supervisor{' '}
         {supervisorUpdateCount > 0 && (
           <Badge size="xs" className="text-xl w-5 h-5">
@@ -293,7 +293,7 @@ export default function DashboardInstallationPage({
       </Tab>,
     );
     tabs.push(
-      <Tab className="sm:max-md:w-[100%]" key="tab-addons">
+      <Tab className="block -truncate" key="tab-addons">
         Addons{' '}
         {addons?.filter(a => a.update_available).length > 0 && (
           <Badge size="xs" className="text-xl w-5 h-5">
@@ -305,17 +305,17 @@ export default function DashboardInstallationPage({
   }
 
   tabs.push(
-    <Tab className="sm:max-md:w-[100%]" key="tab-automations">
+    <Tab className="block -truncate" key="tab-automations">
       Automations
     </Tab>,
   );
   tabs.push(
-    <Tab className="sm:max-md:w-[100%]" key="tab-scenes">
+    <Tab className="block -truncate" key="tab-scenes">
       Scenes
     </Tab>,
   );
   tabs.push(
-    <Tab className="sm:max-md:w-[100%]" key="tab-scripts">
+    <Tab className="block -truncate" key="tab-scripts">
       Scripts
     </Tab>,
   );
@@ -570,10 +570,10 @@ export default function DashboardInstallationPage({
               <InstallationOverviewChart installationId={params.id} />
               <LogSwitcher installationId={params.id} />
             </TabsContent>
-
+      
             <TabsContent value="homeassistant" className="space-y-4">
               <TabGroup className="sm:max-md:block">
-                <TabList className="md:mt-8 sm:max-md:block">{tabs}</TabList>
+                <TabList className="md:mt-8 w-[300px] md:w-max overflow-auto md:overflow-hidden">{tabs}</TabList>
                 <div className="overflow-x-auto">
                   <TabPanels>{tabPanels}</TabPanels>
                 </div>

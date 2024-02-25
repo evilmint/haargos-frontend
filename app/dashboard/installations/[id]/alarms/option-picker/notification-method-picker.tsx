@@ -17,14 +17,14 @@ export function NotificationMethodPicker(props: {
 
   return (
     <div className="mt-2">
-      <div className="flex w-[470px]">
-        <p className="w-[240px] mt-2 font-medium">Notification method</p>
+      <div className="flex flex-col md:flex-row max-w-[470px]">
+        <p className="max-w-[240px] mt-2 font-medium">Notification method</p>
 
         <Listbox
           value={selectedNotificationMethod}
           onChange={setSelectedNotificationMethod}
         >
-          <div className="w-[400px] relative mt-1">
+          <div className="max-w-[400px] relative mt-1">
             <Listbox.Button className="relative w-full cursor-default rounded-lg bg-white dark:bg-gray-800 py-2 pl-3 pr-10 text-left shadow-md focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white/75 focus-visible:ring-offset-2 focus-visible:ring-offset-sr-600 sm:text-sm">
               <span className="block truncate">{selectedNotificationMethod.name}</span>
               <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">

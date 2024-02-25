@@ -68,10 +68,10 @@ export function OlderThanPicker(props: OlderThanPickerProps) {
   const inputMax = getTimeComponentMax(selectedTimeComponent);
 
   return (
-    <div className="flex">
+    <div className="flex flex-col md:flex-row">
       <p className="mr-3 mt-3 font-medium">Older than</p>
 
-      <div className="flex">
+      <div className="flex flex-row md:flex-row">
         <Input
           type="number"
           min={1}

@@ -29,10 +29,10 @@ export default function EditAlarmPage({
   params: { id: string; alarmId: string };
 }) {
   const addons = useAddonsStore(state => state.addonsByInstallationId[params.id]) ?? [];
-  const scripts = useInstallationStore(state => state.observations[params.id])[0]?.scripts ?? [];
-  const scenes = useInstallationStore(state => state.observations[params.id])[0]?.scenes ?? [];
-  const automations = useInstallationStore(state => state.observations[params.id])[0]?.automations ?? [];
-  const zigbeeDevices = useInstallationStore(state => state.observations[params.id])[0]?.zigbee?.devices ?? [];
+  const scripts = useInstallationStore(state => state.observations[params.id])?.[0]?.scripts ?? [];
+  const scenes = useInstallationStore(state => state.observations[params.id])?.[0]?.scenes ?? [];
+  const automations = useInstallationStore(state => state.observations[params.id])?.[0]?.automations ?? [];
+  const zigbeeDevices = useInstallationStore(state => state.observations[params.id])?.[0]?.zigbee?.devices ?? [];
   const alarmConfigurations = useAlarmsStore(state => state.alarmConfigurations);
   const userAlarmConfiguration = useAlarmsStore(
     state => state.userAlarmConfigurations,
@@ -141,7 +141,7 @@ export default function EditAlarmPage({
       {alarmConfigurations.length > 0 && userAlarmConfiguration && (
         <Card>
           <CardHeader>
-            <h1 className="font-semibold text-2xl">
+            <h1 className="font-semibold text-lg md:text-2xl">
               {createAlarmConfigurationName(
                 {
                   ...alarmOptions!!,

@@ -108,7 +108,7 @@ export function GenericDataTable({ ...params }: GenericDataTableParams) {
 
   return (
     <div className="w-full">
-      <div className="flex items-center py-4">
+      <div className="flex flex-col md:flex-row items-center py-4">
         {params.filterColumnName && (
           <Input
             placeholder={`Filter ${params.pluralEntityName ?? 'entities'}...`}
@@ -125,7 +125,7 @@ export function GenericDataTable({ ...params }: GenericDataTableParams) {
         )}
 
         {params.reload && (
-          <div className="inline ml-4">
+          <div className="inline invisible md:visible ml-4">
             <Icons.reload
               onClick={() => params.reload?.()}
               className="cursor-pointer text-slate-500 w-4 h-4"

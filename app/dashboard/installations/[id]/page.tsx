@@ -267,7 +267,7 @@ export default function DashboardInstallationPage({
       : false;
 
   let tabs = [
-    <Tab className="sm:max-md:w-[100%] sm:max-md:ml-4" key="tab-zigbee">
+    <Tab className="block" key="tab-zigbee">
       Zigbee
     </Tab>,
 
@@ -389,16 +389,18 @@ export default function DashboardInstallationPage({
             className="space-y-4"
           >
             <div className="flex-col flex-1">
-              <TabsList>
-                <TabsTrigger value="install">
-                  <Icons.cog6tooth className="w-5 h-5" />
-                </TabsTrigger>
-                <TabsTrigger value="overview">Overview</TabsTrigger>
-                <TabsTrigger value="homeassistant">Home Assistant</TabsTrigger>
-                <TabsTrigger value="host">Host</TabsTrigger>
-                <TabsTrigger value="jobs">Jobs</TabsTrigger>
-                <TabsTrigger value="alarms">Alarms</TabsTrigger>
-              </TabsList>
+              <div className="overflow-x-auto">
+                <TabsList>
+                  <TabsTrigger value="install">
+                    <Icons.cog6tooth className="w-5 h-5" />
+                  </TabsTrigger>
+                  <TabsTrigger value="overview">Overview</TabsTrigger>
+                  <TabsTrigger value="homeassistant">Home Assistant</TabsTrigger>
+                  <TabsTrigger value="host">Host</TabsTrigger>
+                  <TabsTrigger value="jobs">Jobs</TabsTrigger>
+                  <TabsTrigger value="alarms">Alarms</TabsTrigger>
+                </TabsList>
+              </div>
 
               <AlertDialog>
                 <Sheet onOpenChange={setSheetOpen} open={sheetOpen}>
@@ -572,7 +574,9 @@ export default function DashboardInstallationPage({
             <TabsContent value="homeassistant" className="space-y-4">
               <TabGroup className="sm:max-md:block">
                 <TabList className="md:mt-8 sm:max-md:block">{tabs}</TabList>
-                <TabPanels>{tabPanels}</TabPanels>
+                <div className="overflow-x-auto">
+                  <TabPanels>{tabPanels}</TabPanels>
+                </div>
               </TabGroup>
             </TabsContent>
 

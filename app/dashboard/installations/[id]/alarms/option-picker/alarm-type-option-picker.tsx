@@ -138,8 +138,6 @@ export function AlarmTypeOptionPicker(params: AlarmTypeOptionPickerProps) {
 
   return (
     <div className="mb-8 w-full">
-      <h2 className="mb-4 text-2xl font-semibold">Options</h2>
-
       {isAddonOptionPickerAvailable && (
         <AddonPicker
           initialAddons={(params.initialAlarmOptions?.addons ?? []).map(a => {
@@ -218,7 +216,7 @@ export function AlarmTypeOptionPicker(params: AlarmTypeOptionPickerProps) {
 
       {params.alarm.datapoints != 'NONE' && (
         <div className="mt-2">
-          <div className="flex w-[470px]">
+          <div className="flex flex-col md:flex-row max-w-[470px]">
             <p className="w-[240px] mt-2 font-medium">
               {params.alarm.datapoints == 'MISSING' ? 'Missing datapoints' : 'Datapoints'}
             </p>

@@ -27,7 +27,7 @@ export function MainNav({ ...props }, { className }: React.HTMLAttributes<HTMLEl
   const installationInstanceLink = installation?.urls?.instance?.url;
 
   return (
-    <nav className={cn('flex items-center w-auto space-x-3', className)}>
+    <nav className={cn('flex flex-col md:flex-row md:items-center w-auto space-x-3', className)}>
       <Link href="/">
         <h4 className="font-semibold text-lg">
           <Icons.home className="w-5 h-5" />

@@ -30,7 +30,7 @@ export function EntityPicker<T extends EntityOption>({
   }, [initialSelected, entities]);
 
   return (
-    <div className="flex">
+    <div className="flex flex-col md:flex-row">
       <p className="mr-3 mt-3 font-medium">{label}s</p>
       <Listbox
         multiple={true}
@@ -41,7 +41,7 @@ export function EntityPicker<T extends EntityOption>({
           onSelect(selected);
         }}
       >
-        <div className="w-[400px] relative mt-1">
+        <div className="max-w-[400px] relative mt-1">
           <Listbox.Button className="relative w-full cursor-default rounded-lg bg-white dark:bg-gray-800 py-2 pl-3 pr-10 text-left shadow-md focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white/75 focus-visible:ring-offset-2 focus-visible:ring-offset-sr-600 sm:text-sm">
             <span className="block truncate">
               {entities.length > 0

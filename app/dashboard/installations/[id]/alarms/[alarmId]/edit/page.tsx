@@ -29,10 +29,15 @@ export default function EditAlarmPage({
   params: { id: string; alarmId: string };
 }) {
   const addons = useAddonsStore(state => state.addonsByInstallationId[params.id]) ?? [];
-  const scripts = useInstallationStore(state => state.observations[params.id])?.[0]?.scripts ?? [];
-  const scenes = useInstallationStore(state => state.observations[params.id])?.[0]?.scenes ?? [];
-  const automations = useInstallationStore(state => state.observations[params.id])?.[0]?.automations ?? [];
-  const zigbeeDevices = useInstallationStore(state => state.observations[params.id])?.[0]?.zigbee?.devices ?? [];
+  const scripts =
+    useInstallationStore(state => state.observations[params.id])?.[0]?.scripts ?? [];
+  const scenes =
+    useInstallationStore(state => state.observations[params.id])?.[0]?.scenes ?? [];
+  const automations =
+    useInstallationStore(state => state.observations[params.id])?.[0]?.automations ?? [];
+  const zigbeeDevices =
+    useInstallationStore(state => state.observations[params.id])?.[0]?.zigbee?.devices ??
+    [];
   const alarmConfigurations = useAlarmsStore(state => state.alarmConfigurations);
   const userAlarmConfiguration = useAlarmsStore(
     state => state.userAlarmConfigurations,
@@ -121,7 +126,7 @@ export default function EditAlarmPage({
       try {
         await updateUserAlarmConfiguration(token, params.alarmId, alarmOptions);
 
-        toast.success('Alarm has been created.');
+        toast.success('Alarm has been updated.');
 
         setCurrentTab('alarms');
         router.navigateToInstallation(params.id);
@@ -153,7 +158,7 @@ export default function EditAlarmPage({
                 scripts,
                 scenes,
                 automations,
-                zigbeeDevices
+                zigbeeDevices,
               )}
             </h1>
           </CardHeader>

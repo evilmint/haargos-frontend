@@ -88,9 +88,9 @@ services:
 
           <TabGroup>
             <TabList className="mt-8 w-[300px] md:w-max overflow-auto md:overflow-hidden">
-              <Tab className='block -truncate'>Home Assistant Add-on</Tab>
-              <Tab className='block -truncate'>Docker Compose</Tab>
-              <Tab className='block -truncate'>Standalone</Tab>
+              <Tab className="block -truncate">Home Assistant Add-on</Tab>
+              <Tab className="block -truncate">Docker Compose</Tab>
+              <Tab className="block -truncate">Standalone</Tab>
             </TabList>
             <TabPanels>
               <TabPanel>

@@ -4,6 +4,8 @@ import {
   AlarmType,
   Automation,
   AutomationIdentifier,
+  LtGtComparator,
+  LtGtValueType,
   OlderThanOption,
   Scene,
   Script,
@@ -15,6 +17,7 @@ import { Input } from '@/registry/new-york/ui/input';
 import { ChangeEventHandler, useEffect, useState } from 'react';
 import { AddonPicker } from './addon-picker';
 import { AutomationPicker } from './automation-picker';
+import { LtGtThanInput } from './lt-gt-than';
 import { NotificationMethodPicker } from './notification-method-picker';
 import { OlderThanPicker } from './older-than-picker';
 import { ScenePicker } from './scene-picker';
@@ -28,12 +31,66 @@ export interface AlarmTypeOptionPickerProps {
   onAlarmOptionsChanged: (options: any) => void;
 }
 
+type LtGtThanAvailableOption = {
+  alarmType: string;
+  valueType: LtGtValueType;
+  defaultValue: number;
+  defaultComparator: LtGtComparator;
+};
+
 export function AlarmTypeOptionPicker(params: AlarmTypeOptionPickerProps) {
   const isAddonOptionPickerAvailable = params.alarm.category === 'ADDON';
   const isScriptOptionPickerAvailable = params.alarm.category === 'SCRIPTS';
   const isAutomationOptionPickerAvailable = params.alarm.category === 'AUTOMATIONS';
   const isSceneOptionPickerAvailable = params.alarm.category === 'SCENES';
   const isZigbeeOptionPickerAvailable = params.alarm.category === 'ZIGBEE';
+  const ltGtThanAvailableOptions: LtGtThanAvailableOption[] = [
+    {
+      alarmType: 'host_cpu_usage',
+      valueType: 'p',
+      defaultValue: 80,
+      defaultComparator: 'gte',
+    },
+    {
+      alarmType: 'host_disk_usage',
+      valueType: 'p',
+      defaultValue: 80,
+      defaultComparator: 'gte',
+    },
+    {
+      alarmType: 'host_memory_usage',
+      valueType: 'p',
+      defaultValue: 80,
+      defaultComparator: 'gte',
+    },
+    {
+      alarmType: 'addon_cpu_usage',
+      valueType: 'p',
+      defaultValue: 80,
+      defaultComparator: 'gte',
+    },
+    {
+      alarmType: 'addon_memory_usage',
+      valueType: 'p',
+      defaultValue: 80,
+      defaultComparator: 'gte',
+    },
+    {
+      alarmType: 'zigbee_device_lqi',
+      valueType: 'f',
+      defaultValue: 15,
+      defaultComparator: 'lt',
+    },
+    {
+      alarmType: 'zigbee_device_battery_percentage',
+      valueType: 'p',
+      defaultValue: 20,
+      defaultComparator: 'lt',
+    },
+  ];
+
+  const ltGtOption = ltGtThanAvailableOptions.find(o => o.alarmType == params.alarm.type);
+
   const isOlderThanPickerAvailable =
     (params.alarm.components ?? []).map(a => a.type).indexOf('older_than_picker') !== -1;
 
@@ -190,6 +247,18 @@ export function AlarmTypeOptionPicker(params: AlarmTypeOptionPickerProps) {
           })}
           onScenesSelected={handleScenesSelected}
           installationId={params.installationId}
+        />
+      )}
+
+      {ltGtOption && (
+        <LtGtThanInput
+          initialLtGtThanOption={{
+            value: ltGtOption.defaultValue,
+            comparator: ltGtOption.defaultComparator,
+            valueType: ltGtOption.valueType,
+          }}
+          valueType={ltGtOption.valueType}
+          entityName={params.alarm.name}
         />
       )}
 

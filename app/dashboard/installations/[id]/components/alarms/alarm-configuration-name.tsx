@@ -41,12 +41,12 @@ export function createAlarmConfigurationName(
   return name;
 }
 
-// Helper function to append "older than" part to the name
 function appendOlderThan(olderThan: OlderThanOption) {
-  return ` ${olderThan.componentValue} ${olderThan.timeComponent.toLocaleLowerCase()}`;
+  return ` ${
+    olderThan.componentValue
+  } ${olderThan.timeComponent.toLocaleLowerCase()} ago`;
 }
 
-// Helper function to append configuration entities part to the name
 function appendConfigEntities(
   alarmConfiguration: UserAlarmConfiguration,
   addons: AddonsApiResponseAddon[],

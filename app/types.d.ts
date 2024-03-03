@@ -339,6 +339,15 @@ interface OlderThanOption {
   componentValue: number;
 }
 
+type LtGtComparator = 'lt' | 'gt' | 'lte' | 'gte';
+type LtGtValueType = 'f' | 'p'; // flat / percentage
+
+interface LtGtThanOption {
+  comparator: LtGtComparator;
+  value: number;
+  valueType: LtGtValueType;
+}
+
 interface AlarmConfiguration {
   name: string;
   requires_supervisor: boolean;
@@ -425,6 +434,9 @@ export {
   Log,
   LogSource,
   LogsApiResponse,
+  LtGtComparator,
+  LtGtThanOption,
+  LtGtValueType,
   Network,
   NetworkInterface,
   NetworkInterfaceData,
@@ -453,6 +465,5 @@ export {
   UserApiResponse,
   Zigbee,
   ZigbeeDevice,
-  ZigbeeIdentifier
+  ZigbeeIdentifier,
 };
-

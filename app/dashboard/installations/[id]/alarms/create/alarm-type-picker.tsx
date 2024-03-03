@@ -20,7 +20,7 @@ export function AlarmTypePicker(params: AlarmTypePickerProps) {
     <Accordion type="single" collapsible>
       {params.configurations.map((configuration: AlarmConfiguration) => {
         return (
-          <AccordionItem value={`item-${configuration.name}`}>
+          <AccordionItem key={configuration.name} value={`item-${configuration.name}`}>
             <AccordionTrigger>{configuration.name}</AccordionTrigger>
             <AccordionContent>
               <div className="flex flex-grow flex-wrap justify-between">

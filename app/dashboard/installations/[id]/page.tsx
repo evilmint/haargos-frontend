@@ -570,10 +570,12 @@ export default function DashboardInstallationPage({
               <InstallationOverviewChart installationId={params.id} />
               <LogSwitcher installationId={params.id} />
             </TabsContent>
-      
+
             <TabsContent value="homeassistant" className="space-y-4">
               <TabGroup className="sm:max-md:block">
-                <TabList className="md:mt-8 w-[300px] md:w-max overflow-auto md:overflow-hidden">{tabs}</TabList>
+                <TabList className="md:mt-8 w-[300px] md:w-max overflow-auto md:overflow-hidden">
+                  {tabs}
+                </TabList>
                 <div className="overflow-x-auto">
                   <TabPanels>{tabPanels}</TabPanels>
                 </div>

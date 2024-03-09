@@ -110,6 +110,8 @@ export default function AlarmCreatePage({ params }: AlarmCreatePageProps) {
       configuration: {
         datapointCount: options.datapointCount,
         notificationMethod: options.notificationMethod,
+        ltGtThan: options.ltGtThan,
+        statFunction: options.statFunction,
         olderThan: options.olderThan,
         ...(alarmType.category === 'ADDON' ? { addons: options.addons } : {}),
         ...(alarmType.category === 'SCRIPTS' ? { scripts: options.scripts } : {}),

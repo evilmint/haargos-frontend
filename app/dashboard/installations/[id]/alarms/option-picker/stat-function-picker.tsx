@@ -1,64 +1,55 @@
 import { Listbox, Transition } from '@headlessui/react';
-import { CheckIcon, ChevronUpDownIcon } from '@heroicons/react/20/solid';
+import { ChevronUpDownIcon } from '@heroicons/react/20/solid';
+import { CheckIcon } from '@radix-ui/react-icons';
 import { Fragment, useEffect, useState } from 'react';
+import { EntityOption } from './entity-picker';
 
-export interface EntityOption {
+export interface StatOption extends EntityOption {
   id: string;
+  function: string;
   displayName: string;
 }
 
-export interface EntityPickerProps<T extends EntityOption> {
-  label: string;
-  entities: T[];
-  selectedEntities: T[];
-  onSelect: (selectedEntities: T[]) => void;
-  allowsMultipleSelection?: boolean;
+export interface StatisticalFunctionPickerProps {
+  installationId: string;
+  initialStatOption?: StatOption | undefined;
+  onStatOptionSelected: (statOption: StatOption) => void;
 }
 
-export function EntityPicker<T extends EntityOption>({
-  label,
-  entities,
-  selectedEntities: initialSelected,
-  onSelect,
-  allowsMultipleSelection,
-}: EntityPickerProps<T>) {
-  const [selectedEntities, setSelectedEntities] = useState<T[]>([]);
+export function StatisticalFunctionPicker({
+  initialStatOption,
+  onStatOptionSelected,
+}: StatisticalFunctionPickerProps) {
+  const statOptions: StatOption[] = [
+    { id: 'avg', function: 'avg', displayName: 'Average' },
+    { id: 'mean', function: 'mean', displayName: 'Mean' },
+    { id: 'min', function: 'min', displayName: 'Min' },
+    { id: 'max', function: 'max', displayName: 'Max' },
+    { id: 'sum', function: 'sum', displayName: 'Sum' },
+    { id: 'p90', function: 'p90', displayName: 'p90' },
+  ];
+
+  const [selectedEntity, setSelectedEntity] = useState<StatOption>(
+    initialStatOption ?? statOptions[0],
+  );
 
   useEffect(() => {
-    const selectedIds = initialSelected.map(i => i.id);
-    const newSelectedEntities = entities.filter(e => selectedIds.includes(e.id));
-
-    setSelectedEntities(newSelectedEntities);
-  }, [initialSelected, entities]);
+    onStatOptionSelected(selectedEntity);
+  }, [selectedEntity]);
 
   return (
     <div className="flex flex-col md:flex-row">
-      <p className="mr-3 mt-3 font-medium">
-        {label}
-        {`${allowsMultipleSelection ? 's' : ''}`}
-      </p>
+      <p className="mr-3 mt-3 font-medium">Statistical function</p>
       <Listbox
-        multiple={allowsMultipleSelection ?? true}
-        value={selectedEntities}
-        disabled={entities.length === 0}
+        multiple={false}
+        value={selectedEntity}
         onChange={selected => {
-          setSelectedEntities(selected);
-          onSelect(selected);
+          setSelectedEntity(selected);
         }}
       >
         <div className="max-w-[400px] md:w-[400px] relative mt-1">
           <Listbox.Button className="relative w-full cursor-default rounded-lg bg-white dark:bg-gray-800 py-2 pl-3 pr-10 text-left shadow-md focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white/75 focus-visible:ring-offset-2 focus-visible:ring-offset-sr-600 sm:text-sm">
-            <span className="block truncate">
-              {entities.length > 0
-                ? selectedEntities.length > 0
-                  ? selectedEntities.map(entity => entity.displayName).join(', ')
-                  : `Pick a${
-                      ['a', 'e', 'i', 'o', 'u'].includes(label[0].toLocaleLowerCase())
-                        ? 'n'
-                        : ''
-                    } ${label.toLowerCase()}...`
-                : `No ${label.toLocaleLowerCase()}s found`}
-            </span>
+            <span className="block truncate">{selectedEntity.displayName}</span>
             <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
               <ChevronUpDownIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
             </span>
@@ -70,7 +61,7 @@ export function EntityPicker<T extends EntityOption>({
             leaveTo="opacity-0"
           >
             <Listbox.Options className="z-50 absolute mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black/5 focus:outline-none sm:text-sm">
-              {entities.map((entity, entityIdx) => (
+              {statOptions.map((entity, entityIdx) => (
                 <Listbox.Option
                   key={entityIdx}
                   className={({ active }) =>

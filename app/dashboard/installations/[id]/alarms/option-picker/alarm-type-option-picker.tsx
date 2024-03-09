@@ -5,6 +5,7 @@ import {
   Automation,
   AutomationIdentifier,
   LtGtComparator,
+  LtGtThanOption,
   LtGtValueType,
   OlderThanOption,
   Scene,
@@ -22,6 +23,7 @@ import { NotificationMethodPicker } from './notification-method-picker';
 import { OlderThanPicker } from './older-than-picker';
 import { ScenePicker } from './scene-picker';
 import { ScriptPicker } from './script-picker';
+import { StatOption, StatisticalFunctionPicker } from './stat-function-picker';
 import { ZigbeeDevicePicker } from './zigbee-device-picker';
 
 export interface AlarmTypeOptionPickerProps {
@@ -44,6 +46,17 @@ export function AlarmTypeOptionPicker(params: AlarmTypeOptionPickerProps) {
   const isAutomationOptionPickerAvailable = params.alarm.category === 'AUTOMATIONS';
   const isSceneOptionPickerAvailable = params.alarm.category === 'SCENES';
   const isZigbeeOptionPickerAvailable = params.alarm.category === 'ZIGBEE';
+  const alarmTypesWithStatisticalFx = [
+    'addon_memory_usage',
+    'addon_cpu_usage',
+    'zigbee_device_battery_percentage',
+    'host_disk_usage',
+    'host_cpu_usage',
+    'host_memory_usage',
+    'zigbee_device_lqi',
+  ];
+  const isStatFxPickerAvailable = alarmTypesWithStatisticalFx.includes(params.alarm.type);
+
   const ltGtThanAvailableOptions: LtGtThanAvailableOption[] = [
     {
       alarmType: 'host_cpu_usage',
@@ -99,6 +112,8 @@ export function AlarmTypeOptionPicker(params: AlarmTypeOptionPickerProps) {
       addons: params.initialAlarmOptions?.addons ?? [],
       scenes: params.initialAlarmOptions?.scenes ?? [],
       scripts: params.initialAlarmOptions?.scripts ?? [],
+      ltGtThan: params.initialAlarmOptions?.ltGtThan,
+      statFunction: params.initialAlarmOptions?.statFunction,
       automations: params.initialAlarmOptions?.automations ?? [],
       zigbee: params.initialAlarmOptions?.zigbee ?? [],
       olderThan: params.initialAlarmOptions?.olderThan,
@@ -171,6 +186,10 @@ export function AlarmTypeOptionPicker(params: AlarmTypeOptionPickerProps) {
     setSelectedOptions(prevOptions => ({ ...prevOptions, scenes: mappedScenes }));
   };
 
+  const handleLtGtThanOptionSelected = (ltGtThanOption: LtGtThanOption) => {
+    setSelectedOptions(prevOptions => ({ ...prevOptions, ltGtThan: ltGtThanOption }));
+  };
+
   const handleDataPointsChange: ChangeEventHandler<HTMLInputElement> = h => {
     let value = Math.min(5, Math.max(1, parseInt(h.target.value)));
 
@@ -182,6 +201,15 @@ export function AlarmTypeOptionPicker(params: AlarmTypeOptionPickerProps) {
     setSelectedOptions(prevOptions => ({
       ...prevOptions,
       datapointCount: value,
+    }));
+  };
+
+  const handleStatOptionSelected = (statOption: StatOption) => {
+    setSelectedOptions(prevOptions => ({
+      ...prevOptions,
+      statFunction: {
+        function: statOption.function,
+      },
     }));
   };
 
@@ -252,6 +280,7 @@ export function AlarmTypeOptionPicker(params: AlarmTypeOptionPickerProps) {
 
       {ltGtOption && (
         <LtGtThanInput
+          onLtGtThanOptionSelected={handleLtGtThanOptionSelected}
           initialLtGtThanOption={{
             value: ltGtOption.defaultValue,
             comparator: ltGtOption.defaultComparator,
@@ -278,8 +307,16 @@ export function AlarmTypeOptionPicker(params: AlarmTypeOptionPickerProps) {
 
       {isOlderThanPickerAvailable && (
         <OlderThanPicker
+          name={params.alarm.name}
           onOlderThanSelected={onOlderThanSelected}
           initialOlderThanOption={params.initialAlarmOptions?.olderThan}
+        />
+      )}
+
+      {isStatFxPickerAvailable && (
+        <StatisticalFunctionPicker
+          installationId={params.installationId}
+          onStatOptionSelected={handleStatOptionSelected}
         />
       )}
 
@@ -287,7 +324,9 @@ export function AlarmTypeOptionPicker(params: AlarmTypeOptionPickerProps) {
         <div className="mt-2">
           <div className="flex flex-col md:flex-row max-w-[470px]">
             <p className="w-[240px] mt-2 font-medium">
-              {params.alarm.datapoints == 'MISSING' ? 'Missing datapoints' : 'Datapoints'}
+              {params.alarm.datapoints == 'MISSING'
+                ? 'Missing observations'
+                : 'Observations'}
             </p>
 
             <Input

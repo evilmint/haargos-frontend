@@ -386,11 +386,17 @@ interface ZigbeeIdentifier {
   ieee: string;
 }
 
+interface StatFunction {
+  function: string;
+}
+
 interface UserAlarmConfigurationConfiguration {
   datapointCount?: number;
   addons?: AddonIdentifier[];
   scenes?: SceneIdentifier[];
+  statFunction?: StatFunction;
   scripts?: ScriptIdentifier[];
+  ltGtThan?: LtGtThanOption;
   automations?: AutomationIdentifier[];
   zigbee?: ZigbeeIdentifier[];
   olderThan?: OlderThanOption;

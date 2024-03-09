@@ -6,6 +6,7 @@ import { CheckIcon, ChevronUpDownIcon } from '@heroicons/react/20/solid';
 import { Fragment, useEffect, useState } from 'react';
 
 export interface OlderThanPickerProps {
+  name: string;
   initialOlderThanOption?: OlderThanOption | undefined;
   onOlderThanSelected: (olderThanOption: OlderThanOption) => void;
 }
@@ -69,7 +70,7 @@ export function OlderThanPicker(props: OlderThanPickerProps) {
 
   return (
     <div className="flex flex-col md:flex-row">
-      <p className="mr-3 mt-3 font-medium">Older than</p>
+      <p className="mr-3 mt-3 font-medium">{props.name} more than</p>
 
       <div className="flex flex-row md:flex-row">
         <Input
@@ -93,10 +94,10 @@ export function OlderThanPicker(props: OlderThanPickerProps) {
           value={selectedTimeComponent}
           onChange={setSelectedTimeComponentValue}
         >
-          <div className="w-[400px] relative mt-1">
+          <div className="w-[200px] relative mt-1">
             <Listbox.Button className="relative w-full cursor-default rounded-lg bg-white dark:bg-gray-800 py-2 pl-3 pr-10 text-left shadow-md focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white/75 focus-visible:ring-offset-2 focus-visible:ring-offset-sr-600 sm:text-sm">
               <span className="block truncate">
-                {selectedTimeComponent?.name ?? 'Select value...'}
+                {selectedTimeComponent?.name.toLocaleLowerCase() ?? 'Select value...'}
               </span>
               <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
                 <ChevronUpDownIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
@@ -126,7 +127,7 @@ export function OlderThanPicker(props: OlderThanPickerProps) {
                             selected ? 'font-medium' : 'font-normal'
                           }`}
                         >
-                          {value.name}
+                          {value.name.toLocaleLowerCase()}
                         </span>
                         {selected ? (
                           <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-sr-600">
@@ -141,6 +142,8 @@ export function OlderThanPicker(props: OlderThanPickerProps) {
             </Transition>
           </div>
         </Listbox>
+
+        <span className="ml-2 items-center justify-center center flex">ago</span>
       </div>
     </div>
   );

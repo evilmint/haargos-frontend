@@ -3,13 +3,13 @@ import { LtGtComparator, LtGtThanOption, LtGtValueType } from '@/app/types';
 import { Input } from '@/components/ui/input';
 import { Listbox, Transition } from '@headlessui/react';
 import { CheckIcon, ChevronUpDownIcon } from '@heroicons/react/20/solid';
-import { Fragment, useState } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 
 export interface LtGtThanInputProps {
   entityName: string;
   initialLtGtThanOption?: LtGtThanOption | undefined;
   valueType: LtGtValueType;
-  //onOlderThanSelected: (olderThanOption: OlderThanOption) => void;
+  onLtGtThanOptionSelected: (ltGtThanOption: LtGtThanOption) => void;
 }
 
 type DisplayableComparator = { comparator: LtGtComparator; displayName: string };
@@ -50,29 +50,18 @@ export function LtGtThanInput(props: LtGtThanInputProps) {
     setSelectedComparator(value);
   };
 
-  // useEffect(() => {
-  //   if (!selectedTimeComponent) {
-  //     return;
-  //   }
+  useEffect(() => {
+    if (!selectedComparator?.comparator) {
+      return;
+    }
 
-  //   // props.onOlderThanSelected({
-  //   //   timeComponent: selectedTimeComponent.name,
-  //   //   componentValue: selectedTimeValue,
-  //   // });
-  // }, [selectedTimeComponent, selectedTimeValue]);
+    props.onLtGtThanOptionSelected({
+      comparator: selectedComparator?.comparator,
+      value: selectedValue,
+      valueType: props.valueType,
+    });
+  }, [selectedValue, selectedComparator]);
 
-  // useEffect(() => {
-  //   if (!selectedTimeComponent) {
-  //     return;
-  //   }
-
-  //   if (selectedTimeValue > getTimeComponentMax(selectedTimeComponent)) {
-  //     setSelectedTimeValue(getTimeComponentMax(selectedTimeComponent));
-  //     setValue(getTimeComponentMax(selectedTimeComponent));
-  //   }
-  // }, [selectedTimeComponent]);
-
-  const newLocal = selectedComparator?.comparator == 'lt';
   return (
     <div className="flex flex-col md:flex-row">
       <p className="mr-3 mt-3 font-medium">{props.entityName}</p>

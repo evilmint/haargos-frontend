@@ -24,6 +24,7 @@ import { OlderThanPicker } from './older-than-picker';
 import { ScenePicker } from './scene-picker';
 import { ScriptPicker } from './script-picker';
 import { StatOption, StatisticalFunctionPicker } from './stat-function-picker';
+import { StorageOption, StoragePicker } from './storage-picker';
 import { ZigbeeDevicePicker } from './zigbee-device-picker';
 
 export interface AlarmTypeOptionPickerProps {
@@ -46,6 +47,7 @@ export function AlarmTypeOptionPicker(params: AlarmTypeOptionPickerProps) {
   const isAutomationOptionPickerAvailable = params.alarm.category === 'AUTOMATIONS';
   const isSceneOptionPickerAvailable = params.alarm.category === 'SCENES';
   const isZigbeeOptionPickerAvailable = params.alarm.category === 'ZIGBEE';
+  const isStorageOptionPickerAvailable = params.alarm.type === 'host_disk_usage';
   const alarmTypesWithStatisticalFx = [
     'addon_memory_usage',
     'addon_cpu_usage',
@@ -103,6 +105,13 @@ export function AlarmTypeOptionPicker(params: AlarmTypeOptionPickerProps) {
   ];
 
   const ltGtOption = ltGtThanAvailableOptions.find(o => o.alarmType == params.alarm.type);
+  const defaultLtGtThanOption = ltGtOption
+    ? {
+        comparator: ltGtOption.defaultComparator,
+        value: ltGtOption.defaultValue,
+        valueType: ltGtOption.valueType,
+      }
+    : undefined;
 
   const isOlderThanPickerAvailable =
     (params.alarm.components ?? []).map(a => a.type).indexOf('older_than_picker') !== -1;
@@ -113,6 +122,7 @@ export function AlarmTypeOptionPicker(params: AlarmTypeOptionPickerProps) {
       scenes: params.initialAlarmOptions?.scenes ?? [],
       scripts: params.initialAlarmOptions?.scripts ?? [],
       ltGtThan: params.initialAlarmOptions?.ltGtThan,
+      storages: params.initialAlarmOptions?.storages,
       statFunction: params.initialAlarmOptions?.statFunction,
       automations: params.initialAlarmOptions?.automations ?? [],
       zigbee: params.initialAlarmOptions?.zigbee ?? [],
@@ -124,10 +134,6 @@ export function AlarmTypeOptionPicker(params: AlarmTypeOptionPickerProps) {
   const [dataPointsValue, setDataPointsValue] = useState<number>(
     params.initialAlarmOptions?.datapointCount ?? 1,
   );
-
-  useEffect(() => {
-    params.onAlarmOptionsChanged(selectedOptions);
-  }, [selectedOptions]);
 
   // Handlers to update the state
   const handleAddonsSelected = (addons: AddonsApiResponseAddon[]) => {
@@ -186,9 +192,17 @@ export function AlarmTypeOptionPicker(params: AlarmTypeOptionPickerProps) {
     setSelectedOptions(prevOptions => ({ ...prevOptions, scenes: mappedScenes }));
   };
 
+  const handleStoragesSelected = (storages: StorageOption[]) => {
+    setSelectedOptions(prevOptions => ({ ...prevOptions, storages: storages }));
+  };
+
   const handleLtGtThanOptionSelected = (ltGtThanOption: LtGtThanOption) => {
     setSelectedOptions(prevOptions => ({ ...prevOptions, ltGtThan: ltGtThanOption }));
   };
+
+  useEffect(() => {
+    params.onAlarmOptionsChanged(selectedOptions);
+  }, [selectedOptions]);
 
   const handleDataPointsChange: ChangeEventHandler<HTMLInputElement> = h => {
     let value = Math.min(5, Math.max(1, parseInt(h.target.value)));
@@ -281,13 +295,25 @@ export function AlarmTypeOptionPicker(params: AlarmTypeOptionPickerProps) {
       {ltGtOption && (
         <LtGtThanInput
           onLtGtThanOptionSelected={handleLtGtThanOptionSelected}
-          initialLtGtThanOption={{
-            value: ltGtOption.defaultValue,
-            comparator: ltGtOption.defaultComparator,
-            valueType: ltGtOption.valueType,
-          }}
+          initialLtGtThanOption={
+            params.initialAlarmOptions?.ltGtThan ?? defaultLtGtThanOption
+          }
           valueType={ltGtOption.valueType}
           entityName={params.alarm.name}
+        />
+      )}
+
+      {isStorageOptionPickerAvailable && (
+        <StoragePicker
+          initialStorages={(params.initialAlarmOptions?.storages ?? []).map(s => {
+            return {
+              id: s.name,
+              name: s.name,
+              displayName: s.name,
+            };
+          })}
+          onStoragesSelected={handleStoragesSelected}
+          installationId={params.installationId}
         />
       )}
 
@@ -315,6 +341,7 @@ export function AlarmTypeOptionPicker(params: AlarmTypeOptionPickerProps) {
 
       {isStatFxPickerAvailable && (
         <StatisticalFunctionPicker
+          initialStatFunction={params?.initialAlarmOptions?.statFunction?.function}
           installationId={params.installationId}
           onStatOptionSelected={handleStatOptionSelected}
         />

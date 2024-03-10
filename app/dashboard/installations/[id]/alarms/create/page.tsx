@@ -56,7 +56,7 @@ export default function AlarmCreatePage({ params }: AlarmCreatePageProps) {
   const alarmTypeSelected = (alarm: AlarmType | null) => {
     setAlarmType(alarm);
     setAlarmCreationDisabled(
-      !isAlarmCreationPossible(alarm?.category, alarmOptions?.configuration),
+      !isAlarmCreationPossible(alarm?.category, alarm?.type, alarmOptions?.configuration),
     );
   };
 
@@ -103,7 +103,9 @@ export default function AlarmCreatePage({ params }: AlarmCreatePageProps) {
       return;
     }
 
-    setAlarmCreationDisabled(!isAlarmCreationPossible(alarmType.category, options));
+    setAlarmCreationDisabled(
+      !isAlarmCreationPossible(alarmType.category, alarmType.type, options),
+    );
     setAlarmOptions({
       category: alarmType.category,
       type: alarmType.type,
@@ -113,6 +115,7 @@ export default function AlarmCreatePage({ params }: AlarmCreatePageProps) {
         ltGtThan: options.ltGtThan,
         statFunction: options.statFunction,
         olderThan: options.olderThan,
+        storages: options.storages,
         ...(alarmType.category === 'ADDON' ? { addons: options.addons } : {}),
         ...(alarmType.category === 'SCRIPTS' ? { scripts: options.scripts } : {}),
         ...(alarmType.category === 'SCENES' ? { scenes: options.scenes } : {}),

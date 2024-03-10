@@ -8,6 +8,7 @@ import {
   Automation,
   Scene,
   Script,
+  Storage,
   UserAlarmConfiguration,
   ZigbeeDevice,
 } from '@/app/types';
@@ -42,6 +43,7 @@ export function ConfigurationsDataTableProxy(params: { installationId: string })
   const scripts = installationObservation?.scripts ?? [];
   const scenes = installationObservation?.scenes ?? [];
   const automations = installationObservation?.automations ?? [];
+  const storages = installationObservation?.environment.storage ?? [];
   const zigbeeDevices = installationObservation?.zigbee?.devices ?? [];
 
   const deleteAlarm = useAlarmsStore(state => state.deleteUserAlarm);
@@ -95,6 +97,7 @@ export function ConfigurationsDataTableProxy(params: { installationId: string })
         scripts,
         scenes,
         automations,
+        storages,
         zigbeeDevices,
         alarmConfiguration,
         delAlarm,
@@ -127,6 +130,7 @@ function mapToTableView(
   scripts: Script[],
   scenes: Scene[],
   automations: Automation[],
+  storages: Storage[],
   zigbeeDevices: ZigbeeDevice[],
   alarmConfiguration: UserAlarmConfiguration,
   deleteAlarm: (alarmId: string) => void,
@@ -139,6 +143,7 @@ function mapToTableView(
       addons,
       scripts,
       scenes,
+      storages,
       automations,
       zigbeeDevices,
     ),

@@ -33,6 +33,9 @@ export default function EditAlarmPage({
     useInstallationStore(state => state.observations[params.id])?.[0]?.scripts ?? [];
   const scenes =
     useInstallationStore(state => state.observations[params.id])?.[0]?.scenes ?? [];
+  const storages =
+    useInstallationStore(state => state.observations[params.id])?.[0]?.environment
+      .storage ?? [];
   const automations =
     useInstallationStore(state => state.observations[params.id])?.[0]?.automations ?? [];
   const zigbeeDevices =
@@ -95,7 +98,9 @@ export default function EditAlarmPage({
       return;
     }
 
-    setAlarmSavingDisabled(!isAlarmCreationPossible(alarmType.category, options));
+    setAlarmSavingDisabled(
+      !isAlarmCreationPossible(alarmType.category, alarmType.type, options),
+    );
 
     setAlarmOptions({
       category: alarmType.category,
@@ -106,6 +111,7 @@ export default function EditAlarmPage({
         notificationMethod: options.notificationMethod,
         ltGtThan: options.ltGtThan,
         statFunction: options.statFunction,
+        storages: options.storages,
         ...(alarmType.category === 'ADDON' ? { addons: options.addons } : {}),
         ...(alarmType.category === 'ADDON' ? { addons: options.addons } : {}),
         ...(alarmType.category === 'SCRIPTS' ? { scripts: options.scripts } : {}),
@@ -159,6 +165,7 @@ export default function EditAlarmPage({
                 addons,
                 scripts,
                 scenes,
+                storages,
                 automations,
                 zigbeeDevices,
               )}

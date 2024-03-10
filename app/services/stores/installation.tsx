@@ -270,6 +270,23 @@ const useInstallationStore = create<InstallationStoreState>((set, get) => ({
               }) ?? [];
           }
 
+          if (observation.environment?.storage) {
+            let storageKeys = new Set();
+            let uniqueStorages: any[] = [];
+
+            observation.environment.storage.forEach(storage => {
+              if (!storageKeys.has(storage.name)) {
+                storageKeys.add(storage.name);
+                uniqueStorages.push(storage);
+              }
+            });
+
+            observation.environment = {
+              ...observation.environment,
+              storage: uniqueStorages,
+            };
+          }
+
           observation.has_high_cpu_load = observation.environment?.cpu?.load
             ? observation.environment.cpu.load >= cpuLoadThreshold
             : true;

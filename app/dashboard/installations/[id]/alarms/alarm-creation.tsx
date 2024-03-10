@@ -3,9 +3,10 @@ import { AlarmCategory, UserAlarmConfigurationConfiguration } from '@/app/types'
 
 export function isAlarmCreationPossible(
   category: AlarmCategory | undefined | null,
+  type: string | undefined | null,
   configuration: UserAlarmConfigurationConfiguration | undefined | null,
 ): boolean {
-  if (!category || !configuration) {
+  if (!category || !type || !configuration) {
     return false;
   }
 
@@ -19,6 +20,8 @@ export function isAlarmCreationPossible(
     return (configuration.scenes ?? []).length > 0;
   } else if (category === 'ZIGBEE') {
     return (configuration.zigbee ?? []).length > 0;
+  } else if (type == 'host_disk_usage') {
+    return (configuration.storages ?? []).length > 0;
   }
 
   return true;

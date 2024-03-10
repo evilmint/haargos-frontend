@@ -42,6 +42,7 @@ export function LtGtThanInput(props: LtGtThanInputProps) {
         values.find(a => a.comparator == props.initialLtGtThanOption?.comparator ?? 'lt')
           ?.displayName ?? 'lt',
     });
+
   const [selectedValue, setValue] = useState<number>(
     props.initialLtGtThanOption?.value ?? 0,
   );

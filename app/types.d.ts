@@ -24,14 +24,16 @@ interface Network {
   interfaces: NetworkInterface[];
 }
 
+interface EnvironmentCPU {
+  model_name: string;
+  load: number;
+  cpu_mhz: string;
+  architecture: string;
+  temp: string | null;
+}
+
 interface Environment {
-  cpu: {
-    model_name: string;
-    load: number;
-    cpu_mhz: string;
-    architecture: string;
-    temp: string | null;
-  } | null;
+  cpu: EnvironmentCPU | null;
   boot_time: string | null;
   memory: {
     available: number;
@@ -386,7 +388,11 @@ interface ZigbeeIdentifier {
   ieee: string;
 }
 
-interface StatFunction {
+interface StorageIdentifier {
+  name: string;
+}
+
+export interface StatFunction {
   function: string;
 }
 
@@ -396,6 +402,7 @@ interface UserAlarmConfigurationConfiguration {
   scenes?: SceneIdentifier[];
   statFunction?: StatFunction;
   scripts?: ScriptIdentifier[];
+  storages?: StorageIdentifier[];
   ltGtThan?: LtGtThanOption;
   automations?: AutomationIdentifier[];
   zigbee?: ZigbeeIdentifier[];

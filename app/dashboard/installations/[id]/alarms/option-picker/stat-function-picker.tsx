@@ -12,12 +12,12 @@ export interface StatOption extends EntityOption {
 
 export interface StatisticalFunctionPickerProps {
   installationId: string;
-  initialStatOption?: StatOption | undefined;
+  initialStatFunction?: string | undefined;
   onStatOptionSelected: (statOption: StatOption) => void;
 }
 
 export function StatisticalFunctionPicker({
-  initialStatOption,
+  initialStatFunction,
   onStatOptionSelected,
 }: StatisticalFunctionPickerProps) {
   const statOptions: StatOption[] = [
@@ -30,7 +30,9 @@ export function StatisticalFunctionPicker({
   ];
 
   const [selectedEntity, setSelectedEntity] = useState<StatOption>(
-    initialStatOption ?? statOptions[0],
+    initialStatFunction
+      ? statOptions.find(a => a.function == initialStatFunction) ?? statOptions[0]
+      : statOptions[0],
   );
 
   useEffect(() => {

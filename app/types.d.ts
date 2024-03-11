@@ -449,7 +449,8 @@ export {
   ApiResponse,
   Automation,
   AutomationIdentifier,
-  BatteryType, DockerContainer,
+  BatteryType,
+  DockerContainer,
   Environment,
   Installation,
   InstallationApiResponse,
@@ -479,7 +480,9 @@ export {
   Storage,
   SupervisorInfo,
   SupervisorInfoResponse,
-  TextMatcher, TextMatcherOption, Tier,
+  TextMatcher,
+  TextMatcherOption,
+  Tier,
   TimeComponent,
   User,
   UserAlarmConfiguration,
@@ -490,6 +493,5 @@ export {
   UserApiResponse,
   Zigbee,
   ZigbeeDevice,
-  ZigbeeIdentifier
+  ZigbeeIdentifier,
 };
-

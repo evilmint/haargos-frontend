@@ -177,7 +177,6 @@ export function AlarmTypeOptionPicker(params: AlarmTypeOptionPickerProps) {
   const handleZigbeeDevicesSelected = (zigbeeDevices: ZigbeeDevice[]) => {
     const mappedZigbeeDevices: ZigbeeIdentifier[] = zigbeeDevices.map(s => {
       return {
-        id: s.ieee,
         ieee: s.ieee,
       };
     });

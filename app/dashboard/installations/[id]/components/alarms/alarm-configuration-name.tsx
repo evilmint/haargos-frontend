@@ -61,8 +61,11 @@ export function createAlarmConfigurationName(
   return name;
 }
 
-function appendTextCondition(logTypes: LogTypeIdentifier[], textMatcherOption: TextMatcherOption) {
-  const logTypeText = logTypes.map(l => l.logType).join(', ')
+function appendTextCondition(
+  logTypes: LogTypeIdentifier[],
+  textMatcherOption: TextMatcherOption,
+) {
+  const logTypeText = logTypes.map(l => l.logType).join(', ');
   let condition: string = '';
 
   if (textMatcherOption.matcher === 'contains') {
@@ -75,7 +78,9 @@ function appendTextCondition(logTypes: LogTypeIdentifier[], textMatcherOption: T
     condition = 'ending with';
   }
 
-  return ` - ${logTypeText} logs ${condition} "${textMatcherOption.text}" ${!textMatcherOption.caseSensitive ? '[case insensitive]' : '[case sensitive]'}`;
+  return ` - ${logTypeText} logs ${condition} "${textMatcherOption.text}" ${
+    !textMatcherOption.caseSensitive ? '[case insensitive]' : '[case sensitive]'
+  }`;
 }
 
 function appendStatFunction(statFunction: StatFunction) {

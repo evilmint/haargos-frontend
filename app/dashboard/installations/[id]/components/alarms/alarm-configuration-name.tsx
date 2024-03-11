@@ -2,12 +2,14 @@
 import {
   AddonsApiResponseAddon,
   Automation,
+  LogTypeIdentifier,
   LtGtThanOption,
   OlderThanOption,
   Scene,
   Script,
   StatFunction,
   Storage,
+  TextMatcherOption,
   UserAlarmConfiguration,
   ZigbeeDevice,
 } from '@/app/types';
@@ -23,7 +25,7 @@ export function createAlarmConfigurationName(
 ) {
   let name = alarmConfiguration.name;
 
-  const { olderThan, ltGtThan, statFunction, datapointCount } =
+  const { olderThan, textCondition, logTypes, ltGtThan, statFunction, datapointCount } =
     alarmConfiguration.configuration ?? {};
 
   if (olderThan) {
@@ -36,6 +38,10 @@ export function createAlarmConfigurationName(
 
   if (datapointCount && datapointCount > 1 && statFunction) {
     name += appendStatFunction(statFunction);
+  }
+
+  if (textCondition && logTypes) {
+    name += appendTextCondition(logTypes, textCondition);
   }
 
   name += appendConfigEntities(
@@ -53,6 +59,23 @@ export function createAlarmConfigurationName(
   }
 
   return name;
+}
+
+function appendTextCondition(logTypes: LogTypeIdentifier[], textMatcherOption: TextMatcherOption) {
+  const logTypeText = logTypes.map(l => l.logType).join(', ')
+  let condition: string = '';
+
+  if (textMatcherOption.matcher === 'contains') {
+    condition = 'containing';
+  } else if (textMatcherOption.matcher === 'exactly') {
+    condition = 'being exactly';
+  } else if (textMatcherOption.matcher === 'prefix') {
+    condition = 'starting with';
+  } else if (textMatcherOption.matcher === 'suffix') {
+    condition = 'ending with';
+  }
+
+  return ` - ${logTypeText} logs ${condition} "${textMatcherOption.text}" ${!textMatcherOption.caseSensitive ? '[case insensitive]' : '[case sensitive]'}`;
 }
 
 function appendStatFunction(statFunction: StatFunction) {

@@ -341,6 +341,7 @@ interface OlderThanOption {
   componentValue: number;
 }
 
+type TextMatcher = 'contains' | 'prefix' | 'suffix' | 'exactly';
 type LtGtComparator = 'lt' | 'gt' | 'lte' | 'gte';
 type LtGtValueType = 'f' | 'p'; // flat / percentage
 
@@ -348,6 +349,12 @@ interface LtGtThanOption {
   comparator: LtGtComparator;
   value: number;
   valueType: LtGtValueType;
+}
+
+interface TextMatcherOption {
+  text: string;
+  matcher: TextMatcher;
+  caseSensitive: boolean;
 }
 
 interface AlarmConfiguration {
@@ -388,6 +395,10 @@ interface ZigbeeIdentifier {
   ieee: string;
 }
 
+export interface LogTypeIdentifier {
+  logType: string;
+}
+
 interface StorageIdentifier {
   name: string;
 }
@@ -401,9 +412,11 @@ interface UserAlarmConfigurationConfiguration {
   addons?: AddonIdentifier[];
   scenes?: SceneIdentifier[];
   statFunction?: StatFunction;
+  logTypes?: LogTypeIdentifier[];
   scripts?: ScriptIdentifier[];
   storages?: StorageIdentifier[];
   ltGtThan?: LtGtThanOption;
+  textCondition?: TextMatcherOption;
   automations?: AutomationIdentifier[];
   zigbee?: ZigbeeIdentifier[];
   olderThan?: OlderThanOption;
@@ -436,8 +449,7 @@ export {
   ApiResponse,
   Automation,
   AutomationIdentifier,
-  BatteryType,
-  DockerContainer,
+  BatteryType, DockerContainer,
   Environment,
   Installation,
   InstallationApiResponse,
@@ -467,7 +479,7 @@ export {
   Storage,
   SupervisorInfo,
   SupervisorInfoResponse,
-  Tier,
+  TextMatcher, TextMatcherOption, Tier,
   TimeComponent,
   User,
   UserAlarmConfiguration,
@@ -478,5 +490,6 @@ export {
   UserApiResponse,
   Zigbee,
   ZigbeeDevice,
-  ZigbeeIdentifier,
+  ZigbeeIdentifier
 };
+

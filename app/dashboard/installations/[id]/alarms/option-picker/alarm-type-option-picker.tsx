@@ -1,4 +1,5 @@
 'use client';
+import { useInstallationStore } from '@/app/services/stores/installation';
 import {
   AddonsApiResponseAddon,
   AlarmType,
@@ -10,6 +11,7 @@ import {
   OlderThanOption,
   Scene,
   Script,
+  TextMatcherOption,
   UserAlarmConfigurationConfiguration,
   ZigbeeDevice,
   ZigbeeIdentifier,
@@ -18,6 +20,7 @@ import { Input } from '@/registry/new-york/ui/input';
 import { ChangeEventHandler, useEffect, useState } from 'react';
 import { AddonPicker } from './addon-picker';
 import { AutomationPicker } from './automation-picker';
+import { LogTypeOption, LogTypePicker } from './log-type-picker';
 import { LtGtThanInput } from './lt-gt-than';
 import { NotificationMethodPicker } from './notification-method-picker';
 import { OlderThanPicker } from './older-than-picker';
@@ -25,6 +28,7 @@ import { ScenePicker } from './scene-picker';
 import { ScriptPicker } from './script-picker';
 import { StatOption, StatisticalFunctionPicker } from './stat-function-picker';
 import { StorageOption, StoragePicker } from './storage-picker';
+import { TextInputWithMatcher } from './text-with-condition';
 import { ZigbeeDevicePicker } from './zigbee-device-picker';
 
 export interface AlarmTypeOptionPickerProps {
@@ -48,6 +52,12 @@ export function AlarmTypeOptionPicker(params: AlarmTypeOptionPickerProps) {
   const isSceneOptionPickerAvailable = params.alarm.category === 'SCENES';
   const isZigbeeOptionPickerAvailable = params.alarm.category === 'ZIGBEE';
   const isStorageOptionPickerAvailable = params.alarm.type === 'host_disk_usage';
+  const isLogTypePickerAvailable = params.alarm.category === 'LOGS';
+  const textInputWithMatcher =
+    params.alarm.category === 'LOGS'
+      ? { initialOption: params.initialAlarmOptions?.textCondition, entityName: 'Log' }
+      : null;
+
   const alarmTypesWithStatisticalFx = [
     'addon_memory_usage',
     'addon_cpu_usage',
@@ -58,6 +68,13 @@ export function AlarmTypeOptionPicker(params: AlarmTypeOptionPickerProps) {
     'zigbee_device_lqi',
   ];
   const isStatFxPickerAvailable = alarmTypesWithStatisticalFx.includes(params.alarm.type);
+  const observations = useInstallationStore(
+    state => state.observations[params.installationId],
+  );
+  const hasSupervisor =
+    observations && observations.length > 0
+      ? observations[0].agent_type == 'addon'
+      : false;
 
   const ltGtThanAvailableOptions: LtGtThanAvailableOption[] = [
     {
@@ -121,6 +138,7 @@ export function AlarmTypeOptionPicker(params: AlarmTypeOptionPickerProps) {
       addons: params.initialAlarmOptions?.addons ?? [],
       scenes: params.initialAlarmOptions?.scenes ?? [],
       scripts: params.initialAlarmOptions?.scripts ?? [],
+      logTypes: params.initialAlarmOptions?.logTypes,
       ltGtThan: params.initialAlarmOptions?.ltGtThan,
       storages: params.initialAlarmOptions?.storages,
       statFunction: params.initialAlarmOptions?.statFunction,
@@ -183,6 +201,15 @@ export function AlarmTypeOptionPicker(params: AlarmTypeOptionPickerProps) {
     }));
   };
 
+  const handleLogTypesSelected = (logTypes: LogTypeOption[]) => {
+    setSelectedOptions(prevOptions => ({
+      ...prevOptions,
+      logTypes: logTypes.map(l => {
+        return { logType: l.logType };
+      }),
+    }));
+  };
+
   const handleScenesSelected = (scenes: Scene[]) => {
     const mappedScenes = scenes.map(a => {
       return {
@@ -224,6 +251,13 @@ export function AlarmTypeOptionPicker(params: AlarmTypeOptionPickerProps) {
       statFunction: {
         function: statOption.function,
       },
+    }));
+  };
+
+  const textInputWithMatcherChanged = (textMatcherOption: TextMatcherOption) => {
+    setSelectedOptions(prevOptions => ({
+      ...prevOptions,
+      textCondition: textMatcherOption,
     }));
   };
 
@@ -276,6 +310,28 @@ export function AlarmTypeOptionPicker(params: AlarmTypeOptionPickerProps) {
           })}
           onAutomationsSelected={handleAutomationsSelected}
           installationId={params.installationId}
+        />
+      )}
+
+      {isLogTypePickerAvailable && (
+        <LogTypePicker
+          hasSupervisorLogTypes={hasSupervisor}
+          initialLogTypes={(params.initialAlarmOptions?.logTypes ?? []).map(l => {
+            return {
+              displayName: l.logType,
+              id: l.logType,
+              logType: l.logType,
+            };
+          })}
+          onLogTypesSelected={handleLogTypesSelected}
+        />
+      )}
+
+      {textInputWithMatcher && (
+        <TextInputWithMatcher
+          initialMatcherOption={textInputWithMatcher.initialOption}
+          onMatcherOptionSelected={textInputWithMatcherChanged}
+          entityName={textInputWithMatcher.entityName}
         />
       )}
 

@@ -108,10 +108,12 @@ export default function EditAlarmPage({
       configuration: {
         datapointCount: options.datapointCount,
         olderThan: options.olderThan,
+        textCondition: options.textCondition,
         notificationMethod: options.notificationMethod,
         ltGtThan: options.ltGtThan,
         statFunction: options.statFunction,
         storages: options.storages,
+        logTypes: options.logTypes,
         ...(alarmType.category === 'ADDON' ? { addons: options.addons } : {}),
         ...(alarmType.category === 'ADDON' ? { addons: options.addons } : {}),
         ...(alarmType.category === 'SCRIPTS' ? { scripts: options.scripts } : {}),

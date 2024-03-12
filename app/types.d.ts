@@ -493,5 +493,6 @@ export {
   UserApiResponse,
   Zigbee,
   ZigbeeDevice,
-  ZigbeeIdentifier,
+  ZigbeeIdentifier
 };
+

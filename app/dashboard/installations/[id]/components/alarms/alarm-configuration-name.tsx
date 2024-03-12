@@ -23,10 +23,22 @@ export function createAlarmConfigurationName(
   automations: Automation[],
   zigbeeDevices: ZigbeeDevice[],
 ) {
-  let name = alarmConfiguration.name;
-
   const { olderThan, textCondition, logTypes, ltGtThan, statFunction, datapointCount } =
     alarmConfiguration.configuration ?? {};
+
+  let name: string = '';
+
+  if (datapointCount && datapointCount > 1 && statFunction) {
+    name += appendStatFunction(statFunction);
+  }
+
+  if (name.trim().length == 0) {
+    name += alarmConfiguration.name;
+  } else {
+    name +=
+      alarmConfiguration.name.substring(0, 1).toLocaleLowerCase() +
+      alarmConfiguration.name.substring(1);
+  }
 
   if (olderThan) {
     name += appendOlderThan(olderThan);
@@ -34,10 +46,6 @@ export function createAlarmConfigurationName(
 
   if (ltGtThan) {
     name += appendLtGtThan(ltGtThan);
-  }
-
-  if (datapointCount && datapointCount > 1 && statFunction) {
-    name += appendStatFunction(statFunction);
   }
 
   if (textCondition && logTypes) {
@@ -79,12 +87,15 @@ function appendTextCondition(
   }
 
   return ` - ${logTypeText} logs ${condition} "${textMatcherOption.text}" ${
-    !textMatcherOption.caseSensitive ? '[case insensitive]' : '[case sensitive]'
+    !textMatcherOption.caseSensitive ? '[case insensitive]' : ''
   }`;
 }
 
 function appendStatFunction(statFunction: StatFunction) {
-  return ` f(x)=${statFunction.function}`;
+  return `${
+    statFunction.function.substring(0, 1).toLocaleUpperCase() +
+    statFunction.function.substring(1)
+  } `;
 }
 
 function appendOlderThan(olderThan: OlderThanOption) {

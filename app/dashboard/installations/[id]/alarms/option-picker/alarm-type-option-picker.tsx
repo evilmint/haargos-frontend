@@ -219,7 +219,12 @@ export function AlarmTypeOptionPicker(params: AlarmTypeOptionPickerProps) {
   };
 
   const handleStoragesSelected = (storages: StorageOption[]) => {
-    setSelectedOptions(prevOptions => ({ ...prevOptions, storages: storages }));
+    setSelectedOptions(prevOptions => ({
+      ...prevOptions,
+      storages: storages.map(s => {
+        return { name: s.name };
+      }),
+    }));
   };
 
   const handleLtGtThanOptionSelected = (ltGtThanOption: LtGtThanOption) => {

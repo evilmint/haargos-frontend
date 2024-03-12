@@ -62,8 +62,8 @@ export function createAlarmConfigurationName(
     zigbeeDevices,
   );
 
-  if (datapointCount) {
-    name += ` for ${datapointCount} observation${datapointCount == 1 ? '' : 's'}`;
+  if (datapointCount && datapointCount > 1) {
+    name += ` in ${datapointCount} observation${datapointCount == 1 ? '' : 's'}`;
   }
 
   return name;
@@ -109,13 +109,13 @@ function appendLtGtThan(ltGtThan: LtGtThanOption) {
   let comparator = '';
 
   if (ltGtThan.comparator == 'gt') {
-    comparator = '>';
+    comparator = 'greater than';
   } else if (ltGtThan.comparator == 'lt') {
-    comparator = '<';
+    comparator = 'lower than';
   } else if (ltGtThan.comparator == 'lte') {
-    comparator = '<=';
+    comparator = 'lower or equal than';
   } else if (ltGtThan.comparator == 'gte') {
-    comparator = '>=';
+    comparator = 'greater or equal than';
   }
 
   return ` ${comparator} ${ltGtThan.value}${valueType}`;

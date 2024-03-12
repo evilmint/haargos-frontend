@@ -122,7 +122,7 @@ export function LtGtThanInput(props: LtGtThanInputProps) {
 
         <Input
           type="number"
-          min={1}
+          min={0}
           //max={inputMax}
           value={selectedValue}
           onChange={e => {

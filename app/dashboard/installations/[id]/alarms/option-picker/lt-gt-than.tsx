@@ -9,6 +9,7 @@ export interface LtGtThanInputProps {
   entityName: string;
   initialLtGtThanOption?: LtGtThanOption | undefined;
   valueType: LtGtValueType;
+  valueMask?: string | undefined;
   onLtGtThanOptionSelected: (ltGtThanOption: LtGtThanOption) => void;
 }
 
@@ -135,7 +136,7 @@ export function LtGtThanInput(props: LtGtThanInputProps) {
         />
 
         <div className="items-center justify-center center flex">
-          {props.valueType == 'p' ? '%' : ''}
+          {props.valueMask ? props.valueMask : props.valueType == 'p' ? '%' : ''}
         </div>
       </div>
     </div>

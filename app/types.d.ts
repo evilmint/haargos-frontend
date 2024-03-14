@@ -372,7 +372,8 @@ type AlarmCategory =
   | 'LOGS'
   | 'AUTOMATIONS'
   | 'SCRIPTS'
-  | 'SCENES';
+  | 'SCENES'
+  | 'PING';
 
 interface AddonIdentifier {
   slug: string;
@@ -493,6 +494,5 @@ export {
   UserApiResponse,
   Zigbee,
   ZigbeeDevice,
-  ZigbeeIdentifier
+  ZigbeeIdentifier,
 };
-

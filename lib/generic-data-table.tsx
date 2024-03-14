@@ -125,7 +125,7 @@ export function GenericDataTable({ ...params }: GenericDataTableParams) {
         )}
 
         {params.reload && (
-          <div className="inline invisible md:visible ml-4">
+          <div className="inline ml-4">
             <Icons.reload
               onClick={() => params.reload?.()}
               className="cursor-pointer text-slate-500 w-4 h-4"

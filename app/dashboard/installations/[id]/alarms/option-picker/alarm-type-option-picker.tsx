@@ -119,9 +119,16 @@ export function AlarmTypeOptionPicker(params: AlarmTypeOptionPickerProps) {
       defaultValue: 20,
       defaultComparator: 'lt',
     },
+    {
+      alarmType: 'frontend_ping_latency',
+      valueType: 'f',
+      defaultValue: 2000,
+      defaultComparator: 'gte',
+    },
   ];
 
   const ltGtOption = ltGtThanAvailableOptions.find(o => o.alarmType == params.alarm.type);
+  const ltGtMaskValue = params.alarm.type == 'frontend_ping_latency' ? 'ms' : undefined;
   const defaultLtGtThanOption = ltGtOption
     ? {
         comparator: ltGtOption.defaultComparator,
@@ -359,6 +366,7 @@ export function AlarmTypeOptionPicker(params: AlarmTypeOptionPickerProps) {
             params.initialAlarmOptions?.ltGtThan ?? defaultLtGtThanOption
           }
           valueType={ltGtOption.valueType}
+          valueMask={ltGtMaskValue}
           entityName={params.alarm.name}
         />
       )}

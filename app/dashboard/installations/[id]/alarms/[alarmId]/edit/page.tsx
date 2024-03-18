@@ -162,6 +162,7 @@ export default function EditAlarmPage({
                   ...alarmOptions!!,
                   created_at: '',
                   name: userAlarmConfiguration.name,
+                  state: 'OK',
                   id: '',
                 },
                 addons,

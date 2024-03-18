@@ -430,11 +430,13 @@ interface UserAlarmConfigurationRequest {
   configuration: UserAlarmConfigurationConfiguration;
 }
 
+type UserAlarmConfigurationState = 'IN_ALARM' | 'NO_DATA' | 'OK';
+
 interface UserAlarmConfiguration {
   id: string;
   name: string;
   type: string;
-  state: string;
+  state: UserAlarmConfigurationState;
   category: AlarmCategory;
   created_at: string;
   configuration: UserAlarmConfigurationConfiguration;
@@ -491,9 +493,11 @@ export {
   UserAlarmConfigurationConfiguration,
   UserAlarmConfigurationRequest,
   UserAlarmConfigurationResponse,
+  UserAlarmConfigurationState,
   UserAlarmConfigurationsResponse,
   UserApiResponse,
   Zigbee,
   ZigbeeDevice,
-  ZigbeeIdentifier,
+  ZigbeeIdentifier
 };
+

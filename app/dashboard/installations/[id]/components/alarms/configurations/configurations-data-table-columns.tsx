@@ -1,5 +1,6 @@
 'use client';
 
+import { UserAlarmConfigurationState } from '@/app/types';
 import { Icons } from '@/components/icons';
 import { Button } from '@/components/ui/button';
 import {
@@ -83,10 +84,10 @@ export const columns: ColumnDef<AlarmConfigurationTableView>[] = [
       );
     },
     cell: ({ row }) => {
-      const rawState: string = row.getValue('state');
+      const rawState: UserAlarmConfigurationState = row.getValue('state');
       const formattedState: string = rawState.replaceAll('_', ' ');
 
-      let state: any;
+      let state: React.ReactElement;
 
       switch (rawState) {
         case 'OK':
@@ -105,7 +106,7 @@ export const columns: ColumnDef<AlarmConfigurationTableView>[] = [
       return (
         <div className="text-xs items-center align-center flex flex-col">
           {state}
-          <p>{formattedState}</p>
+          <div>{formattedState}</div>
         </div>
       );
     },

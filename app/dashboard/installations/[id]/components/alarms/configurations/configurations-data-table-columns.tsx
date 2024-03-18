@@ -17,6 +17,7 @@ export interface AlarmConfigurationTableView {
   name: string;
   type: string;
   category: string;
+  state: string;
   created_at: string;
   actions: {
     alarmId: string;
@@ -65,6 +66,49 @@ export const columns: ColumnDef<AlarmConfigurationTableView>[] = [
         dangerouslySetInnerHTML={{ __html: row.getValue('name') }}
       />
     ),
+  },
+  {
+    accessorKey: 'state',
+    header: ({ column }) => {
+      return (
+        <div className="text-center">
+          <Button
+            variant="ghost"
+            onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+          >
+            State
+            <ArrowUpDown className="ml-2 h-4 w-4" />
+          </Button>
+        </div>
+      );
+    },
+    cell: ({ row }) => {
+      const rawState: string = row.getValue('state');
+      const formattedState: string = rawState.replaceAll('_', ' ');
+
+      let state: any;
+
+      switch (rawState) {
+        case 'OK':
+          state = <Icons.checkCircle className="w-6 h-6 text-green-600" />;
+          break;
+
+        case 'IN_ALARM':
+          state = <Icons.alertCircle className="w-6 h-6 text-red-600" />;
+          break;
+
+        case 'NO_DATA':
+          state = <Icons.helpCircle className="w-6 h-6 text-gray-600" />;
+          break;
+      }
+
+      return (
+        <div className="text-xs items-center align-center flex flex-col">
+          {state}
+          <p>{formattedState}</p>
+        </div>
+      );
+    },
   },
   {
     accessorKey: 'created_at',

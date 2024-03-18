@@ -148,6 +148,7 @@ function mapToTableView(
       zigbeeDevices,
     ),
     type: alarmConfiguration.type,
+    state: alarmConfiguration.state,
     category:
       alarmConfiguration.category.substring(0, 1).toLocaleUpperCase() +
       alarmConfiguration.category.substring(1).toLocaleLowerCase(),

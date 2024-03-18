@@ -434,6 +434,7 @@ interface UserAlarmConfiguration {
   id: string;
   name: string;
   type: string;
+  state: string;
   category: AlarmCategory;
   created_at: string;
   configuration: UserAlarmConfigurationConfiguration;

@@ -618,10 +618,31 @@ export const Icons = {
       />
     </svg>
   ),
+  alertCircle: (props: IconProps) => (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className="w-6 h-6 feather feather-alert-circle"
+      {...props}
+    >
+      <circle cx="12" cy="12" r="10"></circle>
+      <line x1="12" y1="8" x2="12" y2="12"></line>
+      <line x1="12" y1="16" x2="12.01" y2="16"></line>
+    </svg>
+  ),
   checkCircle: (props: IconProps) => (
     <svg
       xmlns="http://www.w3.org/2000/svg"
       fill="none"
+      width="24"
+      height="24"
       viewBox="0 0 24 24"
       strokeWidth={1.5}
       stroke="currentColor"

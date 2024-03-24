@@ -26,7 +26,7 @@ export function Alarms(props: AlarmProps) {
       <TabGroup>
         <TabList className="mt-2">
           <Tab>Alarms</Tab>
-          <Tab>Incidents</Tab>
+          <Tab>State history</Tab>
         </TabList>
         <TabPanels>
           <TabPanel>

@@ -22,7 +22,7 @@ export function StatisticalFunctionPicker({
 }: StatisticalFunctionPickerProps) {
   const statOptions: StatOption[] = [
     { id: 'avg', function: 'avg', displayName: 'Average' },
-    { id: 'mean', function: 'mean', displayName: 'Mean' },
+    { id: 'median', function: 'median', displayName: 'Median' },
     { id: 'min', function: 'min', displayName: 'Min' },
     { id: 'max', function: 'max', displayName: 'Max' },
     { id: 'sum', function: 'sum', displayName: 'Sum' },

@@ -12,31 +12,31 @@ import {
 } from '@/components/ui/tooltip';
 
 export interface AlarmIncidentTableView {
-  id: string;
-  type: string;
-  status: string;
-  created_at: string;
-  updated_at: string;
+  alarm_configuration: string;
+  state: string;
+  triggered_at: string;
 }
 
 export const columns: ColumnDef<AlarmIncidentTableView>[] = [
   {
-    accessorKey: 'type',
+    accessorKey: 'alarm_configuration',
     header: ({ column }) => {
       return (
         <Button
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
         >
-          Action
+          Alarm configuration
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       );
     },
-    cell: ({ row }) => <div className="text-xs">{row.getValue('type')}</div>,
+    cell: ({ row }) => (
+      <div className="text-xs">{row.getValue('alarm_configuration')}</div>
+    ),
   },
   {
-    accessorKey: 'created_at',
+    accessorKey: 'triggered_at',
     header: ({ column }) => {
       return (
         <div className="text-right">
@@ -44,7 +44,7 @@ export const columns: ColumnDef<AlarmIncidentTableView>[] = [
             variant="ghost"
             onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
           >
-            Created at
+            Triggered at
             <ArrowUpDown className="ml-2 h-4 w-4" />
           </Button>
         </div>
@@ -52,7 +52,7 @@ export const columns: ColumnDef<AlarmIncidentTableView>[] = [
     },
     sortingFn: 'datetime',
     cell: ({ row }) => {
-      const dateString: string | undefined = row.getValue('created_at');
+      const dateString: string | undefined = row.getValue('triggered_at');
       const date = dateString != null ? new Date(dateString) : null;
 
       return (
@@ -65,37 +65,8 @@ export const columns: ColumnDef<AlarmIncidentTableView>[] = [
     },
   },
   {
-    accessorKey: 'updated_at',
-    header: ({ column }) => {
-      return (
-        <div className="text-right">
-          <Button
-            variant="ghost"
-            onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-          >
-            Updated at
-            <ArrowUpDown className="ml-2 h-4 w-4" />
-          </Button>
-        </div>
-      );
-    },
-    sortingFn: 'datetime',
-    cell: ({ row }) => {
-      const dateString: string | undefined = row.getValue('updated_at');
-      const date = dateString != null ? new Date(dateString) : null;
-
-      return (
-        <div className="text-right font-regular text-xs">
-          {date != null
-            ? date.toLocaleDateString() + ', ' + date.toLocaleTimeString()
-            : 'Never'}
-        </div>
-      );
-    },
-  },
-  {
-    accessorKey: 'status',
-    id: 'status',
+    accessorKey: 'state',
+    id: 'state',
     header: ({ column }) => {
       return (
         <div className="text-center">
@@ -106,12 +77,12 @@ export const columns: ColumnDef<AlarmIncidentTableView>[] = [
                   variant="ghost"
                   onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
                 >
-                  Status
+                  State
                   <ArrowUpDown className="ml-2 h-4 w-4" />
                 </Button>
               </TooltipTrigger>
               <TooltipContent>
-                <p>Status of the job</p>
+                <p>State</p>
               </TooltipContent>
             </Tooltip>
           </TooltipProvider>
@@ -119,10 +90,10 @@ export const columns: ColumnDef<AlarmIncidentTableView>[] = [
       );
     },
     cell: ({ row }) => {
-      const status: string = row.getValue('status');
+      const state: string = row.getValue('state');
       return (
         <div className="text-center relative-flex flex justify-center text-xs">
-          {status.toUpperCase()}
+          {state.toUpperCase()}
         </div>
       );
     },

@@ -169,6 +169,20 @@ interface AlarmConfigurationResponse {
   };
 }
 
+interface AlarmHistory {
+  triggered_at: string;
+  installation_id: string;
+  alarm_configuration: string;
+  processed: number;
+  state: 'OK' | 'NO_DATA' | 'IN_ALARM';
+}
+
+interface AlarmHistoryResponse {
+  body: {
+    history: AlarmHistory[];
+  };
+}
+
 interface UserAlarmConfigurationsResponse {
   body: {
     configurations: UserAlarmConfiguration[];
@@ -449,6 +463,8 @@ export {
   AlarmCategory,
   AlarmConfiguration,
   AlarmConfigurationResponse,
+  AlarmHistory,
+  AlarmHistoryResponse,
   AlarmType,
   ApiResponse,
   Automation,

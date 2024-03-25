@@ -46,6 +46,11 @@ type LtGtThanAvailableOption = {
   maskValue?: string;
 };
 
+type StatFunctionOption = {
+  alarmType: string;
+  defaultFunction: 'max' | 'min' | 'p90' | 'avg' | 'median' | 'sum';
+};
+
 export function AlarmTypeOptionPicker(params: AlarmTypeOptionPickerProps) {
   const isAddonOptionPickerAvailable = params.alarm.category === 'ADDON';
   const isScriptOptionPickerAvailable = params.alarm.category === 'SCRIPTS';
@@ -59,16 +64,40 @@ export function AlarmTypeOptionPicker(params: AlarmTypeOptionPickerProps) {
       ? { initialOption: params.initialAlarmOptions?.textCondition, entityName: 'Log' }
       : null;
 
-  const alarmTypesWithStatisticalFx = [
-    'addon_memory_usage',
-    'addon_cpu_usage',
-    'zigbee_device_battery_percentage',
-    'host_disk_usage',
-    'host_cpu_usage',
-    'host_memory_usage',
-    'zigbee_device_lqi',
+  const alarmTypesWithStatisticalFx: StatFunctionOption[] = [
+    {
+      alarmType: 'addon_memory_usage',
+      defaultFunction: 'max',
+    },
+    {
+      alarmType: 'addon_cpu_usage',
+      defaultFunction: 'max',
+    },
+    {
+      alarmType: 'zigbee_device_battery_percentage',
+      defaultFunction: 'min',
+    },
+    {
+      alarmType: 'host_disk_usage',
+      defaultFunction: 'max',
+    },
+    {
+      alarmType: 'host_cpu_usage',
+      defaultFunction: 'max',
+    },
+    {
+      alarmType: 'host_memory_usage',
+      defaultFunction: 'max',
+    },
+    {
+      alarmType: 'zigbee_device_lqi',
+      defaultFunction: 'min',
+    },
   ];
-  const isStatFxPickerAvailable = alarmTypesWithStatisticalFx.includes(params.alarm.type);
+
+  const isStatFxPickerAvailable = alarmTypesWithStatisticalFx
+    .map(a => a.alarmType)
+    .includes(params.alarm.type);
   const observations = useInstallationStore(
     state => state.observations[params.installationId],
   );
@@ -410,7 +439,11 @@ export function AlarmTypeOptionPicker(params: AlarmTypeOptionPickerProps) {
 
       {isStatFxPickerAvailable && (
         <StatisticalFunctionPicker
-          initialStatFunction={params?.initialAlarmOptions?.statFunction?.function}
+          initialStatFunction={
+            params?.initialAlarmOptions?.statFunction?.function ??
+            alarmTypesWithStatisticalFx.find(a => a.alarmType == params.alarm.type)
+              ?.defaultFunction
+          }
           installationId={params.installationId}
           onStatOptionSelected={handleStatOptionSelected}
         />

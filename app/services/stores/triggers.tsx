@@ -5,6 +5,7 @@ import { fetchAlarmHistory } from '../triggers';
 interface TriggersState {
   triggersByInstallationId: Record<string, AlarmHistory[]>;
   fetchTriggers: (installationId: string, token: string) => Promise<void>;
+  reloadTriggers: (installationId: string, token: string) => Promise<void>;
 }
 
 const useTriggersState = create<TriggersState>((set, get) => ({
@@ -14,6 +15,22 @@ const useTriggersState = create<TriggersState>((set, get) => ({
       return;
     }
 
+    const response = await fetchAlarmHistory(token, installationId);
+
+    set(state => ({
+      triggersByInstallationId: {
+        ...state.triggersByInstallationId,
+        [installationId]: response.body.history,
+      },
+    }));
+  },
+  async reloadTriggers(installationId, token) {
+    set(state => ({
+      triggersByInstallationId: {
+        ...state.triggersByInstallationId,
+        [installationId]: [],
+      },
+    }));
     const response = await fetchAlarmHistory(token, installationId);
 
     set(state => ({

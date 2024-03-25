@@ -9,11 +9,12 @@ export function makeSimpleCell<T>(
   label: string,
   name: string,
   width = '100px',
+  alignment = 'justify-center',
 ): ColumnDef<T> {
   return {
     accessorKey: name,
     header: ({ column }) => (
-      <div className="flex justify-center">
+      <div className={`flex ${alignment}`}>
         <Button
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
@@ -24,10 +25,40 @@ export function makeSimpleCell<T>(
       </div>
     ),
     cell: ({ row }) => (
-      <div className={`text-xs flex justify-center text-center`}>
-        {row.getValue(name)}
-      </div>
+      <div className={`text-xs flex ${alignment} text-center`}>{row.getValue(name)}</div>
     ),
+  };
+}
+
+export function makeDateCell<T>(label: string, name: string): ColumnDef<T> {
+  return {
+    accessorKey: label,
+    header: ({ column }) => {
+      return (
+        <div className="text-right">
+          <Button
+            variant="ghost"
+            onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+          >
+            {name}
+            <ArrowUpDown className="ml-2 h-4 w-4" />
+          </Button>
+        </div>
+      );
+    },
+    sortingFn: 'datetime',
+    cell: ({ row }) => {
+      const dateString: string | undefined = row.getValue(label);
+      const date = dateString != null ? new Date(dateString) : null;
+
+      return (
+        <div className="text-right font-regular text-xs">
+          {date != null
+            ? date.toLocaleDateString() + ', ' + date.toLocaleTimeString()
+            : 'Never'}
+        </div>
+      );
+    },
   };
 }
 

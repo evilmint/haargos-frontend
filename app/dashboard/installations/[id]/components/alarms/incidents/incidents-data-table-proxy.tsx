@@ -1,7 +1,6 @@
 'use client';
 
 import { useInstallationStore } from '@/app/services/stores/installation';
-import { useJobsStore } from '@/app/services/stores/jobs';
 import { useTriggersState } from '@/app/services/stores/triggers';
 import { AlarmHistory } from '@/app/types';
 import { GenericDataTable } from '@/lib/generic-data-table';
@@ -13,7 +12,7 @@ export function IncidentsDataTableProxy({ ...params }) {
   const { installationId } = params;
 
   const fetchIncidents = useTriggersState(state => state.fetchTriggers);
-  const reloadJobs = useJobsStore(state => state.reloadJobs);
+  const reloadTriggers = useTriggersState(state => state.reloadTriggers);
   const incidents = useTriggersState(
     state => state.triggersByInstallationId[installationId],
   );
@@ -54,7 +53,7 @@ export function IncidentsDataTableProxy({ ...params }) {
       data={incidentViews}
       reload={async () => {
         const token = await getAccessTokenSilently();
-        //await reloadTriggers(installationId, token);
+        await reloadTriggers(installationId, token);
       }}
     />
   );

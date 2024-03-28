@@ -33,11 +33,11 @@ export function createAlarmConfigurationName(
   }
 
   if (name.trim().length == 0) {
-    name += alarmConfiguration.name;
+    name += alarmConfiguration.description;
   } else {
     name +=
-      alarmConfiguration.name.substring(0, 1).toLocaleLowerCase() +
-      alarmConfiguration.name.substring(1);
+      alarmConfiguration.description.substring(0, 1).toLocaleLowerCase() +
+      alarmConfiguration.description.substring(1);
   }
 
   if (olderThan) {

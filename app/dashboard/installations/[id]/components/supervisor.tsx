@@ -1,6 +1,7 @@
 import { useInstallationStore } from '@/app/services/stores/installation';
 import { useOSStore } from '@/app/services/stores/os';
 import { useSupervisorStore } from '@/app/services/stores/supervisor';
+import { OSInfo, SupervisorInfo } from '@/app/types';
 import { Icons } from '@/components/icons';
 import { InstallationLink } from '@/components/installation-link';
 import { RemoteAction, RemoteActionType } from '@/components/remote-action';
@@ -20,12 +21,14 @@ import { useAuth0 } from '@auth0/auth0-react';
 import { ReactElement, useEffect } from 'react';
 
 type SupervisorParams = {
+  supervisorInfo?: SupervisorInfo | null;
+  osInfo?: OSInfo | null;
   installationId: string;
 };
 
 type Field = { name: string; value: string | boolean | ReactElement };
 
-export function Supervisor({ installationId }: SupervisorParams) {
+export function Supervisor({ osInfo, supervisorInfo, installationId }: SupervisorParams) {
   return (
     <Card>
       <CardHeader>
@@ -33,8 +36,11 @@ export function Supervisor({ installationId }: SupervisorParams) {
       </CardHeader>
       <CardContent>
         <div className="inline">
-          <SupervisorRemoteActions installationId={installationId} />
-          <CoreRemoteActions installationId={installationId} />
+          <SupervisorRemoteActions
+            supervisorInfo={supervisorInfo}
+            installationId={installationId}
+          />
+          <CoreRemoteActions osInfo={osInfo} installationId={installationId} />
         </div>
         <Table className={'max-w-[450px]'}>
           <TableBody>
@@ -54,13 +60,19 @@ type RemoteActionDropdownItem = {
   text: string;
 };
 
-function CoreRemoteActions({ installationId }: SupervisorParams) {
-  const coreActions: RemoteActionDropdownItem[] = [
+function CoreRemoteActions({ osInfo, installationId }: SupervisorParams) {
+  let coreActions: RemoteActionDropdownItem[] = [
     { type: 'core_restart', visual: 'link', text: 'Restart' },
     { type: 'core_stop', visual: 'link', text: 'Stop' },
     { type: 'core_start', visual: 'link', text: 'Start' },
-    { type: 'core_update', visual: 'link', text: 'Update' },
   ];
+
+  if (osInfo && osInfo.update_available) {
+    coreActions = [
+      { type: 'core_update', visual: 'link', text: 'Update' },
+      ...coreActions,
+    ];
+  }
 
   return (
     <DropdownMenu>
@@ -92,13 +104,19 @@ function CoreRemoteActions({ installationId }: SupervisorParams) {
   );
 }
 
-function SupervisorRemoteActions({ installationId }: SupervisorParams) {
-  const supervisorActions: RemoteActionDropdownItem[] = [
+function SupervisorRemoteActions({ supervisorInfo, installationId }: SupervisorParams) {
+  let supervisorActions: RemoteActionDropdownItem[] = [
     { type: 'supervisor_restart', visual: 'link', text: 'Restart' },
     { type: 'supervisor_reload', visual: 'link', text: 'Reload' },
     { type: 'supervisor_repair', visual: 'link', text: 'Repair' },
-    { type: 'supervisor_update', visual: 'link', text: 'Update' },
   ];
+
+  if (supervisorInfo && supervisorInfo.update_available) {
+    supervisorActions = [
+      { type: 'supervisor_update', visual: 'link', text: 'Update' },
+      ...supervisorActions,
+    ];
+  }
 
   return (
     <DropdownMenu>

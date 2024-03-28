@@ -93,18 +93,22 @@ export default function EditAlarmPage({
     }
   }, [alarmConfigurations]);
 
-  const onAlarmOptionsChanged = (options: UserAlarmConfigurationConfiguration) => {
+  const onAlarmOptionsChanged = (
+    options: UserAlarmConfigurationConfiguration,
+    name: string,
+  ) => {
     if (alarmType == null) {
       return;
     }
 
     setAlarmSavingDisabled(
-      !isAlarmCreationPossible(alarmType.category, alarmType.type, options),
+      !isAlarmCreationPossible(name, alarmType.category, alarmType.type, options),
     );
 
     setAlarmOptions({
       category: alarmType.category,
       type: alarmType.type,
+      name: name,
       configuration: {
         datapointCount: options.datapointCount,
         olderThan: options.olderThan,
@@ -162,6 +166,7 @@ export default function EditAlarmPage({
                   ...alarmOptions!!,
                   created_at: '',
                   name: userAlarmConfiguration.name,
+                  description: userAlarmConfiguration.description,
                   state: 'OK',
                   id: '',
                 },
@@ -178,13 +183,14 @@ export default function EditAlarmPage({
             {alarmType && (
               <div>
                 <AlarmTypeOptionPicker
+                  name={userAlarmConfiguration.name}
                   installationId={params.id}
                   alarm={alarmType}
                   initialAlarmOptions={{
                     ...userAlarmConfiguration.configuration,
                     notificationMethod: 'E-mail',
                   }}
-                  onAlarmOptionsChanged={onAlarmOptionsChanged}
+                  onAlarmChanged={onAlarmOptionsChanged}
                 />
                 <PrimaryButton
                   disabled={alarmSavingDisabled}

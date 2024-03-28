@@ -16,6 +16,7 @@ import { ArrowUpDown } from 'lucide-react';
 export interface AlarmConfigurationTableView {
   id: string;
   name: string;
+  description: string;
   type: string;
   category: string;
   state: string;
@@ -56,7 +57,7 @@ export const columns: ColumnDef<AlarmConfigurationTableView>[] = [
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
         >
-          Alarm
+          Name
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       );
@@ -65,6 +66,26 @@ export const columns: ColumnDef<AlarmConfigurationTableView>[] = [
       <div
         className="text-xs"
         dangerouslySetInnerHTML={{ __html: row.getValue('name') }}
+      />
+    ),
+  },
+  {
+    accessorKey: 'description',
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+        >
+          Alarm
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      );
+    },
+    cell: ({ row }) => (
+      <div
+        className="text-xs"
+        dangerouslySetInnerHTML={{ __html: row.getValue('description') }}
       />
     ),
   },

@@ -124,12 +124,16 @@ export function LtGtThanInput(props: LtGtThanInputProps) {
         <Input
           type="number"
           min={0}
-          //max={inputMax}
           value={selectedValue}
           onChange={e => {
-            // Probably not 100 if a flat value
-            const val = Math.max(0, Math.min(100, parseInt(e.target.value)));
-            // setSelectedTimeValue(val);
+            let val: number;
+
+            if (props.valueType == 'p') {
+              val = Math.max(0, Math.min(100, parseInt(e.target.value)));
+            } else {
+              val = parseInt(e.target.value);
+            }
+
             setValue(val);
           }}
           className="mt-1 ml-3 mr-2 w-[120px]"

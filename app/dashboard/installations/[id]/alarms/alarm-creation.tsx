@@ -2,11 +2,16 @@
 import { AlarmCategory, UserAlarmConfigurationConfiguration } from '@/app/types';
 
 export function isAlarmCreationPossible(
-  category: AlarmCategory | undefined | null,
-  type: string | undefined | null,
-  configuration: UserAlarmConfigurationConfiguration | undefined | null,
+  name: string,
+  category: AlarmCategory,
+  type: string,
+  configuration: UserAlarmConfigurationConfiguration | undefined,
 ): boolean {
-  if (!category || !type || !configuration) {
+  if (!configuration) {
+    return false;
+  }
+
+  if (name.trim().length === 0) {
     return false;
   }
 

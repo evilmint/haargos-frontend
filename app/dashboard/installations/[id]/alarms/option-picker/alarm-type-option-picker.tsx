@@ -33,9 +33,10 @@ import { ZigbeeDevicePicker } from './zigbee-device-picker';
 
 export interface AlarmTypeOptionPickerProps {
   alarm: AlarmType;
+  name: string;
   installationId: string;
   initialAlarmOptions?: UserAlarmConfigurationConfiguration;
-  onAlarmOptionsChanged: (options: any) => void;
+  onAlarmChanged: (options: any, name: string) => void;
 }
 
 type LtGtThanAvailableOption = {
@@ -67,6 +68,10 @@ export function AlarmTypeOptionPicker(params: AlarmTypeOptionPickerProps) {
   const alarmTypesWithStatisticalFx: StatFunctionOption[] = [
     {
       alarmType: 'addon_memory_usage',
+      defaultFunction: 'max',
+    },
+    {
+      alarmType: 'frontend_ping_latency',
       defaultFunction: 'max',
     },
     {
@@ -186,11 +191,15 @@ export function AlarmTypeOptionPicker(params: AlarmTypeOptionPickerProps) {
       notificationMethod: params.initialAlarmOptions?.notificationMethod ?? 'E-mail', // Default value, adjust if needed
     });
 
+  const [nameValue, setNameValue] = useState<string>(params.name ?? '');
   const [dataPointsValue, setDataPointsValue] = useState<number>(
     params.initialAlarmOptions?.datapointCount ?? 1,
   );
 
-  // Handlers to update the state
+  const handleNameChange = (name: string) => {
+    setNameValue(name);
+  };
+
   const handleAddonsSelected = (addons: AddonsApiResponseAddon[]) => {
     const mappedAddons = addons.map(a => {
       return {
@@ -269,8 +278,8 @@ export function AlarmTypeOptionPicker(params: AlarmTypeOptionPickerProps) {
   };
 
   useEffect(() => {
-    params.onAlarmOptionsChanged(selectedOptions);
-  }, [selectedOptions]);
+    params.onAlarmChanged(selectedOptions, nameValue);
+  }, [selectedOptions, nameValue]);
 
   const handleDataPointsChange: ChangeEventHandler<HTMLInputElement> = h => {
     let value = Math.min(5, Math.max(1, parseInt(h.target.value)));
@@ -312,6 +321,20 @@ export function AlarmTypeOptionPicker(params: AlarmTypeOptionPickerProps) {
 
   return (
     <div className="mb-8 w-full">
+      <div className="mt-2">
+        <div className="flex flex-col md:flex-row max-w-[470px]">
+          <p className="w-[240px] mt-2 font-medium">Name</p>
+
+          <Input
+            type="text"
+            value={nameValue}
+            onChange={e => {
+              handleNameChange(e.target.value);
+            }}
+          />
+        </div>
+      </div>
+
       {isAddonOptionPickerAvailable && (
         <AddonPicker
           initialAddons={(params.initialAlarmOptions?.addons ?? []).map(a => {

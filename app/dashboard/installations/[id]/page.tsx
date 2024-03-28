@@ -338,7 +338,11 @@ export default function DashboardInstallationPage({
     tabPanels.push(
       <TabPanel key="tabpanel-supervisor">
         <div className="mt-10">
-          <Supervisor installationId={params.id} />
+          <Supervisor
+            osInfo={os}
+            supervisorInfo={supervisor}
+            installationId={params.id}
+          />
         </div>
       </TabPanel>,
     );

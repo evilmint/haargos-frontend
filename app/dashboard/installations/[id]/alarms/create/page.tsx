@@ -55,8 +55,18 @@ export default function AlarmCreatePage({ params }: AlarmCreatePageProps) {
 
   const alarmTypeSelected = (alarm: AlarmType | null) => {
     setAlarmType(alarm);
+
+    if (!alarm) {
+      setAlarmCreationDisabled(true);
+      return;
+    }
     setAlarmCreationDisabled(
-      !isAlarmCreationPossible(alarm?.category, alarm?.type, alarmOptions?.configuration),
+      !isAlarmCreationPossible(
+        alarm.name,
+        alarm.category,
+        alarm.type,
+        alarmOptions?.configuration,
+      ),
     );
   };
 
@@ -98,17 +108,21 @@ export default function AlarmCreatePage({ params }: AlarmCreatePageProps) {
     params.id,
   ]);
 
-  const onAlarmOptionsChanged = (options: UserAlarmConfigurationConfiguration) => {
+  const onAlarmOptionsChanged = (
+    options: UserAlarmConfigurationConfiguration,
+    name: string,
+  ) => {
     if (alarmType == null) {
       return;
     }
 
     setAlarmCreationDisabled(
-      !isAlarmCreationPossible(alarmType.category, alarmType.type, options),
+      !isAlarmCreationPossible(name, alarmType.category, alarmType.type, options),
     );
     setAlarmOptions({
       category: alarmType.category,
       type: alarmType.type,
+      name: name,
       configuration: {
         datapointCount: options.datapointCount,
         notificationMethod: options.notificationMethod,
@@ -170,9 +184,10 @@ export default function AlarmCreatePage({ params }: AlarmCreatePageProps) {
               {alarmType && (
                 <div>
                   <AlarmTypeOptionPicker
+                    name=""
                     installationId={params.id}
                     alarm={alarmType}
-                    onAlarmOptionsChanged={onAlarmOptionsChanged}
+                    onAlarmChanged={onAlarmOptionsChanged}
                   />
                   <PrimaryButton
                     disabled={alarmCreationDisabled}

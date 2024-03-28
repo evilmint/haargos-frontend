@@ -89,9 +89,7 @@ export const columns: ColumnDef<AddonTableView>[] = [
 
       return (
         <div className="text-xs">
-          {!actionsAvailable ? (
-            'Not available for Haargos'
-          ) : (
+          {actionsAvailable && (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button

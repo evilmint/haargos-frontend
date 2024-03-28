@@ -46,8 +46,6 @@ export function IncidentsDataTableProxy({ ...params }) {
 
   return (
     <GenericDataTable
-      pluralEntityName="entries"
-      filterColumnName="type"
       columns={columns}
       columnVisibilityKey="AlarmIncidentDataTable_columnVisibility"
       data={incidentViews}

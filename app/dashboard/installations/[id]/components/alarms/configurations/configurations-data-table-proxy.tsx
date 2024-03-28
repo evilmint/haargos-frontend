@@ -108,15 +108,11 @@ export function ConfigurationsDataTableProxy(params: { installationId: string })
 
   return (
     <GenericDataTable
-      pluralEntityName="alarm configurations"
+      pluralEntityName="alarms"
       filterColumnName="name"
       columns={columns}
       columnVisibilityKey="UserAlarmConfigurationDataTable_columnVisibility"
       data={alarmConfigurationViews}
-      // linkColumnName="name"
-      // link={col => {
-      //   return 'http://www.wp.pl';
-      // }}
       reload={async () => {
         const token = await getAccessTokenSilently();
         await reloadUserAlarmConfigurations(token);
@@ -138,7 +134,8 @@ function mapToTableView(
 ): AlarmConfigurationTableView {
   return {
     id: alarmConfiguration.id,
-    name: createAlarmConfigurationName(
+    name: alarmConfiguration.name,
+    description: createAlarmConfigurationName(
       alarmConfiguration,
       addons,
       scripts,

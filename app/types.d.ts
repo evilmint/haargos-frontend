@@ -343,6 +343,7 @@ interface AlarmType {
   name: string;
   type: string;
   category: AlarmCategory;
+  description: string;
   datapoints: 'NONE' | 'MISSING' | 'PRESENT';
   disabled: boolean;
   components: { type: 'older_than_picker' }[];
@@ -439,6 +440,7 @@ interface UserAlarmConfigurationConfiguration {
 }
 
 interface UserAlarmConfigurationRequest {
+  name: string;
   type: string;
   category: AlarmCategory;
   configuration: UserAlarmConfigurationConfiguration;
@@ -449,6 +451,7 @@ type UserAlarmConfigurationState = 'IN_ALARM' | 'NO_DATA' | 'OK';
 interface UserAlarmConfiguration {
   id: string;
   name: string;
+  description: string;
   type: string;
   state: UserAlarmConfigurationState;
   category: AlarmCategory;

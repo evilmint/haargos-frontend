@@ -404,7 +404,7 @@ interface AutomationIdentifier {
 }
 
 interface ScriptIdentifier {
-  alias: string;
+  unique_id: string;
 }
 
 interface ZigbeeIdentifier {
@@ -517,5 +517,6 @@ export {
   UserApiResponse,
   Zigbee,
   ZigbeeDevice,
-  ZigbeeIdentifier,
+  ZigbeeIdentifier
 };
+

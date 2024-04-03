@@ -4,9 +4,7 @@ import { useAuth0 } from '@auth0/auth0-react';
 import { useEffect, useState } from 'react';
 import { EntityOption, EntityPicker } from './entity-picker';
 
-interface ScriptOption extends EntityOption {
-  alias: string;
-}
+interface ScriptOption extends EntityOption {}
 
 export interface ScriptPickerProps {
   installationId: string;
@@ -27,11 +25,12 @@ export function ScriptPicker({
   );
 
   const scripts = (observations ?? []).length > 0 ? observations[0].scripts : [];
-  const scriptOptions: ScriptOption[] = scripts.map(script => ({
-    id: script.alias,
-    displayName: script.alias,
-    alias: script.alias,
-  }));
+  const scriptOptions: ScriptOption[] = scripts
+    .filter(s => !!s.unique_id)
+    .map(script => ({
+      id: script.unique_id!,
+      displayName: script.alias,
+    }));
 
   const [selectedScripts, setSelectedScripts] = useState<ScriptOption[]>(
     initialAddons ?? [],
@@ -50,7 +49,9 @@ export function ScriptPicker({
 
   useEffect(() => {
     onScriptsSelected(
-      scripts.filter(script => selectedScripts.map(a => a.alias).includes(script.alias)),
+      scripts.filter(script =>
+        selectedScripts.map(a => a.id).includes(script.unique_id!),
+      ),
     );
   }, [selectedScripts]);
 

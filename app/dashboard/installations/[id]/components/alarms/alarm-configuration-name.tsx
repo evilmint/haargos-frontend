@@ -142,7 +142,7 @@ function appendConfigEntities(
   } else if (configStorages.length > 0) {
     return ` in ${getNameFromEntities(configStorages, storages, 'name', 'name')}`;
   } else if (configScripts.length > 0) {
-    return ` for ${getNameFromEntities(configScripts, scripts, 'alias', 'alias')}`;
+    return ` for ${getNameFromEntities(configScripts, scripts, 'unique_id', 'alias')}`;
   } else if (configScenes.length > 0) {
     return ` for ${getNameFromEntities(configScenes, scenes, 'id', 'friendly_name')}`;
   } else if (configAutomations.length > 0) {

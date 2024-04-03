@@ -39,6 +39,7 @@ import { Storage } from './components/host/storage';
 import { InstallationOverviewChart } from './components/installation-overview-chart';
 
 import { updateInstallation } from '@/app/services/installations';
+import { useAlarmsStore } from '@/app/services/stores/alarms';
 import { useOSStore } from '@/app/services/stores/os';
 import { useSupervisorStore } from '@/app/services/stores/supervisor';
 import { TabType, useTabStore } from '@/app/services/stores/tab';
@@ -118,6 +119,19 @@ export default function DashboardInstallationPage({
     state => state.supervisorByInstallationId[params.id],
   );
   const os = useOSStore(state => state.osByInstallationId[params.id]);
+  const alarmNotificationCount = useAlarmsStore(
+    state => state.userAlarmConfigurations,
+  ).filter(c => c.state === 'IN_ALARM').length;
+
+  const homeAssistantNotificationCount =
+    useNotificationsStore(state => state.notificationsByInstallationId?.[params.id] ?? [])
+      .length +
+    useSupervisorStore(state =>
+      state.supervisorByInstallationId[params.id]?.update_available ? 1 : 0,
+    ) +
+    useOSStore(state =>
+      state.osByInstallationId?.[params.id]?.update_available ? 1 : 0,
+    );
 
   const [origin, setOrigin] = useState<string | null>(null);
   const defaultTab = useTabStore(state => state.currentTab);
@@ -171,6 +185,9 @@ export default function DashboardInstallationPage({
   const [isUpdating, setUpdating] = useState<boolean>(false);
 
   const fetchInstallations = useInstallationStore(state => state.fetchInstallations);
+  const fetchUserAlarms = useAlarmsStore(state => state.fetchUserAlarms);
+  const fetchSupervisor = useSupervisorStore(state => state.fetchSupervisor);
+  const fetchOS = useOSStore(state => state.fetchOS);
   const asyncFetch = async () => {
     try {
       const token = await getAccessTokenSilently();
@@ -191,6 +208,22 @@ export default function DashboardInstallationPage({
     form.reset(defaultValues);
   }, [installation]);
 
+  useEffect(() => {
+    let preload = async () => {
+      try {
+        const token = await getAccessTokenSilently();
+        await fetchInstallations(token, false);
+        await fetchUserAlarms(token);
+        await fetchSupervisor(params.id, token);
+        await fetchOS(params.id, token);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    preload();
+  });
+
   async function onSubmit(data: UpdateInstallationFormValues) {
     setUpdating(true);
 
@@ -210,7 +243,6 @@ export default function DashboardInstallationPage({
     } finally {
       setUpdating(false);
       toast.success('Installation has been updated.');
-      //setSheetOpen(false);
     }
   }
 
@@ -399,10 +431,24 @@ export default function DashboardInstallationPage({
                     <Icons.cog6tooth className="w-5 h-5" />
                   </TabsTrigger>
                   <TabsTrigger value="overview">Overview</TabsTrigger>
-                  <TabsTrigger value="homeassistant">Home Assistant</TabsTrigger>
+                  <TabsTrigger value="homeassistant">
+                    Home Assistant{' '}
+                    {homeAssistantNotificationCount > 0 && (
+                      <Badge size="xs" color="blue" className="ml-1 text-xl w-5 h-5">
+                        {homeAssistantNotificationCount}
+                      </Badge>
+                    )}
+                  </TabsTrigger>
                   <TabsTrigger value="host">Host</TabsTrigger>
                   <TabsTrigger value="jobs">Jobs</TabsTrigger>
-                  <TabsTrigger value="alarms">Alarms</TabsTrigger>
+                  <TabsTrigger value="alarms">
+                    Alarms
+                    {alarmNotificationCount > 0 && (
+                      <Badge size="xs" color="red" className="ml-1 text-xl w-5 h-5">
+                        {alarmNotificationCount}
+                      </Badge>
+                    )}
+                  </TabsTrigger>
                 </TabsList>
               </div>
 

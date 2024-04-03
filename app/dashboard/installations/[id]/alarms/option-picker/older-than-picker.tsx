@@ -53,9 +53,6 @@ export function OlderThanPicker(props: OlderThanPickerProps) {
 
   const values: ValueType[] = [
     {
-      name: 'Minutes',
-    },
-    {
       name: 'Hours',
     },
     {

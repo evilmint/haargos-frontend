@@ -54,6 +54,7 @@ export default function AlarmCreatePage({ params }: AlarmCreatePageProps) {
   const router = useHaargosRouter(useRouter());
 
   const alarmTypeSelected = (alarm: AlarmType | null) => {
+    setAlarmOptions(null);
     setAlarmType(alarm);
 
     if (!alarm) {
@@ -119,6 +120,7 @@ export default function AlarmCreatePage({ params }: AlarmCreatePageProps) {
     setAlarmCreationDisabled(
       !isAlarmCreationPossible(name, alarmType.category, alarmType.type, options),
     );
+
     setAlarmOptions({
       category: alarmType.category,
       type: alarmType.type,

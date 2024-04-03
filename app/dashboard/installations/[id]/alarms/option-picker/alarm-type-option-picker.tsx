@@ -175,21 +175,27 @@ export function AlarmTypeOptionPicker(params: AlarmTypeOptionPickerProps) {
   const isOlderThanPickerAvailable =
     (params.alarm.components ?? []).map(a => a.type).indexOf('older_than_picker') !== -1;
 
+  const initialConfiguration: UserAlarmConfigurationConfiguration = {
+    addons: params.initialAlarmOptions?.addons ?? [],
+    scenes: params.initialAlarmOptions?.scenes ?? [],
+    scripts: params.initialAlarmOptions?.scripts ?? [],
+    logTypes: params.initialAlarmOptions?.logTypes,
+    ltGtThan: params.initialAlarmOptions?.ltGtThan,
+    storages: params.initialAlarmOptions?.storages,
+    statFunction: params.initialAlarmOptions?.statFunction,
+    automations: params.initialAlarmOptions?.automations ?? [],
+    zigbee: params.initialAlarmOptions?.zigbee ?? [],
+    olderThan: params.initialAlarmOptions?.olderThan,
+    datapointCount: params.initialAlarmOptions?.datapointCount ?? 1,
+    notificationMethod: params.initialAlarmOptions?.notificationMethod ?? 'E-mail', // Default value, adjust if needed
+  };
+
   const [selectedOptions, setSelectedOptions] =
-    useState<UserAlarmConfigurationConfiguration>({
-      addons: params.initialAlarmOptions?.addons ?? [],
-      scenes: params.initialAlarmOptions?.scenes ?? [],
-      scripts: params.initialAlarmOptions?.scripts ?? [],
-      logTypes: params.initialAlarmOptions?.logTypes,
-      ltGtThan: params.initialAlarmOptions?.ltGtThan,
-      storages: params.initialAlarmOptions?.storages,
-      statFunction: params.initialAlarmOptions?.statFunction,
-      automations: params.initialAlarmOptions?.automations ?? [],
-      zigbee: params.initialAlarmOptions?.zigbee ?? [],
-      olderThan: params.initialAlarmOptions?.olderThan,
-      datapointCount: params.initialAlarmOptions?.datapointCount ?? 1,
-      notificationMethod: params.initialAlarmOptions?.notificationMethod ?? 'E-mail', // Default value, adjust if needed
-    });
+    useState<UserAlarmConfigurationConfiguration>(initialConfiguration);
+
+  useEffect(() => {
+    setSelectedOptions(initialConfiguration);
+  }, [params.alarm.type]);
 
   const [nameValue, setNameValue] = useState<string>(params.name ?? '');
   const [dataPointsValue, setDataPointsValue] = useState<number>(
@@ -213,7 +219,7 @@ export function AlarmTypeOptionPicker(params: AlarmTypeOptionPickerProps) {
   const handleScriptsSelected = (scripts: Script[]) => {
     const mappedScripts = scripts.map(s => {
       return {
-        alias: s.alias,
+        unique_id: s.unique_id!,
       };
     });
 
@@ -442,8 +448,7 @@ export function AlarmTypeOptionPicker(params: AlarmTypeOptionPickerProps) {
         <ScriptPicker
           initialScripts={(params.initialAlarmOptions?.scripts ?? []).map(s => {
             return {
-              id: s.alias,
-              alias: s.alias,
+              id: s.unique_id,
               displayName: '',
             };
           })}

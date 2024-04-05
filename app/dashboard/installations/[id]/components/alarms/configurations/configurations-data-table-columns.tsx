@@ -21,6 +21,7 @@ export interface AlarmConfigurationTableView {
   category: string;
   state: string;
   created_at: string;
+  updated_at: string;
   actions: {
     alarmId: string;
     deleteAlarm: (alarmId: string) => void;
@@ -128,6 +129,35 @@ export const columns: ColumnDef<AlarmConfigurationTableView>[] = [
         <div className="text-xs items-center align-center flex flex-col">
           {state}
           <div>{formattedState}</div>
+        </div>
+      );
+    },
+  },
+  {
+    accessorKey: 'updated_at',
+    header: ({ column }) => {
+      return (
+        <div className="text-right">
+          <Button
+            variant="ghost"
+            onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+          >
+            Updated at
+            <ArrowUpDown className="ml-2 h-4 w-4" />
+          </Button>
+        </div>
+      );
+    },
+    sortingFn: 'datetime',
+    cell: ({ row }) => {
+      const dateString: string | undefined = row.getValue('updated_at');
+      const date = dateString != null ? new Date(dateString) : null;
+
+      return (
+        <div className="text-right font-regular text-xs">
+          {date != null
+            ? date.toLocaleDateString() + ', ' + date.toLocaleTimeString()
+            : 'Never'}
         </div>
       );
     },

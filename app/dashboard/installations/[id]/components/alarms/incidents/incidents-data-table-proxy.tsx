@@ -60,7 +60,7 @@ export function IncidentsDataTableProxy({ ...params }) {
 function mapToTableView(history: AlarmHistory): AlarmIncidentTableView {
   return {
     alarm_configuration: history.alarm_configuration,
-    state: history.state,
+    state: history.state.state,
     triggered_at: history.triggered_at,
   };
 }

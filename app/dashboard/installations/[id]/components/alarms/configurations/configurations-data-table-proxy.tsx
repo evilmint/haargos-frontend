@@ -150,6 +150,7 @@ function mapToTableView(
       alarmConfiguration.category.substring(0, 1).toLocaleUpperCase() +
       alarmConfiguration.category.substring(1).toLocaleLowerCase(),
     created_at: alarmConfiguration.created_at,
+    updated_at: alarmConfiguration.updated_at,
     actions: {
       alarmId: alarmConfiguration.id,
       deleteAlarm: deleteAlarm,

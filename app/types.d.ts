@@ -174,7 +174,7 @@ interface AlarmHistory {
   installation_id: string;
   alarm_configuration: string;
   processed: number;
-  state: 'OK' | 'NO_DATA' | 'IN_ALARM';
+  state: { state: 'OK' | 'NO_DATA' | 'IN_ALARM'; date: string; };
 }
 
 interface AlarmHistoryResponse {
@@ -456,6 +456,7 @@ interface UserAlarmConfiguration {
   state: UserAlarmConfigurationState;
   category: AlarmCategory;
   created_at: string;
+  updated_at: string;
   configuration: UserAlarmConfigurationConfiguration;
 }
 

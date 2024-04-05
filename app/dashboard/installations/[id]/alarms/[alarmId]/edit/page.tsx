@@ -165,6 +165,7 @@ export default function EditAlarmPage({
                 {
                   ...alarmOptions!!,
                   created_at: '',
+                  updated_at: '',
                   name: userAlarmConfiguration.name,
                   description: userAlarmConfiguration.description,
                   state: 'OK',

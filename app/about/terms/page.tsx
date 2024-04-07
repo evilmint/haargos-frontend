@@ -58,8 +58,8 @@ export default function TermsOfService() {
               By using Haargos, you grant explicit consent for the execution of remote
               actions initiated through our platform. You acknowledge that while Haargos
               takes precautions to ensure the safety and security of these operations, the
-              ultimate responsibility for any changes made to your system lies with you,
-              the user.
+              ultimate responsibility for any changes made to your system lies with the
+              user.
             </p>
           </li>
 

@@ -10,6 +10,7 @@ module.exports = {
     './registry/**/*.{ts,tsx}',
     './app/**/*.{ts,tsx}',
     './node_modules/@tremor/**/*.{js,ts,jsx,tsx}',
+    './node_modules/tw-elements/js/**/*.js',
   ],
   theme: {
     container: {
@@ -194,5 +195,9 @@ module.exports = {
         /^(fill-(?:slate|gray|zinc|neutral|stone|red|orange|amber|yellow|lime|green|emerald|teal|cyan|sky|blue|indigo|violet|purple|fuchsia|pink|rose)-(?:50|100|200|300|400|500|600|700|800|900|950))$/,
     },
   ],
-  plugins: [require('tailwindcss-animate'), require('@headlessui/tailwindcss')],
+  plugins: [
+    require('tailwindcss-animate'),
+    require('@headlessui/tailwindcss'),
+    require('tw-elements/plugin.cjs'),
+  ],
 };

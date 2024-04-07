@@ -14,9 +14,9 @@ export default function FAQ() {
             <strong>What is Haargos?</strong>
           </dt>
           <dd>
-            Haargos is an advanced monitoring and analytics platform for Home Assistant,
-            providing in-depth insights, alerts, and support for your smart home
-            environment.
+            Haargos is a monitoring and analytics platform for Home Assistant, providing
+            in-depth insights, alarms, remote execution capabilities and support for your
+            smart home environment.
           </dd>
 
           <dt>
@@ -28,19 +28,11 @@ export default function FAQ() {
           </dd>
 
           <dt>
-            <strong>How does Haargos enhance my Home Assistant experience?</strong>
-          </dt>
-          <dd>
-            Haargos offers detailed analytics and reporting on your smart home's
-            performance, helping you optimize and secure your environment.
-          </dd>
-
-          <dt>
             <strong>Is Haargos easy to install?</strong>
           </dt>
           <dd>
-            Yes, Haargos is designed for easy installation as a Home Assistant add-on or
-            as a separate docker image.
+            Haargos is designed for easy installation as a Home Assistant add-on, or as a
+            separate docker image.
           </dd>
 
           <dt>
@@ -56,16 +48,16 @@ export default function FAQ() {
               target="_blank"
             >
               here
-            </a>
-            .
+            </a>{' '}
+            or create an account with an installation to see the get started guide.
           </dd>
 
           <dt>
             <strong>How secure is Haargos?</strong>
           </dt>
           <dd>
-            Haargos prioritizes security and only reads data which it needs for presenting
-            HomeAssistant related information.
+            Haargos prioritizes security and only reads data which it needs for
+            operational purposes. Haargos does not sell any of your data.
           </dd>
 
           <dt>
@@ -108,8 +100,8 @@ export default function FAQ() {
           <dd>
             Feedback and suggestions can be shared through our official website's contact
             form and customer support email at{' '}
-            <a className="text-blue-600" href="mailto: haargos@alorenc.me">
-              haargos AT alorenc DOT me
+            <a className="text-blue-600" href="mailto: contact@haargos.com">
+              contact AT haargos DOT com
             </a>
             .
           </dd>

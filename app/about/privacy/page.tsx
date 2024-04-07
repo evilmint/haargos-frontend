@@ -25,7 +25,7 @@ export default function PrivacyPolicy() {
               Configuration analysis is performed only locally by the agent and only with
               your explicit consent. We do not send or store your configuration.yml or
               secrets.yml data. For data removal requests, contact us at{' '}
-              <a href="mailto:gdpr@haargos.com">gdpr@haargos.com</a>.
+              <a href="mailto:privacy@haargos.com">privacy@haargos.com</a>.
             </p>
           </li>
 
@@ -34,8 +34,8 @@ export default function PrivacyPolicy() {
             <p>
               The information we collect is used solely for providing and improving our
               monitoring service and for data-driven decisions and statistical analysis.
-              Data is aggregated and anonymized to ensure privacy. We do not sell, share,
-              or distribute your data to third parties without explicit consent.
+              We do not sell, share, or distribute your data to third parties without
+              explicit consent.
             </p>
           </li>
 
@@ -62,36 +62,6 @@ export default function PrivacyPolicy() {
           </li>
 
           <li>
-            <strong>Security of Remote Actions</strong>
-            <p>
-              We prioritize the security of your Home Assistant installation and take
-              steps to ensure that remote actions are securely transmitted and executed.
-              This includes encryption of command transmissions and strict authentication
-              mechanisms. We recommend you also follow best security practices on your end
-              to further safeguard your system.
-            </p>
-          </li>
-
-          <li>
-            <strong>Impact of Remote Actions on Privacy</strong>
-            <p>
-              While we aim to minimize the impact of remote actions on your privacy, it's
-              important to understand that certain actions may indirectly involve
-              processing of personal data, such as device names or identifiers. We ensure
-              that such data is handled in accordance with this Privacy Policy and
-              applicable data protection laws.
-            </p>
-          </li>
-
-          <li>
-            <strong>Data Storage and Security</strong>
-            <p>
-              Data transmitted to our servers is encrypted and stored securely. We employ
-              various security measures for data protection.
-            </p>
-          </li>
-
-          <li>
             <strong>GDPR Compliance and Personal Data</strong>
             <p>
               We comply with GDPR. Users have the right to access, rectify, or delete
@@ -101,9 +71,9 @@ export default function PrivacyPolicy() {
           </li>
 
           <li>
-            <strong>Third-party Services</strong>
+            <strong>Sharing data</strong>
             <p>
-              We do not share your data with third-party services unless necessary for our
+              We do not share your personal data with others unless necessary for our
               service or required by law.
             </p>
           </li>

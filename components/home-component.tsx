@@ -5,6 +5,7 @@ import { UserNav } from '@/components/ui/user-nav';
 import { Contact } from './contact';
 import Features from './features';
 import Hero from './hero';
+import HomeCarousel from './home-carousel';
 import PricingTiers from './tiers';
 import WhatIsHaargos from './what-is-haargos';
 
@@ -21,7 +22,9 @@ export default function HomeComponent() {
       </div>
 
       <Hero />
+
       <WhatIsHaargos />
+      <HomeCarousel className="mb-4" />
       <Features />
       <PricingTiers />
       <Contact />
